@@ -1,35 +1,12 @@
-using System;
-using System.Collections.Generic;
-using Data.Core.Models.Field;
-using Data.Core.Models.Method;
+using Data.Core.Models.Core;
 
 namespace Data.Core.Models.Class
 {
     /// <summary>
-    /// Represents a single class mapping within a project.
+    /// Represents a single class during its lifetime in the games source code.
     /// </summary>
-    public interface IClassMapping
+    public interface IClassMapping : IMapping<IClassVersionedMapping, IClassCommittedMappingEntry, IClassProposalMappingEntry>
     {
-        /// <summary>
-        /// The id of the class mapping.
-        /// </summary>
-        Guid Id { get; set; }
 
-        /// <summary>
-        /// The mapping entries made for this class.
-        /// </summary>
-        ICollection<IClassCommittedMappingEntry> CommittedMappings { get; set; }
-
-        /// <summary>
-        /// The proposals made for the class.
-        /// </summary>
-        ICollection<IClassProposalMappingEntry> ProposalMappings { get; set; }
-
-        /// <summary>
-        /// The methods that are part of this class.
-        /// </summary>
-        ICollection<IMethodMapping> Methods { get; set; }
-
-        ICollection<IFieldMapping> Fields { get; set; }
     }
 }

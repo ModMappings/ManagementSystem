@@ -1,32 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Data.Core.Models.Class;
+using Data.Core.Models.Field;
+using Data.Core.Models.Core;
 
 namespace Data.Core.Models.Field
 {
     /// <summary>
-    /// Represents a single field mapping within a project.
+    /// Represents a single field during its lifetime in the games source code.
     /// </summary>
-    public interface IFieldMapping
+    public interface IFieldMapping : IMapping<IFieldVersionedMapping, IFieldCommittedMappingEntry, IFieldProposalMappingEntry>
     {
-        /// <summary>
-        /// The id of the field mapping.
-        /// </summary>
-        Guid Id { get; set; }
 
-        /// <summary>
-        /// The mapping entries made for this field.
-        /// </summary>
-        ICollection<IFieldCommittedMappingEntry> CommittedMappings { get; set; }
-
-        /// <summary>
-        /// The proposals made for the field.
-        /// </summary>
-        ICollection<IFieldProposalMappingEntry> ProposalMappings { get; set; }
-
-        /// <summary>
-        /// The class that this mapping belongs to.
-        /// </summary>
-        IClassMapping Class { get; set; }
     }
 }

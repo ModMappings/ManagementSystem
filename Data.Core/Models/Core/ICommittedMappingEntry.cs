@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Data.Core.Models.Core
 {
     /// <summary>
@@ -10,5 +12,10 @@ namespace Data.Core.Models.Core
         /// The proposal that was made that resulted in this mapping after it was accepted.
         /// </summary>
         TProposal Proposal { get; set; }
+
+        /// <summary>
+        /// The releases this committed mapping is part of.
+        /// </summary>
+        ICollection<IRelease> ContainedInReleases { get; set; }
     }
 }

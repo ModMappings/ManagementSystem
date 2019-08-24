@@ -14,11 +14,6 @@ namespace Data.Core.Models.Core
         Guid Id { get; set; }
 
         /// <summary>
-        /// The game version that this mapping is made for.
-        /// </summary>
-        IGameVersion GameVersion { get; set; }
-
-        /// <summary>
         /// The input mappings type.
         /// </summary>
         string InputMappingType { get; set; }

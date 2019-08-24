@@ -8,10 +8,6 @@ namespace Data.Core.Models.Core
     /// </summary>
     public interface IProposalMappingEntry : IMappingEntry
     {
-        /// <summary>
-        /// The id of the proposal.
-        /// </summary>
-        Guid Id { get; set; }
 
         /// <summary>
         /// The user who made this proposal.

@@ -6,8 +6,4 @@
         <RootNamespace>Data.Core</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="Readers\Core" />
-    </ItemGroup>
-
 </Project>
