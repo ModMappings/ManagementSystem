@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace DataAccess.Core.Models.Class
 {
     /// <summary>
-    /// Represents a single mapping within a project.
+    /// Represents a single class mapping within a project.
     /// </summary>
     public interface IClassMapping
     {
@@ -16,11 +16,11 @@ namespace DataAccess.Core.Models.Class
         /// <summary>
         /// The mapping entries made for this class.
         /// </summary>
-        ICollection<IClassCommittedMappingEntry> MappingEntries { get; set; }
+        ICollection<IClassCommittedMappingEntry> CommittedMappings { get; set; }
 
         /// <summary>
         /// The proposals made for the class.
         /// </summary>
-        ICollection<IClassMappingProposal> Proposals { get; set; }
+        ICollection<IClassProposalMappingEntry> ProposalMappings { get; set; }
     }
 }

@@ -4,7 +4,7 @@ namespace DataAccess.Core.Models.Core
     /// Represents a mapping between two versions of the same source code.
     /// </summary>
     public interface ICommittedMappingEntry<TProposal> : IMappingEntry
-        where TProposal : IProposal
+        where TProposal : IProposalMappingEntry
     {
         /// <summary>
         /// The proposal that was made that resulted in this mapping after it was accepted.

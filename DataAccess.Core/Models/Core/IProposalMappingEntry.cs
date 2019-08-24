@@ -6,7 +6,7 @@ namespace DataAccess.Core.Models.Core
     /// <summary>
     /// An interface that indicates that this object is not a committed change.
     /// </summary>
-    public interface IProposal : IMappingEntry
+    public interface IProposalMappingEntry : IMappingEntry
     {
         /// <summary>
         /// The id of the proposal.

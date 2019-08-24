@@ -1,7 +1,18 @@
+using System;
+
 namespace DataAccess.Core.Models.Core
 {
+    /// <summary>
+    /// Represents a single mapping entry.
+    /// Maps the input to the output from the input to the output type.
+    /// </summary>
     public interface IMappingEntry
     {
+        /// <summary>
+        /// The id of the mapping entry.
+        /// </summary>
+        Guid Id { get; set; }
+
         /// <summary>
         /// The game version that this mapping is made for.
         /// </summary>
