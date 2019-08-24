@@ -1,6 +1,6 @@
-using DataAccess.Core.Models.Core;
+using Data.Core.Models.Core;
 
-namespace DataAccess.Core.Models.Method
+namespace Data.Core.Models.Method
 {
     /// <summary>
     /// A proposal for changing a method mapping.

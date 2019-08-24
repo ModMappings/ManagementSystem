@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using DataAccess.Core.Models.Class;
-using DataAccess.Core.Models.Parameter;
+using Data.Core.Models.Class;
 
-namespace DataAccess.Core.Models.Field
+namespace Data.Core.Models.Field
 {
     /// <summary>
     /// Represents a single field mapping within a project.

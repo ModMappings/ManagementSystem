@@ -1,6 +1,6 @@
-using DataAccess.Core.Models.Core;
+using Data.Core.Models.Core;
 
-namespace DataAccess.Core.Models.Field
+namespace Data.Core.Models.Field
 {
     /// <summary>
     /// A proposal for changing a field mapping.

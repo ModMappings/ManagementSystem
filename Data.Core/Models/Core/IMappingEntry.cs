@@ -1,6 +1,6 @@
 using System;
 
-namespace DataAccess.Core.Models.Core
+namespace Data.Core.Models.Core
 {
     /// <summary>
     /// Represents a single mapping entry.

@@ -1,6 +1,6 @@
-using DataAccess.Core.Models.Core;
+using Data.Core.Models.Core;
 
-namespace DataAccess.Core.Models.Method
+namespace Data.Core.Models.Method
 {
     /// <summary>
     /// A single entry in the history of the mapping

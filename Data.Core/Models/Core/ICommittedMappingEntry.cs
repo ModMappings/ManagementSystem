@@ -1,4 +1,4 @@
-namespace DataAccess.Core.Models.Core
+namespace Data.Core.Models.Core
 {
     /// <summary>
     /// Represents a mapping between two versions of the same source code.

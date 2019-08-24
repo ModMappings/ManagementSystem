@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 
-namespace DataAccess.Core.Models.Core
+namespace Data.Core.Models.Core
 {
     /// <summary>
     /// Represents a user.

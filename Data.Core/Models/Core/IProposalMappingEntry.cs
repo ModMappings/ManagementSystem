@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DataAccess.Core.Models.Core
+namespace Data.Core.Models.Core
 {
     /// <summary>
     /// An interface that indicates that this object is not a committed change.

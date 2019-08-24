@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using DataAccess.Core.Models.Field;
-using DataAccess.Core.Models.Method;
+using Data.Core.Models.Field;
+using Data.Core.Models.Method;
 
-namespace DataAccess.Core.Models.Class
+namespace Data.Core.Models.Class
 {
     /// <summary>
     /// Represents a single class mapping within a project.

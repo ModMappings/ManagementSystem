@@ -1,7 +1,6 @@
-using System;
-using DataAccess.Core.Models.Core;
+using Data.Core.Models.Core;
 
-namespace DataAccess.Core.Models.Class
+namespace Data.Core.Models.Class
 {
     /// <summary>
     /// A single entry in the history of the mapping

@@ -1,6 +1,6 @@
-using DataAccess.Core.Models.Core;
+using Data.Core.Models.Core;
 
-namespace DataAccess.Core.Models.Class
+namespace Data.Core.Models.Class
 {
     /// <summary>
     /// A proposal for changing a class mapping.

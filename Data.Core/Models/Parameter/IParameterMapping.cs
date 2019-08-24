@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using DataAccess.Core.Models.Class;
-using DataAccess.Core.Models.Method;
+using Data.Core.Models.Method;
 
-namespace DataAccess.Core.Models.Parameter
+namespace Data.Core.Models.Parameter
 {
     /// <summary>
     /// Represents a single parameter mapping within a project.
