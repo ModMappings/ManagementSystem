@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using DataAccess.Core.Models.Field;
+using DataAccess.Core.Models.Method;
 
 namespace DataAccess.Core.Models.Class
 {
@@ -22,5 +24,12 @@ namespace DataAccess.Core.Models.Class
         /// The proposals made for the class.
         /// </summary>
         ICollection<IClassProposalMappingEntry> ProposalMappings { get; set; }
+
+        /// <summary>
+        /// The methods that are part of this class.
+        /// </summary>
+        ICollection<IMethodMapping> Methods { get; set; }
+
+        ICollection<IFieldMapping> Fields { get; set; }
     }
 }

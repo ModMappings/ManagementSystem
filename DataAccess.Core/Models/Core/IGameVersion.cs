@@ -1,6 +1,6 @@
 using System;
 
-namespace DataAccess.Core.Models
+namespace DataAccess.Core.Models.Core
 {
     /// <summary>
     /// Represents a single game version or a possible snapshot of a game version.
