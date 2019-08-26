@@ -6,4 +6,10 @@
         <RootNamespace>Data.Core</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+        <HintPath>..\..\..\..\..\usr\share\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.2.0\ref\netcoreapp2.2\System.ComponentModel.Annotations.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

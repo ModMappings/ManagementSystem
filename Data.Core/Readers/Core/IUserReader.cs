@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
@@ -6,20 +7,20 @@ namespace Data.Core.Readers.Core
 {
     public interface IUserReader
     {
-        Task<IUser> GetById { get; set; }
+        Task<User> GetById(Guid id);
 
-        Task<IUser> GetByName { get; set; }
+        Task<User> GetByName(string name);
 
-        Task<IQueryable<IUser>> AsQueryable();
+        Task<IQueryable<User>> AsQueryable();
 
-        Task<IQueryable<IUser>> GetAllEditers();
+        Task<IQueryable<User>> GetAllEditers();
 
-        Task<IQueryable<IUser>> GetAllReviewers();
+        Task<IQueryable<User>> GetAllReviewers();
 
-        Task<IQueryable<IUser>> GetAllCommitters();
+        Task<IQueryable<User>> GetAllCommitters();
 
-        Task<IQueryable<IUser>> GetAllReleasers();
+        Task<IQueryable<User>> GetAllReleasers();
 
-        Task<IQueryable<IUser>> GetAllGameVersionCreators();
+        Task<IQueryable<User>> GetAllGameVersionCreators();
     }
 }

@@ -4,7 +4,7 @@ using Data.Core.Readers.Core;
 namespace Data.Core.Writers.Core
 {
     public interface IGameVersionWriter
-        : IGameVersionReader, IWriter<IGameVersion>
+        : IGameVersionReader, IWriter<GameVersion>
     {
     }
 }

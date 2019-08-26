@@ -405,3 +405,10 @@ MigrationBackup/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+#
+#
+# Project specific.
+#
+#
+Data.EFCore/Context/Database/

@@ -7,20 +7,20 @@ namespace Data.Core.Readers.Core
 {
     public interface IReleaseReader
     {
-        Task<IRelease> GetById(Guid id);
+        Task<Release> GetById(Guid id);
 
-        Task<IRelease> GetByName(string name);
+        Task<Release> GetByName(string name);
 
-        Task<IQueryable<IRelease>> AsQueryable();
+        Task<IQueryable<Release>> AsQueryable();
 
-        Task<IQueryable<IRelease>> GetMadeBy(Guid userId);
+        Task<IQueryable<Release>> GetMadeBy(Guid userId);
 
-        Task<IQueryable<IRelease>> GetMadeBy(IUser user);
+        Task<IQueryable<Release>> GetMadeBy(User user);
 
-        Task<IQueryable<IRelease>> GetMadeOn(DateTime date);
+        Task<IQueryable<Release>> GetMadeOn(DateTime date);
 
-        Task<IQueryable<IGameVersion>> GetMadeForVersion(Guid id);
+        Task<IQueryable<Release>> GetMadeForVersion(Guid id);
 
-        Task<IQueryable<IGameVersion>> GetMadeForVersion(IGameVersion version);
+        Task<IQueryable<Release>> GetMadeForVersion(GameVersion version);
     }
 }

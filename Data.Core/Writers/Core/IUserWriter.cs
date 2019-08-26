@@ -4,7 +4,7 @@ using Data.Core.Readers.Core;
 namespace Data.Core.Writers.Core
 {
     public interface IUserWriter
-        : IUserReader, IWriter<IUser>
+        : IUserReader, IWriter<User>
     {
     }
 }

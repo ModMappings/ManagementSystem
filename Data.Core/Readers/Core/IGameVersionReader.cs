@@ -7,16 +7,16 @@ namespace Data.Core.Readers.Core
 {
     public interface IGameVersionReader
     {
-        Task<IGameVersion> GetById(Guid id);
+        Task<GameVersion> GetById(Guid id);
 
-        Task<IGameVersion> GetByName(string name);
+        Task<GameVersion> GetByName(string name);
 
-        Task<IQueryable<IGameVersion>> AsQueryable();
+        Task<IQueryable<GameVersion>> AsQueryable();
 
-        Task<IQueryable<IGameVersion>> GetAllReleases();
+        Task<IQueryable<GameVersion>> GetAllFullReleases();
 
-        Task<IQueryable<IGameVersion>> GetAllReleaseCandidates();
+        Task<IQueryable<GameVersion>> GetAllPreReleases();
 
-        Task<IQueryable<IGameVersion>> GetAllSnapshots();
+        Task<IQueryable<GameVersion>> GetAllSnapshots();
     }
 }

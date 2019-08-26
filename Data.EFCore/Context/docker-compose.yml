@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  postgres_image:
+    image: postgres:latest
+    ports:
+      - "5432"
+    environment:
+      POSTGRES_USER: "mcp-migrations"
+      POSTGRES_PASSWORD: "mcp-migrations"
+      POSTGRES_DB: "mcp"
