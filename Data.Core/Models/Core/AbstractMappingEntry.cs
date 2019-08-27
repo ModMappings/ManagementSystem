@@ -20,13 +20,7 @@ namespace Data.Core.Models.Core
         public TVersionedMapping VersionedMapping { get; set; }
 
         [Required]
-        public string InputMappingType { get; set; }
-
-        [Required]
         public string InputMapping { get; set; }
-
-        [Required]
-        public string OutputMappingType { get; set; }
 
         [Required]
         public string OutputMapping { get; set; }

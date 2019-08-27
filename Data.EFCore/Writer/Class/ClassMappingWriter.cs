@@ -146,13 +146,31 @@ namespace Data.EFCore.Writer.Class
             Guid? parentClassId = null;
             ClassCommittedMappingEntry targetMapping = null;
 
-            foreach (var classNameComponent in classNameComponents)
+            var nameComponentsList = classNameComponents.ToList();
+            foreach (var classNameComponent in nameComponentsList)
             {
                 targetMapping = await _context.ClassCommittedMappingEntries.FirstOrDefaultAsync(mapping =>
-                    mapping.Package == packageName &&
-                    mapping.Parent.Id == parentClassId &&
+                    mapping.VersionedMapping.Package == packageName &&
+                    mapping.VersionedMapping.Parent.Id == parentClassId &&
                     mapping.OutputMapping == classNameComponent &&
                     versionedMapping.CommittedMappings.Select(committedMapping => committedMapping.Id).Contains(mapping.Id));
+
+                parentClassId = targetMapping.VersionedMapping.Id;
+            }
+
+            if (targetMapping == null)
+            {
+                parentClassId = null;
+                foreach (var classNameComponent in nameComponentsList)
+                {
+                    targetMapping = await _context.ClassCommittedMappingEntries.FirstOrDefaultAsync(mapping =>
+                        mapping.VersionedMapping.Package == packageName &&
+                        mapping.VersionedMapping.Parent.Id == parentClassId &&
+                        mapping.InputMapping == classNameComponent &&
+                        versionedMapping.CommittedMappings.Select(committedMapping => committedMapping.Id).Contains(mapping.Id));
+
+                    parentClassId = targetMapping.Id;
+                }
             }
 
             if (targetMapping == null)

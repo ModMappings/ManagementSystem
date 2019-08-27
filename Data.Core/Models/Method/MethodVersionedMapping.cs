@@ -13,5 +13,7 @@ namespace Data.Core.Models.Method
         public ClassCommittedMappingEntry MemberOf { get; set; }
 
         public IQueryable<ParameterCommittedMappingEntry> Parameters { get; set; }
+
+        public bool IsStatic { get; set; }
     }
 }

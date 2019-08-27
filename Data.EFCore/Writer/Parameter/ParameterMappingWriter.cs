@@ -63,7 +63,7 @@ namespace Data.EFCore.Writer.Parameter
             return _context.ParameterMappings.Where(parameterMapping =>
                 parameterMapping.VersionedMappings.OrderByDescending(versionedMapping => versionedMapping.CreatedOn)
                     .FirstOrDefault().CommittedMappings
-                    .Any(committedMappings => committedMappings.OutputMapping == name));
+                    .Any(committedMapping => committedMapping.OutputMapping == name || committedMapping.InputMapping == name));
         }
 
         public async Task<IQueryable<ParameterMapping>> GetByMappingInVersion(string name, Guid versionId)
@@ -71,8 +71,8 @@ namespace Data.EFCore.Writer.Parameter
             return _context.ParameterMappings.Where(parameterMapping =>
                 parameterMapping.VersionedMappings.Any(versionedMapping =>
                     versionedMapping.GameVersion.Id == versionId &&
-                    versionedMapping.CommittedMappings.Any(committedMappings =>
-                        committedMappings.OutputMapping == name)));
+                    versionedMapping.CommittedMappings.Any(committedMapping =>
+                        committedMapping.OutputMapping == name || committedMapping.InputMapping == name)));
         }
 
         public async Task<IQueryable<ParameterMapping>> GetByMappingInVersion(string name, GameVersion gameVersion)
@@ -84,9 +84,9 @@ namespace Data.EFCore.Writer.Parameter
         {
             return _context.ParameterMappings.Where(parameterMapping =>
                 parameterMapping.VersionedMappings.Any(versionedMapping =>
-                    versionedMapping.CommittedMappings.Any(committedMappings =>
-                        committedMappings.OutputMapping == name &&
-                        committedMappings.Releases.Select(release => release.Id).Contains(releaseId))));
+                    versionedMapping.CommittedMappings.Any(committedMapping =>
+                        (committedMapping.OutputMapping == name || committedMapping.InputMapping == name) &&
+                        committedMapping.Releases.Select(release => release.Id).Contains(releaseId))));
         }
 
         public async Task<IQueryable<ParameterMapping>> GetByMappingInRelease(string name, Release release)

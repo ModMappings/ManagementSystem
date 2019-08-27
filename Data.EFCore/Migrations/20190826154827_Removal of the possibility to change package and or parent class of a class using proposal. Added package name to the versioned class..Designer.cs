@@ -3,15 +3,17 @@ using System;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
     [DbContext(typeof(MCPContext))]
-    partial class MCPContextModelSnapshot : ModelSnapshot
+    [Migration("20190826154827_Removal of the possibility to change package and or parent class of a class using proposal. Added package name to the versioned class.")]
+    partial class RemovalofthepossibilitytochangepackageandorparentclassofaclassusingproposalAddedpackagenametotheversionedclass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -390,6 +392,8 @@ namespace Data.EFCore.Migrations
                     b.Property<string>("InputMapping")
                         .IsRequired();
 
+                    b.Property<bool>("IsStatic");
+
                     b.Property<string>("OutputMapping")
                         .IsRequired();
 
@@ -430,6 +434,8 @@ namespace Data.EFCore.Migrations
                     b.Property<bool>("IsOpen");
 
                     b.Property<bool>("IsPublicVote");
+
+                    b.Property<bool>("IsStatic");
 
                     b.Property<bool?>("Merged");
 
@@ -487,8 +493,6 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("GameVersionId");
 
-                    b.Property<bool>("IsStatic");
-
                     b.Property<Guid>("MappingId");
 
                     b.Property<Guid>("MemberOfId");
@@ -510,6 +514,8 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Index");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -551,6 +557,8 @@ namespace Data.EFCore.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<int>("Index");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -615,11 +623,9 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("GameVersionId");
 
-                    b.Property<int>("Index");
-
                     b.Property<Guid>("MappingId");
 
-                    b.Property<Guid>("ParameterOfId");
+                    b.Property<Guid?>("ParameterOfId");
 
                     b.HasKey("Id");
 
@@ -969,8 +975,7 @@ namespace Data.EFCore.Migrations
 
                     b.HasOne("Data.Core.Models.Method.MethodCommittedMappingEntry", "ParameterOf")
                         .WithMany()
-                        .HasForeignKey("ParameterOfId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParameterOfId");
                 });
 #pragma warning restore 612, 618
         }

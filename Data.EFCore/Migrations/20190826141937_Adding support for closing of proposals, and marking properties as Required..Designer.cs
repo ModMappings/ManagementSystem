@@ -3,15 +3,17 @@ using System;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
     [DbContext(typeof(MCPContext))]
-    partial class MCPContextModelSnapshot : ModelSnapshot
+    [Migration("20190826141937_Adding support for closing of proposals, and marking properties as Required.")]
+    partial class AddingsupportforclosingofproposalsandmarkingpropertiesasRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +32,20 @@ namespace Data.EFCore.Migrations
                     b.Property<string>("OutputMapping")
                         .IsRequired();
 
+                    b.Property<string>("Package")
+                        .IsRequired();
+
+                    b.Property<Guid?>("ParentId");
+
+                    b.Property<Guid>("ProposalId");
+
                     b.Property<Guid>("VersionedMappingId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("ProposalId");
 
                     b.HasIndex("VersionedMappingId");
 
@@ -54,12 +67,12 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClosedById");
-
-                    b.Property<DateTime?>("ClosedOn");
-
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<Guid?>("CommittedById");
+
+                    b.Property<DateTime?>("CommittedOn");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -67,10 +80,6 @@ namespace Data.EFCore.Migrations
                     b.Property<bool>("IsOpen");
 
                     b.Property<bool>("IsPublicVote");
-
-                    b.Property<bool?>("Merged");
-
-                    b.Property<Guid?>("MergedWithId");
 
                     b.Property<string>("OutputMapping")
                         .IsRequired();
@@ -83,10 +92,7 @@ namespace Data.EFCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClosedById");
-
-                    b.HasIndex("MergedWithId")
-                        .IsUnique();
+                    b.HasIndex("CommittedById");
 
                     b.HasIndex("ProposedById");
 
@@ -126,10 +132,6 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("MappingId");
 
-                    b.Property<string>("Package");
-
-                    b.Property<Guid?>("ParentId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -137,8 +139,6 @@ namespace Data.EFCore.Migrations
                     b.HasIndex("GameVersionId");
 
                     b.HasIndex("MappingId");
-
-                    b.HasIndex("ParentId");
 
                     b.ToTable("ClassVersionedMappings");
                 });
@@ -271,9 +271,13 @@ namespace Data.EFCore.Migrations
                     b.Property<string>("OutputMapping")
                         .IsRequired();
 
+                    b.Property<Guid>("ProposalId");
+
                     b.Property<Guid>("VersionedMappingId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProposalId");
 
                     b.HasIndex("VersionedMappingId");
 
@@ -295,12 +299,12 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClosedById");
-
-                    b.Property<DateTime?>("ClosedOn");
-
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<Guid?>("CommittedById");
+
+                    b.Property<DateTime?>("CommittedOn");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -308,10 +312,6 @@ namespace Data.EFCore.Migrations
                     b.Property<bool>("IsOpen");
 
                     b.Property<bool>("IsPublicVote");
-
-                    b.Property<bool?>("Merged");
-
-                    b.Property<Guid?>("MergedWithId");
 
                     b.Property<string>("OutputMapping")
                         .IsRequired();
@@ -324,10 +324,7 @@ namespace Data.EFCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClosedById");
-
-                    b.HasIndex("MergedWithId")
-                        .IsUnique();
+                    b.HasIndex("CommittedById");
 
                     b.HasIndex("ProposedById");
 
@@ -390,12 +387,18 @@ namespace Data.EFCore.Migrations
                     b.Property<string>("InputMapping")
                         .IsRequired();
 
+                    b.Property<bool>("IsStatic");
+
                     b.Property<string>("OutputMapping")
                         .IsRequired();
+
+                    b.Property<Guid>("ProposalId");
 
                     b.Property<Guid>("VersionedMappingId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProposalId");
 
                     b.HasIndex("VersionedMappingId");
 
@@ -417,12 +420,12 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClosedById");
-
-                    b.Property<DateTime?>("ClosedOn");
-
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<Guid?>("CommittedById");
+
+                    b.Property<DateTime?>("CommittedOn");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -431,9 +434,7 @@ namespace Data.EFCore.Migrations
 
                     b.Property<bool>("IsPublicVote");
 
-                    b.Property<bool?>("Merged");
-
-                    b.Property<Guid?>("MergedWithId");
+                    b.Property<bool>("IsStatic");
 
                     b.Property<string>("OutputMapping")
                         .IsRequired();
@@ -446,10 +447,7 @@ namespace Data.EFCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClosedById");
-
-                    b.HasIndex("MergedWithId")
-                        .IsUnique();
+                    b.HasIndex("CommittedById");
 
                     b.HasIndex("ProposedById");
 
@@ -487,8 +485,6 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("GameVersionId");
 
-                    b.Property<bool>("IsStatic");
-
                     b.Property<Guid>("MappingId");
 
                     b.Property<Guid>("MemberOfId");
@@ -511,6 +507,8 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("Index");
+
                     b.Property<string>("InputMapping")
                         .IsRequired();
 
@@ -519,11 +517,15 @@ namespace Data.EFCore.Migrations
                     b.Property<string>("OutputMapping")
                         .IsRequired();
 
+                    b.Property<Guid>("ProposalId");
+
                     b.Property<Guid>("VersionedMappingId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MethodVersionedMappingId");
+
+                    b.HasIndex("ProposalId");
 
                     b.HasIndex("VersionedMappingId");
 
@@ -545,12 +547,14 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClosedById");
-
-                    b.Property<DateTime?>("ClosedOn");
-
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<Guid?>("CommittedById");
+
+                    b.Property<DateTime?>("CommittedOn");
+
+                    b.Property<int>("Index");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -558,10 +562,6 @@ namespace Data.EFCore.Migrations
                     b.Property<bool>("IsOpen");
 
                     b.Property<bool>("IsPublicVote");
-
-                    b.Property<bool?>("Merged");
-
-                    b.Property<Guid?>("MergedWithId");
 
                     b.Property<string>("OutputMapping")
                         .IsRequired();
@@ -574,10 +574,7 @@ namespace Data.EFCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClosedById");
-
-                    b.HasIndex("MergedWithId")
-                        .IsUnique();
+                    b.HasIndex("CommittedById");
 
                     b.HasIndex("ProposedById");
 
@@ -615,11 +612,9 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("GameVersionId");
 
-                    b.Property<int>("Index");
-
                     b.Property<Guid>("MappingId");
 
-                    b.Property<Guid>("ParameterOfId");
+                    b.Property<Guid?>("ParameterOfId");
 
                     b.HasKey("Id");
 
@@ -636,6 +631,15 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Class.ClassCommittedMappingEntry", b =>
                 {
+                    b.HasOne("Data.Core.Models.Class.ClassCommittedMappingEntry", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
+
+                    b.HasOne("Data.Core.Models.Class.ClassProposalMappingEntry", "Proposal")
+                        .WithMany()
+                        .HasForeignKey("ProposalId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "VersionedMapping")
                         .WithMany("CommittedMappings")
                         .HasForeignKey("VersionedMappingId")
@@ -644,13 +648,9 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Class.ClassProposalMappingEntry", b =>
                 {
-                    b.HasOne("Data.Core.Models.Core.User", "ClosedBy")
+                    b.HasOne("Data.Core.Models.Core.User", "CommittedBy")
                         .WithMany()
-                        .HasForeignKey("ClosedById");
-
-                    b.HasOne("Data.Core.Models.Class.ClassCommittedMappingEntry", "MergedWith")
-                        .WithOne("Proposal")
-                        .HasForeignKey("Data.Core.Models.Class.ClassProposalMappingEntry", "MergedWithId");
+                        .HasForeignKey("CommittedById");
 
                     b.HasOne("Data.Core.Models.Core.User", "ProposedBy")
                         .WithMany()
@@ -692,10 +692,6 @@ namespace Data.EFCore.Migrations
                         .WithMany("VersionedMappings")
                         .HasForeignKey("MappingId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("Data.Core.Models.Core.GameVersion", b =>
@@ -776,6 +772,11 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Field.FieldCommittedMappingEntry", b =>
                 {
+                    b.HasOne("Data.Core.Models.Field.FieldProposalMappingEntry", "Proposal")
+                        .WithMany()
+                        .HasForeignKey("ProposalId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Data.Core.Models.Field.FieldVersionedMapping", "VersionedMapping")
                         .WithMany("CommittedMappings")
                         .HasForeignKey("VersionedMappingId")
@@ -784,13 +785,9 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Field.FieldProposalMappingEntry", b =>
                 {
-                    b.HasOne("Data.Core.Models.Core.User", "ClosedBy")
+                    b.HasOne("Data.Core.Models.Core.User", "CommittedBy")
                         .WithMany()
-                        .HasForeignKey("ClosedById");
-
-                    b.HasOne("Data.Core.Models.Field.FieldCommittedMappingEntry", "MergedWith")
-                        .WithOne("Proposal")
-                        .HasForeignKey("Data.Core.Models.Field.FieldProposalMappingEntry", "MergedWithId");
+                        .HasForeignKey("CommittedById");
 
                     b.HasOne("Data.Core.Models.Core.User", "ProposedBy")
                         .WithMany()
@@ -841,6 +838,11 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Method.MethodCommittedMappingEntry", b =>
                 {
+                    b.HasOne("Data.Core.Models.Method.MethodProposalMappingEntry", "Proposal")
+                        .WithMany()
+                        .HasForeignKey("ProposalId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Data.Core.Models.Method.MethodVersionedMapping", "VersionedMapping")
                         .WithMany("CommittedMappings")
                         .HasForeignKey("VersionedMappingId")
@@ -849,13 +851,9 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Method.MethodProposalMappingEntry", b =>
                 {
-                    b.HasOne("Data.Core.Models.Core.User", "ClosedBy")
+                    b.HasOne("Data.Core.Models.Core.User", "CommittedBy")
                         .WithMany()
-                        .HasForeignKey("ClosedById");
-
-                    b.HasOne("Data.Core.Models.Method.MethodCommittedMappingEntry", "MergedWith")
-                        .WithOne("Proposal")
-                        .HasForeignKey("Data.Core.Models.Method.MethodProposalMappingEntry", "MergedWithId");
+                        .HasForeignKey("CommittedById");
 
                     b.HasOne("Data.Core.Models.Core.User", "ProposedBy")
                         .WithMany()
@@ -910,6 +908,11 @@ namespace Data.EFCore.Migrations
                         .WithMany("Parameters")
                         .HasForeignKey("MethodVersionedMappingId");
 
+                    b.HasOne("Data.Core.Models.Parameter.ParameterProposalMappingEntry", "Proposal")
+                        .WithMany()
+                        .HasForeignKey("ProposalId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Data.Core.Models.Parameter.ParameterVersionedMapping", "VersionedMapping")
                         .WithMany("CommittedMappings")
                         .HasForeignKey("VersionedMappingId")
@@ -918,13 +921,9 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Parameter.ParameterProposalMappingEntry", b =>
                 {
-                    b.HasOne("Data.Core.Models.Core.User", "ClosedBy")
+                    b.HasOne("Data.Core.Models.Core.User", "CommittedBy")
                         .WithMany()
-                        .HasForeignKey("ClosedById");
-
-                    b.HasOne("Data.Core.Models.Parameter.ParameterCommittedMappingEntry", "MergedWith")
-                        .WithOne("Proposal")
-                        .HasForeignKey("Data.Core.Models.Parameter.ParameterProposalMappingEntry", "MergedWithId");
+                        .HasForeignKey("CommittedById");
 
                     b.HasOne("Data.Core.Models.Core.User", "ProposedBy")
                         .WithMany()
@@ -969,8 +968,7 @@ namespace Data.EFCore.Migrations
 
                     b.HasOne("Data.Core.Models.Method.MethodCommittedMappingEntry", "ParameterOf")
                         .WithMany()
-                        .HasForeignKey("ParameterOfId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParameterOfId");
                 });
 #pragma warning restore 612, 618
         }

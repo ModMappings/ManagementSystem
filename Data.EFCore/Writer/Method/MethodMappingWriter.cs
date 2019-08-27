@@ -62,27 +62,27 @@ namespace Data.EFCore.Writer.Method
             return _context.MethodMappings.Where(methodMapping =>
                 methodMapping.VersionedMappings.OrderByDescending(versionedMapping => versionedMapping.CreatedOn)
                     .FirstOrDefault().CommittedMappings
-                    .Any(committedMapping => committedMapping.OutputMapping == name));
+                    .Any(committedMapping => committedMapping.OutputMapping == name || committedMapping.InputMapping == name));
         }
 
         public async Task<IQueryable<MethodMapping>> GetByMappingInVersion(string name, Guid versionId)
         {
             return _context.MethodMappings.Where(mapping => mapping.VersionedMappings.Any(versionMapping =>
                 versionMapping.GameVersion.Id == versionId &&
-                versionMapping.CommittedMappings.Any(committedMapping => committedMapping.OutputMapping == name)));
+                versionMapping.CommittedMappings.Any(committedMapping => committedMapping.OutputMapping == name || committedMapping.InputMapping == name)));
         }
 
         public async Task<IQueryable<MethodMapping>> GetByMappingInVersion(string name, GameVersion gameVersion)
         {
             return _context.MethodMappings.Where(mapping => mapping.VersionedMappings.Any(versionMapping =>
                 versionMapping.GameVersion.Id == gameVersion.Id &&
-                versionMapping.CommittedMappings.Any(committedMapping => committedMapping.OutputMapping == name)));
+                versionMapping.CommittedMappings.Any(committedMapping => committedMapping.OutputMapping == name || committedMapping.InputMapping == name)));
         }
 
         public async Task<IQueryable<MethodMapping>> GetByMappingInRelease(string name, Guid releaseId)
         {
             return _context.MethodMappings.Where(mapping => mapping.VersionedMappings.Any(versionMapping =>
-                versionMapping.CommittedMappings.Any(committedMapping => committedMapping.OutputMapping == name &&
+                versionMapping.CommittedMappings.Any(committedMapping => (committedMapping.OutputMapping == name || committedMapping.InputMapping == name) &&
                                                                          committedMapping.Releases.Select(release => release.Id)
                                                                              .Contains(releaseId))));
         }
@@ -90,7 +90,7 @@ namespace Data.EFCore.Writer.Method
         public async Task<IQueryable<MethodMapping>> GetByMappingInRelease(string name, Release release)
         {
             return _context.MethodMappings.Where(mapping => mapping.VersionedMappings.Any(versionMapping =>
-                versionMapping.CommittedMappings.Any(committedMapping => committedMapping.OutputMapping == name &&
+                versionMapping.CommittedMappings.Any(committedMapping => (committedMapping.OutputMapping == name || committedMapping.InputMapping == name) &&
                                                                          committedMapping.Releases
                                                                              .Contains(release))));
         }

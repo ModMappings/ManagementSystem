@@ -3,15 +3,17 @@ using System;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
     [DbContext(typeof(MCPContext))]
-    partial class MCPContextModelSnapshot : ModelSnapshot
+    [Migration("20190826144220_Adding a link to the committed entry to use for lookup after a proposal was merged.")]
+    partial class Addingalinktothecommittedentrytouseforlookupafteraproposalwasmerged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +32,16 @@ namespace Data.EFCore.Migrations
                     b.Property<string>("OutputMapping")
                         .IsRequired();
 
+                    b.Property<string>("Package")
+                        .IsRequired();
+
+                    b.Property<Guid?>("ParentId");
+
                     b.Property<Guid>("VersionedMappingId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
 
                     b.HasIndex("VersionedMappingId");
 
@@ -126,10 +135,6 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("MappingId");
 
-                    b.Property<string>("Package");
-
-                    b.Property<Guid?>("ParentId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -137,8 +142,6 @@ namespace Data.EFCore.Migrations
                     b.HasIndex("GameVersionId");
 
                     b.HasIndex("MappingId");
-
-                    b.HasIndex("ParentId");
 
                     b.ToTable("ClassVersionedMappings");
                 });
@@ -390,6 +393,8 @@ namespace Data.EFCore.Migrations
                     b.Property<string>("InputMapping")
                         .IsRequired();
 
+                    b.Property<bool>("IsStatic");
+
                     b.Property<string>("OutputMapping")
                         .IsRequired();
 
@@ -430,6 +435,8 @@ namespace Data.EFCore.Migrations
                     b.Property<bool>("IsOpen");
 
                     b.Property<bool>("IsPublicVote");
+
+                    b.Property<bool>("IsStatic");
 
                     b.Property<bool?>("Merged");
 
@@ -487,8 +494,6 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("GameVersionId");
 
-                    b.Property<bool>("IsStatic");
-
                     b.Property<Guid>("MappingId");
 
                     b.Property<Guid>("MemberOfId");
@@ -510,6 +515,8 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Index");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -551,6 +558,8 @@ namespace Data.EFCore.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<int>("Index");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -615,11 +624,9 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("GameVersionId");
 
-                    b.Property<int>("Index");
-
                     b.Property<Guid>("MappingId");
 
-                    b.Property<Guid>("ParameterOfId");
+                    b.Property<Guid?>("ParameterOfId");
 
                     b.HasKey("Id");
 
@@ -636,6 +643,10 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Class.ClassCommittedMappingEntry", b =>
                 {
+                    b.HasOne("Data.Core.Models.Class.ClassCommittedMappingEntry", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
+
                     b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "VersionedMapping")
                         .WithMany("CommittedMappings")
                         .HasForeignKey("VersionedMappingId")
@@ -692,10 +703,6 @@ namespace Data.EFCore.Migrations
                         .WithMany("VersionedMappings")
                         .HasForeignKey("MappingId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("Data.Core.Models.Core.GameVersion", b =>
@@ -969,8 +976,7 @@ namespace Data.EFCore.Migrations
 
                     b.HasOne("Data.Core.Models.Method.MethodCommittedMappingEntry", "ParameterOf")
                         .WithMany()
-                        .HasForeignKey("ParameterOfId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParameterOfId");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Data.Core.Models.Core
@@ -18,6 +19,10 @@ namespace Data.Core.Models.Core
         [Required]
         public DateTime ProposedOn { get; set; }
 
+        [Required]
+        public bool IsOpen { get; set; }
+
+        [Required]
         public bool IsPublicVote { get; set; }
 
         public IQueryable<User> VotedFor { get; set; }
@@ -27,8 +32,15 @@ namespace Data.Core.Models.Core
         [Required]
         public string Comment { get; set; }
 
-        public User CommittedBy { get; set; }
+        public User ClosedBy { get; set; }
 
-        public DateTime CommittedOn { get; set; }
+        public DateTime? ClosedOn { get; set; }
+
+        public bool? Merged { get; set; }
+
+        public Guid? MergedWithId { get; set; }
+
+        [ForeignKey("MergedWithId")]
+        public TCommittedEntry MergedWith { get; set; }
     }
 }
