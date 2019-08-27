@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace API.Model.View.Core
+namespace API.Model.Read.Core
 {
-    public class AbstractViewModel<TVersionedViewModel>
-        where TVersionedViewModel : AbstractVersionedViewModel
+    public class AbstractReadModel<TVersionedReadModel>
+        where TVersionedReadModel : AbstractVersionedReadModel
     {
         /// <summary>
         /// The id of the class.
@@ -19,6 +19,6 @@ namespace API.Model.View.Core
         /// <summary>
         /// The versioned view models.
         /// </summary>
-        public IEnumerable<TVersionedViewModel> Versioned { get; set; }
+        public IEnumerable<TVersionedReadModel> Versioned { get; set; }
     }
 }

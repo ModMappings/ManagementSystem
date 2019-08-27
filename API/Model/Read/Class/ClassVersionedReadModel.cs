@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using API.Model.View.Core;
+using API.Model.Read.Core;
 
-namespace API.Model.View.Class
+namespace API.Model.Read.Class
 {
     /// <summary>
     /// A versioned view model for classes.
     /// </summary>
-    public class ClassVersionedViewModel : AbstractVersionedViewModel
+    public class ClassVersionedReadModel : AbstractVersionedReadModel
     {
         /// <summary>
         /// The name of the package that the class is in.

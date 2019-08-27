@@ -1,12 +1,12 @@
 using System;
 using System.Globalization;
 
-namespace API.Model.View.Core
+namespace API.Model.Read.Core
 {
     /// <summary>
     /// Model that represents an already registered user.
     /// </summary>
-    public class UserViewModel
+    public class UserReadModel
     {
         /// <summary>
         /// The id of the user.

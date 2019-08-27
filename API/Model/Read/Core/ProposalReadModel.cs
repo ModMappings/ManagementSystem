@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 
-namespace API.Model.View.Class
+namespace API.Model.Read.Core
 {
     /// <summary>
     /// A view model for a proposal to change a mapping.
     /// </summary>
-    public class ProposalViewModel
+    public class ProposalReadModel
     {
         /// <summary>
         /// The id of the proposal.

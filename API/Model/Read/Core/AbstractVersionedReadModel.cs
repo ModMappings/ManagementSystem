@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using API.Model.View.Class;
+using API.Model.Read.Class;
 
-namespace API.Model.View.Core
+namespace API.Model.Read.Core
 {
     /// <summary>
     /// Abstract view model for a versioned type.
     /// </summary>
-    public class AbstractVersionedViewModel
+    public class AbstractVersionedReadModel
     {
         /// <summary>
         /// The id of the view model for the type that this is versioned for.
@@ -22,11 +22,11 @@ namespace API.Model.View.Core
         /// <summary>
         /// The latest mappings of all known game versions.
         /// </summary>
-        public IEnumerable<MappingViewModel> CurrentMappings { get; set; }
+        public IEnumerable<MappingReadModel> CurrentMappings { get; set; }
 
         /// <summary>
         /// The proposals made for this versioned view model.
         /// </summary>
-        public IEnumerable<ProposalViewModel> Proposals { get; set; }
+        public IEnumerable<ProposalReadModel> Proposals { get; set; }
     }
 }

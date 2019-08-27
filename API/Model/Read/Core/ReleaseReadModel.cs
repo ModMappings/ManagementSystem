@@ -1,11 +1,11 @@
 using System;
 
-namespace API.Model.View.Core
+namespace API.Model.Read.Core
 {
     /// <summary>
     /// Model that represents a release.
     /// </summary>
-    public class ReleaseViewModel
+    public class ReleaseReadModel
     {
         /// <summary>
         /// The id of the release.

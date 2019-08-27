@@ -1,8 +1,8 @@
 using System;
 
-namespace API.Model.View.Core
+namespace API.Model.Read.Core
 {
-    public class GameVersionViewModel
+    public class GameVersionReadModel
     {
         /// <summary>
         /// The id of the game version.

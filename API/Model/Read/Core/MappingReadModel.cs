@@ -1,8 +1,8 @@
 using System;
 
-namespace API.Model.View.Core
+namespace API.Model.Read.Core
 {
-    public class MappingViewModel
+    public class MappingReadModel
     {
         public string In { get; set; }
 
