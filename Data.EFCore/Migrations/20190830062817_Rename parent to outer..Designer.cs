@@ -3,15 +3,17 @@ using System;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
     [DbContext(typeof(MCPContext))]
-    partial class MCPContextModelSnapshot : ModelSnapshot
+    [Migration("20190830062817_Rename parent to outer.")]
+    partial class Renameparenttoouter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,8 +45,6 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Documentation");
 
                     b.HasKey("Id");
 
@@ -287,8 +287,6 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Documentation");
-
                     b.HasKey("Id");
 
                     b.ToTable("FieldMappings");
@@ -410,8 +408,6 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Documentation");
 
                     b.HasKey("Id");
 
@@ -542,8 +538,6 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Documentation");
 
                     b.HasKey("Id");
 
@@ -704,7 +698,7 @@ namespace Data.EFCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "Outer")
-                        .WithMany("InheritsFrom")
+                        .WithMany()
                         .HasForeignKey("OuterId");
                 });
 

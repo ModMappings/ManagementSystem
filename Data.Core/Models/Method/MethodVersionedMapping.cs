@@ -15,5 +15,7 @@ namespace Data.Core.Models.Method
         public IQueryable<ParameterCommittedMappingEntry> Parameters { get; set; }
 
         public bool IsStatic { get; set; }
+
+        public string Descriptor { get; set; }
     }
 }

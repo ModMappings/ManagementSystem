@@ -3,15 +3,17 @@ using System;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
     [DbContext(typeof(MCPContext))]
-    partial class MCPContextModelSnapshot : ModelSnapshot
+    [Migration("20190830055540_Add descriptor support to a given version.")]
+    partial class Adddescriptorsupporttoagivenversion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,8 +45,6 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Documentation");
 
                     b.HasKey("Id");
 
@@ -128,9 +128,9 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("MappingId");
 
-                    b.Property<Guid?>("OuterId");
-
                     b.Property<string>("Package");
+
+                    b.Property<Guid?>("ParentId");
 
                     b.HasKey("Id");
 
@@ -140,7 +140,7 @@ namespace Data.EFCore.Migrations
 
                     b.HasIndex("MappingId");
 
-                    b.HasIndex("OuterId");
+                    b.HasIndex("ParentId");
 
                     b.ToTable("ClassVersionedMappings");
                 });
@@ -287,8 +287,6 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Documentation");
-
                     b.HasKey("Id");
 
                     b.ToTable("FieldMappings");
@@ -410,8 +408,6 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Documentation");
 
                     b.HasKey("Id");
 
@@ -542,8 +538,6 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Documentation");
 
                     b.HasKey("Id");
 
@@ -703,9 +697,9 @@ namespace Data.EFCore.Migrations
                         .HasForeignKey("MappingId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "Outer")
-                        .WithMany("InheritsFrom")
-                        .HasForeignKey("OuterId");
+                    b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("Data.Core.Models.Core.GameVersion", b =>

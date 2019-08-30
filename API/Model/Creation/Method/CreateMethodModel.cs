@@ -35,6 +35,12 @@ namespace API.Model.Creation.Method
         public string Out { get; set; }
 
         /// <summary>
+        /// The descriptor of a method.
+        /// </summary>
+        [Required]
+        public string Descriptor { get; set; }
+
+        /// <summary>
         /// The id of the class that this method is part of.
         /// </summary>
         [Required]

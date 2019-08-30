@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace API.Model.Read.Core
@@ -7,12 +8,8 @@ namespace API.Model.Read.Core
     /// A view model for a proposal to change a mapping.
     /// </summary>
     public class ProposalReadModel
+        : MappingReadModel
     {
-        /// <summary>
-        /// The id of the proposal.
-        /// </summary>
-        public Guid Id { get; set; }
-
         /// <summary>
         /// The id of the type for which the proposal was made.
         /// </summary>
@@ -51,12 +48,12 @@ namespace API.Model.Read.Core
         /// <summary>
         /// A list of ids of users who voted for the proposal.
         /// </summary>
-        public IQueryable<Guid> VotedFor { get; set; }
+        public IEnumerable<Guid> VotedFor { get; set; }
 
         /// <summary>
         /// A list of ids of users who voted against the proposal.
         /// </summary>
-        public IQueryable<Guid> VotedAgainst { get; set; }
+        public IEnumerable<Guid> VotedAgainst { get; set; }
 
         /// <summary>
         /// The comment made to explain the proposal.
@@ -72,15 +69,5 @@ namespace API.Model.Read.Core
         /// The date and time when the proposal was closed.
         /// </summary>
         public DateTime? ClosedOn { get; set; }
-
-        /// <summary>
-        /// The current output of the mapping.
-        /// </summary>
-        public string CurrentOutput { get; set; }
-
-        /// <summary>
-        /// The proposed change to the mapping.
-        /// </summary>
-        public string NewOutput { get; set; }
     }
 }

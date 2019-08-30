@@ -151,7 +151,7 @@ namespace Data.EFCore.Writer.Class
             {
                 targetMapping = await _context.ClassCommittedMappingEntries.FirstOrDefaultAsync(mapping =>
                     mapping.VersionedMapping.Package == packageName &&
-                    mapping.VersionedMapping.Parent.Id == parentClassId &&
+                    mapping.VersionedMapping.Outer.Id == parentClassId &&
                     mapping.OutputMapping == classNameComponent &&
                     versionedMapping.CommittedMappings.Select(committedMapping => committedMapping.Id).Contains(mapping.Id));
 
@@ -165,7 +165,7 @@ namespace Data.EFCore.Writer.Class
                 {
                     targetMapping = await _context.ClassCommittedMappingEntries.FirstOrDefaultAsync(mapping =>
                         mapping.VersionedMapping.Package == packageName &&
-                        mapping.VersionedMapping.Parent.Id == parentClassId &&
+                        mapping.VersionedMapping.Outer.Id == parentClassId &&
                         mapping.InputMapping == classNameComponent &&
                         versionedMapping.CommittedMappings.Select(committedMapping => committedMapping.Id).Contains(mapping.Id));
 

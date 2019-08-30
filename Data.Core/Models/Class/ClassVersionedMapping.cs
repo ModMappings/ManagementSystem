@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Data.Core.Models.Core;
 
 namespace Data.Core.Models.Class
@@ -7,6 +9,8 @@ namespace Data.Core.Models.Class
     {
         public string Package { get; set; }
 
-        public ClassVersionedMapping Parent { get; set; }
+        public ClassVersionedMapping Outer { get; set; }
+
+        public IQueryable<ClassVersionedMapping> InheritsFrom { get; set; }
     }
 }

@@ -51,5 +51,16 @@ namespace Data.EFCore.Context
         public DbSet<ParameterProposalMappingEntry> ParameterProposalMappingEntries { get; set; }
 
         public DbSet<ParameterVersionedMapping> ParameterVersionedMappings { get; set; }
+
+        public void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GameVersion>()
+                .HasIndex(version => version.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Release>()
+                .HasIndex(release => release.Name)
+                .IsUnique();
+        }
     }
 }

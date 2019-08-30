@@ -10,6 +10,11 @@ namespace API.Model.Read.Core
     public class AbstractVersionedReadModel
     {
         /// <summary>
+        /// The id of the versioned view model.
+        /// </summary>
+        public Guid Id { get; set; }
+
+        /// <summary>
         /// The id of the view model for the type that this is versioned for.
         /// </summary>
         public Guid VersionedViewModelFor { get; set; }

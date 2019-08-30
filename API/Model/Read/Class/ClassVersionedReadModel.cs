@@ -18,5 +18,10 @@ namespace API.Model.Read.Class
         /// The id of the class that is the outer class of this class.
         /// </summary>
         public Guid? Outer { get; set; }
+
+        /// <summary>
+        /// The class this class inherits from.
+        /// </summary>
+        public IEnumerable<Guid> InheritsFrom { get; set; }
     }
 }

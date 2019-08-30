@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace API.Model.Read.Core
 {
+    /// <summary>
+    /// Abstract read model for core components.
+    /// </summary>
+    /// <typeparam name="TVersionedReadModel">The versioned read model.</typeparam>
     public class AbstractReadModel<TVersionedReadModel>
         where TVersionedReadModel : AbstractVersionedReadModel
     {
@@ -10,11 +14,6 @@ namespace API.Model.Read.Core
         /// The id of the class.
         /// </summary>
         public Guid Id { get; set; }
-
-        /// <summary>
-        /// The name of the class.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// The versioned view models.

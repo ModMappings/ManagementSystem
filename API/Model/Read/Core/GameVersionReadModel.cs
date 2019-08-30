@@ -2,6 +2,9 @@ using System;
 
 namespace API.Model.Read.Core
 {
+    /// <summary>
+    /// Read model for game versions.
+    /// </summary>
     public class GameVersionReadModel
     {
         /// <summary>
