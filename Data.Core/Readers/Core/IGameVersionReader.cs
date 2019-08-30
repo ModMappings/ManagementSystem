@@ -18,5 +18,7 @@ namespace Data.Core.Readers.Core
         Task<IQueryable<GameVersion>> GetAllPreReleases();
 
         Task<IQueryable<GameVersion>> GetAllSnapshots();
+
+        Task<GameVersion> GetLatest();
     }
 }

@@ -29,7 +29,7 @@ namespace API.Controllers
         /// </summary>
         private readonly IClassMappingWriter _classReaderOrWriter;
 
-        private readonly IReleaseReader _releaseReader;
+        private readonly IGameVersionReader _gameVersionReader;
 
         /// <summary>
         /// The user resolving service.
@@ -41,13 +41,13 @@ namespace API.Controllers
         /// Called via DI.
         /// </summary>
         /// <param name="classReaderOrWriter">The classReaderOrWriter for class mappings.</param>
-        /// <param name="releaseReader">The reader for releases.</param>
+        /// <param name="gameVersionReader">The reader for game versions.</param>
         /// <param name="userResolvingService">The service used to resolve the user.</param>
-        public ClassController(IClassMappingWriter classReaderOrWriter, IReleaseReader releaseReader, IUserResolvingService userResolvingService)
+        public ClassController(IClassMappingWriter classReaderOrWriter, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService)
         {
             _classReaderOrWriter = classReaderOrWriter;
             _userResolvingService = userResolvingService;
-            _releaseReader = releaseReader;
+            _gameVersionReader = gameVersionReader;
         }
 
         /// <summary>
@@ -461,7 +461,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Add([FromBody] CreateClassModel mapping)
         {
-            var currentRelease = await _releaseReader.GetLatest();
+            var currentRelease = await _gameVersionReader.GetLatest();
             if (currentRelease == null)
                 return BadRequest();
 
