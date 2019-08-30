@@ -12,5 +12,7 @@ namespace Data.Core.Writers.Core
         where TCommittedEntry : AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
         where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
     {
+
+        Task AddProposal(TProposalEntry proposalEntry);
     }
 }

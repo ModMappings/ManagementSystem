@@ -25,5 +25,11 @@ namespace Data.Core.Readers.Core
         Task<TMapping> GetByMappingInRelease(string name, Guid releaseId);
 
         Task<TMapping> GetByMappingInRelease(string name, Release release);
+
+        Task<TVersionedMapping> GetVersionedMapping(Guid id);
+
+        Task<TProposalEntry> GetProposal(Guid proposalEntry);
+
+        Task<TCommittedEntry> GetCommittedEntry(Guid committedEntryId);
     }
 }

@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace Data.Core.Models.Core
 {
@@ -25,9 +25,9 @@ namespace Data.Core.Models.Core
         [Required]
         public bool IsPublicVote { get; set; }
 
-        public IQueryable<User> VotedFor { get; set; }
+        public List<User> VotedFor { get; set; }
 
-        public IQueryable<User> VotedAgainst { get; set; }
+        public List<User> VotedAgainst { get; set; }
 
         [Required]
         public string Comment { get; set; }

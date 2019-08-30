@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -15,6 +16,6 @@ namespace Data.Core.Models.Core
     {
         [Required]
         public TProposalEntry Proposal { get; set; }
-        public IQueryable<Release> Releases { get; set; }
+        public List<Release> Releases { get; set; }
     }
 }

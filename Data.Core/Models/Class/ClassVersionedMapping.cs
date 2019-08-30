@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Data.Core.Models.Core;
 
@@ -11,6 +12,6 @@ namespace Data.Core.Models.Class
 
         public ClassVersionedMapping Outer { get; set; }
 
-        public IQueryable<ClassVersionedMapping> InheritsFrom { get; set; }
+        public List<ClassVersionedMapping> InheritsFrom { get; set; }
     }
 }

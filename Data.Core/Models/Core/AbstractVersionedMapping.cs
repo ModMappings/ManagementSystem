@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -27,8 +28,8 @@ namespace Data.Core.Models.Core
         [Required]
         public TMapping Mapping { get; set; }
 
-        public IQueryable<TCommittedEntry> CommittedMappings { get; set; }
+        public List<TCommittedEntry> CommittedMappings { get; set; }
 
-        public IQueryable<TProposalEntry> ProposalMappings { get; set; }
+        public List<TProposalEntry> ProposalMappings { get; set; }
     }
 }

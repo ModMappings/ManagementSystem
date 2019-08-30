@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Model.Creation.Class;
+using API.Model.Creation.Core;
 using API.Model.Read.Class;
 using API.Model.Read.Core;
+using API.Services.Core;
 using Data.Core.Models.Class;
 using Data.Core.Models.Core;
 using Data.Core.Writers.Class;
@@ -26,13 +29,20 @@ namespace API.Controllers
         private readonly IClassMappingWriter _writer;
 
         /// <summary>
+        /// The user resolving service.
+        /// </summary>
+        private readonly IUserResolvingService _userResolvingService;
+
+        /// <summary>
         /// Creates a new controller.
         /// Called via DI.
         /// </summary>
         /// <param name="writer">The writer for class mappings.</param>
-        public ClassController(IClassMappingWriter writer)
+        /// <param name="userResolvingService">The service used to resolve the user.</param>
+        public ClassController(IClassMappingWriter writer, IUserResolvingService userResolvingService)
         {
             _writer = writer;
+            _userResolvingService = userResolvingService;
         }
 
         /// <summary>
@@ -46,12 +56,12 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassReadModel>> GetById(Guid id)
         {
-            var _dbModel = await _writer.GetById(id);
+            var dbModel = await _writer.GetById(id);
 
-            if (_dbModel == null)
+            if (dbModel == null)
                 return NotFound();
 
-            var readModel = ConvertClassModelToReadModel(_dbModel);
+            var readModel = ConvertClassModelToReadModel(dbModel);
 
             return Json(readModel);
         }
@@ -67,9 +77,9 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IQueryable<ClassReadModel>>> AsMappingQueryable(int pageSize, int pageIndex)
         {
-            var _dbModels = (await _writer.AsMappingQueryable()).Skip(pageSize * pageIndex).Take(pageSize);
+            var dbModels = (await _writer.AsMappingQueryable()).Skip(pageSize * pageIndex).Take(pageSize);
 
-            var readModels = _dbModels.ToList().Select(ConvertClassModelToReadModel);
+            var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel);
 
             return Json(readModels);
         }
@@ -96,9 +106,9 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByLatestRelease(int pageSize, int pageIndex)
         {
-            var _dbModels = await _writer.GetByLatestRelease();
+            var dbModels = await _writer.GetByLatestRelease();
 
-            var readModels = _dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
+            var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
 
             return Json(readModels);
         }
@@ -126,9 +136,9 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByRelease(Guid releaseId, int pageSize, int pageIndex)
         {
-            var _dbModels = await _writer.GetByRelease(releaseId);
+            var dbModels = await _writer.GetByRelease(releaseId);
 
-            var readModels = _dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
+            var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
 
             return Json(readModels);
         }
@@ -138,7 +148,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="releaseId">The id of the release for which the classes are being pulled.</param>
         /// <returns>The amount of classes that are part of the given release.</returns>
-        [HttpGet("release/count/{releaseId}", Name = "ByReleaseById")]
+        [HttpGet("release/count/{releaseId}", Name = "CountOfReleaseById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<int>> GetByReleaseCount(Guid releaseId)
         {
@@ -157,105 +167,296 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByRelease(string releaseName, int pageSize, int pageIndex)
         {
-            var _dbModels = await _writer.GetByRelease(releaseName);
+            var dbModels = await _writer.GetByRelease(releaseName);
 
-            var readModels = _dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
+            var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
 
             return Json(readModels);
         }
 
+        /// <summary>
+        /// Calculates the amount of classes that are part of the release with the given name.
+        /// </summary>
+        /// <param name="releaseName">The name of the release in question.</param>
+        /// <returns>The amount of classes that are part of the release.</returns>
+        [HttpGet("release/count/{releaseName}", Name = "CountOfReleaseByName")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<int>> GetByReleaseCount(string releaseName)
+        {
+            return Ok(await (await _writer.GetByRelease(releaseName)).CountAsync());
+        }
+
+        /// <summary>
+        /// Gets the class of the corresponding name in the latest mapping, for the latest MC version.
+        /// Returns 404 when no class is found.
+        /// </summary>
+        /// <param name="name">The name of the class in the current mapping as output. In the form: net.package.com.OutClassName#InnerClassName#TargetClassNameAsMostInnerClass</param>
+        /// <returns>The class model of the class with the name in question.</returns>
         [HttpGet("byMapping/latest/{name}", Name = "ByLatestMapping")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassReadModel>> GetByLatestMapping(string name)
         {
-            var _dbModels = await _writer.GetByLatestMapping(name);
+            var dbModels = await _writer.GetByLatestMapping(name);
 
-            if (_dbModels == null)
+            if (dbModels == null)
                 return NotFound();
 
-            var readModels = ConvertClassModelToReadModel(_dbModels);
+            var readModels = ConvertClassModelToReadModel(dbModels);
 
             return Json(readModels);
         }
 
-        [HttpGet("byMapping/version/{name}/{versionId}", Name = "ByMappingInVersionFromId")]
+        /// <summary>
+        /// Gets the class of the corresponding name in the latest mapping, for the given mc version.
+        /// Returns 404 when no class in the target version is found.
+        /// </summary>
+        /// <param name="name">The name of the class in the current mapping as output. In the form: net.package.com.OutClassName#InnerClassName#TargetClassNameAsMostInnerClass</param>
+        /// <param name="versionId">The id of the game version in which needs to be looked.</param>
+        /// <returns>The class model of the class with the name in question, in the requested version.</returns>
+        [HttpGet("mapping/version/{name}/{versionId}", Name = "ByMappingInVersionFromId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassReadModel>> GetByMappingInVersion(string name, Guid versionId)
         {
-            var _dbModels = await _writer.GetByMappingInVersion(name, versionId);
+            var dbModels = await _writer.GetByMappingInVersion(name, versionId);
 
-            if (_dbModels == null)
+            if (dbModels == null)
                 return NotFound();
 
-            var readModels = ConvertClassModelToReadModel(_dbModels);
+            var readModels = ConvertClassModelToReadModel(dbModels);
 
             return Json(readModels);
         }
 
-        [HttpGet("byMapping/version/{name}", Name = "ByMappingInVersionFromReadModel")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ClassReadModel>> GetByMappingInVersion(string name, [FromBody] GameVersionReadModel gameVersion)
-        {
-            return await GetByMappingInVersion(name, gameVersion.Id);
-        }
-
-        [HttpGet("byMapping/release/{name}/{releaseId}", Name = "ByMappingInReleaseFromId")]
+        /// <summary>
+        /// Gets the class of the corresponding name in the latest mapping, for the given release.
+        /// Returns 404 when no class in the target version is found.
+        /// </summary>
+        /// <param name="name">The name of the class in the current mapping as output. In the form: net.package.com.OutClassName#InnerClassName#TargetClassNameAsMostInnerClass</param>
+        /// <param name="releaseId">The id of the release in which needs to be looked.</param>
+        /// <returns>The class model of the class with the name in question, in the requested version.</returns>
+        [HttpGet("mapping/release/{name}/{releaseId}", Name = "ByMappingInReleaseFromId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassReadModel>> GetByMappingInRelease(string name, Guid releaseId)
         {
-            var _dbModels = await _writer.GetByMappingInRelease(name, releaseId);
+            var dbModels = await _writer.GetByMappingInRelease(name, releaseId);
 
-            if (_dbModels == null)
+            if (dbModels == null)
                 return NotFound();
 
-            var readModels = ConvertClassModelToReadModel(_dbModels);
+            var readModels = ConvertClassModelToReadModel(dbModels);
 
             return Json(readModels);
         }
 
-        [HttpGet("byMapping/release/{name}", Name = "ByMappingInReleaseFromViewModel")]
+        /// <summary>
+        /// Method used to create a new proposal.
+        /// </summary>
+        /// <param name="proposalModel">The model for the proposal.</param>
+        /// <returns>The result of the creation. Either 200 for successful or 400 for a bad request.</returns>
+        [HttpPost("propose", Name = "Propose")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ClassReadModel>> GetByMappingInRelease(string name, [FromBody] ReleaseReadModel release)
+        public async Task<ActionResult> Propose([FromBody] CreateProposalModel proposalModel)
         {
-            return await GetByMappingInRelease(name, release.Id);
+            var classVersionedEntry = await _writer.GetVersionedMapping(proposalModel.ProposedFor);
+            if (classVersionedEntry == null)
+                return NotFound(
+                    $"Their is no class mapping with a version entry with id: {proposalModel.ProposedFor}");
+
+            var user = await _userResolvingService.Get();
+            if (user == null)
+                return Unauthorized();
+
+            var initialVotedFor = new List<User> {user};
+            var initialVotedAgainst = new List<User>();
+
+            var proposalEntry = new ClassProposalMappingEntry
+            {
+                VersionedMapping = classVersionedEntry,
+                InputMapping = proposalModel.NewInput,
+                OutputMapping = proposalModel.NewOutput,
+                ProposedBy = user,
+                ProposedOn = DateTime.Now,
+                IsOpen = true,
+                IsPublicVote = proposalModel.IsPublicVote,
+                VotedFor = initialVotedAgainst,
+                VotedAgainst = initialVotedAgainst,
+                Comment = proposalModel.Comment,
+                ClosedBy = null,
+                ClosedOn = null,
+                Merged = null,
+                MergedWithId = null,
+                MergedWith = null
+            };
+
+            await this._writer.AddProposal(proposalEntry);
+            await this._writer.SaveChanges();
+
+            return CreatedAtAction("GetById", proposalEntry.VersionedMapping.Mapping.Id, proposalEntry);
         }
 
-        [HttpPost("/add")]
+        /// <summary>
+        /// Marks the current user as a person who voted for the proposal.
+        /// </summary>
+        /// <param name="proposalId">The id of the proposal for which is voted for.</param>
+        /// <returns>An http response code: 200-Ok, 400-Unknown or closed proposal, 401-Unauthorized user.</returns>
+        [HttpPost("proposal/vote/{proposalId}/for", Name = "VoteFor")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> VoteFor(Guid proposalId)
+        {
+            var currentProposal = await _writer.GetProposal(proposalId);
+            if (currentProposal == null)
+                return NotFound("No proposal with the given id exists.");
+
+            if (!currentProposal.IsOpen)
+                return BadRequest("Proposal is not open");
+
+            var user = await _userResolvingService.Get();
+            if (user == null)
+                return Unauthorized();
+
+            if (!currentProposal.IsPublicVote && user.CanReview)
+                return Unauthorized();
+
+            if (currentProposal.VotedFor.Contains(user))
+                return Conflict();
+
+            currentProposal.VotedAgainst.Remove(user);
+            currentProposal.VotedFor.Add(user);
+            await _writer.SaveChanges();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Marks the current user as a person who voted against the proposal.
+        /// </summary>
+        /// <param name="proposalId">The id of the proposal for which is voted against.</param>
+        /// <returns>An http response code: 200-Ok, 400-Unknown or closed proposal, 401-Unauthorized user.</returns>
+        [HttpPost("proposal/vote/{proposalId}/against", Name = "VoteAgainst")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> VoteAgainst(Guid proposalId)
+        {
+            var currentProposal = await _writer.GetProposal(proposalId);
+            if (currentProposal == null)
+                return NotFound("No proposal with the given id exists.");
+
+            if (!currentProposal.IsOpen)
+                return BadRequest("Proposal is not open");
+
+            var user = await _userResolvingService.Get();
+            if (user == null)
+                return Unauthorized();
+
+            if (!currentProposal.IsPublicVote && user.CanReview)
+                return Unauthorized();
+
+            if (currentProposal.VotedAgainst.Contains(user))
+                return Conflict();
+
+            currentProposal.VotedFor.Remove(user);
+            currentProposal.VotedAgainst.Add(user);
+            await _writer.SaveChanges();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Closes an open proposal.
+        /// </summary>
+        /// <param name="proposalId">The id of the proposal to close.</param>
+        /// <param name="merge">True to merge a proposal as a committed mapping, false when not.</param>
+        /// <returns>An http response code: 200-Ok proposal closed, 201-Created proposal merged, 400-Unknown or closed proposal, 401-Unauthorized user.</returns>
+        [HttpPost("proposal/close/{proposalId}", Name = "MergeOrClose")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult> Add([FromBody] ClassReadModel mapping)
+        public async Task<ActionResult> Close(Guid proposalId, bool merge)
+        {
+            var currentProposal = await _writer.GetProposal(proposalId);
+            if (currentProposal == null)
+                return NotFound("No proposal with the given id exists.");
+
+            if (!currentProposal.IsOpen)
+                return BadRequest("Proposal is not open");
+
+            var user = await _userResolvingService.Get();
+            if (user == null)
+                return Unauthorized();
+
+            if (!currentProposal.IsPublicVote && user.CanCommit)
+                return Unauthorized();
+
+            currentProposal.ClosedBy = user;
+            currentProposal.ClosedOn = DateTime.Now;
+            currentProposal.Merged = merge;
+
+            if (merge)
+            {
+                var newCommittedMapping = new ClassCommittedMappingEntry
+                {
+                    InputMapping = currentProposal.InputMapping,
+                    OutputMapping = currentProposal.OutputMapping,
+                    Proposal = currentProposal,
+                    Releases = new List<Release>(),
+                    VersionedMapping = currentProposal.VersionedMapping
+                };
+
+                currentProposal.VersionedMapping.CommittedMappings.Add(newCommittedMapping);
+                await _writer.SaveChanges();
+
+                return CreatedAtAction("GetById", newCommittedMapping.VersionedMapping.Mapping.Id, newCommittedMapping);
+            }
+
+            await _writer.SaveChanges();
+            return Ok();
+        }
+
+        [HttpGet("committed/detailed/{committedMappingId}", Name = "GetDetailedCommittedMapping")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ClassDetailedMappingReadModel>> Detailed(Guid committedMappingId)
+        {
+            var committedMapping = await _writer.GetCommittedEntry(committedMappingId);
+            if (committedMapping == null)
+                return NotFound("Unknown committed mapping with requested id.");
+
+            return Json(new ClassDetailedMappingReadModel
+            {
+                Id = committedMappingId,
+                In = committedMapping.InputMapping,
+                Out = committedMapping.OutputMapping,
+                Proposal = committedMapping.Proposal.Id,
+                Releases = committedMapping.Releases.Select(release => release.Id),
+                VersionedMapping = committedMapping.VersionedMapping.Id
+            });
+        }
+
+        [HttpPost("add")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult> Add([FromBody] CreateClassModel mapping)
         {
             //TODO: User auth
             throw new NotImplementedException();
         }
 
-        [HttpPost("/add/all")]
+        [HttpPost("add/all")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status206PartialContent)]
-        public async Task<ActionResult> AddAll([FromBody] IEnumerable<ClassReadModel> mapping)
+        public async Task<ActionResult> AddAll([FromBody] IEnumerable<CreateClassModel> mapping)
         {
             //TODO: User auth and handling logic.
-            throw new NotImplementedException();
-        }
-
-        [HttpPatch("/update")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult> Update([FromBody] ClassReadModel mapping)
-        {
-            //TODO: User auth
-            throw new NotImplementedException();
-        }
-
-        [HttpPatch("/update/all")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status206PartialContent)]
-        public async Task<ActionResult> UpdateAll([FromBody] IEnumerable<ClassReadModel> mapping)
-        {
-            //TODO: User auth
             throw new NotImplementedException();
         }
 

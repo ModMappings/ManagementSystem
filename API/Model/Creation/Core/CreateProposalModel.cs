@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
 
-namespace API.Model.Creation.Class
+namespace API.Model.Creation.Core
 {
     /// <summary>
     /// Model used to create a new proposal to edit mappings.
@@ -29,6 +28,11 @@ namespace API.Model.Creation.Class
         /// The comment made to explain the proposal.
         /// </summary>
         public string Comment { get; set; }
+
+        /// <summary>
+        /// The proposed change to the input mapping.
+        /// </summary>
+        public string NewInput { get; set; }
 
         /// <summary>
         /// The proposed change to the mapping.

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Data.Core.Models.Class;
@@ -12,7 +13,7 @@ namespace Data.Core.Models.Method
         [Required]
         public ClassCommittedMappingEntry MemberOf { get; set; }
 
-        public IQueryable<ParameterCommittedMappingEntry> Parameters { get; set; }
+        public List<ParameterCommittedMappingEntry> Parameters { get; set; }
 
         public bool IsStatic { get; set; }
 

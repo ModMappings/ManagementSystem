@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -27,12 +28,12 @@ namespace Data.Core.Models.Core
         [Required]
         public GameVersion GameVersion { get; set; }
 
-        public IQueryable<ClassReleaseMember> Classes { get; set; }
+        public List<ClassReleaseMember> Classes { get; set; }
 
-        public IQueryable<MethodReleaseMember> Methods { get; set; }
+        public List<MethodReleaseMember> Methods { get; set; }
 
-        public IQueryable<ParameterReleaseMember> Parameters { get; set; }
+        public List<ParameterReleaseMember> Parameters { get; set; }
 
-        public IQueryable<FieldReleaseMember> Fields { get; set; }
+        public List<FieldReleaseMember> Fields { get; set; }
     }
 }
