@@ -9,6 +9,7 @@ using API.Model.Read.Core;
 using API.Services.Core;
 using Data.Core.Models.Class;
 using Data.Core.Models.Core;
+using Data.Core.Readers.Core;
 using Data.Core.Writers.Class;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,11 @@ namespace API.Controllers
     public class ClassController : Controller
     {
         /// <summary>
-        /// The writer and as such also the reader for class mappings.
+        /// The classReaderOrWriter and as such also the reader for class mappings.
         /// </summary>
-        private readonly IClassMappingWriter _writer;
+        private readonly IClassMappingWriter _classReaderOrWriter;
+
+        private readonly IReleaseReader _releaseReader;
 
         /// <summary>
         /// The user resolving service.
@@ -37,12 +40,14 @@ namespace API.Controllers
         /// Creates a new controller.
         /// Called via DI.
         /// </summary>
-        /// <param name="writer">The writer for class mappings.</param>
+        /// <param name="classReaderOrWriter">The classReaderOrWriter for class mappings.</param>
+        /// <param name="releaseReader">The reader for releases.</param>
         /// <param name="userResolvingService">The service used to resolve the user.</param>
-        public ClassController(IClassMappingWriter writer, IUserResolvingService userResolvingService)
+        public ClassController(IClassMappingWriter classReaderOrWriter, IReleaseReader releaseReader, IUserResolvingService userResolvingService)
         {
-            _writer = writer;
+            _classReaderOrWriter = classReaderOrWriter;
             _userResolvingService = userResolvingService;
+            _releaseReader = releaseReader;
         }
 
         /// <summary>
@@ -56,7 +61,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassReadModel>> GetById(Guid id)
         {
-            var dbModel = await _writer.GetById(id);
+            var dbModel = await _classReaderOrWriter.GetById(id);
 
             if (dbModel == null)
                 return NotFound();
@@ -77,7 +82,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IQueryable<ClassReadModel>>> AsMappingQueryable(int pageSize, int pageIndex)
         {
-            var dbModels = (await _writer.AsMappingQueryable()).Skip(pageSize * pageIndex).Take(pageSize);
+            var dbModels = (await _classReaderOrWriter.AsMappingQueryable()).Skip(pageSize * pageIndex).Take(pageSize);
 
             var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel);
 
@@ -92,7 +97,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<int>> Count()
         {
-            return Ok(await (await _writer.AsMappingQueryable()).CountAsync());
+            return Ok(await (await _classReaderOrWriter.AsMappingQueryable()).CountAsync());
         }
 
         /// <summary>
@@ -106,7 +111,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByLatestRelease(int pageSize, int pageIndex)
         {
-            var dbModels = await _writer.GetByLatestRelease();
+            var dbModels = await _classReaderOrWriter.GetByLatestRelease();
 
             var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
 
@@ -121,7 +126,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<int>> GetByLatestReleaseCount()
         {
-            return Ok(await (await _writer.GetByLatestRelease()).CountAsync());
+            return Ok(await (await _classReaderOrWriter.GetByLatestRelease()).CountAsync());
         }
 
         /// <summary>
@@ -136,7 +141,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByRelease(Guid releaseId, int pageSize, int pageIndex)
         {
-            var dbModels = await _writer.GetByRelease(releaseId);
+            var dbModels = await _classReaderOrWriter.GetByRelease(releaseId);
 
             var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
 
@@ -152,7 +157,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<int>> GetByReleaseCount(Guid releaseId)
         {
-            return Ok(await (await _writer.GetByRelease(releaseId)).CountAsync());
+            return Ok(await (await _classReaderOrWriter.GetByRelease(releaseId)).CountAsync());
         }
 
         /// <summary>
@@ -167,7 +172,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByRelease(string releaseName, int pageSize, int pageIndex)
         {
-            var dbModels = await _writer.GetByRelease(releaseName);
+            var dbModels = await _classReaderOrWriter.GetByRelease(releaseName);
 
             var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
 
@@ -183,7 +188,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<int>> GetByReleaseCount(string releaseName)
         {
-            return Ok(await (await _writer.GetByRelease(releaseName)).CountAsync());
+            return Ok(await (await _classReaderOrWriter.GetByRelease(releaseName)).CountAsync());
         }
 
         /// <summary>
@@ -197,7 +202,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassReadModel>> GetByLatestMapping(string name)
         {
-            var dbModels = await _writer.GetByLatestMapping(name);
+            var dbModels = await _classReaderOrWriter.GetByLatestMapping(name);
 
             if (dbModels == null)
                 return NotFound();
@@ -219,7 +224,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassReadModel>> GetByMappingInVersion(string name, Guid versionId)
         {
-            var dbModels = await _writer.GetByMappingInVersion(name, versionId);
+            var dbModels = await _classReaderOrWriter.GetByMappingInVersion(name, versionId);
 
             if (dbModels == null)
                 return NotFound();
@@ -241,7 +246,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClassReadModel>> GetByMappingInRelease(string name, Guid releaseId)
         {
-            var dbModels = await _writer.GetByMappingInRelease(name, releaseId);
+            var dbModels = await _classReaderOrWriter.GetByMappingInRelease(name, releaseId);
 
             if (dbModels == null)
                 return NotFound();
@@ -255,14 +260,14 @@ namespace API.Controllers
         /// Method used to create a new proposal.
         /// </summary>
         /// <param name="proposalModel">The model for the proposal.</param>
-        /// <returns>The result of the creation. Either 200 for successful or 400 for a bad request.</returns>
+        /// <returns>An http response code: 201-Created new proposal, 404-Unknown class, 401-Unauthorized user.</returns>
         [HttpPost("propose", Name = "Propose")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Propose([FromBody] CreateProposalModel proposalModel)
         {
-            var classVersionedEntry = await _writer.GetVersionedMapping(proposalModel.ProposedFor);
+            var classVersionedEntry = await _classReaderOrWriter.GetVersionedMapping(proposalModel.ProposedFor);
             if (classVersionedEntry == null)
                 return NotFound(
                     $"Their is no class mapping with a version entry with id: {proposalModel.ProposedFor}");
@@ -283,7 +288,7 @@ namespace API.Controllers
                 ProposedOn = DateTime.Now,
                 IsOpen = true,
                 IsPublicVote = proposalModel.IsPublicVote,
-                VotedFor = initialVotedAgainst,
+                VotedFor = initialVotedFor,
                 VotedAgainst = initialVotedAgainst,
                 Comment = proposalModel.Comment,
                 ClosedBy = null,
@@ -293,8 +298,8 @@ namespace API.Controllers
                 MergedWith = null
             };
 
-            await this._writer.AddProposal(proposalEntry);
-            await this._writer.SaveChanges();
+            await this._classReaderOrWriter.AddProposal(proposalEntry);
+            await this._classReaderOrWriter.SaveChanges();
 
             return CreatedAtAction("GetById", proposalEntry.VersionedMapping.Mapping.Id, proposalEntry);
         }
@@ -303,7 +308,7 @@ namespace API.Controllers
         /// Marks the current user as a person who voted for the proposal.
         /// </summary>
         /// <param name="proposalId">The id of the proposal for which is voted for.</param>
-        /// <returns>An http response code: 200-Ok, 400-Unknown or closed proposal, 401-Unauthorized user.</returns>
+        /// <returns>An http response code: 200-Ok, 400-closed proposal, 401-Unauthorized user, 404-Unknown proposal.</returns>
         [HttpPost("proposal/vote/{proposalId}/for", Name = "VoteFor")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -311,7 +316,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> VoteFor(Guid proposalId)
         {
-            var currentProposal = await _writer.GetProposal(proposalId);
+            var currentProposal = await _classReaderOrWriter.GetProposal(proposalId);
             if (currentProposal == null)
                 return NotFound("No proposal with the given id exists.");
 
@@ -330,7 +335,7 @@ namespace API.Controllers
 
             currentProposal.VotedAgainst.Remove(user);
             currentProposal.VotedFor.Add(user);
-            await _writer.SaveChanges();
+            await _classReaderOrWriter.SaveChanges();
 
             return Ok();
         }
@@ -339,7 +344,7 @@ namespace API.Controllers
         /// Marks the current user as a person who voted against the proposal.
         /// </summary>
         /// <param name="proposalId">The id of the proposal for which is voted against.</param>
-        /// <returns>An http response code: 200-Ok, 400-Unknown or closed proposal, 401-Unauthorized user.</returns>
+        /// <returns>An http response code: 200-Ok, 400-Closed proposal, 401-Unauthorized user, 404-Unknown proposal</returns>
         [HttpPost("proposal/vote/{proposalId}/against", Name = "VoteAgainst")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -347,7 +352,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> VoteAgainst(Guid proposalId)
         {
-            var currentProposal = await _writer.GetProposal(proposalId);
+            var currentProposal = await _classReaderOrWriter.GetProposal(proposalId);
             if (currentProposal == null)
                 return NotFound("No proposal with the given id exists.");
 
@@ -366,7 +371,7 @@ namespace API.Controllers
 
             currentProposal.VotedFor.Remove(user);
             currentProposal.VotedAgainst.Add(user);
-            await _writer.SaveChanges();
+            await _classReaderOrWriter.SaveChanges();
 
             return Ok();
         }
@@ -385,7 +390,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult> Close(Guid proposalId, bool merge)
         {
-            var currentProposal = await _writer.GetProposal(proposalId);
+            var currentProposal = await _classReaderOrWriter.GetProposal(proposalId);
             if (currentProposal == null)
                 return NotFound("No proposal with the given id exists.");
 
@@ -415,20 +420,26 @@ namespace API.Controllers
                 };
 
                 currentProposal.VersionedMapping.CommittedMappings.Add(newCommittedMapping);
-                await _writer.SaveChanges();
+                await _classReaderOrWriter.SaveChanges();
 
                 return CreatedAtAction("GetById", newCommittedMapping.VersionedMapping.Mapping.Id, newCommittedMapping);
             }
 
-            await _writer.SaveChanges();
+            await _classReaderOrWriter.SaveChanges();
             return Ok();
         }
 
+        /// <summary>
+        /// Gets the details on a committed mapping.
+        /// </summary>
+        /// <param name="committedMappingId">The id of the committed mapping.</param>
+        /// <returns>The committed mapping with the id or 404.</returns>
         [HttpGet("committed/detailed/{committedMappingId}", Name = "GetDetailedCommittedMapping")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ClassDetailedMappingReadModel>> Detailed(Guid committedMappingId)
         {
-            var committedMapping = await _writer.GetCommittedEntry(committedMappingId);
+            var committedMapping = await _classReaderOrWriter.GetCommittedEntry(committedMappingId);
             if (committedMapping == null)
                 return NotFound("Unknown committed mapping with requested id.");
 
@@ -445,10 +456,22 @@ namespace API.Controllers
 
         [HttpPost("add")]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Add([FromBody] CreateClassModel mapping)
         {
-            //TODO: User auth
-            throw new NotImplementedException();
+            var currentRelease = await _releaseReader.GetLatest();
+            if (currentRelease == null)
+                return BadRequest();
+
+            var user = await _userResolvingService.Get();
+            if (user == null || !user.CanCommit)
+                return Unauthorized();
+
+            //TODO: Add logic, creation model needs to be adapted.
+            //TODO: Add logic to create/update a created class.
+            return null;
         }
 
         [HttpPost("add/all")]

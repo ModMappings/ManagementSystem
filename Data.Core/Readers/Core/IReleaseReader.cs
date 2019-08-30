@@ -22,5 +22,7 @@ namespace Data.Core.Readers.Core
         Task<IQueryable<Release>> GetMadeForVersion(Guid id);
 
         Task<IQueryable<Release>> GetMadeForVersion(GameVersion version);
+
+        Task<Release> GetLatest();
     }
 }

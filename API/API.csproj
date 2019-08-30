@@ -21,4 +21,8 @@
       <ProjectReference Include="..\Data.EFCore\Data.EFCore.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Model\Update" />
+    </ItemGroup>
+
 </Project>

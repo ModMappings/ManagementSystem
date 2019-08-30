@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Model.Creation.Class
@@ -44,5 +46,10 @@ namespace API.Model.Creation.Class
         /// The id of the outer class that the new class resides in.
         /// </summary>
         public Guid Outer { get; set; }
+
+        /// <summary>
+        /// The ids of the classes or interfaces from which this class inherits.
+        /// </summary>
+        public IEnumerable<Guid> InheritsFrom { get; set; }
     }
 }
