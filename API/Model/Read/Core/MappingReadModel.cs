@@ -2,6 +2,9 @@ using System;
 
 namespace API.Model.Read.Core
 {
+    /// <summary>
+    /// A single mappings core data.
+    /// </summary>
     public class MappingReadModel
     {
         /// <summary>
@@ -18,5 +21,10 @@ namespace API.Model.Read.Core
         /// The output of the mapping.
         /// </summary>
         public string Out { get; set; }
+
+        /// <summary>
+        /// The documentation associated with the mapping.
+        /// </summary>
+        public string Documentation { get; set; }
     }
 }

@@ -16,7 +16,5 @@ namespace Data.Core.Models.Core
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public List<TVersionedMapping> VersionedMappings { get; set; }
-
-        public string Documentation { get; set; }
     }
 }

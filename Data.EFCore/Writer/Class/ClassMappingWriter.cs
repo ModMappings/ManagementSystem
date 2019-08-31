@@ -75,6 +75,24 @@ namespace Data.EFCore.Writer.Class
             return await this.GetByMappingInVersion(name, release.Id);
         }
 
+        public async Task<ClassVersionedMapping> GetVersionedMapping(Guid id)
+        {
+            return await _context.ClassVersionedMappings.FirstOrDefaultAsync(versionedMappings =>
+                versionedMappings.Id == id);
+        }
+
+        public async Task<ClassProposalMappingEntry> GetProposal(Guid proposalEntry)
+        {
+            return await _context.ClassProposalMappingEntries.FirstOrDefaultAsync(proposalMappingEntry =>
+                proposalMappingEntry.Id == proposalEntry);
+        }
+
+        public async Task<ClassCommittedMappingEntry> GetCommittedEntry(Guid committedEntryId)
+        {
+            return await _context.ClassCommittedMappingEntries.FirstOrDefaultAsync(committedMappingEntry =>
+                committedMappingEntry.Id == committedEntryId);
+        }
+
         public async Task<IQueryable<ClassMapping>> AsMappingQueryable()
         {
             return await Task.FromResult(_context.ClassMappings);
@@ -178,6 +196,11 @@ namespace Data.EFCore.Writer.Class
 
             return await _context.ClassMappings.FirstOrDefaultAsync(mapping =>
                 mapping.VersionedMappings.Select(v => v.Id).Contains(versionedMapping.Id));
+        }
+
+        public async Task AddProposal(ClassProposalMappingEntry proposalEntry)
+        {
+            await _context.ClassProposalMappingEntries.AddAsync(proposalEntry);
         }
     }
 }

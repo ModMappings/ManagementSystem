@@ -60,6 +60,11 @@ namespace Data.EFCore.Writer.Core
             return _context.Releases.Where(release => release.GameVersion == version);
         }
 
+        public async Task<Release> GetLatest()
+        {
+            return await _context.Releases.OrderByDescending(release => release.CreatedOn).FirstOrDefaultAsync();
+        }
+
         public async Task Add(Release mapping)
         {
             if (mapping is Release release)

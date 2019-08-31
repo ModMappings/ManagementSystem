@@ -454,33 +454,150 @@ namespace API.Controllers
             });
         }
 
-        [HttpPost("add")]
+        /// <summary>
+        /// Creates a new class and its central mapping entry.
+        /// Creates a new core mapping class, a versioned mapping class for the latest version, as well a single committed mapping.
+        /// </summary>
+        /// <param name="mapping">The mapping to create.</param>
+        /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized.</returns>
+        [HttpPost("add/version/latest", Name = "AddNewToLatest")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult> Add([FromBody] CreateClassModel mapping)
+        public async Task<ActionResult> AddToLatest([FromBody] CreateClassModel mapping)
         {
-            var currentRelease = await _gameVersionReader.GetLatest();
-            if (currentRelease == null)
-                return BadRequest();
+            var currentLatestGameVersion = await _gameVersionReader.GetLatest();
+            if (currentLatestGameVersion == null)
+                return BadRequest("No game version has been registered yet.");
 
             var user = await _userResolvingService.Get();
             if (user == null || !user.CanCommit)
                 return Unauthorized();
 
-            //TODO: Add logic, creation model needs to be adapted.
-            //TODO: Add logic to create/update a created class.
-            return null;
+            ClassVersionedMapping outer = null;
+            if (mapping.Outer.HasValue)
+            {
+                outer = await _classReaderOrWriter.GetVersionedMapping(mapping.Outer.Value);
+                if (outer == null)
+                    return BadRequest("Unknown outer class");
+            }
+
+            var inheritsFrom =
+                (await Task.WhenAll(mapping.InheritsFrom.Select(async id =>
+                    await _classReaderOrWriter.GetVersionedMapping(id)))).ToList();
+
+            if (inheritsFrom.Any(m => m == null))
+                return BadRequest("Unknown inheriting class.");
+
+            var versionedClassMapping = new ClassVersionedMapping
+            {
+                CreatedBy = user,
+                CreatedOn = DateTime.Now,
+                GameVersion = currentLatestGameVersion,
+                Outer=outer,
+                Package = mapping.Package,
+                InheritsFrom = inheritsFrom,
+                CommittedMappings = new List<ClassCommittedMappingEntry>(),
+                ProposalMappings = new List<ClassProposalMappingEntry>()
+            };
+
+            var initialCommittedMappingEntry = new ClassCommittedMappingEntry
+            {
+                Documentation = mapping.Documentation,
+                InputMapping = mapping.In,
+                OutputMapping = mapping.Out,
+                Proposal = null,
+                Releases = new List<Release>(),
+                VersionedMapping = versionedClassMapping
+            };
+
+            versionedClassMapping.CommittedMappings.Add(initialCommittedMappingEntry);
+
+            var classMapping = new ClassMapping
+            {
+                Id = Guid.NewGuid(),
+                VersionedMappings = new List<ClassVersionedMapping>() {versionedClassMapping}
+            };
+
+            await _classReaderOrWriter.Add(classMapping);
+            await _classReaderOrWriter.SaveChanges();
+
+            return CreatedAtAction("GetById", classMapping.Id, classMapping);
         }
 
-        [HttpPost("add/all")]
+        /// <summary>
+        /// Creates a new versioned class entry for an already existing class mapping.
+        /// Creates a versioned mapping class for the given version, as well a single committed mapping.
+        /// </summary>
+        /// <param name="mapping">The versioned mapping to create.</param>
+        /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized,409-A versioned class for that version already exists with the class.</returns>
+        [HttpPost("add/version/{versionId}", Name = "AddVersionToExisting")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status206PartialContent)]
-        public async Task<ActionResult> AddAll([FromBody] IEnumerable<CreateClassModel> mapping)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult> AddToVersion([FromBody] CreateVersionedClassModel mapping)
         {
-            //TODO: User auth and handling logic.
-            throw new NotImplementedException();
+            var currentGameVersion = await _gameVersionReader.GetById(mapping.GameVersion);
+            if (currentGameVersion == null)
+                return BadRequest("No game version with that id has been registered yet.");
+
+            var user = await _userResolvingService.Get();
+            if (user == null || !user.CanCommit)
+                return Unauthorized();
+
+            ClassVersionedMapping outer = null;
+            if (mapping.Outer.HasValue)
+            {
+                outer = await _classReaderOrWriter.GetVersionedMapping(mapping.Outer.Value);
+                if (outer == null)
+                    return BadRequest("Unknown outer class");
+            }
+
+            var classMapping = await _classReaderOrWriter.GetById(mapping.VersionedMappingFor);
+            if (classMapping == null)
+                return BadRequest("Unknown class mapping to create the versioned mapping for.");
+
+            if (classMapping.VersionedMappings.Any(versionedMapping =>
+                versionedMapping.GameVersion.Id == mapping.GameVersion))
+                return Conflict();
+
+            var inheritsFrom =
+                (await Task.WhenAll(mapping.InheritsFrom.Select(async id =>
+                    await _classReaderOrWriter.GetVersionedMapping(id)))).ToList();
+
+            if (inheritsFrom.Any(m => m == null))
+                return BadRequest("Unknown inheriting class.");
+
+            var versionedClassMapping = new ClassVersionedMapping
+            {
+                CreatedBy = user,
+                CreatedOn = DateTime.Now,
+                GameVersion = currentGameVersion,
+                Outer=outer,
+                Package = mapping.Package,
+                InheritsFrom = inheritsFrom,
+                CommittedMappings = new List<ClassCommittedMappingEntry>(),
+                ProposalMappings = new List<ClassProposalMappingEntry>()
+            };
+
+            var initialCommittedMappingEntry = new ClassCommittedMappingEntry
+            {
+                Documentation = mapping.Documentation,
+                InputMapping = mapping.In,
+                OutputMapping = mapping.Out,
+                Proposal = null,
+                Releases = new List<Release>(),
+                VersionedMapping = versionedClassMapping
+            };
+
+            versionedClassMapping.CommittedMappings.Add(initialCommittedMappingEntry);
+
+            await _classReaderOrWriter.SaveChanges();
+
+            return CreatedAtAction("GetById", classMapping.Id, classMapping);
         }
 
         private ClassReadModel ConvertClassModelToReadModel(ClassMapping classModel)
@@ -511,7 +628,7 @@ namespace API.Controllers
 
         private MappingReadModel ConvertCommittedMappingToSimpleReadModel(ClassCommittedMappingEntry committedMapping)
         {
-            return new MappingReadModel {Id = committedMapping.Id, In = committedMapping.InputMapping, Out = committedMapping.OutputMapping};
+            return new MappingReadModel {Id = committedMapping.Id, In = committedMapping.InputMapping, Out = committedMapping.OutputMapping, Documentation = committedMapping.Documentation};
         }
 
         private static ProposalReadModel ConvertProposalMappingToReadModel(ClassProposalMappingEntry proposalMapping)
@@ -531,7 +648,8 @@ namespace API.Controllers
                 ClosedBy = proposalMapping.ClosedBy.Id,
                 ClosedOn = proposalMapping.ClosedOn,
                 In = proposalMapping.InputMapping,
-                Out = proposalMapping.OutputMapping
+                Out = proposalMapping.OutputMapping,
+                Documentation = proposalMapping.Documentation
             };
         }
     }

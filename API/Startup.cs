@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NSwag;
+using NSwag.AspNetCore;
 
 namespace API
 {
@@ -34,6 +36,17 @@ namespace API
 
             services.AddSwaggerDocument(config =>
             {
+                var securityData = new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.OAuth2,
+                    Flow = OpenApiOAuth2Flow.Implicit,
+                    AuthorizationUrl = "auth.mcp.service.test/connect/authorize",
+                    Scopes = new Dictionary<string, string>
+                    {
+                        {"mcp.api", "MCP API - Access"}
+                    }
+                };
+
                 config.PostProcess = document =>
                 {
                     document.Info.Version = "v0.1";
@@ -44,7 +57,7 @@ namespace API
                     {
                         Name = "MCP Team",
                         Email = string.Empty,
-                        Url = "https://github.com/MinecraftForge"
+                        Url = "https://github.com/mcp_service_example"
                     };
                     document.Info.License = new NSwag.OpenApiLicense
                     {
@@ -52,6 +65,7 @@ namespace API
                         Url = "https://example.com/license"
                     };
                 };
+                config.AddSecurity("Authentication", securityData);
             });
         }
 
@@ -71,7 +85,14 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi3(settings =>
+            {
+                settings.OAuth2Client = new OAuth2ClientSettings()
+                {
+                    AppName = "MCP.API - Swagger",
+                    ClientId = "MCP.API_Swagger"
+                };
+            });
 
             app.UseMvc();
         }

@@ -48,6 +48,11 @@ namespace Data.EFCore.Writer.Core
             return _context.GameVersions.Where(version => version.IsSnapshot);
         }
 
+        public async Task<GameVersion> GetLatest()
+        {
+            return await _context.GameVersions.OrderByDescending(version => version.CreatedOn).FirstOrDefaultAsync();
+        }
+
         public async Task Add(GameVersion mapping)
         {
             if (mapping is GameVersion gameVersion)

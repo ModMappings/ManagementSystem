@@ -24,5 +24,7 @@ namespace Data.Core.Models.Core
 
         [Required]
         public string OutputMapping { get; set; }
+
+        public string Documentation { get; set; }
     }
 }

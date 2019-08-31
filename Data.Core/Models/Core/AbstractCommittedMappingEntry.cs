@@ -14,7 +14,6 @@ namespace Data.Core.Models.Core
         AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
         where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
     {
-        [Required]
         public TProposalEntry Proposal { get; set; }
         public List<Release> Releases { get; set; }
     }
