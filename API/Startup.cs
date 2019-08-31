@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Reflection;
 using API.Services.Core;
 using API.Services.UserResolving;
 using Data.Core.Readers.Class;
@@ -23,8 +27,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NSwag;
-using NSwag.AspNetCore;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -48,38 +51,26 @@ namespace API
             services.AddDbContext<MCPContext>(opt =>
                 opt.UseNpgsql(Configuration["ConnectionStrings:DefaultConnection"]));
 
-            services.AddSwaggerDocument(config =>
+            services.AddSwaggerGen(config =>
             {
-                var securityData = new OpenApiSecurityScheme
+                config.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
+                    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+                config.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Type = OpenApiSecuritySchemeType.OAuth2,
-                    Flow = OpenApiOAuth2Flow.Implicit,
-                    AuthorizationUrl = "auth.mcp.service.test/connect/authorize",
-                    Scopes = new Dictionary<string, string>
+                    Contact = new OpenApiContact
                     {
-                        {"mcp.api", "MCP API - Access"}
-                    }
-                };
-
-                config.PostProcess = document =>
-                {
-                    document.Info.Version = "v0.1";
-                    document.Info.Title = "MCP.Service API";
-                    document.Info.Description = "API for MCP data.";
-                    document.Info.TermsOfService = "MCP";
-                    document.Info.Contact = new OpenApiContact
+                        Email = "mcp.service@test.com",
+                        Url = new Uri("https://mcptest.ldtteam.com"),
+                        Name = "mcp.service - Development team"
+                    },
+                    Description = "OpenAPI documentation for the MCP.Service API.",
+                    License = new OpenApiLicense
                     {
-                        Name = "MCP Team",
-                        Email = string.Empty,
-                        Url = "https://github.com/mcp_service_example"
-                    };
-                    document.Info.License = new OpenApiLicense
-                    {
-                        Name = "Use under MCP Licence",
-                        Url = "https://example.com/license"
-                    };
-                };
-                config.AddSecurity("Authentication", securityData);
+                        Name = "GPL v3",
+                    },
+                    Title = "MCP.API - OpenAPI Documentation",
+                    Version = "0.1"
+                });
             });
 
             services.AddTransient<IUserResolvingService, DummyUserResolvingService>();
@@ -112,17 +103,13 @@ namespace API
 
             app.UseHttpsRedirection();
 
-            app.UseOpenApi();
-            app.UseSwaggerUi3(settings =>
-            {
-                settings.OAuth2Client = new OAuth2ClientSettings()
-                {
-                    AppName = "MCP.API - Swagger",
-                    ClientId = "MCP.API_Swagger"
-                };
-            });
-
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MCP.API - OpenAPI Documentation");
+            });
         }
     }
 }

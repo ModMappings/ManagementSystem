@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
     public abstract class
-        NoneUniqueMappingControllerBase<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReadModel, TVersionedReadModel, TCreateReadModel, TCreateVersionedModel> : Controller
+        NoneUniqueMappingControllerBase<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TAPIModel, TVersionedReadModel, TCreateReadModel, TCreateVersionedModel> : Controller
         where TMapping : AbstractMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
         where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
         where TCommittedEntry :
@@ -67,7 +67,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<TReadModel>> GetById(Guid id)
+        public async Task<ActionResult<TAPIModel>> GetById(Guid id)
         {
             var dbModel = await _readerWriter.GetById(id);
 
@@ -90,7 +90,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> AsMappingQueryable(int pageSize, int pageIndex)
+        public async Task<ActionResult<IQueryable<TAPIModel>>> AsMappingQueryable(int pageSize, int pageIndex)
         {
             var dbModels = (await _readerWriter.AsMappingQueryable()).Skip(pageSize * pageIndex).Take(pageSize);
 
@@ -123,7 +123,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByLatestRelease(int pageSize, int pageIndex)
+        public async Task<ActionResult<IQueryable<TAPIModel>>> GetByLatestRelease(int pageSize, int pageIndex)
         {
             var dbModels = await _readerWriter.GetByLatestRelease();
 
@@ -158,7 +158,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByRelease(Guid releaseId, int pageSize,
+        public async Task<ActionResult<IQueryable<TAPIModel>>> GetByRelease(Guid releaseId, int pageSize,
             int pageIndex)
         {
             var dbModels = await _readerWriter.GetByRelease(releaseId);
@@ -195,7 +195,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByRelease(string releaseName, int pageSize,
+        public async Task<ActionResult<IQueryable<TAPIModel>>> GetByRelease(string releaseName, int pageSize,
             int pageIndex)
         {
             var dbModels = await _readerWriter.GetByRelease(releaseName);
@@ -231,7 +231,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<TReadModel>> GetByLatestMapping(string name)
+        public async Task<ActionResult<TAPIModel>> GetByLatestMapping(string name)
         {
             var dbModels = await _readerWriter.GetByLatestMapping(name);
 
@@ -255,7 +255,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<TReadModel>> GetByMappingInVersion(string name, Guid versionId)
+        public async Task<ActionResult<TAPIModel>> GetByMappingInVersion(string name, Guid versionId)
         {
             var dbModels = await _readerWriter.GetByMappingInVersion(name, versionId);
 
@@ -279,7 +279,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult<TReadModel>> GetByMappingInRelease(string name, Guid releaseId)
+        public async Task<ActionResult<TAPIModel>> GetByMappingInRelease(string name, Guid releaseId)
         {
             var dbModels = await _readerWriter.GetByMappingInRelease(name, releaseId);
 
@@ -530,12 +530,12 @@ namespace API.Controllers
         [Produces("application/json")]
         public abstract Task<ActionResult> AddToVersion([FromBody] TCreateVersionedModel mapping);
 
-        private IEnumerable<TReadModel> ConvertDBModelToApiModel(IEnumerable<TMapping> mappings)
+        private IEnumerable<TAPIModel> ConvertDBModelToApiModel(IEnumerable<TMapping> mappings)
         {
             return mappings.Select(ConvertDBModelToApiModel);
         }
 
-        protected abstract TReadModel ConvertDBModelToApiModel(TMapping methodModel);
+        protected abstract TAPIModel ConvertDBModelToApiModel(TMapping methodModel);
 
         protected abstract TVersionedReadModel ConvertVersionedDbModelToVersionedApiModel(
             TVersionedMapping versionedMapping);

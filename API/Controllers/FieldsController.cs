@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Model.Creation.Core;
 using API.Model.Creation.Field;
 using API.Model.Read.Core;
 using API.Model.Read.Field;
@@ -101,6 +102,20 @@ namespace API.Controllers
             return CreatedAtAction("GetById", fieldMapping.Id, fieldMapping);
         }
 
+        /// <summary>
+        /// Creates a new versioned model entry for an already existing method mapping.
+        /// Creates a versioned mapping model for the given version, as well a single committed mapping.
+        /// </summary>
+        /// <param name="mapping">The versioned mapping to create.</param>
+        /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized,409-A versioned model for that version already exists with the core model.</returns>
+        [HttpPost("add/version/{versionId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public override async Task<ActionResult> AddToVersion([FromBody] CreateVersionedFieldModel mapping)
         {
             var currentGameVersion = await _gameVersionReader.GetById(mapping.GameVersion);
@@ -150,8 +165,6 @@ namespace API.Controllers
 
             return CreatedAtAction("GetById", fieldMapping.Id, fieldMapping);
         }
-
-
 
         protected override FieldReadModel ConvertDBModelToApiModel(FieldMapping fieldModel)
         {
