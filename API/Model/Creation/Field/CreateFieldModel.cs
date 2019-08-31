@@ -8,7 +8,6 @@ namespace API.Model.Creation.Field
     /// </summary>
     /// <example>
     /// {
-    ///     "name": "a",
     ///     "in": "a",
     ///     "out": "field_190927_a",
     ///     "memberOf": "00000000-0000-0000-0000-000000000000"
@@ -16,12 +15,6 @@ namespace API.Model.Creation.Field
     /// </example>
     public class CreateFieldModel
     {
-        /// <summary>
-        /// The name of the new field.
-        /// </summary>
-        [Required]
-        public string Name { get; set; }
-
         /// <summary>
         /// The input mapping of the new field.
         /// </summary>
@@ -39,5 +32,15 @@ namespace API.Model.Creation.Field
         /// </summary>
         [Required]
         public Guid MemberOf { get; set; }
+
+        /// <summary>
+        /// Indicates if the field is static.
+        /// </summary>
+        public bool IsStatic { get; set; }
+
+        /// <summary>
+        /// The documentation for the field.
+        /// </summary>
+        public string Documentation { get; set; }
     }
 }

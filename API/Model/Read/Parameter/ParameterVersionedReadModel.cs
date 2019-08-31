@@ -3,7 +3,7 @@ using API.Model.Read.Core;
 
 namespace API.Model.Read.Parameter
 {
-    public abstract class ParameterVersionedReadModel
+    public class ParameterVersionedReadModel
         : AbstractVersionedReadModel
     {
         public Guid ParameterOf { get; set; }

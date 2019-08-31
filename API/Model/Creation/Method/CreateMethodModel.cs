@@ -17,12 +17,6 @@ namespace API.Model.Creation.Method
     public class CreateMethodModel
     {
         /// <summary>
-        /// The name of the new method.
-        /// </summary>
-        [Required]
-        public string Name { get; set; }
-
-        /// <summary>
         /// The input mapping of the new method.
         /// </summary>
         [Required]
@@ -39,6 +33,18 @@ namespace API.Model.Creation.Method
         /// </summary>
         [Required]
         public string Descriptor { get; set; }
+
+        /// <summary>
+        /// Indicates if the method is static in the class.
+        /// </summary>
+        [Required]
+        public bool IsStatic { get; set; }
+
+        /// <summary>
+        /// The documentation for method.
+        /// </summary>
+        [Required]
+        public string Documentation { get; set; }
 
         /// <summary>
         /// The id of the class that this method is part of.

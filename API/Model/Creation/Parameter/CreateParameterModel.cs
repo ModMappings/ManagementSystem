@@ -8,7 +8,6 @@ namespace API.Model.Creation.Parameter
     /// </summary>
     /// <example>
     /// {
-    ///     "name": "name",
     ///     "in": "string1",
     ///     "out": "name",
     ///     "parameterOf": "00000000-0000-0000-0000-000000000000",
@@ -17,12 +16,6 @@ namespace API.Model.Creation.Parameter
     /// </example>
     public class CreateParameterModel
     {
-        /// <summary>
-        /// The name of the new parameter.
-        /// </summary>
-        [Required]
-        public string Name { get; set; }
-
         /// <summary>
         /// The input mapping of the new parameter.
         /// </summary>
@@ -46,5 +39,11 @@ namespace API.Model.Creation.Parameter
         /// </summary>
         [Required]
         public int Index { get; set; }
+
+        /// <summary>
+        /// The documentation for the new parameter.
+        /// </summary>
+        [Required]
+        public string Documentation { get; set; }
     }
 }

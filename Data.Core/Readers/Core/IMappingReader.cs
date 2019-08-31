@@ -17,5 +17,8 @@ namespace Data.Core.Readers.Core
         Task<IQueryable<TMapping>> GetByRelease(Guid releaseId);
         Task<IQueryable<TMapping>> GetByRelease(string releaseName);
         Task<IQueryable<TMapping>> GetByRelease(Release release);
+        Task<IQueryable<TMapping>> GetByVersion(Guid versionId);
+        Task<IQueryable<TMapping>> GetByVersion(string versionName);
+        Task<IQueryable<TMapping>> GetByVersion(GameVersion version);
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using API.Model.Read.Core;
 
-namespace API.Model.Read.Member
+namespace API.Model.Read.Method
 {
     /// <summary>
     /// Versioned read model for methods.1
@@ -18,5 +18,10 @@ namespace API.Model.Read.Member
         /// The descriptor of the method.
         /// </summary>
         public string Descriptor { get; set; }
+
+        /// <summary>
+        /// Indicates if this method is a static member.
+        /// </summary>
+        public bool IsStatic { get; set; }
     }
 }

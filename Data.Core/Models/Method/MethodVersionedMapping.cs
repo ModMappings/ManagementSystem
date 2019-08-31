@@ -11,9 +11,9 @@ namespace Data.Core.Models.Method
         : AbstractVersionedMapping<MethodMapping, MethodVersionedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry>
     {
         [Required]
-        public ClassCommittedMappingEntry MemberOf { get; set; }
+        public ClassVersionedMapping MemberOf { get; set; }
 
-        public List<ParameterCommittedMappingEntry> Parameters { get; set; }
+        public List<ParameterVersionedMapping> Parameters { get; set; }
 
         public bool IsStatic { get; set; }
 

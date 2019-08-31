@@ -123,6 +123,24 @@ namespace Data.EFCore.Writer.Class
                 vcls.CommittedMappings.Any(cmvcls => cmvcls.Releases.Contains(release))));
         }
 
+        public async Task<IQueryable<ClassMapping>> GetByVersion(Guid versionId)
+        {
+            return _context.ClassMappings.Where(mapping =>
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion.Id == versionId));
+        }
+
+        public async Task<IQueryable<ClassMapping>> GetByVersion(string versionName)
+        {
+            return _context.ClassMappings.Where(mapping =>
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion.Name == versionName));
+        }
+
+        public async Task<IQueryable<ClassMapping>> GetByVersion(GameVersion version)
+        {
+            return _context.ClassMappings.Where(mapping =>
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion == version));
+        }
+
         public async Task Add(ClassMapping mapping)
         {
             if (mapping is ClassMapping classMapping)

@@ -7,5 +7,7 @@ namespace API.Model.Read.Field
         : AbstractVersionedReadModel
     {
         public Guid MemberOf { get; set; }
+
+        public bool IsStatic { get; set; }
     }
 }

@@ -8,6 +8,9 @@ namespace Data.Core.Models.Field
         : AbstractVersionedMapping<FieldMapping, FieldVersionedMapping, FieldCommittedMappingEntry, FieldProposalMappingEntry>
     {
         [Required]
-        public ClassCommittedMappingEntry MemberOf { get; set; }
+        public ClassVersionedMapping MemberOf { get; set; }
+
+        [Required]
+        public bool IsStatic { get; set; }
     }
 }

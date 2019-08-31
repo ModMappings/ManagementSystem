@@ -8,7 +8,7 @@ namespace Data.Core.Models.Parameter
         : AbstractVersionedMapping<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry>
     {
         [Required]
-        public MethodCommittedMappingEntry ParameterOf { get; set; }
+        public MethodVersionedMapping ParameterOf { get; set; }
 
         [Required]
         public int Index { get; set; }

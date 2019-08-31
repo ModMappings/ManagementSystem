@@ -1,7 +1,6 @@
 using API.Model.Read.Core;
-using API.Model.Read.Field;
 
-namespace API.Model.Read.Member
+namespace API.Model.Read.Method
 {
     /// <summary>
     /// Core read model for methods.

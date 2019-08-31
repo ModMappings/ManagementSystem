@@ -58,6 +58,24 @@ namespace Data.EFCore.Writer.Parameter
             return await this.GetByRelease(release.Id);
         }
 
+        public async Task<IQueryable<ParameterMapping>> GetByVersion(Guid versionId)
+        {
+            return _context.ParameterMappings.Where(mapping =>
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion.Id == versionId));
+        }
+
+        public async Task<IQueryable<ParameterMapping>> GetByVersion(string versionName)
+        {
+            return _context.ParameterMappings.Where(mapping =>
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion.Name == versionName));
+        }
+
+        public async Task<IQueryable<ParameterMapping>> GetByVersion(GameVersion version)
+        {
+            return _context.ParameterMappings.Where(mapping =>
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion == version));
+        }
+
         public async Task<IQueryable<ParameterMapping>> GetByLatestMapping(string name)
         {
             return _context.ParameterMappings.Where(parameterMapping =>
@@ -92,6 +110,21 @@ namespace Data.EFCore.Writer.Parameter
         public async Task<IQueryable<ParameterMapping>> GetByMappingInRelease(string name, Release release)
         {
             return await this.GetByMappingInRelease(name, release.Id);
+        }
+
+        public async Task<ParameterVersionedMapping> GetVersionedMapping(Guid id)
+        {
+            return await _context.ParameterVersionedMappings.FirstOrDefaultAsync(mapping => mapping.Id == id);
+        }
+
+        public async Task<ParameterProposalMappingEntry> GetProposal(Guid proposalEntry)
+        {
+            return await _context.ParameterProposalMappingEntries.FirstOrDefaultAsync(mapping => mapping.Id == proposalEntry);
+        }
+
+        public async Task<ParameterCommittedMappingEntry> GetCommittedEntry(Guid committedEntryId)
+        {
+            return await _context.ParameterCommittedMappingEntries.FirstOrDefaultAsync(mapping => mapping.Id == committedEntryId);
         }
 
         public async Task<IQueryable<ParameterMapping>> GetByMethodInLatestVersion(Guid methodId)
@@ -164,6 +197,11 @@ namespace Data.EFCore.Writer.Parameter
         public async Task SaveChanges()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task AddProposal(ParameterProposalMappingEntry proposalEntry)
+        {
+            await _context.ParameterProposalMappingEntries.AddAsync(proposalEntry);
         }
     }
 }

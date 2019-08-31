@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Readers.Core;
 
@@ -10,5 +11,6 @@ namespace Data.Core.Writers.Core
         where TCommittedEntry : AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
         where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
     {
+        Task AddProposal(TProposalEntry proposalEntry);
     }
 }
