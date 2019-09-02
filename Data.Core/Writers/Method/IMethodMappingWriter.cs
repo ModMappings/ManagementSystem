@@ -8,7 +8,7 @@ using Data.Core.Writers.Core;
 namespace Data.Core.Writers.Method
 {
     public interface IMethodMappingWriter
-        : IMethodMappingReader, INoneUniqueNamedMappingWriter<MethodMapping, MethodVersionedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry>
+        : IMethodMappingReader, INoneUniqueNamedMappingWriter<MethodMapping, MethodVersionedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry, MethodReleaseMember>
     {
     }
 }

@@ -30,6 +30,7 @@ namespace API.Controllers
         MethodVersionedMapping,
         MethodCommittedMappingEntry,
         MethodProposalMappingEntry,
+        MethodReleaseMember,
         MethodReadModel,
         MethodVersionedReadModel,
         CreateMethodModel,
@@ -38,7 +39,7 @@ namespace API.Controllers
 
         private readonly IClassMappingReader _classMappingReader;
 
-        public MethodsController(INoneUniqueNamedMappingWriter<MethodMapping, MethodVersionedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry> readerWriter, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService, IClassMappingReader classMappingReader) : base(readerWriter, gameVersionReader, userResolvingService)
+        public MethodsController(INoneUniqueNamedMappingWriter<MethodMapping, MethodVersionedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry, MethodReleaseMember> readerWriter, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService, IClassMappingReader classMappingReader) : base(readerWriter, gameVersionReader, userResolvingService)
         {
             _classMappingReader = classMappingReader;
         }
@@ -88,8 +89,9 @@ namespace API.Controllers
                 InputMapping = mapping.In,
                 OutputMapping = mapping.Out,
                 Proposal = null,
-                Releases = new List<Release>(),
-                VersionedMapping = versionedMethodMapping
+                Releases = new List<MethodReleaseMember>(),
+                VersionedMapping = versionedMethodMapping,
+                CreatedOn = DateTime.Now
             };
 
             versionedMethodMapping.CommittedMappings.Add(initialCommittedMappingEntry);
@@ -146,8 +148,9 @@ namespace API.Controllers
                 InputMapping = mapping.In,
                 OutputMapping = mapping.Out,
                 Proposal = null,
-                Releases = new List<Release>(),
-                VersionedMapping = versionedMethodMapping
+                Releases = new List<MethodReleaseMember>(),
+                VersionedMapping = versionedMethodMapping,
+                CreatedOn = DateTime.Now
             };
 
             versionedMethodMapping.CommittedMappings.Add(initialCommittedMappingEntry);

@@ -24,6 +24,10 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("Documentation");
+
                     b.Property<string>("InputMapping")
                         .IsRequired();
 
@@ -44,8 +48,6 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Documentation");
-
                     b.HasKey("Id");
 
                     b.ToTable("ClassMappings");
@@ -62,6 +64,10 @@ namespace Data.EFCore.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("Documentation");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -165,6 +171,9 @@ namespace Data.EFCore.Migrations
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("GameVersions");
                 });
 
@@ -173,36 +182,23 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ClassCommittedMappingEntryId");
-
                     b.Property<Guid>("CreatedById");
 
                     b.Property<DateTime>("CreatedOn");
 
-                    b.Property<Guid?>("FieldCommittedMappingEntryId");
-
                     b.Property<Guid>("GameVersionId");
-
-                    b.Property<Guid?>("MethodCommittedMappingEntryId");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<Guid?>("ParameterCommittedMappingEntryId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassCommittedMappingEntryId");
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("FieldCommittedMappingEntryId");
-
                     b.HasIndex("GameVersionId");
 
-                    b.HasIndex("MethodCommittedMappingEntryId");
-
-                    b.HasIndex("ParameterCommittedMappingEntryId");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Releases");
                 });
@@ -267,6 +263,10 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("Documentation");
+
                     b.Property<string>("InputMapping")
                         .IsRequired();
 
@@ -287,8 +287,6 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Documentation");
-
                     b.HasKey("Id");
 
                     b.ToTable("FieldMappings");
@@ -305,6 +303,10 @@ namespace Data.EFCore.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("Documentation");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -369,6 +371,8 @@ namespace Data.EFCore.Migrations
 
                     b.Property<Guid>("GameVersionId");
 
+                    b.Property<bool>("IsStatic");
+
                     b.Property<Guid>("MappingId");
 
                     b.Property<Guid>("MemberOfId");
@@ -391,6 +395,10 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("Documentation");
+
                     b.Property<string>("InputMapping")
                         .IsRequired();
 
@@ -411,8 +419,6 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Documentation");
-
                     b.HasKey("Id");
 
                     b.ToTable("MethodMappings");
@@ -429,6 +435,10 @@ namespace Data.EFCore.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("Documentation");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -519,10 +529,12 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("Documentation");
+
                     b.Property<string>("InputMapping")
                         .IsRequired();
-
-                    b.Property<Guid?>("MethodVersionedMappingId");
 
                     b.Property<string>("OutputMapping")
                         .IsRequired();
@@ -530,8 +542,6 @@ namespace Data.EFCore.Migrations
                     b.Property<Guid>("VersionedMappingId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MethodVersionedMappingId");
 
                     b.HasIndex("VersionedMappingId");
 
@@ -542,8 +552,6 @@ namespace Data.EFCore.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Documentation");
 
                     b.HasKey("Id");
 
@@ -561,6 +569,10 @@ namespace Data.EFCore.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("Documentation");
 
                     b.Property<string>("InputMapping")
                         .IsRequired();
@@ -676,7 +688,7 @@ namespace Data.EFCore.Migrations
             modelBuilder.Entity("Data.Core.Models.Class.ClassReleaseMember", b =>
                 {
                     b.HasOne("Data.Core.Models.Class.ClassCommittedMappingEntry", "Member")
-                        .WithMany()
+                        .WithMany("Releases")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -718,31 +730,15 @@ namespace Data.EFCore.Migrations
 
             modelBuilder.Entity("Data.Core.Models.Core.Release", b =>
                 {
-                    b.HasOne("Data.Core.Models.Class.ClassCommittedMappingEntry")
-                        .WithMany("Releases")
-                        .HasForeignKey("ClassCommittedMappingEntryId");
-
                     b.HasOne("Data.Core.Models.Core.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Data.Core.Models.Field.FieldCommittedMappingEntry")
-                        .WithMany("Releases")
-                        .HasForeignKey("FieldCommittedMappingEntryId");
-
                     b.HasOne("Data.Core.Models.Core.GameVersion", "GameVersion")
                         .WithMany()
                         .HasForeignKey("GameVersionId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Data.Core.Models.Method.MethodCommittedMappingEntry")
-                        .WithMany("Releases")
-                        .HasForeignKey("MethodCommittedMappingEntryId");
-
-                    b.HasOne("Data.Core.Models.Parameter.ParameterCommittedMappingEntry")
-                        .WithMany("Releases")
-                        .HasForeignKey("ParameterCommittedMappingEntryId");
                 });
 
             modelBuilder.Entity("Data.Core.Models.Core.User", b =>
@@ -816,7 +812,7 @@ namespace Data.EFCore.Migrations
             modelBuilder.Entity("Data.Core.Models.Field.FieldReleaseMember", b =>
                 {
                     b.HasOne("Data.Core.Models.Field.FieldCommittedMappingEntry", "Member")
-                        .WithMany()
+                        .WithMany("Releases")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -843,8 +839,8 @@ namespace Data.EFCore.Migrations
                         .HasForeignKey("MappingId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Data.Core.Models.Class.ClassCommittedMappingEntry", "MemberOf")
-                        .WithMany()
+                    b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "MemberOf")
+                        .WithMany("Fields")
                         .HasForeignKey("MemberOfId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -881,7 +877,7 @@ namespace Data.EFCore.Migrations
             modelBuilder.Entity("Data.Core.Models.Method.MethodReleaseMember", b =>
                 {
                     b.HasOne("Data.Core.Models.Method.MethodCommittedMappingEntry", "Member")
-                        .WithMany()
+                        .WithMany("Releases")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -908,18 +904,14 @@ namespace Data.EFCore.Migrations
                         .HasForeignKey("MappingId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Data.Core.Models.Class.ClassCommittedMappingEntry", "MemberOf")
-                        .WithMany()
+                    b.HasOne("Data.Core.Models.Class.ClassVersionedMapping", "MemberOf")
+                        .WithMany("Methods")
                         .HasForeignKey("MemberOfId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Data.Core.Models.Parameter.ParameterCommittedMappingEntry", b =>
                 {
-                    b.HasOne("Data.Core.Models.Method.MethodVersionedMapping")
-                        .WithMany("Parameters")
-                        .HasForeignKey("MethodVersionedMappingId");
-
                     b.HasOne("Data.Core.Models.Parameter.ParameterVersionedMapping", "VersionedMapping")
                         .WithMany("CommittedMappings")
                         .HasForeignKey("VersionedMappingId")
@@ -950,7 +942,7 @@ namespace Data.EFCore.Migrations
             modelBuilder.Entity("Data.Core.Models.Parameter.ParameterReleaseMember", b =>
                 {
                     b.HasOne("Data.Core.Models.Parameter.ParameterCommittedMappingEntry", "Member")
-                        .WithMany()
+                        .WithMany("Releases")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -977,8 +969,8 @@ namespace Data.EFCore.Migrations
                         .HasForeignKey("MappingId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Data.Core.Models.Method.MethodCommittedMappingEntry", "ParameterOf")
-                        .WithMany()
+                    b.HasOne("Data.Core.Models.Method.MethodVersionedMapping", "ParameterOf")
+                        .WithMany("Parameters")
                         .HasForeignKey("ParameterOfId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

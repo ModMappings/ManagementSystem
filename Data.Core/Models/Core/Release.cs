@@ -23,17 +23,20 @@ namespace Data.Core.Models.Core
         public DateTime CreatedOn { get; set; }
 
         [Required]
-        public User CreatedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
 
         [Required]
-        public GameVersion GameVersion { get; set; }
+        public virtual GameVersion GameVersion { get; set; }
 
-        public List<ClassReleaseMember> Classes { get; set; }
+        [Required]
+        public virtual MappingType MappingType { get; set; }
 
-        public List<MethodReleaseMember> Methods { get; set; }
+        public virtual List<ClassReleaseMember> Classes { get; set; }
 
-        public List<ParameterReleaseMember> Parameters { get; set; }
+        public virtual List<MethodReleaseMember> Methods { get; set; }
 
-        public List<FieldReleaseMember> Fields { get; set; }
+        public virtual List<ParameterReleaseMember> Parameters { get; set; }
+
+        public virtual List<FieldReleaseMember> Fields { get; set; }
     }
 }

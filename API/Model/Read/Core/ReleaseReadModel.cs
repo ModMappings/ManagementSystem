@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace API.Model.Read.Core
 {
@@ -31,5 +32,25 @@ namespace API.Model.Read.Core
         /// The date and time that this release was created.
         /// </summary>
         public DateTime CreatedOn { get; set; }
+
+        /// <summary>
+        /// The ids of the versioned classes that are part of this release.
+        /// </summary>
+        public List<Guid> Classes { get; set; }
+
+        /// <summary>
+        /// The ids of the versioned methods that are part of this release.
+        /// </summary>
+        public List<Guid> Methods { get; set; }
+
+        /// <summary>
+        /// The ids of the versioned parameters that are part of this release.
+        /// </summary>
+        public List<Guid> Parameters { get; set; }
+
+        /// <summary>
+        /// The ids of the versioned fields that are part of this release.
+        /// </summary>
+        public List<Guid> Fields { get; set; }
     }
 }

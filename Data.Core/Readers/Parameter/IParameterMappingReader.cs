@@ -8,7 +8,7 @@ using Data.Core.Readers.Core;
 
 namespace Data.Core.Readers.Parameter
 {
-    public interface IParameterMappingReader : INoneUniqueNamedMappingReader<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry>
+    public interface IParameterMappingReader : INoneUniqueNamedMappingReader<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry, ParameterReleaseMember>
     {
         Task<IQueryable<ParameterMapping>> GetByMethodInLatestVersion(Guid methodId);
 

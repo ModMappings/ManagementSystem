@@ -7,7 +7,7 @@ using Data.Core.Writers.Core;
 namespace Data.Core.Writers.Parameters
 {
     public interface IParameterMappingWriter
-        : IParameterMappingReader, INoneUniqueNamedMappingWriter<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry>
+        : IParameterMappingReader, INoneUniqueNamedMappingWriter<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry, ParameterReleaseMember>
     {
     }
 }

@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Core", "Data.Core\Data
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.EFCore", "Data.EFCore\Data.EFCore.csproj", "{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.MCPImport", "Data.MCPImport\Data.MCPImport.csproj", "{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

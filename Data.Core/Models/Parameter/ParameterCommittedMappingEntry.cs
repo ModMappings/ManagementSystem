@@ -4,7 +4,7 @@ using Data.Core.Models.Core;
 namespace Data.Core.Models.Parameter
 {
     public class ParameterCommittedMappingEntry
-        : AbstractCommittedMappingEntry<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry>
+        : AbstractCommittedMappingEntry<ParameterMapping, ParameterVersionedMapping, ParameterTypedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry, ParameterReleaseMember>
     {
     }
 }

@@ -58,6 +58,12 @@ namespace Data.EFCore.Writer.Parameter
             return await this.GetByRelease(release.Id);
         }
 
+        public async Task<IQueryable<ParameterMapping>> GetByLatestVersion()
+        {
+            return await this.GetByVersion(await _context.GameVersions.OrderByDescending(release => release.CreatedOn)
+                .FirstOrDefaultAsync());
+        }
+
         public async Task<IQueryable<ParameterMapping>> GetByVersion(Guid versionId)
         {
             return _context.ParameterMappings.Where(mapping =>
@@ -104,7 +110,7 @@ namespace Data.EFCore.Writer.Parameter
                 parameterMapping.VersionedMappings.Any(versionedMapping =>
                     versionedMapping.CommittedMappings.Any(committedMapping =>
                         (committedMapping.OutputMapping == name || committedMapping.InputMapping == name) &&
-                        committedMapping.Releases.Select(release => release.Id).Contains(releaseId))));
+                        committedMapping.Releases.Select(release => release.Release.Id).Contains(releaseId))));
         }
 
         public async Task<IQueryable<ParameterMapping>> GetByMappingInRelease(string name, Release release)

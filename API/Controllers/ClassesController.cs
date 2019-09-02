@@ -106,7 +106,7 @@ namespace API.Controllers
         [Produces("text/plain")]
         public async Task<ActionResult<int>> Count()
         {
-            return Ok(await (await _classReaderOrWriter.AsMappingQueryable()).CountAsync());
+            return Content((await (await _classReaderOrWriter.AsMappingQueryable()).CountAsync()).ToString());
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace API.Controllers
         {
             var dbModels = await _classReaderOrWriter.GetByLatestRelease();
 
-            var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
+            var readModels = dbModels.Skip(pageSize * pageIndex).Take(pageSize).ToList().Select(ConvertClassModelToReadModel);
 
             return Json(readModels);
         }
@@ -139,7 +139,7 @@ namespace API.Controllers
         [Produces("text/plain")]
         public async Task<ActionResult<int>> GetByLatestReleaseCount()
         {
-            return Ok(await (await _classReaderOrWriter.GetByLatestRelease()).CountAsync());
+            return Content((await (await _classReaderOrWriter.GetByLatestRelease()).CountAsync()).ToString());
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace API.Controllers
         {
             var dbModels = await _classReaderOrWriter.GetByRelease(releaseId);
 
-            var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
+            var readModels = dbModels.Skip(pageSize * pageIndex).Take(pageSize).ToList().Select(ConvertClassModelToReadModel);
 
             return Json(readModels);
         }
@@ -174,7 +174,7 @@ namespace API.Controllers
         [Produces("text/plain")]
         public async Task<ActionResult<int>> GetByReleaseCount(Guid releaseId)
         {
-            return Ok(await (await _classReaderOrWriter.GetByRelease(releaseId)).CountAsync());
+            return Content((await (await _classReaderOrWriter.GetByRelease(releaseId)).CountAsync()).ToString());
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace API.Controllers
         {
             var dbModels = await _classReaderOrWriter.GetByRelease(releaseName);
 
-            var readModels = dbModels.ToList().Select(ConvertClassModelToReadModel).Skip(pageSize * pageIndex).Take(pageIndex);
+            var readModels = dbModels.Skip(pageSize * pageIndex).Take(pageSize).ToList().Select(ConvertClassModelToReadModel);
 
             return Json(readModels);
         }
@@ -209,7 +209,111 @@ namespace API.Controllers
         [Produces("text/plain")]
         public async Task<ActionResult<int>> GetByReleaseCount(string releaseName)
         {
-            return Ok(await (await _classReaderOrWriter.GetByRelease(releaseName)).CountAsync());
+            return Content((await (await _classReaderOrWriter.GetByRelease(releaseName)).CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// The class models that are part of the current version.
+        /// Returns a paginated result.
+        /// </summary>
+        /// <param name="pageSize">The size of the page to get.</param>
+        /// <param name="pageIndex">The 0-based index of the page to get.</param>
+        /// <returns>The class models that are part of the current version and are on the requested page.</returns>
+        [HttpGet("version/latest/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByLatestVersion(int pageSize, int pageIndex)
+        {
+            var dbModels = await _classReaderOrWriter.GetByLatestVersion();
+
+            var readModels = dbModels.Skip(pageSize * pageIndex).Take(pageSize).ToList()
+                .Select(ConvertClassModelToReadModel);
+
+            return Json(readModels);
+        }
+
+        /// <summary>
+        /// Counts the amount of classes that are contained in the latest version.
+        /// </summary>
+        /// <returns>The amount of classes that are contained in the latest version</returns>
+        [HttpGet("version/latest/count")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> GetByLatestVersionCount()
+        {
+            return Content((await (await _classReaderOrWriter.GetByLatestVersion()).CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// The class models that are part of a given version based on the given id.
+        /// Returns a paginated result.
+        /// </summary>
+        /// <param name="versionId">The id of the version for which the classes are being pulled.</param>
+        /// <param name="pageSize">The size of the page that is being requested.</param>
+        /// <param name="pageIndex">The 0-based index of the page that is being requested.</param>
+        /// <returns>The classes that are part of the given version and are on the requested page.</returns>
+        [HttpGet("version/{versionId}/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByVersion(Guid versionId, int pageSize, int pageIndex)
+        {
+            var dbModels = await _classReaderOrWriter.GetByVersion(versionId);
+
+            var readModels = dbModels.Skip(pageSize * pageIndex).Take(pageSize).ToList().Select(ConvertClassModelToReadModel);
+
+            return Json(readModels);
+        }
+
+        /// <summary>
+        /// Counts the class models that are part of a given version.
+        /// </summary>
+        /// <param name="versionId">The id of the version for which the classes are being pulled.</param>
+        /// <returns>The amount of classes that are part of the given version.</returns>
+        [HttpGet("version/count/{versionId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> GetByVersionCount(Guid versionId)
+        {
+            return Content((await (await _classReaderOrWriter.GetByVersion(versionId)).CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// The class models that are part of a given version with the given name.
+        /// Returns a paginated result.
+        /// </summary>
+        /// <param name="versionName">The name of the version for which the class models are retrieved.</param>
+        /// <param name="pageSize">The size of the page for which the class models are retrieved. </param>
+        /// <param name="pageIndex">The index of the page for which the class models are retrieved.</param>
+        /// <returns>The classes that are part of the given version with the requested name as well as are on the requested page.</returns>
+        [HttpGet("version/{versionName}/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<ActionResult<IQueryable<ClassReadModel>>> GetByVersion(string versionName, int pageSize, int pageIndex)
+        {
+            var dbModels = await _classReaderOrWriter.GetByVersion(versionName);
+
+            var readModels = dbModels.Skip(pageSize * pageIndex).Take(pageSize).ToList().Select(ConvertClassModelToReadModel);
+
+            return Json(readModels);
+        }
+
+        /// <summary>
+        /// Calculates the amount of classes that are part of the version with the given name.
+        /// </summary>
+        /// <param name="versionName">The name of the version in question.</param>
+        /// <returns>The amount of classes that are part of the version.</returns>
+        [HttpGet("version/count/{versionName}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> GetByVersionCount(string versionName)
+        {
+            return Content((await (await _classReaderOrWriter.GetByVersion(versionName)).CountAsync()).ToString());
         }
 
         /// <summary>
@@ -320,6 +424,7 @@ namespace API.Controllers
                 VotedFor = initialVotedFor,
                 VotedAgainst = initialVotedAgainst,
                 Comment = proposalModel.Comment,
+                CreatedOn = DateTime.Now,
                 ClosedBy = null,
                 ClosedOn = null,
                 Merged = null,
@@ -450,8 +555,9 @@ namespace API.Controllers
                     InputMapping = currentProposal.InputMapping,
                     OutputMapping = currentProposal.OutputMapping,
                     Proposal = currentProposal,
-                    Releases = new List<Release>(),
-                    VersionedMapping = currentProposal.VersionedMapping
+                    Releases = new List<ClassReleaseMember>(),
+                    VersionedMapping = currentProposal.VersionedMapping,
+                    CreatedOn = DateTime.Now
                 };
 
                 currentProposal.VersionedMapping.CommittedMappings.Add(newCommittedMapping);
@@ -547,8 +653,9 @@ namespace API.Controllers
                 InputMapping = mapping.In,
                 OutputMapping = mapping.Out,
                 Proposal = null,
-                Releases = new List<Release>(),
-                VersionedMapping = versionedClassMapping
+                Releases = new List<ClassReleaseMember>(),
+                VersionedMapping = versionedClassMapping,
+                CreatedOn = DateTime.Now
             };
 
             versionedClassMapping.CommittedMappings.Add(initialCommittedMappingEntry);
@@ -630,8 +737,9 @@ namespace API.Controllers
                 InputMapping = mapping.In,
                 OutputMapping = mapping.Out,
                 Proposal = null,
-                Releases = new List<Release>(),
-                VersionedMapping = versionedClassMapping
+                Releases = new List<ClassReleaseMember>(),
+                VersionedMapping = versionedClassMapping,
+                CreatedOn = DateTime.Now
             };
 
             versionedClassMapping.CommittedMappings.Add(initialCommittedMappingEntry);

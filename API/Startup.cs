@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using API.Initialization;
 using API.Services.Core;
 using API.Services.UserResolving;
+using Data.Core.Models.Core;
 using Data.Core.Readers.Class;
 using Data.Core.Readers.Core;
 using Data.Core.Readers.Field;
@@ -48,8 +51,11 @@ namespace API
             services.AddHealthChecks()
                 .AddDbContextCheck<MCPContext>();
 
+            services.AddEntityFrameworkProxies();
+
             services.AddDbContext<MCPContext>(opt =>
-                opt.UseNpgsql(Configuration["ConnectionStrings:DefaultConnection"]));
+                opt.UseNpgsql(Configuration["ConnectionStrings:DefaultConnection"])
+                    .UseLazyLoadingProxies());
 
             services.AddSwaggerGen(config =>
             {
@@ -110,6 +116,13 @@ namespace API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "MCP.API - OpenAPI Documentation");
             });
+
+            UpdateDatabase(app);
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            MCPDataInitializer.InitializeData(app);
         }
     }
 }

@@ -5,16 +5,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Core.Models.Core
 {
-    public abstract class AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry,
-        TProposalEntry> : AbstractMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TMapping : AbstractMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
+    public abstract class AbstractProposalMappingEntry<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry,
+        TProposalEntry, TReleaseEntry> : AbstractMappingEntry<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TMapping : AbstractMapping<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TTypedMapping : AbstractTypedMapping<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
         where TCommittedEntry :
-        AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
+        AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TReleaseEntry : AbstractReleaseMember<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
     {
         [Required]
-        public User ProposedBy { get; set; }
+        public virtual User ProposedBy { get; set; }
 
         [Required]
         public DateTime ProposedOn { get; set; }
@@ -25,14 +27,14 @@ namespace Data.Core.Models.Core
         [Required]
         public bool IsPublicVote { get; set; }
 
-        public List<User> VotedFor { get; set; }
+        public virtual List<User> VotedFor { get; set; }
 
-        public List<User> VotedAgainst { get; set; }
+        public virtual List<User> VotedAgainst { get; set; }
 
         [Required]
         public string Comment { get; set; }
 
-        public User ClosedBy { get; set; }
+        public virtual User ClosedBy { get; set; }
 
         public DateTime? ClosedOn { get; set; }
 
@@ -41,6 +43,6 @@ namespace Data.Core.Models.Core
         public Guid? MergedWithId { get; set; }
 
         [ForeignKey("MergedWithId")]
-        public TCommittedEntry MergedWith { get; set; }
+        public virtual TCommittedEntry MergedWith { get; set; }
     }
 }

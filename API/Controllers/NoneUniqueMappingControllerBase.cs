@@ -15,18 +15,19 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
     public abstract class
-        NoneUniqueMappingControllerBase<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TAPIModel, TVersionedReadModel, TCreateReadModel, TCreateVersionedModel> : Controller
-        where TMapping : AbstractMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
+        NoneUniqueMappingControllerBase<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry, TAPIModel, TVersionedReadModel, TCreateReadModel, TCreateVersionedModel> : Controller
+        where TMapping : AbstractMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
         where TCommittedEntry :
-        AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>, new()
+        AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>, new()
         where TProposalEntry :
-        AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>, new()
+        AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>, new()
+        where TReleaseEntry : AbstractReleaseMember<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
     {
         /// <summary>
         /// The readerWriter and as such also the reader for mappings.
         /// </summary>
-        protected INoneUniqueNamedMappingWriter<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
+        protected INoneUniqueNamedMappingWriter<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
             _readerWriter;
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace API.Controllers
         /// <param name="gameVersionReader">The reader for game versions.</param>
         /// <param name="userResolvingService">The service used to resolve the user.</param>
         protected NoneUniqueMappingControllerBase(
-            INoneUniqueNamedMappingWriter<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry> readerWriter,
+            INoneUniqueNamedMappingWriter<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry> readerWriter,
             IGameVersionReader gameVersionReader,
             IUserResolvingService userResolvingService)
         {
@@ -109,7 +110,7 @@ namespace API.Controllers
         [Produces("text/plain")]
         public async Task<ActionResult<int>> Count()
         {
-            return Ok(await (await _readerWriter.AsMappingQueryable()).CountAsync());
+            return Content((await (await _readerWriter.AsMappingQueryable()).CountAsync()).ToString());
         }
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="pageSize">The size of the page to get.</param>
         /// <param name="pageIndex">The 0-based index of the page to get.</param>
-        /// <returns>The models that are part of the current release and are on the requested page.</returns>
+        /// <returns>The models that are part of the current release and  are on the requested page.</returns>
         [HttpGet("release/latest/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Consumes("application/json")]
@@ -127,8 +128,8 @@ namespace API.Controllers
         {
             var dbModels = await _readerWriter.GetByLatestRelease();
 
-            var readModels = dbModels.ToList().Select(ConvertDBModelToApiModel).Skip(pageSize * pageIndex)
-                .Take(pageIndex);
+            var readModels = dbModels.Skip(pageSize * pageIndex)
+                                                     .Take(pageSize).ToList().Select(ConvertDBModelToApiModel);
 
             return Json(readModels);
         }
@@ -143,7 +144,7 @@ namespace API.Controllers
         [Produces("text/plain")]
         public async Task<ActionResult<int>> GetByLatestReleaseCount()
         {
-            return Ok(await (await _readerWriter.GetByLatestRelease()).CountAsync());
+            return Content((await (await _readerWriter.GetByLatestRelease()).CountAsync()).ToString());
         }
 
         /// <summary>
@@ -163,8 +164,8 @@ namespace API.Controllers
         {
             var dbModels = await _readerWriter.GetByRelease(releaseId);
 
-            var readModels = dbModels.ToList().Select(ConvertDBModelToApiModel).Skip(pageSize * pageIndex)
-                .Take(pageIndex);
+            var readModels = dbModels.Skip(pageSize * pageIndex)
+                                                     .Take(pageSize).ToList().Select(ConvertDBModelToApiModel);
 
             return Json(readModels);
         }
@@ -180,7 +181,7 @@ namespace API.Controllers
         [Produces("text/plain")]
         public async Task<ActionResult<int>> GetByReleaseCount(Guid releaseId)
         {
-            return Ok(await (await _readerWriter.GetByRelease(releaseId)).CountAsync());
+            return Content((await (await _readerWriter.GetByRelease(releaseId)).CountAsync()).ToString());
         }
 
         /// <summary>
@@ -200,8 +201,8 @@ namespace API.Controllers
         {
             var dbModels = await _readerWriter.GetByRelease(releaseName);
 
-            var readModels = dbModels.ToList().Select(ConvertDBModelToApiModel).Skip(pageSize * pageIndex)
-                .Take(pageIndex);
+            var readModels = dbModels.Skip(pageSize * pageIndex)
+                                                     .Take(pageSize).ToList().Select(ConvertDBModelToApiModel);
 
             return Json(readModels);
         }
@@ -217,7 +218,115 @@ namespace API.Controllers
         [Produces("text/plain")]
         public async Task<ActionResult<int>> GetByReleaseCount(string releaseName)
         {
-            return Ok(await (await _readerWriter.GetByRelease(releaseName)).CountAsync());
+            return Content((await (await _readerWriter.GetByRelease(releaseName)).CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// The models that are part of the current version.
+        /// Returns a paginated result.
+        /// </summary>
+        /// <param name="pageSize">The size of the page to get.</param>
+        /// <param name="pageIndex">The 0-based index of the page to get.</param>
+        /// <returns>The models that are part of the current version and  are on the requested page.</returns>
+        [HttpGet("version/latest/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<ActionResult<IQueryable<TAPIModel>>> GetByLatestVersion(int pageSize, int pageIndex)
+        {
+            var dbModels = await _readerWriter.GetByLatestVersion();
+
+            var readModels = dbModels.Skip(pageSize * pageIndex)
+                                                     .Take(pageSize).ToList().Select(ConvertDBModelToApiModel);
+
+            return Json(readModels);
+        }
+
+        /// <summary>
+        /// Counts the amount of that are contained in the latest version.
+        /// </summary>
+        /// <returns>The amount of that are contained in the latest version</returns>
+        [HttpGet("version/latest/count")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> GetByLatestVersionCount()
+        {
+            return Content((await (await _readerWriter.GetByLatestVersion()).CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// The models that are part of a given version based on the given id.
+        /// Returns a paginated result.
+        /// </summary>
+        /// <param name="versionId">The id of the version for which the models are being pulled.</param>
+        /// <param name="pageSize">The size of the page that is being requested.</param>
+        /// <param name="pageIndex">The 0-based index of the page that is being requested.</param>
+        /// <returns>The models that are part of the given version and are on the requested page.</returns>
+        [HttpGet("version/{versionId}/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<ActionResult<IQueryable<TAPIModel>>> GetByVersion(Guid versionId, int pageSize,
+            int pageIndex)
+        {
+            var dbModels = await _readerWriter.GetByVersion(versionId);
+
+            var readModels = dbModels.Skip(pageSize * pageIndex)
+                                                     .Take(pageSize).ToList().Select(ConvertDBModelToApiModel);
+
+            return Json(readModels);
+        }
+
+        /// <summary>
+        /// Counts the models that are part of a given version.
+        /// </summary>
+        /// <param name="versionId">The id of the version for which the models are being pulled.</param>
+        /// <returns>The amount of models that are part of the given version.</returns>
+        [HttpGet("version/count/{versionId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> GetByVersionCount(Guid versionId)
+        {
+            return Content((await (await _readerWriter.GetByVersion(versionId)).CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// The models that are part of a given version with the given name.
+        /// Returns a paginated result.
+        /// </summary>
+        /// <param name="versionName">The name of the version for which the models are retrieved.</param>
+        /// <param name="pageSize">The size of the page for which the models are retrieved. </param>
+        /// <param name="pageIndex">The index of the page for which the models are retrieved.</param>
+        /// <returns>The models that are part of the given version with the requested name as well as are on the requested page.</returns>
+        [HttpGet("version/{versionName}/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<ActionResult<IQueryable<TAPIModel>>> GetByVersion(string versionName, int pageSize,
+            int pageIndex)
+        {
+            var dbModels = await _readerWriter.GetByVersion(versionName);
+
+            var readModels = dbModels.Skip(pageSize * pageIndex)
+                                                     .Take(pageSize).ToList().Select(ConvertDBModelToApiModel);
+
+            return Json(readModels);
+        }
+
+        /// <summary>
+        /// Calculates the amount of models that are part of the version with the given name.
+        /// </summary>
+        /// <param name="versionName">The name of the version in question.</param>
+        /// <returns>The amount of models that are part of the version.</returns>
+        [HttpGet("version/count/{versionName}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Consumes("application/json")]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> GetByVersionCount(string versionName)
+        {
+            return Content((await (await _readerWriter.GetByVersion(versionName)).CountAsync()).ToString());
         }
 
         /// <summary>
@@ -332,7 +441,8 @@ namespace API.Controllers
                 ClosedOn = null,
                 Merged = null,
                 MergedWithId = null,
-                MergedWith = null
+                MergedWith = null,
+                CreatedOn = DateTime.Now
             };
 
             await this._readerWriter.AddProposal(proposalEntry);
@@ -458,8 +568,9 @@ namespace API.Controllers
                     InputMapping = currentProposal.InputMapping,
                     OutputMapping = currentProposal.OutputMapping,
                     Proposal = currentProposal,
-                    Releases = new List<Release>(),
-                    VersionedMapping = currentProposal.VersionedMapping
+                    Releases = new List<TReleaseEntry>(),
+                    VersionedMapping = currentProposal.VersionedMapping,
+                    CreatedOn = DateTime.Now
                 };
 
                 currentProposal.VersionedMapping.CommittedMappings.Add(newCommittedMapping);

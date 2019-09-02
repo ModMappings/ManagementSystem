@@ -8,6 +8,7 @@ using Data.Core.Readers.Core;
 using Data.Core.Writers.Method;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Data.EFCore.Writer.Method
 {
@@ -56,6 +57,12 @@ namespace Data.EFCore.Writer.Method
             return await this.GetByRelease(release.Id);
         }
 
+        public async Task<IQueryable<MethodMapping>> GetByLatestVersion()
+        {
+            return await this.GetByVersion(await _context.GameVersions.OrderByDescending(release => release.CreatedOn)
+                .FirstOrDefaultAsync());
+        }
+
         public async Task<IQueryable<MethodMapping>> GetByVersion(Guid versionId)
         {
             return _context.MethodMappings.Where(mapping =>
@@ -100,7 +107,7 @@ namespace Data.EFCore.Writer.Method
         {
             return _context.MethodMappings.Where(mapping => mapping.VersionedMappings.Any(versionMapping =>
                 versionMapping.CommittedMappings.Any(committedMapping => (committedMapping.OutputMapping == name || committedMapping.InputMapping == name) &&
-                                                                         committedMapping.Releases.Select(release => release.Id)
+                                                                         committedMapping.Releases.Select(release => release.Release.Id)
                                                                              .Contains(releaseId))));
         }
 
@@ -109,7 +116,7 @@ namespace Data.EFCore.Writer.Method
             return _context.MethodMappings.Where(mapping => mapping.VersionedMappings.Any(versionMapping =>
                 versionMapping.CommittedMappings.Any(committedMapping => (committedMapping.OutputMapping == name || committedMapping.InputMapping == name) &&
                                                                          committedMapping.Releases
-                                                                             .Contains(release))));
+                                                                             .Any(r => r.Release == release))));
         }
 
         public async Task<MethodVersionedMapping> GetVersionedMapping(Guid id)

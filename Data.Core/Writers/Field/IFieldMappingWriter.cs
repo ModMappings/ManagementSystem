@@ -7,7 +7,7 @@ using Data.Core.Writers.Core;
 namespace Data.Core.Writers.Field
 {
     public interface IFieldMappingWriter
-        : IFieldMappingReader, INoneUniqueNamedMappingWriter<FieldMapping, FieldVersionedMapping, FieldCommittedMappingEntry, FieldProposalMappingEntry>
+        : IFieldMappingReader, INoneUniqueNamedMappingWriter<FieldMapping, FieldVersionedMapping, FieldCommittedMappingEntry, FieldProposalMappingEntry, FieldReleaseMember>
     {
     }
 }

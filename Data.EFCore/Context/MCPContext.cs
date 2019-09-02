@@ -52,8 +52,10 @@ namespace Data.EFCore.Context
 
         public DbSet<ParameterVersionedMapping> ParameterVersionedMappings { get; set; }
 
-        public void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<GameVersion>()
                 .HasIndex(version => version.Name)
                 .IsUnique();

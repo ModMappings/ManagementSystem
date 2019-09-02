@@ -9,7 +9,7 @@ using Data.Core.Readers.Core;
 namespace Data.Core.Readers.Class
 {
     public interface IClassMappingReader
-        : IUniqueNamedMappingReader<ClassMapping, ClassVersionedMapping, ClassCommittedMappingEntry, ClassProposalMappingEntry>
+        : IUniqueNamedMappingReader<ClassMapping, ClassVersionedMapping, ClassCommittedMappingEntry, ClassProposalMappingEntry, ClassReleaseMember>
     {
     }
 }

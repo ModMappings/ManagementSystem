@@ -8,7 +8,7 @@ using Data.Core.Readers.Core;
 
 namespace Data.Core.Readers.Field
 {
-    public interface IFieldMappingReader : INoneUniqueNamedMappingReader<FieldMapping, FieldVersionedMapping, FieldCommittedMappingEntry, FieldProposalMappingEntry>
+    public interface IFieldMappingReader : INoneUniqueNamedMappingReader<FieldMapping, FieldVersionedMapping, FieldCommittedMappingEntry, FieldProposalMappingEntry, FieldReleaseMember>
     {
         Task<IQueryable<FieldMapping>> GetByClassInLatestVersion(Guid classId);
 

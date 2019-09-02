@@ -18,7 +18,7 @@ namespace Data.Core.Models.Core
         public DateTime CreatedOn { get; set; }
 
         [Required]
-        public User CreatedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
 
         public bool IsPreRelease { get; set; }
 

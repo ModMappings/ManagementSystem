@@ -8,12 +8,12 @@ using Data.Core.Models.Parameter;
 namespace Data.Core.Models.Method
 {
     public class MethodVersionedMapping
-        : AbstractVersionedMapping<MethodMapping, MethodVersionedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry>
+        : AbstractVersionedMapping<MethodMapping, MethodVersionedMapping, MethodTypedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry, MethodReleaseMember>
     {
         [Required]
-        public ClassVersionedMapping MemberOf { get; set; }
+        public virtual ClassVersionedMapping MemberOf { get; set; }
 
-        public List<ParameterVersionedMapping> Parameters { get; set; }
+        public virtual List<ParameterVersionedMapping> Parameters { get; set; }
 
         public bool IsStatic { get; set; }
 

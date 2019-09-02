@@ -5,10 +5,10 @@ using Data.Core.Models.Method;
 namespace Data.Core.Models.Parameter
 {
     public class ParameterVersionedMapping
-        : AbstractVersionedMapping<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry>
+        : AbstractVersionedMapping<ParameterMapping, ParameterVersionedMapping, ParameterTypedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry, ParameterReleaseMember>
     {
         [Required]
-        public MethodVersionedMapping ParameterOf { get; set; }
+        public virtual MethodVersionedMapping ParameterOf { get; set; }
 
         [Required]
         public int Index { get; set; }

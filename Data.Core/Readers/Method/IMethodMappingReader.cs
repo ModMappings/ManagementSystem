@@ -9,7 +9,7 @@ using Data.Core.Readers.Core;
 
 namespace Data.Core.Readers.Method
 {
-    public interface IMethodMappingReader : INoneUniqueNamedMappingReader<MethodMapping, MethodVersionedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry>
+    public interface IMethodMappingReader : INoneUniqueNamedMappingReader<MethodMapping, MethodVersionedMapping, MethodCommittedMappingEntry, MethodProposalMappingEntry, MethodReleaseMember>
     {
         Task<IQueryable<MethodMapping>> GetByClassInLatestVersion(Guid classId);
 

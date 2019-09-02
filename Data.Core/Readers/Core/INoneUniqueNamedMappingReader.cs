@@ -10,12 +10,13 @@ namespace Data.Core.Readers.Core
     /// The mapping has a unique name, for example classes with their package name included.
     /// </summary>
     public interface
-        INoneUniqueNamedMappingReader<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        : IMappingReader<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TMapping : AbstractMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TCommittedEntry : AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
+        INoneUniqueNamedMappingReader<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        : IMappingReader<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TMapping : AbstractMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TCommittedEntry : AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TReleaseEntry : AbstractReleaseMember<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
     {
         Task<IQueryable<TMapping>> GetByLatestMapping(string name);
 

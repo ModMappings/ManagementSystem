@@ -27,6 +27,7 @@ namespace API.Controllers
         FieldVersionedMapping,
         FieldCommittedMappingEntry,
         FieldProposalMappingEntry,
+        FieldReleaseMember,
         FieldReadModel,
         FieldVersionedReadModel,
         CreateFieldModel,
@@ -35,7 +36,7 @@ namespace API.Controllers
 
         private readonly IClassMappingReader _classMappingReader;
 
-        public FieldsController(INoneUniqueNamedMappingWriter<FieldMapping, FieldVersionedMapping, FieldCommittedMappingEntry, FieldProposalMappingEntry> readerWriter, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService, IClassMappingReader classMappingReader) : base(readerWriter, gameVersionReader, userResolvingService)
+        public FieldsController(INoneUniqueNamedMappingWriter<FieldMapping, FieldVersionedMapping, FieldCommittedMappingEntry, FieldProposalMappingEntry, FieldReleaseMember> readerWriter, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService, IClassMappingReader classMappingReader) : base(readerWriter, gameVersionReader, userResolvingService)
         {
             _classMappingReader = classMappingReader;
         }
@@ -84,8 +85,9 @@ namespace API.Controllers
                 InputMapping = mapping.In,
                 OutputMapping = mapping.Out,
                 Proposal = null,
-                Releases = new List<Release>(),
-                VersionedMapping = versionedFieldMapping
+                Releases = new List<FieldReleaseMember>(),
+                VersionedMapping = versionedFieldMapping,
+                CreatedOn = DateTime.Now
             };
 
             versionedFieldMapping.CommittedMappings.Add(initialCommittedMappingEntry);
@@ -155,8 +157,9 @@ namespace API.Controllers
                 InputMapping = mapping.In,
                 OutputMapping = mapping.Out,
                 Proposal = null,
-                Releases = new List<Release>(),
-                VersionedMapping = versionedFieldMapping
+                Releases = new List<FieldReleaseMember>(),
+                VersionedMapping = versionedFieldMapping,
+                CreatedOn = DateTime.Now
             };
 
             versionedFieldMapping.CommittedMappings.Add(initialCommittedMappingEntry);

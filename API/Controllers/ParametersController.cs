@@ -27,6 +27,7 @@ namespace API.Controllers
         ParameterVersionedMapping,
         ParameterCommittedMappingEntry,
         ParameterProposalMappingEntry,
+        ParameterReleaseMember,
         ParameterReadModel,
         ParameterVersionedReadModel,
         CreateParameterModel,
@@ -35,7 +36,7 @@ namespace API.Controllers
 
         private readonly IMethodMappingReader _methodMappingReader;
 
-        public ParametersController(INoneUniqueNamedMappingWriter<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry> readerWriter, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService, IMethodMappingReader methodMappingReader) : base(readerWriter, gameVersionReader, userResolvingService)
+        public ParametersController(INoneUniqueNamedMappingWriter<ParameterMapping, ParameterVersionedMapping, ParameterCommittedMappingEntry, ParameterProposalMappingEntry, ParameterReleaseMember> readerWriter, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService, IMethodMappingReader methodMappingReader) : base(readerWriter, gameVersionReader, userResolvingService)
         {
             _methodMappingReader = methodMappingReader;
         }
@@ -87,8 +88,9 @@ namespace API.Controllers
                 InputMapping = mapping.In,
                 OutputMapping = mapping.Out,
                 Proposal = null,
-                Releases = new List<Release>(),
-                VersionedMapping = versionedParameterMapping
+                Releases = new List<ParameterReleaseMember>(),
+                VersionedMapping = versionedParameterMapping,
+                CreatedOn = DateTime.Now
             };
 
             versionedParameterMapping.CommittedMappings.Add(initialCommittedMappingEntry);
@@ -144,8 +146,9 @@ namespace API.Controllers
                 InputMapping = mapping.In,
                 OutputMapping = mapping.Out,
                 Proposal = null,
-                Releases = new List<Release>(),
-                VersionedMapping = versionedParameterMapping
+                Releases = new List<ParameterReleaseMember>(),
+                VersionedMapping = versionedParameterMapping,
+                CreatedOn = DateTime.Now
             };
 
             versionedParameterMapping.CommittedMappings.Add(initialCommittedMappingEntry);

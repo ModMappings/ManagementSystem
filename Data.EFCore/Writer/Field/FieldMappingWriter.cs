@@ -52,7 +52,7 @@ namespace Data.EFCore.Writer.Field
         {
             return _context.FieldMappings.Where(mapping => mapping.VersionedMappings.Any(versionMapping =>
                 versionMapping.CommittedMappings.Any(committedMapping => (committedMapping.OutputMapping == name || committedMapping.InputMapping == name) &&
-                                                                         committedMapping.Releases.Select(release => release.Id)
+                                                                         committedMapping.Releases.Select(release => release.Release.Id)
                                                                              .Contains(releaseId))));
         }
 
@@ -61,7 +61,7 @@ namespace Data.EFCore.Writer.Field
             return _context.FieldMappings.Where(mapping => mapping.VersionedMappings.Any(versionMapping =>
                 versionMapping.CommittedMappings.Any(committedMapping => (committedMapping.OutputMapping == name || committedMapping.InputMapping == name) &&
                                                                          committedMapping.Releases
-                                                                             .Contains(release))));
+                                                                             .Any(r => r.Release == release))));
         }
 
         public async Task<FieldVersionedMapping> GetVersionedMapping(Guid id)
@@ -106,6 +106,12 @@ namespace Data.EFCore.Writer.Field
         public async Task<IQueryable<FieldMapping>> GetByRelease(Release release)
         {
             return await this.GetByRelease(release.Id);
+        }
+
+        public async Task<IQueryable<FieldMapping>> GetByLatestVersion()
+        {
+            return await this.GetByVersion(await _context.GameVersions.OrderByDescending(release => release.CreatedOn)
+                .FirstOrDefaultAsync());
         }
 
         public async Task<IQueryable<FieldMapping>> GetByVersion(Guid versionId)

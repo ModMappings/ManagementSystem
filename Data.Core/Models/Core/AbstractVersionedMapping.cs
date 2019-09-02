@@ -6,30 +6,28 @@ using System.Linq;
 
 namespace Data.Core.Models.Core
 {
-    public abstract class AbstractVersionedMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TMapping : AbstractMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TCommittedEntry : AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
-        where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TCommittedEntry, TProposalEntry>
+    public abstract class AbstractVersionedMapping<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TMapping : AbstractMapping<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TVersionedMapping : AbstractVersionedMapping<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TTypedMapping : AbstractTypedMapping<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TCommittedEntry : AbstractCommittedMappingEntry<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TProposalEntry : AbstractProposalMappingEntry<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
+        where TReleaseEntry : AbstractReleaseMember<TMapping, TVersionedMapping, TTypedMapping, TCommittedEntry, TProposalEntry, TReleaseEntry>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
-        public GameVersion GameVersion { get; set; }
+        public virtual GameVersion GameVersion { get; set; }
 
         [Required]
-        public User CreatedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
 
         [Required]
         public DateTime CreatedOn { get; set; }
 
         [Required]
-        public TMapping Mapping { get; set; }
-
-        public List<TCommittedEntry> CommittedMappings { get; set; }
-
-        public List<TProposalEntry> ProposalMappings { get; set; }
+        public virtual TMapping Mapping { get; set; }
     }
 }

@@ -24,7 +24,8 @@ namespace Data.EFCore.Writer.Class
 
         public async Task<ClassMapping> GetById(Guid id)
         {
-            return await _context.ClassMappings.FirstOrDefaultAsync(mapping => mapping.Id == id);
+            return await _context.ClassMappings.IncludeForDefaultClassMappingLogic()
+                .FirstOrDefaultAsync(mapping => mapping.Id == id);
         }
 
         public async Task<ClassMapping> GetByLatestMapping(string name)
@@ -33,6 +34,7 @@ namespace Data.EFCore.Writer.Class
 
             var versionedMapping =
                 await _context.ClassVersionedMappings.OrderByDescending(mapping => mapping.CreatedOn)
+                    .Include(mapping => mapping.CommittedMappings)
                     .FirstOrDefaultAsync();
 
             return await GetMappingFromNameAndVersionedMapping(classNameComponents, packageName, versionedMapping);
@@ -44,6 +46,7 @@ namespace Data.EFCore.Writer.Class
 
             var versionedMapping =
                 await _context.ClassVersionedMappings.OrderByDescending(mapping => mapping.CreatedOn)
+                    .Include(mapping => mapping.CommittedMappings)
                     .FirstOrDefaultAsync(mapping => mapping.GameVersion.Id == versionId);
 
             return await GetMappingFromNameAndVersionedMapping(classNameComponents, packageName, versionedMapping);
@@ -61,7 +64,9 @@ namespace Data.EFCore.Writer.Class
             var release = await _context.Releases.FirstOrDefaultAsync(r => r.Id == releaseId);
 
             var versionedMapping =
-                await _context.ClassVersionedMappings.FirstOrDefaultAsync(mapping =>
+                await _context.ClassVersionedMappings
+                    .Include(mapping => mapping.CommittedMappings)
+                    .FirstOrDefaultAsync(mapping =>
                     mapping.GameVersion.Id == release.GameVersion.Id);
 
             if (versionedMapping == null)
@@ -95,7 +100,8 @@ namespace Data.EFCore.Writer.Class
 
         public async Task<IQueryable<ClassMapping>> AsMappingQueryable()
         {
-            return await Task.FromResult(_context.ClassMappings);
+            return await Task.FromResult(_context.ClassMappings.IncludeForDefaultClassMappingLogic()
+            );
         }
 
         public async Task<IQueryable<ClassMapping>> GetByLatestRelease()
@@ -120,25 +126,31 @@ namespace Data.EFCore.Writer.Class
                 return null;
 
             return _context.ClassMappings.Where(cls => cls.VersionedMappings.Any(vcls =>
-                vcls.CommittedMappings.Any(cmvcls => cmvcls.Releases.Contains(release))));
+                vcls.CommittedMappings.Any(cmvcls => cmvcls.Releases.Any(r => r.Release == release)))).IncludeForDefaultClassMappingLogic();
+        }
+
+        public async Task<IQueryable<ClassMapping>> GetByLatestVersion()
+        {
+            return await this.GetByVersion(await _context.GameVersions.OrderByDescending(release => release.CreatedOn)
+                .FirstOrDefaultAsync());
         }
 
         public async Task<IQueryable<ClassMapping>> GetByVersion(Guid versionId)
         {
             return _context.ClassMappings.Where(mapping =>
-                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion.Id == versionId));
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion.Id == versionId)).IncludeForDefaultClassMappingLogic();
         }
 
         public async Task<IQueryable<ClassMapping>> GetByVersion(string versionName)
         {
             return _context.ClassMappings.Where(mapping =>
-                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion.Name == versionName));
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion.Name == versionName)).IncludeForDefaultClassMappingLogic();
         }
 
         public async Task<IQueryable<ClassMapping>> GetByVersion(GameVersion version)
         {
             return _context.ClassMappings.Where(mapping =>
-                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion == version));
+                mapping.VersionedMappings.Any(versionedMapping => versionedMapping.GameVersion == version)).IncludeForDefaultClassMappingLogic();
         }
 
         public async Task Add(ClassMapping mapping)
@@ -171,7 +183,7 @@ namespace Data.EFCore.Writer.Class
                 packageName = nameComponents.Take(nameComponents.Length - 1).Aggregate(((s, s1) => $"{s}.{s1}"));
             }
 
-            var classNameComponents = nameComponents.Last().Split('#');
+            var classNameComponents = nameComponents.Last().Split('$');
             return (nameComponents, packageName, classNameComponents);
         }
 
@@ -185,11 +197,16 @@ namespace Data.EFCore.Writer.Class
             var nameComponentsList = classNameComponents.ToList();
             foreach (var classNameComponent in nameComponentsList)
             {
-                targetMapping = await _context.ClassCommittedMappingEntries.FirstOrDefaultAsync(mapping =>
+                targetMapping = await _context.ClassCommittedMappingEntries
+                    .Include(mapping => mapping.VersionedMapping)
+                    .FirstOrDefaultAsync(mapping =>
                     mapping.VersionedMapping.Package == packageName &&
                     mapping.VersionedMapping.Outer.Id == parentClassId &&
                     mapping.OutputMapping == classNameComponent &&
                     versionedMapping.CommittedMappings.Select(committedMapping => committedMapping.Id).Contains(mapping.Id));
+
+                if (targetMapping == null)
+                    return null;
 
                 parentClassId = targetMapping.VersionedMapping.Id;
             }
@@ -199,11 +216,16 @@ namespace Data.EFCore.Writer.Class
                 parentClassId = null;
                 foreach (var classNameComponent in nameComponentsList)
                 {
-                    targetMapping = await _context.ClassCommittedMappingEntries.FirstOrDefaultAsync(mapping =>
+                    targetMapping = await _context.ClassCommittedMappingEntries
+                        .Include(mapping => mapping.VersionedMapping)
+                        .FirstOrDefaultAsync(mapping =>
                         mapping.VersionedMapping.Package == packageName &&
                         mapping.VersionedMapping.Outer.Id == parentClassId &&
                         mapping.InputMapping == classNameComponent &&
                         versionedMapping.CommittedMappings.Select(committedMapping => committedMapping.Id).Contains(mapping.Id));
+
+                    if (targetMapping == null)
+                        return null;
 
                     parentClassId = targetMapping.Id;
                 }
@@ -212,7 +234,8 @@ namespace Data.EFCore.Writer.Class
             if (targetMapping == null)
                 return null;
 
-            return await _context.ClassMappings.FirstOrDefaultAsync(mapping =>
+            return await _context.ClassMappings.IncludeForDefaultClassMappingLogic()
+                .FirstOrDefaultAsync(mapping =>
                 mapping.VersionedMappings.Select(v => v.Id).Contains(versionedMapping.Id));
         }
 
