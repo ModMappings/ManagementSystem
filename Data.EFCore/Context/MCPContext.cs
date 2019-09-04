@@ -1,8 +1,6 @@
-using Data.Core.Models.Class;
 using Data.Core.Models.Core;
-using Data.Core.Models.Field;
-using Data.Core.Models.Method;
-using Data.Core.Models.Parameter;
+using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.MetaData;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.EFCore.Context
@@ -14,43 +12,33 @@ namespace Data.EFCore.Context
         {
         }
 
-        public DbSet<ClassCommittedMappingEntry> ClassCommittedMappingEntries { get; set; }
-
-        public DbSet<ClassMapping> ClassMappings { get; set; }
-
-        public DbSet<ClassProposalMappingEntry> ClassProposalMappingEntries { get; set; }
-
-        public DbSet<ClassVersionedMapping> ClassVersionedMappings { get; set; }
-
         public DbSet<GameVersion> GameVersions { get; set; }
 
         public DbSet<Release> Releases { get; set; }
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<FieldCommittedMappingEntry> FieldCommittedMappingEntries { get; set; }
+        public DbSet<MappingType> MappingTypes { get; set; }
 
-        public DbSet<FieldMapping> FieldMappings { get; set; }
+        public DbSet<Component> Components { get; set; }
 
-        public DbSet<FieldProposalMappingEntry> FieldProposalMappingEntries { get; set; }
+        public DbSet<VersionedComponent> VersionedComponents { get; set; }
 
-        public DbSet<FieldVersionedMapping> FieldVersionedMappings { get; set; }
+        public DbSet<LiveMappingEntry> LiveMappingEntries { get; set; }
 
-        public DbSet<MethodCommittedMappingEntry> MethodCommittedMappingEntries { get; set; }
+        public DbSet<ProposalMappingEntry> ProposalMappingEntries { get; set; }
 
-        public DbSet<MethodMapping> MethodMappings { get; set; }
+        public DbSet<ReleaseComponent> ReleaseComponents { get; set; }
 
-        public DbSet<MethodProposalMappingEntry> MethodProposalMappingEntries { get; set; }
+        public DbSet<VersionedComponentMetadataBase> VersionedComponentMetadata { get; set; }
 
-        public DbSet<MethodVersionedMapping> MethodVersionedMappings { get; set; }
+        public DbSet<ClassMetadata> ClassMetadata { get; set; }
 
-        public DbSet<ParameterCommittedMappingEntry> ParameterCommittedMappingEntries { get; set; }
+        public DbSet<MethodMetadata> MethodMetadata { get; set; }
 
-        public DbSet<ParameterMapping> ParameterMappings { get; set; }
+        public DbSet<FieldMetadata> FieldMetadata { get; set; }
 
-        public DbSet<ParameterProposalMappingEntry> ParameterProposalMappingEntries { get; set; }
-
-        public DbSet<ParameterVersionedMapping> ParameterVersionedMappings { get; set; }
+        public DbSet<ParameterMetadata> ParameterMetadata { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

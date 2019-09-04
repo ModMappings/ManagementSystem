@@ -18,7 +18,5 @@ namespace Data.Core.Readers.Core
         Task<IQueryable<MappingType>> GetMadeBy(User user);
 
         Task<IQueryable<MappingType>> GetMadeOn(DateTime date);
-
-        Task<MappingType> GetLatest();
     }
 }

@@ -43,10 +43,14 @@ namespace Data.Core.Readers.Core
 
         Task<IQueryable<Release>> GetMadeForVersionForMappingType(GameVersion version, MappingType mappingType);
 
-        Task<IQueryable<Release>> GetMadeForMapping(Guid id);
+        Task<IQueryable<Release>> GetMadeForMappingType(Guid id);
 
-        Task<IQueryable<Release>> GetMadeForMapping(MappingType mapping);
+        Task<IQueryable<Release>> GetMadeForMappingType(MappingType mapping);
 
         Task<Release> GetLatest();
+
+        Task<Release> GetLatestForMapping(Guid id);
+
+        Task<Release> GetLatestForMapping(MappingType mappingType);
     }
 }

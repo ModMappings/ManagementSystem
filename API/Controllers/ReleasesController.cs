@@ -1,22 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using API.Model.Creation.Core;
 using API.Model.Read.Core;
 using API.Services.Core;
-using Data.Core.Models.Class;
 using Data.Core.Models.Core;
-using Data.Core.Models.Field;
-using Data.Core.Models.Method;
-using Data.Core.Models.Parameter;
-using Data.Core.Readers.Class;
+using Data.Core.Models.Mapping;
 using Data.Core.Readers.Core;
-using Data.Core.Readers.Field;
-using Data.Core.Readers.Method;
-using Data.Core.Readers.Parameter;
 using Data.Core.Writers.Core;
+using Data.EFCore.Writer.Mapping;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,13 +36,13 @@ namespace API.Controllers
         /// </summary>
         private readonly IGameVersionReader _gameVersionReader;
 
-        private readonly IClassMappingReader _classMappingReader;
+        private readonly ClassWriter _classes;
 
-        private readonly IMethodMappingReader _methodMappingReader;
+        private readonly MethodWriter _methods;
 
-        private readonly IFieldMappingReader _fieldMappingReader;
+        private readonly FieldWriter _fields;
 
-        private readonly IParameterMappingReader _parameterMappingReader;
+        private readonly ParameterWriter _parameters;
 
         /// <summary>
         /// Creates a new game version controller.
@@ -58,20 +50,20 @@ namespace API.Controllers
         /// <param name="releaseWriter">The writer and reader for releases.</param>
         /// <param name="userResolvingService">The user resolving service.</param>
         /// <param name="gameVersionReader">The reader for releases.</param>
-        /// <param name="classMappingReader">The class mapping reader.</param>
-        /// <param name="methodMappingReader">The method mapping reader.</param>
-        /// <param name="fieldMappingReader">The field mapping reader.</param>
-        /// <param name="parameterMappingReader">The parameter mapping reader.</param>
+        /// <param name="classes">The class mapping reader.</param>
+        /// <param name="methods">The method mapping reader.</param>
+        /// <param name="fields">The field mapping reader.</param>
+        /// <param name="parameters">The parameter mapping reader.</param>
         public ReleaseController(IReleaseWriter releaseWriter, IUserResolvingService userResolvingService,
-            IGameVersionReader gameVersionReader, IClassMappingReader classMappingReader, IMethodMappingReader methodMappingReader, IFieldMappingReader fieldMappingReader, IParameterMappingReader parameterMappingReader)
+            IGameVersionReader gameVersionReader, ClassWriter classes, MethodWriter methods, FieldWriter fields, ParameterWriter parameters)
         {
             _releaseWriter = releaseWriter;
             _userResolvingService = userResolvingService;
             _gameVersionReader = gameVersionReader;
-            _classMappingReader = classMappingReader;
-            _methodMappingReader = methodMappingReader;
-            _fieldMappingReader = fieldMappingReader;
-            _parameterMappingReader = parameterMappingReader;
+            _classes = classes;
+            _methods = methods;
+            _fields = fields;
+            _parameters = parameters;
         }
 
         /// <summary>
@@ -220,46 +212,50 @@ namespace API.Controllers
                 GameVersion = gameVersion
             };
 
-            release.Classes = (await _classMappingReader.GetByVersion(gameVersion)).Select(classMapping =>
+            release.Classes = (await _classes.GetByVersion(gameVersion)).Select(classMapping =>
                 classMapping.VersionedMappings
-                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).CommittedMappings
+                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
-                committedMapping => new ClassReleaseMember
+                committedMapping => new ReleaseComponent
                 {
                     Id = new Guid(),
+                    ComponentType = ComponentType.CLASS,
                     Release = release,
                     Member = committedMapping
                 }).ToList();
 
-            release.Methods = (await _methodMappingReader.GetByVersion(gameVersion)).Select(methodMapping =>
+            release.Methods = (await _methods.GetByVersion(gameVersion)).Select(methodMapping =>
                 methodMapping.VersionedMappings
-                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).CommittedMappings
+                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
-                committedMapping => new MethodReleaseMember
+                committedMapping => new ReleaseComponent()
                 {
                     Id = new Guid(),
+                    ComponentType = ComponentType.METHOD,
                     Release = release,
                     Member = committedMapping
                 }).ToList();
 
-            release.Fields = (await _fieldMappingReader.GetByVersion(gameVersion)).Select(fieldMapping =>
+            release.Fields = (await _fields.GetByVersion(gameVersion)).Select(fieldMapping =>
                 fieldMapping.VersionedMappings
-                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).CommittedMappings
+                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
-                committedMapping => new FieldReleaseMember
+                committedMapping => new ReleaseComponent()
                 {
                     Id = new Guid(),
+                    ComponentType = ComponentType.FIELD,
                     Release = release,
                     Member = committedMapping
                 }).ToList();
 
-            release.Parameters = (await _parameterMappingReader.GetByVersion(gameVersion)).Select(parameterMapping =>
+            release.Parameters = (await _parameters.GetByVersion(gameVersion)).Select(parameterMapping =>
                 parameterMapping.VersionedMappings
-                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).CommittedMappings
+                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
-                committedMapping => new ParameterReleaseMember
+                committedMapping => new ReleaseComponent()
                 {
                     Id = new Guid(),
+                    ComponentType = ComponentType.FIELD,
                     Release = release,
                     Member = committedMapping
                 }).ToList();

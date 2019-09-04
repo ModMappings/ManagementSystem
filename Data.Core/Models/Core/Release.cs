@@ -2,11 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using Data.Core.Models.Class;
-using Data.Core.Models.Field;
-using Data.Core.Models.Method;
-using Data.Core.Models.Parameter;
+using Data.Core.Models.Mapping;
 
 namespace Data.Core.Models.Core
 {
@@ -31,12 +27,12 @@ namespace Data.Core.Models.Core
         [Required]
         public virtual MappingType MappingType { get; set; }
 
-        public virtual List<ClassReleaseMember> Classes { get; set; }
+        public virtual List<ReleaseComponent> Classes { get; set; }
 
-        public virtual List<MethodReleaseMember> Methods { get; set; }
+        public virtual List<ReleaseComponent> Methods { get; set; }
 
-        public virtual List<ParameterReleaseMember> Parameters { get; set; }
+        public virtual List<ReleaseComponent> Parameters { get; set; }
 
-        public virtual List<FieldReleaseMember> Fields { get; set; }
+        public virtual List<ReleaseComponent> Fields { get; set; }
     }
 }

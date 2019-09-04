@@ -17,6 +17,7 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.6" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
     </ItemGroup>

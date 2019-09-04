@@ -26,5 +26,10 @@ namespace API.Model.Read.Core
         /// The documentation associated with the mapping.
         /// </summary>
         public string Documentation { get; set; }
+
+        /// <summary>
+        /// The name of the mapping used.
+        /// </summary>
+        public string MappingName { get; set; }
     }
 }

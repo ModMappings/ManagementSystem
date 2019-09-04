@@ -82,12 +82,12 @@ namespace API
             services.AddTransient<IUserResolvingService, DummyUserResolvingService>();
             services.AddTransient<IClassMappingWriter, ClassMappingWriter>();
             services.AddTransient<IClassMappingReader, ClassMappingWriter>();
-            services.AddTransient<IMethodMappingWriter, MethodMappingWriter>();
-            services.AddTransient<IMethodMappingReader, MethodMappingWriter>();
-            services.AddTransient<IFieldMappingWriter, FieldMappingWriter>();
-            services.AddTransient<IFieldMappingReader, FieldMappingWriter>();
-            services.AddTransient<IParameterMappingWriter, ParameterMappingWriter>();
-            services.AddTransient<IParameterMappingReader, ParameterMappingWriter>();
+            services.AddTransient<IMethodComponentWriter, MethodComponentWriter>();
+            services.AddTransient<IMethodMappingReader, MethodComponentWriter>();
+            services.AddTransient<IFieldComponentWriter, FieldComponentWriter>();
+            services.AddTransient<IFieldMappingReader, FieldComponentWriter>();
+            services.AddTransient<IParameterComponentWriter, ParameterComponentWriter>();
+            services.AddTransient<IParameterMappingReader, ParameterComponentWriter>();
             services.AddTransient<IGameVersionReader, GameVersionWriter>();
             services.AddTransient<IGameVersionWriter, GameVersionWriter>();
         }

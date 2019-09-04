@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using API.Model.Read.Core;
 
 namespace API.Model.Read.Class

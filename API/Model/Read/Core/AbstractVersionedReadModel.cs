@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using API.Model.Read.Class;
 
 namespace API.Model.Read.Core
 {

@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Core.Readers.Class;
+using Data.Core.Models.Mapping.MetaData;
+using Data.EFCore.Writer.Mapping;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace API.Controllers
 {
@@ -13,11 +13,11 @@ namespace API.Controllers
     [Route("/packages")]
     public class PackagesController : Controller
     {
-        private readonly IClassMappingReader _classMappingReader;
+        private readonly ClassWriter _classes;
 
-        public PackagesController(IClassMappingReader classMappingReader)
+        public PackagesController(ClassWriter classes)
         {
-            _classMappingReader = classMappingReader;
+            _classes = classes;
         }
 
         /// <summary>
@@ -30,9 +30,9 @@ namespace API.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<IEnumerable<string>>> GetByLatestVersion()
         {
-            return Json((await _classMappingReader.GetByLatestRelease()).Select(mapping =>
-                mapping.VersionedMappings.OrderByDescending(versionedMapping => versionedMapping.CreatedOn)
-                    .FirstOrDefault().Package).Distinct().OrderBy(s => s));
+            return Json((await _classes.GetByLatestRelease()).Select(mapping =>
+                (mapping.VersionedMappings.OrderByDescending(versionedMapping => versionedMapping.CreatedOn)
+                    .FirstOrDefault().Metadata as ClassMetadata).Package).Distinct().OrderBy(s => s));
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace API.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<IEnumerable<string>>> GetByVersion(Guid versionId)
         {
-            return Json((await _classMappingReader.GetByVersion(versionId)).Select(mapping =>
-                mapping.VersionedMappings
-                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion.Id == versionId).Package).Distinct().OrderBy(s => s));
+            return Json((await _classes.GetByVersion(versionId)).Select(mapping =>
+                (mapping.VersionedMappings
+                    .FirstOrDefault(versionedMapping => versionedMapping.GameVersion.Id == versionId).Metadata as ClassMetadata).Package).Distinct().OrderBy(s => s));
         }
 
         /// <summary>
@@ -62,11 +62,11 @@ namespace API.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<IEnumerable<string>>> GetByRelease(Guid releaseId)
         {
-            return Json((await _classMappingReader.GetByRelease(releaseId))
+            return Json((await _classes.GetByRelease(releaseId))
                 .SelectMany(mapping => mapping.VersionedMappings)
-                .Where(versionedMapping => versionedMapping.CommittedMappings.Any(committedMapping =>
+                .Where(versionedMapping => versionedMapping.Mappings.Any(committedMapping =>
                     committedMapping.Releases.Any(release => release.Id == releaseId)))
-                .Select(versionedMapping => versionedMapping.Package).Distinct().OrderBy(s => s));
+                .Select(versionedMapping => (versionedMapping.Metadata as ClassMetadata).Package).Distinct().OrderBy(s => s));
         }
     }
 }

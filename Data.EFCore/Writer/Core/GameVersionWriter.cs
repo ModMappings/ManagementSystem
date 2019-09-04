@@ -20,37 +20,37 @@ namespace Data.EFCore.Writer.Core
 
         public async Task<GameVersion> GetById(Guid id)
         {
-            return await _context.GameVersions.FirstOrDefaultAsync(version => version.Id == id);
+            return await (await AsQueryable()).FirstOrDefaultAsync(version => version.Id == id);
         }
 
         public async Task<GameVersion> GetByName(string name)
         {
-            return await _context.GameVersions.FirstOrDefaultAsync(version => version.Name == name);
+            return await (await AsQueryable()).FirstOrDefaultAsync(version => version.Name == name);
         }
 
         public async Task<IQueryable<GameVersion>> AsQueryable()
         {
-            return _context.GameVersions;
+            return await Task.FromResult(_context.GameVersions.Include(g => g.CreatedBy));
         }
 
         public async Task<IQueryable<GameVersion>> GetAllFullReleases()
         {
-            return _context.GameVersions.Where(version => !version.IsSnapshot && !version.IsPreRelease);
+            return (await AsQueryable()).Where(version => !version.IsSnapshot && !version.IsPreRelease);
         }
 
         public async Task<IQueryable<GameVersion>> GetAllPreReleases()
         {
-            return _context.GameVersions.Where(version => version.IsPreRelease);
+            return (await AsQueryable()).Where(version => version.IsPreRelease);
         }
 
         public async Task<IQueryable<GameVersion>> GetAllSnapshots()
         {
-            return _context.GameVersions.Where(version => version.IsSnapshot);
+            return (await AsQueryable()).Where(version => version.IsSnapshot);
         }
 
         public async Task<GameVersion> GetLatest()
         {
-            return await _context.GameVersions.OrderByDescending(version => version.CreatedOn).FirstOrDefaultAsync();
+            return await (await AsQueryable()).OrderByDescending(version => version.CreatedOn).FirstOrDefaultAsync();
         }
 
         public async Task Add(GameVersion mapping)
