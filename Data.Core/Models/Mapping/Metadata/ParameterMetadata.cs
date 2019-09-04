@@ -6,7 +6,7 @@ namespace Data.Core.Models.Mapping.MetaData
         : VersionedComponentMetadataBase
     {
         [Required]
-        public virtual VersionedComponent ParameterOf { get; set; }
+        public virtual MethodMetadata ParameterOf { get; set; }
 
         [Required]
         public int Index { get; set; }

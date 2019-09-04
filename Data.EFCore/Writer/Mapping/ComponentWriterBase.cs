@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
 using Data.Core.Writers.Core;
@@ -123,7 +124,12 @@ namespace Data.EFCore.Writer.Mapping
 
         public async Task<VersionedComponent> GetVersionedMapping(Guid id)
         {
-            return await McpContext.VersionedComponents.FirstOrDefaultAsync(v => v.Id == id);
+            return await McpContext.VersionedComponents
+                .Include(vc => vc.Component)
+                .Include(vc => vc.Mappings)
+                .Include(vc => vc.Metadata)
+                .Include(vc => vc.Proposals)
+                .FirstOrDefaultAsync(v => v.Id == id);
         }
 
         public async Task<ProposalMappingEntry> GetProposalMapping(Guid id)

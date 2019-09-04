@@ -60,7 +60,7 @@ namespace API
 
             var inheritsFrom =
                 (await Task.WhenAll(
-                    mapping.InheritsFrom.Select(async id => await ComponentWriter.GetVersionedMapping(id)))).ToList();
+                    mapping.InheritsFrom.Select(async id => (await ComponentWriter.GetVersionedMapping(id)).Metadata as ClassMetadata))).ToList();
 
             if (inheritsFrom.Any(m => m == null))
                 return BadRequest("Unknown inheriting class.");
@@ -77,7 +77,7 @@ namespace API
             versionedClassMapping.Metadata = new ClassMetadata
             {
                 Component = versionedClassMapping,
-                Outer=outer,
+                Outer=outer?.Metadata as ClassMetadata,
                 Package = mapping.Package,
                 InheritsFrom = inheritsFrom,
             };
@@ -140,6 +140,13 @@ namespace API
                     return BadRequest("Unknown outer class");
             }
 
+            var inheritsFrom =
+                (await Task.WhenAll(
+                    mapping.InheritsFrom.Select(async id => (await ComponentWriter.GetVersionedMapping(id)).Metadata as ClassMetadata))).ToList();
+
+            if (inheritsFrom.Any(m => m == null))
+                return BadRequest("Unknown inheriting class.");
+
             var classMapping = await ComponentWriter.GetById(mapping.VersionedMappingFor);
             if (classMapping == null)
                 return BadRequest("Unknown class mapping to create the versioned mapping for.");
@@ -147,13 +154,6 @@ namespace API
             if (classMapping.VersionedMappings.Any(versionedMapping =>
                 versionedMapping.GameVersion.Id == mapping.GameVersion))
                 return Conflict();
-
-            var inheritsFrom =
-                (await Task.WhenAll(mapping.InheritsFrom.Select(async id =>
-                    await ComponentWriter.GetVersionedMapping(id)))).ToList();
-
-            if (inheritsFrom.Any(m => m == null))
-                return BadRequest("Unknown inheriting class.");
 
             var versionedClassMapping = new VersionedComponent
             {
@@ -167,7 +167,7 @@ namespace API
             versionedClassMapping.Metadata = new ClassMetadata
             {
                 Component = versionedClassMapping,
-                Outer=outer,
+                Outer=outer?.Metadata as ClassMetadata,
                 Package = mapping.Package,
                 InheritsFrom = inheritsFrom,
             };
@@ -200,7 +200,7 @@ namespace API
 
         protected override ClassVersionedReadModel ConvertVersionedDbModelToReadModel(VersionedComponent versionedComponent)
         {
-            var outerId = (versionedComponent.Metadata as ClassMetadata)?.Outer?.Id;
+            var outerId = (versionedComponent.Metadata as ClassMetadata)?.Outer?.Component.Id;
 
             return new ClassVersionedReadModel
             {
@@ -209,7 +209,7 @@ namespace API
                 GameVersion = versionedComponent.GameVersion.Id,
                 Outer = outerId,
                 Package = (versionedComponent.Metadata as ClassMetadata)?.Package,
-                InheritsFrom = (versionedComponent.Metadata as ClassMetadata)?.InheritsFrom.ToList().Select(parentClass => parentClass.Id),
+                InheritsFrom = (versionedComponent.Metadata as ClassMetadata)?.InheritsFrom.ToList().Select(parentClass => parentClass.Component.Id),
                 CurrentMappings = versionedComponent.Mappings.ToList().Select(ConvertLiveDbModelToMappingReadModel),
                 Proposals = versionedComponent.Proposals.ToList().Select(ConvertProposalDbModelToProposalReadModel)
             };

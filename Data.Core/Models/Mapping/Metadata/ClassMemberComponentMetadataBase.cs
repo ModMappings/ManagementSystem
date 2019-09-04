@@ -7,7 +7,7 @@ namespace Data.Core.Models.Mapping.MetaData
         : VersionedComponentMetadataBase
     {
         [Required]
-        public virtual VersionedComponent MemberOf { get; set; }
+        public virtual ClassMetadata MemberOf { get; set; }
 
         [Required]
         public bool IsStatic { get; set; }

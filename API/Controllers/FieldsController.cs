@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Controllers;
-using API.Model.Creation.Method;
-using API.Model.Read.Method;
+using API.Model.Creation.Field;
+using API.Model.Read.Field;
 using API.Services.Core;
 using Data.Core.Models.Mapping;
 using Data.Core.Models.Mapping.MetaData;
@@ -17,23 +17,23 @@ using Microsoft.AspNetCore.Mvc;
 namespace API
 {
     /// <summary>
-    /// Controller that handles interactions on method levels.
+    /// Controller that handles interactions on field levels.
     /// </summary>
-    [Route("/methods")]
+    [Route("/fields")]
     [ApiController]
-    public class MethodsController : ComponentControllerBase<MethodReadModel, MethodVersionedReadModel>
+    public class FieldsController : ComponentControllerBase<FieldReadModel, FieldVersionedReadModel>
     {
 
         private readonly IComponentWriter _classWriter;
 
-        public MethodsController(ComponentWriterFactory componentWriterFactory, IReleaseReader releaseReader, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService) : base(componentWriterFactory.Build(ComponentType.METHOD), releaseReader, gameVersionReader, userResolvingService)
+        public FieldsController(ComponentWriterFactory componentWriterFactory, IReleaseReader releaseReader, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService) : base(componentWriterFactory.Build(ComponentType.FIELD), releaseReader, gameVersionReader, userResolvingService)
         {
             this._classWriter = componentWriterFactory.Build(ComponentType.CLASS);
         }
 
         /// <summary>
-        /// Creates a new method and its central mapping entry.
-        /// Creates a new core mapping method, a versioned mapping method for the latest version, as well a single committed mapping.
+        /// Creates a new field and its central mapping entry.
+        /// Creates a new core mapping field, a versioned mapping field for the latest version, as well a single committed mapping.
         /// </summary>
         /// <param name="mapping">The mapping to create.</param>
         /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized.</returns>
@@ -44,7 +44,7 @@ namespace API
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult> AddToLatest([FromBody] CreateMethodModel mapping)
+        public async Task<ActionResult> AddToLatest([FromBody] CreateFieldModel mapping)
         {
             var currentLatestGameVersion = await GameVersionReader.GetLatest();
             if (currentLatestGameVersion == null)
@@ -58,7 +58,7 @@ namespace API
             if (memberOf == null)
                 return BadRequest("Unknown memberOf class.");
 
-            var versionedMethodMapping = new VersionedComponent
+            var versionedFieldMapping = new VersionedComponent
             {
                 CreatedBy = user,
                 CreatedOn = DateTime.Now,
@@ -67,12 +67,10 @@ namespace API
                 Proposals = new List<ProposalMappingEntry>()
             };
 
-            versionedMethodMapping.Metadata = new MethodMetadata
+            versionedFieldMapping.Metadata = new FieldMetadata
             {
-                Component = versionedMethodMapping,
+                Component = versionedFieldMapping,
                 MemberOf = memberOf.Metadata as ClassMetadata,
-                Parameters = new List<ParameterMetadata>(),
-                Descriptor = mapping.Descriptor,
                 IsStatic = mapping.IsStatic
             };
 
@@ -83,31 +81,31 @@ namespace API
                 OutputMapping = mapping.Out,
                 Proposal = null,
                 Releases = new List<ReleaseComponent>(),
-                Mapping = versionedMethodMapping,
+                Mapping = versionedFieldMapping,
                 CreatedOn = DateTime.Now
             };
 
-            versionedMethodMapping.Mappings.Add(initialCommittedMappingEntry);
+            versionedFieldMapping.Mappings.Add(initialCommittedMappingEntry);
 
-            var methodMapping = new Component
+            var fieldMapping = new Component
             {
                 Id = Guid.NewGuid(),
-                Type = ComponentType.METHOD,
-                VersionedMappings = new List<VersionedComponent>() {versionedMethodMapping}
+                Type = ComponentType.FIELD,
+                VersionedMappings = new List<VersionedComponent>() {versionedFieldMapping}
             };
 
-            await ComponentWriter.Add(methodMapping);
+            await ComponentWriter.Add(fieldMapping);
             await ComponentWriter.SaveChanges();
 
-            return CreatedAtAction("GetById", methodMapping.Id, methodMapping);
+            return CreatedAtAction("GetById", fieldMapping.Id, fieldMapping);
         }
 
         /// <summary>
-        /// Creates a new versioned method entry for an already existing method mapping.
-        /// Creates a versioned mapping method for the given version, as well a single committed mapping.
+        /// Creates a new versioned field entry for an already existing field mapping.
+        /// Creates a versioned mapping field for the given version, as well a single committed mapping.
         /// </summary>
         /// <param name="mapping">The versioned mapping to create.</param>
-        /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized,409-A versioned method for that version already exists with the method.</returns>
+        /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized,409-A versioned field for that version already exists with the field.</returns>
         [HttpPost("add/version/{versionId}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -116,7 +114,7 @@ namespace API
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult> AddToVersion([FromBody] CreateVersionedMethodModel mapping)
+        public async Task<ActionResult> AddToVersion([FromBody] CreateVersionedFieldModel mapping)
         {
             var currentGameVersion = await GameVersionReader.GetById(mapping.GameVersion);
             if (currentGameVersion == null)
@@ -130,15 +128,15 @@ namespace API
             if (memberOf == null)
                 return BadRequest("Unknown memberOf class.");
 
-            var methodMapping = await ComponentWriter.GetById(mapping.VersionedMappingFor);
-            if (methodMapping == null)
-                return BadRequest("Unknown method mapping to create the versioned mapping for.");
+            var fieldMapping = await ComponentWriter.GetById(mapping.VersionedMappingFor);
+            if (fieldMapping == null)
+                return BadRequest("Unknown field mapping to create the versioned mapping for.");
 
-            if (methodMapping.VersionedMappings.Any(versionedMapping =>
+            if (fieldMapping.VersionedMappings.Any(versionedMapping =>
                 versionedMapping.GameVersion.Id == mapping.GameVersion))
                 return Conflict();
 
-            var versionedMethodMapping = new VersionedComponent
+            var versionedFieldMapping = new VersionedComponent
             {
                 CreatedBy = user,
                 CreatedOn = DateTime.Now,
@@ -147,12 +145,10 @@ namespace API
                 Proposals = new List<ProposalMappingEntry>()
             };
 
-            versionedMethodMapping.Metadata = new MethodMetadata
+            versionedFieldMapping.Metadata = new FieldMetadata
             {
-                Component = versionedMethodMapping,
+                Component = versionedFieldMapping,
                 MemberOf = memberOf.Metadata as ClassMetadata,
-                Parameters = new List<ParameterMetadata>(),
-                Descriptor = mapping.Descriptor,
                 IsStatic = mapping.IsStatic
             };
 
@@ -163,42 +159,41 @@ namespace API
                 OutputMapping = mapping.Out,
                 Proposal = null,
                 Releases = new List<ReleaseComponent>(),
-                Mapping = versionedMethodMapping,
+                Mapping = versionedFieldMapping,
                 CreatedOn = DateTime.Now
             };
 
-            versionedMethodMapping.Mappings.Add(initialCommittedMappingEntry);
+            versionedFieldMapping.Mappings.Add(initialCommittedMappingEntry);
             await ComponentWriter.SaveChanges();
 
-            return CreatedAtAction("GetById", methodMapping.Id, methodMapping);
+            return CreatedAtAction("GetById", fieldMapping.Id, fieldMapping);
         }
 
-        protected override MethodReadModel ConvertDbModelToReadModel(Component component)
+        protected override FieldReadModel ConvertDbModelToReadModel(Component component)
         {
-            return new MethodReadModel
+            return new FieldReadModel
             {
                 Id = component.Id,
                 Versioned = component.VersionedMappings.ToList().Select(ConvertVersionedDbModelToReadModel)
             };
         }
 
-        protected override MethodVersionedReadModel ConvertVersionedDbModelToReadModel(VersionedComponent versionedComponent)
+        protected override FieldVersionedReadModel ConvertVersionedDbModelToReadModel(VersionedComponent versionedComponent)
         {
-            var methodMetaData = versionedComponent.Metadata as MethodMetadata;
+            var fieldMetaData = versionedComponent.Metadata as FieldMetadata;
 
-            if (methodMetaData == null)
+            if (fieldMetaData == null)
                 throw new ArgumentException("The given versioned component does not contain a valid metadata", nameof(versionedComponent));
 
-            return new MethodVersionedReadModel
+            return new FieldVersionedReadModel
             {
                 Id = versionedComponent.Id,
                 VersionedViewModelFor = versionedComponent.Component.Id,
                 GameVersion = versionedComponent.GameVersion.Id,
                 CurrentMappings = versionedComponent.Mappings.ToList().Select(ConvertLiveDbModelToMappingReadModel),
                 Proposals = versionedComponent.Proposals.ToList().Select(ConvertProposalDbModelToProposalReadModel),
-                MemberOf = methodMetaData.MemberOf.Component.Id,
-                Descriptor = methodMetaData.Descriptor,
-                IsStatic = methodMetaData.IsStatic
+                MemberOf = fieldMetaData.MemberOf.Component.Id,
+                IsStatic = fieldMetaData.IsStatic,
             };
         }
     }

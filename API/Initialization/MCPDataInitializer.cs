@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Data.Core.Models.Class;
 using Data.Core.Models.Core;
 using Data.Core.Models.Field;
+using Data.Core.Models.Mapping;
 using Data.Core.Models.Method;
 using Data.Core.Models.Parameter;
 using Data.EFCore.Context;
@@ -93,7 +94,7 @@ namespace API.Initialization
         {
             var logger = app.ApplicationServices.GetRequiredService <ILogger<MCPDataInitializer>>();
 
-            if (context.ClassMappings.Any())
+            if (context.Components.Any())
             {
                 logger.LogWarning("MCP Data already loaded. Skipping init.");
                 return;
@@ -144,14 +145,14 @@ namespace API.Initialization
                 return new Release
                 {
                     Id = Guid.NewGuid(),
-                    Classes = new List<ClassReleaseMember>(),
+                    Classes = new List<ReleaseComponent>(),
                     CreatedBy = initUser,
                     CreatedOn = DateTime.Now,
-                    Fields = new List<FieldReleaseMember>(),
+                    Fields = new List<ReleaseComponent>(),
                     GameVersion = gameVersion,
-                    Methods = new List<MethodReleaseMember>(),
+                    Methods = new List<ReleaseComponent>(),
                     Name = relName,
-                    Parameters = new List<ParameterReleaseMember>()
+                    Parameters = new List<ReleaseComponent>()
                 };
             }).ToDictionary(release => release.Name, release => release);
 
@@ -170,14 +171,14 @@ namespace API.Initialization
             logger.LogInformation(
                 $"Processed MCP maven version information. Found: {mcVersions.Count} minecraft major version releases, and: {releases} MCP releases for those versions");
 
-            var classes = new List<ClassMapping>();
-            var methods = new List<MethodMapping>();
-            var fields = new List<FieldMapping>();
+            var classes = new List<Component>();
+            var methods = new List<Component>();
+            var fields = new List<Component>();
 
             logger.LogInformation("Starting the processing of MCP Config data.");
 
             var mcVersionClassVersionMappings = Task.WhenAll(mavenReleaseNames.Select(mavenReleaseName =>
-                Task.Run(() => ProcessMcpDataForRelease(logger, mavenReleaseName, releases)))).Result;
+                Task.Run(() => ProcessMcpDataForRelease(logger, mavenReleaseName, releases)))).;
 
 
             logger.LogWarning($"Starting the linear processing of MCP data. Attempting to determine cross version history of classes.");
@@ -232,9 +233,9 @@ namespace API.Initialization
             context.SaveChanges();
         }
 
-        private static List<ClassVersionedMapping> ProcessMcpDataForRelease(ILogger<MCPDataInitializer> logger, string releaseName, Dictionary<string, Release> releases)
+        private static List<VersionedComponent> ProcessMcpDataForRelease(ILogger<MCPDataInitializer> logger, string releaseName, Dictionary<string, Release> releases)
         {
-            List<ClassVersionedMapping> classVersionedMappings;
+            List<VersionedComponent> classVersionedMappings;
             logger.LogInformation($"Processing: {releaseName}");
             var release = releases[releaseName];
             var gameVersion = release.GameVersion;
@@ -247,7 +248,7 @@ namespace API.Initialization
                 if (!mavenMetaDownloadResult.IsSuccessStatusCode)
                 {
                     Log.Error("Could not download the mcp config zip. Error message: " + mavenMetaDownloadResult.ReasonPhrase + " from url: " + $"{MAVEN_MCP_URL}/{releaseName}/mcp_config-{releaseName}.zip");
-                    return new List<ClassVersionedMapping>();
+                    return new List<VersionedComponent>();
                 }
 
                 var zip = new ZipArchive(mavenMetaDownloadResult.Content.ReadAsStreamAsync().Result);
@@ -259,8 +260,8 @@ namespace API.Initialization
 
                 logger.LogInformation($"Found: {tsrgContents.Count} entries in the tsrg information.");
 
-                classVersionedMappings = new List<ClassVersionedMapping>();
-                ClassVersionedMapping currentClass = null;
+                classVersionedMappings = new List<VersionedComponent>();
+                VersionedComponent currentClass = null;
 
                 var totalLineCount = tsrgContents.Count;
                 var currentlyProcessed = 0d;

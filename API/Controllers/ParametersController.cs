@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Controllers;
-using API.Model.Creation.Method;
-using API.Model.Read.Method;
+using API.Model.Creation.Parameter;
+using API.Model.Read.Parameter;
 using API.Services.Core;
 using Data.Core.Models.Mapping;
 using Data.Core.Models.Mapping.MetaData;
@@ -17,23 +17,23 @@ using Microsoft.AspNetCore.Mvc;
 namespace API
 {
     /// <summary>
-    /// Controller that handles interactions on method levels.
+    /// Controller that handles interactions on parameter levels.
     /// </summary>
-    [Route("/methods")]
+    [Route("/parameters")]
     [ApiController]
-    public class MethodsController : ComponentControllerBase<MethodReadModel, MethodVersionedReadModel>
+    public class ParametersController : ComponentControllerBase<ParameterReadModel, ParameterVersionedReadModel>
     {
 
-        private readonly IComponentWriter _classWriter;
+        private readonly IComponentWriter _methodWriter;
 
-        public MethodsController(ComponentWriterFactory componentWriterFactory, IReleaseReader releaseReader, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService) : base(componentWriterFactory.Build(ComponentType.METHOD), releaseReader, gameVersionReader, userResolvingService)
+        public ParametersController(ComponentWriterFactory componentWriterFactory, IReleaseReader releaseReader, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService) : base(componentWriterFactory.Build(ComponentType.PARAMETER), releaseReader, gameVersionReader, userResolvingService)
         {
-            this._classWriter = componentWriterFactory.Build(ComponentType.CLASS);
+            this._methodWriter = componentWriterFactory.Build(ComponentType.METHOD);
         }
 
         /// <summary>
-        /// Creates a new method and its central mapping entry.
-        /// Creates a new core mapping method, a versioned mapping method for the latest version, as well a single committed mapping.
+        /// Creates a new parameter and its central mapping entry.
+        /// Creates a new core mapping parameter, a versioned mapping parameter for the latest version, as well a single committed mapping.
         /// </summary>
         /// <param name="mapping">The mapping to create.</param>
         /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized.</returns>
@@ -44,7 +44,7 @@ namespace API
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult> AddToLatest([FromBody] CreateMethodModel mapping)
+        public async Task<ActionResult> AddToLatest([FromBody] CreateParameterModel mapping)
         {
             var currentLatestGameVersion = await GameVersionReader.GetLatest();
             if (currentLatestGameVersion == null)
@@ -54,11 +54,11 @@ namespace API
             if (user == null || !user.CanCommit)
                 return Unauthorized();
 
-            VersionedComponent memberOf = await _classWriter.GetVersionedMapping(mapping.MemberOf);
+            VersionedComponent memberOf = await _methodWriter.GetVersionedMapping(mapping.ParameterOf);
             if (memberOf == null)
-                return BadRequest("Unknown memberOf class.");
+                return BadRequest("Unknown memberOf method.");
 
-            var versionedMethodMapping = new VersionedComponent
+            var versionedParameterMapping = new VersionedComponent
             {
                 CreatedBy = user,
                 CreatedOn = DateTime.Now,
@@ -67,13 +67,11 @@ namespace API
                 Proposals = new List<ProposalMappingEntry>()
             };
 
-            versionedMethodMapping.Metadata = new MethodMetadata
+            versionedParameterMapping.Metadata = new ParameterMetadata
             {
-                Component = versionedMethodMapping,
-                MemberOf = memberOf.Metadata as ClassMetadata,
-                Parameters = new List<ParameterMetadata>(),
-                Descriptor = mapping.Descriptor,
-                IsStatic = mapping.IsStatic
+                Component = versionedParameterMapping,
+                ParameterOf = memberOf.Metadata as MethodMetadata,
+                Index = mapping.Index
             };
 
             var initialCommittedMappingEntry = new LiveMappingEntry()
@@ -83,31 +81,31 @@ namespace API
                 OutputMapping = mapping.Out,
                 Proposal = null,
                 Releases = new List<ReleaseComponent>(),
-                Mapping = versionedMethodMapping,
+                Mapping = versionedParameterMapping,
                 CreatedOn = DateTime.Now
             };
 
-            versionedMethodMapping.Mappings.Add(initialCommittedMappingEntry);
+            versionedParameterMapping.Mappings.Add(initialCommittedMappingEntry);
 
-            var methodMapping = new Component
+            var parameterMapping = new Component
             {
                 Id = Guid.NewGuid(),
-                Type = ComponentType.METHOD,
-                VersionedMappings = new List<VersionedComponent>() {versionedMethodMapping}
+                Type = ComponentType.PARAMETER,
+                VersionedMappings = new List<VersionedComponent>() {versionedParameterMapping}
             };
 
-            await ComponentWriter.Add(methodMapping);
+            await ComponentWriter.Add(parameterMapping);
             await ComponentWriter.SaveChanges();
 
-            return CreatedAtAction("GetById", methodMapping.Id, methodMapping);
+            return CreatedAtAction("GetById", parameterMapping.Id, parameterMapping);
         }
 
         /// <summary>
-        /// Creates a new versioned method entry for an already existing method mapping.
-        /// Creates a versioned mapping method for the given version, as well a single committed mapping.
+        /// Creates a new versioned parameter entry for an already existing parameter mapping.
+        /// Creates a versioned mapping parameter for the given version, as well a single committed mapping.
         /// </summary>
         /// <param name="mapping">The versioned mapping to create.</param>
-        /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized,409-A versioned method for that version already exists with the method.</returns>
+        /// <returns>An http response code:201-New mapping created,400-The request was invalid,404-Certain data could not be found,401-Unauthorized,409-A versioned parameter for that version already exists with the parameter.</returns>
         [HttpPost("add/version/{versionId}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -116,7 +114,7 @@ namespace API
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<ActionResult> AddToVersion([FromBody] CreateVersionedMethodModel mapping)
+        public async Task<ActionResult> AddToVersion([FromBody] CreateVersionedParameterModel mapping)
         {
             var currentGameVersion = await GameVersionReader.GetById(mapping.GameVersion);
             if (currentGameVersion == null)
@@ -126,19 +124,19 @@ namespace API
             if (user == null || !user.CanCommit)
                 return Unauthorized();
 
-            VersionedComponent memberOf = await _classWriter.GetVersionedMapping(mapping.MemberOf);
+            VersionedComponent memberOf = await _methodWriter.GetVersionedMapping(mapping.ParameterOf);
             if (memberOf == null)
-                return BadRequest("Unknown memberOf class.");
+                return BadRequest("Unknown memberOf method.");
 
-            var methodMapping = await ComponentWriter.GetById(mapping.VersionedMappingFor);
-            if (methodMapping == null)
-                return BadRequest("Unknown method mapping to create the versioned mapping for.");
+            var parameterMapping = await ComponentWriter.GetById(mapping.VersionedMappingFor);
+            if (parameterMapping == null)
+                return BadRequest("Unknown parameter mapping to create the versioned mapping for.");
 
-            if (methodMapping.VersionedMappings.Any(versionedMapping =>
+            if (parameterMapping.VersionedMappings.Any(versionedMapping =>
                 versionedMapping.GameVersion.Id == mapping.GameVersion))
                 return Conflict();
 
-            var versionedMethodMapping = new VersionedComponent
+            var versionedParameterMapping = new VersionedComponent
             {
                 CreatedBy = user,
                 CreatedOn = DateTime.Now,
@@ -147,13 +145,11 @@ namespace API
                 Proposals = new List<ProposalMappingEntry>()
             };
 
-            versionedMethodMapping.Metadata = new MethodMetadata
+            versionedParameterMapping.Metadata = new ParameterMetadata
             {
-                Component = versionedMethodMapping,
-                MemberOf = memberOf.Metadata as ClassMetadata,
-                Parameters = new List<ParameterMetadata>(),
-                Descriptor = mapping.Descriptor,
-                IsStatic = mapping.IsStatic
+                Component = versionedParameterMapping,
+                ParameterOf = memberOf.Metadata as MethodMetadata,
+                Index = mapping.Index
             };
 
             var initialCommittedMappingEntry = new LiveMappingEntry()
@@ -163,42 +159,41 @@ namespace API
                 OutputMapping = mapping.Out,
                 Proposal = null,
                 Releases = new List<ReleaseComponent>(),
-                Mapping = versionedMethodMapping,
+                Mapping = versionedParameterMapping,
                 CreatedOn = DateTime.Now
             };
 
-            versionedMethodMapping.Mappings.Add(initialCommittedMappingEntry);
+            versionedParameterMapping.Mappings.Add(initialCommittedMappingEntry);
             await ComponentWriter.SaveChanges();
 
-            return CreatedAtAction("GetById", methodMapping.Id, methodMapping);
+            return CreatedAtAction("GetById", parameterMapping.Id, parameterMapping);
         }
 
-        protected override MethodReadModel ConvertDbModelToReadModel(Component component)
+        protected override ParameterReadModel ConvertDbModelToReadModel(Component component)
         {
-            return new MethodReadModel
+            return new ParameterReadModel
             {
                 Id = component.Id,
                 Versioned = component.VersionedMappings.ToList().Select(ConvertVersionedDbModelToReadModel)
             };
         }
 
-        protected override MethodVersionedReadModel ConvertVersionedDbModelToReadModel(VersionedComponent versionedComponent)
+        protected override ParameterVersionedReadModel ConvertVersionedDbModelToReadModel(VersionedComponent versionedComponent)
         {
-            var methodMetaData = versionedComponent.Metadata as MethodMetadata;
+            var parameterMetaData = versionedComponent.Metadata as ParameterMetadata;
 
-            if (methodMetaData == null)
+            if (parameterMetaData == null)
                 throw new ArgumentException("The given versioned component does not contain a valid metadata", nameof(versionedComponent));
 
-            return new MethodVersionedReadModel
+            return new ParameterVersionedReadModel
             {
                 Id = versionedComponent.Id,
                 VersionedViewModelFor = versionedComponent.Component.Id,
                 GameVersion = versionedComponent.GameVersion.Id,
                 CurrentMappings = versionedComponent.Mappings.ToList().Select(ConvertLiveDbModelToMappingReadModel),
                 Proposals = versionedComponent.Proposals.ToList().Select(ConvertProposalDbModelToProposalReadModel),
-                MemberOf = methodMetaData.MemberOf.Component.Id,
-                Descriptor = methodMetaData.Descriptor,
-                IsStatic = methodMetaData.IsStatic
+                ParameterOf = parameterMetaData.ParameterOf.Component.Id,
+                Index = parameterMetaData.Index,
             };
         }
     }
