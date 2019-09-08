@@ -20,7 +20,7 @@ namespace Data.Core.Models.Core
         public string Name { get; set; }
 
         [Required]
-        public virtual User CreatedBy { get; set; }
+        public virtual Guid CreatedBy { get; set; }
 
         [Required]
         public DateTime CreatedOn { get; set; }

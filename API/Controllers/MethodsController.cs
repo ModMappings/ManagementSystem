@@ -60,7 +60,7 @@ namespace API
 
             var versionedMethodMapping = new VersionedComponent
             {
-                CreatedBy = user,
+                CreatedBy = user.Id,
                 CreatedOn = DateTime.Now,
                 GameVersion = currentLatestGameVersion,
                 Mappings = new List<LiveMappingEntry>(),
@@ -140,7 +140,7 @@ namespace API
 
             var versionedMethodMapping = new VersionedComponent
             {
-                CreatedBy = user,
+                CreatedBy = user.Id,
                 CreatedOn = DateTime.Now,
                 GameVersion = currentGameVersion,
                 Mappings = new List<LiveMappingEntry>(),

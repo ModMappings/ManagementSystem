@@ -1,29 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using API.Initialization;
 using API.Services.Core;
 using API.Services.UserResolving;
-using Data.Core.Models.Core;
-using Data.Core.Readers.Class;
 using Data.Core.Readers.Core;
-using Data.Core.Readers.Field;
-using Data.Core.Readers.Method;
-using Data.Core.Readers.Parameter;
-using Data.Core.Writers.Class;
 using Data.Core.Writers.Core;
-using Data.Core.Writers.Field;
-using Data.Core.Writers.Method;
-using Data.Core.Writers.Parameters;
 using Data.EFCore.Context;
-using Data.EFCore.Writer.Class;
 using Data.EFCore.Writer.Core;
-using Data.EFCore.Writer.Field;
-using Data.EFCore.Writer.Method;
-using Data.EFCore.Writer.Parameter;
+using Data.EFCore.Writer.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -79,17 +64,14 @@ namespace API
                 });
             });
 
-            services.AddTransient<IUserResolvingService, DummyUserResolvingService>();
-            services.AddTransient<IClassMappingWriter, ClassMappingWriter>();
-            services.AddTransient<IClassMappingReader, ClassMappingWriter>();
-            services.AddTransient<IMethodComponentWriter, MethodComponentWriter>();
-            services.AddTransient<IMethodMappingReader, MethodComponentWriter>();
-            services.AddTransient<IFieldComponentWriter, FieldComponentWriter>();
-            services.AddTransient<IFieldMappingReader, FieldComponentWriter>();
-            services.AddTransient<IParameterComponentWriter, ParameterComponentWriter>();
-            services.AddTransient<IParameterMappingReader, ParameterComponentWriter>();
+            services.AddTransient<IUserResolvingService, AuthorizationBasedUserResolvingService>();
             services.AddTransient<IGameVersionReader, GameVersionWriter>();
             services.AddTransient<IGameVersionWriter, GameVersionWriter>();
+            services.AddTransient<IReleaseReader, ReleaseWriter>();
+            services.AddTransient<IReleaseWriter, ReleaseWriter>();
+            services.AddTransient<IMappingTypeReader, MappingTypeWriter>();
+            services.AddTransient<IMappingTypeWriter, MappingTypeWriter>();
+            services.AddTransient<ComponentWriterFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

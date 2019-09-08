@@ -32,22 +32,14 @@ namespace Data.EFCore.Writer.Core
 
         public async Task<IQueryable<Release>> AsQueryable()
         {
-            return await Task.FromResult(_context.Releases.Include(r => r.Classes)
-                .Include(r => r.Fields)
-                .Include(r => r.Methods)
-                .Include(r => r.Parameters)
+            return await Task.FromResult(_context.Releases.Include(r => r.Components)
                 .Include(r => r.CreatedBy)
                 .Include(r => r.MappingType));
         }
 
         public async Task<IQueryable<Release>> GetMadeBy(Guid userId)
         {
-            return (await AsQueryable()).Where(release => release.CreatedBy.Id == userId);
-        }
-
-        public async Task<IQueryable<Release>> GetMadeBy(User user)
-        {
-            return (await AsQueryable()).Where(release => release.CreatedBy == user);
+            return (await AsQueryable()).Where(release => release.CreatedBy == userId);
         }
 
         public async Task<IQueryable<Release>> GetMadeOn(DateTime date)
@@ -68,12 +60,7 @@ namespace Data.EFCore.Writer.Core
         public async Task<IQueryable<Release>> GetMadeByForMappingType(Guid userId, Guid mappingType)
         {
             return await Task.FromResult((await AsQueryable()).Where(r =>
-                r.CreatedBy.Id == userId && r.MappingType.Id == mappingType));
-        }
-
-        public async Task<IQueryable<Release>> GetMadeByForMappingType(User user, Guid mappingType)
-        {
-            return await GetMadeByForMappingType(user.Id, mappingType);
+                r.CreatedBy == userId && r.MappingType.Id == mappingType));
         }
 
         public async Task<IQueryable<Release>> GetMadeOnForMappingType(DateTime date, Guid mappingType)
@@ -97,11 +84,6 @@ namespace Data.EFCore.Writer.Core
         public async Task<IQueryable<Release>> GetMadeByForMappingType(Guid userId, MappingType mappingType)
         {
             return await GetMadeByForMappingType(userId, mappingType.Id);
-        }
-
-        public async Task<IQueryable<Release>> GetMadeByForMappingType(User user, MappingType mappingType)
-        {
-            return await GetMadeByForMappingType(user.Id, mappingType.Id);
         }
 
         public async Task<IQueryable<Release>> GetMadeOnForMappingType(DateTime date, MappingType mappingType)

@@ -7,12 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Data.Core.Models.Class;
 using Data.Core.Models.Core;
-using Data.Core.Models.Field;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Method;
-using Data.Core.Models.Parameter;
+using Data.Core.Models.Mapping.MetaData;
 using Data.EFCore.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +24,12 @@ namespace API.Initialization
     {
         private const string MAVEN_MCP_URL = "https://files.minecraftforge.net/maven/de/oceanlabs/mcp/mcp_config";
 
-        private static User initUser;
+        private static Guid initUser;
 
         public static void InitializeData(IApplicationBuilder app)
         {
+            return;
+
             using (var serviceScope = app.ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
                 .CreateScope())
@@ -38,7 +37,7 @@ namespace API.Initialization
                 using (var context = serviceScope.ServiceProvider.GetService<MCPContext>())
                 {
                     InitializeDummyUser(app, context);
-                    InitializeMCP(app, context);
+                    InitializeMCPConfigData(app, context);
                 }
             }
 
@@ -54,43 +53,14 @@ namespace API.Initialization
                 context.Database.Migrate();
             }
 
-            if (!EnumerableExtensions.Any(context.Users))
-            {
-                logger.LogWarning("Adding debugging users.");
+            initUser = context.VersionedComponents.OrderByDescending(vc => vc.CreatedOn).Select(vc => vc.CreatedBy)
+                .FirstOrDefault();
 
-                context.Users.Add(new User
-                {
-                    CanCommit = true,
-                    CanCreateGameVersions = true,
-                    CanEdit = true,
-                    CanRelease = true,
-                    CanReview = true,
-                    Id = Guid.NewGuid(),
-                    Name = "Dummy"
-                });
-
-                initUser = new User
-                {
-                    CanCommit = false,
-                    CanCreateGameVersions = false,
-                    CanEdit = false,
-                    CanRelease = false,
-                    CanReview = false,
-                    Id = Guid.NewGuid(),
-                    Name = "Initialization"
-                };
-                context.Users.Add(initUser);
-
-                context.SaveChanges();
-            }
-            else
-            {
-                logger.LogWarning("Using existing initialization user.");
-                initUser = context.Users.FirstOrDefault(user => user.Name == "Initialization");
-            }
+            if (initUser == null)
+                initUser = Guid.NewGuid();
         }
 
-        private static void InitializeMCP(IApplicationBuilder app, MCPContext context)
+        private static void InitializeMCPConfigData(IApplicationBuilder app, MCPContext context)
         {
             var logger = app.ApplicationServices.GetRequiredService <ILogger<MCPDataInitializer>>();
 
@@ -105,6 +75,8 @@ namespace API.Initialization
             var mcVersions = new Dictionary<string, GameVersion>();
             var releases = new Dictionary<string, Release>();
             var mavenReleaseNames = new List<string>();
+
+
 
             //Download the maven metadata and parse the versioning information.
             using (var client = new HttpClient())
@@ -145,16 +117,22 @@ namespace API.Initialization
                 return new Release
                 {
                     Id = Guid.NewGuid(),
-                    Classes = new List<ReleaseComponent>(),
                     CreatedBy = initUser,
                     CreatedOn = DateTime.Now,
-                    Fields = new List<ReleaseComponent>(),
                     GameVersion = gameVersion,
-                    Methods = new List<ReleaseComponent>(),
                     Name = relName,
-                    Parameters = new List<ReleaseComponent>()
+                    Components = new List<ReleaseComponent>()
                 };
             }).ToDictionary(release => release.Name, release => release);
+
+            var tsrgMappingType = new MappingType()
+            {
+                CreatedBy = initUser,
+                CreatedOn = DateTime.Now,
+                Id = Guid.NewGuid(),
+                Name = "OBF to TSRG",
+                Releases = releases.Values.ToList(),
+            };
 
             foreach (var mcVersionsValue in mcVersions.Values)
             {
@@ -165,6 +143,8 @@ namespace API.Initialization
             {
                 context.Releases.Add(releasesValue);
             }
+
+            context.MappingTypes.Add(tsrgMappingType);
 
             context.SaveChanges();
 
@@ -178,62 +158,75 @@ namespace API.Initialization
             logger.LogInformation("Starting the processing of MCP Config data.");
 
             var mcVersionClassVersionMappings = Task.WhenAll(mavenReleaseNames.Select(mavenReleaseName =>
-                Task.Run(() => ProcessMcpDataForRelease(logger, mavenReleaseName, releases)))).;
+                Task.Run(() => ProcessMcpConfigDataForRelease(logger, mavenReleaseName, releases, tsrgMappingType)))).Result;
 
 
             logger.LogWarning($"Starting the linear processing of MCP data. Attempting to determine cross version history of classes.");
 
             classes = mcVersionClassVersionMappings.SelectMany(entry => entry).GroupBy(mapping =>
-                mapping.Package + "." + mapping.CommittedMappings.First().OutputMapping).Select(
-                matchingGrouping => new ClassMapping
+                (mapping.Metadata as ClassMetadata).Package + "." + mapping.Mappings.First().OutputMapping).Select(
+                matchingGrouping => new Component()
                 {
                     Id = Guid.NewGuid(),
-                    VersionedMappings = matchingGrouping.ToList()
+                    VersionedMappings = matchingGrouping.ToList(),
+                    Type = ComponentType.CLASS
                 }).ToList();
 
-            classes.ForEach(cls => cls.VersionedMappings.ForEach(clsvm => clsvm.Mapping = cls));
+            classes.ForEach(cls => cls.VersionedMappings.ForEach(clsvm => clsvm.Component = cls));
 
             logger.LogWarning($"Continuing the linear processing of MCP data. Attempting to determine cross version history of methods.");
 
             classes.ForEach(classMapping =>
             {
-                methods.AddRange(classMapping.VersionedMappings.SelectMany(mapping => mapping.Methods).GroupBy(method =>
-                    method.CommittedMappings.First().OutputMapping + "%" + method.Descriptor + "%" + method.IsStatic).Select(
-                    methodGrouping => new MethodMapping
-                    {
-                        Id = Guid.NewGuid(),
-                        VersionedMappings = methodGrouping.ToList()
-                    }));
+                methods
+                    .AddRange(
+                        classMapping.VersionedMappings
+                            .Select(mapping => mapping.Metadata as ClassMetadata)
+                            .SelectMany(clsmd => clsmd.Methods)
+                            .Select(mthmd => mthmd.MemberOf.Component)
+                            .GroupBy(method =>
+                                method.Mappings.First().OutputMapping + "%" + (method.Metadata as MethodMetadata).Descriptor + "%" + (method.Metadata as MethodMetadata).IsStatic).Select(
+                                methodGrouping => new Component()
+                                {
+                                    Id = Guid.NewGuid(),
+                                    VersionedMappings = methodGrouping.ToList(),
+                                    Type = ComponentType.METHOD
+                                }));
             });
 
-            methods.ForEach(mtd => mtd.VersionedMappings.ForEach(mtdvm => mtdvm.Mapping = mtd));
+            methods.ForEach(mtd => mtd.VersionedMappings.ForEach(mtdvm => mtdvm.Component = mtd));
 
             logger.LogWarning($"Continuing the linear processing of MCP data. Attempting to determine cross version history of fields.");
 
             classes.ForEach(classMapping =>
             {
-                fields.AddRange(classMapping.VersionedMappings.SelectMany(mapping => mapping.Fields).GroupBy(field =>
-                    field.CommittedMappings.First().OutputMapping + "%" + field.IsStatic).Select(
-                    fieldGrouping => new FieldMapping
+                fields.AddRange(
+                    classMapping.VersionedMappings
+                        .Select(mapping => mapping.Metadata as ClassMetadata)
+                        .SelectMany(mapping => mapping.Fields)
+                        .Select(fldmd => fldmd.MemberOf.Component)
+                        .GroupBy(field =>
+                    field.Mappings.First().OutputMapping + "%" + (field.Metadata as FieldMetadata).IsStatic).Select(
+                    fieldGrouping => new Component()
                     {
                         Id = Guid.NewGuid(),
-                        VersionedMappings = fieldGrouping.ToList()
+                        VersionedMappings = fieldGrouping.ToList(),
+                        Type = ComponentType.FIELD
                     }));
             });
 
-            fields.ForEach(fld => fld.VersionedMappings.ForEach(fldvm => fldvm.Mapping = fld));
+            fields.ForEach(fld => fld.VersionedMappings.ForEach(fldvm => fldvm.Component = fld));
 
             logger.LogWarning($"Found: {classes.Count} classes, {methods.Count} methods and {fields.Count} fields.");
 
-            foreach (var classMapping in classes)
-            {
-                context.ClassMappings.Add(classMapping);
-            }
+            context.Components.AddRange(classes);
+            context.Components.AddRange(methods);
+            context.Components.AddRange(fields);
 
             context.SaveChanges();
         }
 
-        private static List<VersionedComponent> ProcessMcpDataForRelease(ILogger<MCPDataInitializer> logger, string releaseName, Dictionary<string, Release> releases)
+        private static List<VersionedComponent> ProcessMcpConfigDataForRelease(ILogger<MCPDataInitializer> logger, string releaseName, Dictionary<string, Release> releases, MappingType tsrgMappingType)
         {
             List<VersionedComponent> classVersionedMappings;
             logger.LogInformation($"Processing: {releaseName}");
@@ -301,7 +294,7 @@ namespace API.Initialization
                         logger.LogDebug(
                             $"Processing entry as class, with mapping: {inputMapping} ->{outputMapping} in package: {package}");
 
-                        var committedMapping = new ClassCommittedMappingEntry
+                        var committedMapping = new LiveMappingEntry()
                         {
                             CreatedOn = DateTime.Now,
                             Documentation = "",
@@ -309,34 +302,41 @@ namespace API.Initialization
                             InputMapping = inputMapping,
                             OutputMapping = outputMapping,
                             Proposal = null,
-                            Releases = new List<ClassReleaseMember>(),
-                            VersionedMapping = null
+                            Releases = new List<ReleaseComponent>(),
+                            Mapping = null,
+                            MappingType = tsrgMappingType
                         };
 
-                        committedMapping.Releases.Add(new ClassReleaseMember
+                        committedMapping.Releases.Add(new ReleaseComponent()
                         {
                             Id = Guid.NewGuid(),
                             Member = committedMapping,
-                            Release = release
+                            Release = release,
+                            ComponentType = ComponentType.CLASS
                         });
 
-                        currentClass = new ClassVersionedMapping
+                        currentClass = new VersionedComponent()
                         {
                             Id = Guid.NewGuid(),
-                            CommittedMappings = new List<ClassCommittedMappingEntry> {committedMapping},
+                            Mappings = new List<LiveMappingEntry> {committedMapping},
                             CreatedBy = initUser,
                             CreatedOn = DateTime.Now,
                             GameVersion = gameVersion,
-                            InheritsFrom = new List<ClassVersionedMapping>(),
-                            Mapping = null,
-                            Outer = null,
-                            Package = package,
-                            ProposalMappings = new List<ClassProposalMappingEntry>(),
-                            Fields = new List<FieldVersionedMapping>(),
-                            Methods = new List<MethodVersionedMapping>()
+                            Component = null,
+                            Proposals = new List<ProposalMappingEntry>()
                         };
 
-                        committedMapping.VersionedMapping = currentClass;
+                        currentClass.Metadata = new ClassMetadata()
+                        {
+                            InheritsFrom = new List<ClassMetadata>(),
+                            Outer = null,
+                            Package = package,
+                            Fields = new List<FieldMetadata>(),
+                            Methods = new List<MethodMetadata>(),
+                            Component = currentClass
+                        };
+
+                        committedMapping.Mapping = currentClass;
                     }
                     else if (tsrgLine.Contains('('))
                     {
@@ -349,7 +349,7 @@ namespace API.Initialization
                         logger.LogDebug(
                             $"Processing entry as method, with mapping: {inputMapping} -> {outputMapping} and descriptor: {descriptor}");
 
-                        var committedMappingEntry = new MethodCommittedMappingEntry
+                        var committedMappingEntry = new LiveMappingEntry()
                         {
                             Id = Guid.NewGuid(),
                             CreatedOn = DateTime.Now,
@@ -357,33 +357,39 @@ namespace API.Initialization
                             InputMapping = inputMapping,
                             OutputMapping = outputMapping,
                             Proposal = null,
-                            Releases = new List<MethodReleaseMember>(),
-                            VersionedMapping = null
+                            Releases = new List<ReleaseComponent>(),
+                            Mapping = null,
+                            MappingType = tsrgMappingType
                         };
 
-                        committedMappingEntry.Releases.Add(new MethodReleaseMember
+                        committedMappingEntry.Releases.Add(new ReleaseComponent()
                         {
                             Id = Guid.NewGuid(),
                             Member = committedMappingEntry,
-                            Release = release
+                            Release = release,
+                            ComponentType = ComponentType.METHOD
                         });
 
-                        var methodVersionedMapping = new MethodVersionedMapping
+                        var methodVersionedMapping = new VersionedComponent()
                         {
-                            CommittedMappings = new List<MethodCommittedMappingEntry> {committedMappingEntry},
+                            Mappings = new List<LiveMappingEntry> {committedMappingEntry},
+                            Proposals = new List<ProposalMappingEntry>(),
                             CreatedBy = initUser,
                             CreatedOn = DateTime.Now,
-                            Descriptor = descriptor,
                             GameVersion = gameVersion,
                             Id = Guid.NewGuid(),
-                            IsStatic = staticMethods.Contains(outputMapping),
-                            Mapping = null,
-                            MemberOf = currentClass,
-                            Parameters = new List<ParameterVersionedMapping>(),
                         };
 
-                        committedMappingEntry.VersionedMapping = methodVersionedMapping;
-                        currentClass.Methods.Add(methodVersionedMapping);
+                        methodVersionedMapping.Metadata = new MethodMetadata()
+                        {
+                            Descriptor = descriptor,
+                            IsStatic = staticMethods.Contains(outputMapping),
+                            MemberOf = currentClass.Metadata as ClassMetadata,
+                            Parameters = new List<ParameterMetadata>(),
+                        };
+
+                        committedMappingEntry.Mapping = methodVersionedMapping;
+                        (currentClass.Metadata as ClassMetadata).Methods.Add(methodVersionedMapping.Metadata as MethodMetadata);
                     }
                     else
                     {
@@ -394,7 +400,7 @@ namespace API.Initialization
                         logger.LogDebug(
                             $"Processing entry as field, with mapping: {inputMapping} -> {outputMapping}");
 
-                        var committedMappingEntry = new FieldCommittedMappingEntry
+                        var committedMappingEntry = new LiveMappingEntry()
                         {
                             Id = Guid.NewGuid(),
                             CreatedOn = DateTime.Now,
@@ -402,32 +408,38 @@ namespace API.Initialization
                             InputMapping = inputMapping,
                             OutputMapping = outputMapping,
                             Proposal = null,
-                            Releases = new List<FieldReleaseMember>(),
-                            VersionedMapping = null
+                            Releases = new List<ReleaseComponent>(),
+                            Mapping = null,
+                            MappingType = tsrgMappingType
                         };
 
-                        committedMappingEntry.Releases.Add(new FieldReleaseMember
+                        committedMappingEntry.Releases.Add(new ReleaseComponent()
                         {
                             Id = Guid.NewGuid(),
                             Member = committedMappingEntry,
-                            Release = release
+                            Release = release,
+                            ComponentType = ComponentType.FIELD
                         });
 
-                        var versionedMapping = new FieldVersionedMapping
+                        var versionedMapping = new VersionedComponent()
                         {
-                            CommittedMappings = new List<FieldCommittedMappingEntry> {committedMappingEntry},
+                            Mappings = new List<LiveMappingEntry> {committedMappingEntry},
                             CreatedBy = initUser,
                             CreatedOn = DateTime.Now,
                             GameVersion = gameVersion,
                             Id = Guid.NewGuid(),
-                            IsStatic = false,
-                            Mapping = null,
-                            MemberOf = currentClass,
-                            ProposalMappings = new List<FieldProposalMappingEntry>()
+                            Proposals = new List<ProposalMappingEntry>(),
+                            Component = null
                         };
 
-                        committedMappingEntry.VersionedMapping = versionedMapping;
-                        currentClass.Fields.Add(versionedMapping);
+                        versionedMapping.Metadata = new FieldMetadata()
+                        {
+                            IsStatic = false,
+                            MemberOf = currentClass.Metadata as ClassMetadata
+                        };
+
+                        committedMappingEntry.Mapping = versionedMapping;
+                        (currentClass.Metadata as ClassMetadata).Fields.Add(versionedMapping.Metadata as FieldMetadata);
                     }
                 }
             }

@@ -19,7 +19,7 @@ namespace Data.Core.Models.Core
         public DateTime CreatedOn { get; set; }
 
         [Required]
-        public virtual User CreatedBy { get; set; }
+        public virtual Guid CreatedBy { get; set; }
 
         [Required]
         public virtual GameVersion GameVersion { get; set; }
@@ -27,12 +27,6 @@ namespace Data.Core.Models.Core
         [Required]
         public virtual MappingType MappingType { get; set; }
 
-        public virtual List<ReleaseComponent> Classes { get; set; }
-
-        public virtual List<ReleaseComponent> Methods { get; set; }
-
-        public virtual List<ReleaseComponent> Parameters { get; set; }
-
-        public virtual List<ReleaseComponent> Fields { get; set; }
+        public virtual List<ReleaseComponent> Components { get; set; }
     }
 }

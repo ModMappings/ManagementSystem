@@ -10,7 +10,7 @@ namespace Data.Core.Models.Mapping
         : MappingEntryBase
     {
         [Required]
-        public virtual User ProposedBy { get; set; }
+        public virtual Guid ProposedBy { get; set; }
 
         [Required]
         public DateTime ProposedOn { get; set; }
@@ -21,14 +21,14 @@ namespace Data.Core.Models.Mapping
         [Required]
         public bool IsPublicVote { get; set; }
 
-        public virtual List<User> VotedFor { get; set; }
+        public virtual List<Guid> VotedFor { get; set; }
 
-        public virtual List<User> VotedAgainst { get; set; }
+        public virtual List<Guid> VotedAgainst { get; set; }
 
         [Required]
         public string Comment { get; set; }
 
-        public virtual User ClosedBy { get; set; }
+        public virtual Guid? ClosedBy { get; set; }
 
         public DateTime? ClosedOn { get; set; }
 

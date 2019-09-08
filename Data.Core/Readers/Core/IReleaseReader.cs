@@ -15,8 +15,6 @@ namespace Data.Core.Readers.Core
 
         Task<IQueryable<Release>> GetMadeBy(Guid userId);
 
-        Task<IQueryable<Release>> GetMadeBy(User user);
-
         Task<IQueryable<Release>> GetMadeOn(DateTime date);
 
         Task<IQueryable<Release>> GetMadeForVersion(Guid id);
@@ -25,8 +23,6 @@ namespace Data.Core.Readers.Core
 
         Task<IQueryable<Release>> GetMadeByForMappingType(Guid userId, Guid mappingType);
 
-        Task<IQueryable<Release>> GetMadeByForMappingType(User user, Guid mappingType);
-
         Task<IQueryable<Release>> GetMadeOnForMappingType(DateTime date, Guid mappingType);
 
         Task<IQueryable<Release>> GetMadeForVersionForMappingType(Guid id, Guid mappingType);
@@ -34,8 +30,6 @@ namespace Data.Core.Readers.Core
         Task<IQueryable<Release>> GetMadeForVersionForMappingType(GameVersion version, Guid mappingType);
 
         Task<IQueryable<Release>> GetMadeByForMappingType(Guid userId, MappingType mappingType);
-
-        Task<IQueryable<Release>> GetMadeByForMappingType(User user, MappingType mappingType);
 
         Task<IQueryable<Release>> GetMadeOnForMappingType(DateTime date, MappingType mappingType);
 

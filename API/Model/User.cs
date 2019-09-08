@@ -1,16 +1,11 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data.Core.Models.Core
+namespace API.Model
 {
     public class User
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
 
         public bool CanEdit { get; set; }
@@ -22,5 +17,7 @@ namespace Data.Core.Models.Core
         public bool CanRelease { get; set; }
 
         public bool CanCreateGameVersions { get; set; }
+
+        public bool CanCreateMappingTypes { get; set; }
     }
 }

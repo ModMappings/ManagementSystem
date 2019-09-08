@@ -16,8 +16,6 @@ namespace Data.EFCore.Context
 
         public DbSet<Release> Releases { get; set; }
 
-        public DbSet<User> Users { get; set; }
-
         public DbSet<MappingType> MappingTypes { get; set; }
 
         public DbSet<Component> Components { get; set; }

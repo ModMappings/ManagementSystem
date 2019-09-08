@@ -38,12 +38,7 @@ namespace Data.EFCore.Writer.Core
 
         public async Task<IQueryable<MappingType>> GetMadeBy(Guid userId)
         {
-            return (await AsQueryable()).Where(m => m.CreatedBy.Id == userId);
-        }
-
-        public async Task<IQueryable<MappingType>> GetMadeBy(User user)
-        {
-            return await GetMadeBy(user.Id);
+            return (await AsQueryable()).Where(m => m.CreatedBy == userId);
         }
 
         public async Task<IQueryable<MappingType>> GetMadeOn(DateTime date)

@@ -205,14 +205,14 @@ namespace API.Controllers
 
             var release = new Release
             {
-                CreatedBy = user,
+                CreatedBy = user.Id,
                 CreatedOn = DateTime.Now,
                 Name = mapping.Name,
                 Id = Guid.NewGuid(),
                 GameVersion = gameVersion
             };
 
-            release.Classes = (await _classes.GetByVersion(gameVersion)).Select(classMapping =>
+            var releaseClasses = (await _classes.GetByVersion(gameVersion)).Select(classMapping =>
                 classMapping.VersionedMappings
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
@@ -224,7 +224,7 @@ namespace API.Controllers
                     Member = committedMapping
                 }).ToList();
 
-            release.Methods = (await _methods.GetByVersion(gameVersion)).Select(methodMapping =>
+            var releaseMethods = (await _methods.GetByVersion(gameVersion)).Select(methodMapping =>
                 methodMapping.VersionedMappings
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
@@ -236,7 +236,7 @@ namespace API.Controllers
                     Member = committedMapping
                 }).ToList();
 
-            release.Fields = (await _fields.GetByVersion(gameVersion)).Select(fieldMapping =>
+            var releaseFields = (await _fields.GetByVersion(gameVersion)).Select(fieldMapping =>
                 fieldMapping.VersionedMappings
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
@@ -248,7 +248,7 @@ namespace API.Controllers
                     Member = committedMapping
                 }).ToList();
 
-            release.Parameters = (await _parameters.GetByVersion(gameVersion)).Select(parameterMapping =>
+            var releaseParameters = (await _parameters.GetByVersion(gameVersion)).Select(parameterMapping =>
                 parameterMapping.VersionedMappings
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
@@ -259,6 +259,11 @@ namespace API.Controllers
                     Release = release,
                     Member = committedMapping
                 }).ToList();
+
+            release.Components.AddRange(releaseClasses);
+            release.Components.AddRange(releaseMethods);
+            release.Components.AddRange(releaseFields);
+            release.Components.AddRange(releaseParameters);
 
             await _releaseWriter.Add(release);
             await _releaseWriter.SaveChanges();
@@ -271,13 +276,13 @@ namespace API.Controllers
             return new ReleaseReadModel
             {
                 Id = release.Id,
-                CreatedBy = release.CreatedBy.Id,
+                CreatedBy = release.CreatedBy,
                 CreatedOn = release.CreatedOn,
                 Name = release.Name,
-                Classes = release.Classes.Select(member => member.Id).ToList(),
-                Methods = release.Methods.Select(member => member.Id).ToList(),
-                Parameters = release.Parameters.Select(member => member.Id).ToList(),
-                Fields = release.Fields.Select(member => member.Id).ToList(),
+                Classes = release.Components.Where(rc => rc.ComponentType == ComponentType.CLASS).Select(member => member.Id).ToList(),
+                Methods = release.Components.Where(rc => rc.ComponentType == ComponentType.METHOD).Select(member => member.Id).ToList(),
+                Fields = release.Components.Where(rc => rc.ComponentType == ComponentType.FIELD).Select(member => member.Id).ToList(),
+                Parameters = release.Components.Where(rc => rc.ComponentType == ComponentType.PARAMETER).Select(member => member.Id).ToList()
             };
         }
     }

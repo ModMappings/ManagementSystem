@@ -172,11 +172,13 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult> Add([FromBody] CreateMappingTypeModel createMappingModel)
         {
+            var createdBy = await _userResolvingService.Get();
+
             var mapping = new MappingType
             {
                 Id = Guid.NewGuid(),
                 Name = createMappingModel.Name,
-                CreatedBy = await _userResolvingService.Get(),
+                CreatedBy = createdBy.Id,
                 CreatedOn = DateTime.Now,
                 Releases = new List<Release>()
             };
@@ -192,7 +194,7 @@ namespace API.Controllers
             {
                 Id = mappingType.Id,
                 Name = mappingType.Name,
-                CreatedBy = mappingType.CreatedBy.Id,
+                CreatedBy = mappingType.CreatedBy,
                 CreatedOn = mappingType.CreatedOn,
                 Releases = mappingType.Releases.Select(m => m.Id).ToList()
             };

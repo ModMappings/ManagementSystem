@@ -406,7 +406,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">The id of the proposal you are looking for.</param>
         /// <returns>200-The proposal with the given id. 404-When no proposal exists with the given id.</returns>
-        [HttpGet("proposal/{id}")]
+        [HttpGet("mappings/proposal/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json")]
@@ -425,7 +425,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id">The id of the live mapping you are looking for.</param>
         /// <returns>200-The live mapping with the given id. 404-When no live mapping exists with the given id.</returns>
-        [HttpGet("proposal/{id}")]
+        [HttpGet("mappings/live/detailed/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json")]
@@ -461,15 +461,15 @@ namespace API.Controllers
             if (user == null)
                 return Unauthorized();
 
-            var initialVotedFor = new List<User> {user};
-            var initialVotedAgainst = new List<User>();
+            var initialVotedFor = new List<Guid> {user.Id};
+            var initialVotedAgainst = new List<Guid>();
 
             var proposalEntry = new ProposalMappingEntry()
             {
                 Mapping = classVersionedEntry,
                 InputMapping = proposalModel.NewInput,
                 OutputMapping = proposalModel.NewOutput,
-                ProposedBy = user,
+                ProposedBy = user.Id,
                 ProposedOn = DateTime.Now,
                 IsOpen = true,
                 IsPublicVote = proposalModel.IsPublicVote,
@@ -520,11 +520,11 @@ namespace API.Controllers
             if (!currentProposal.IsPublicVote && user.CanReview)
                 return Unauthorized();
 
-            if (currentProposal.VotedFor.Contains(user))
+            if (currentProposal.VotedFor.Contains(user.Id))
                 return Conflict();
 
-            currentProposal.VotedAgainst.Remove(user);
-            currentProposal.VotedFor.Add(user);
+            currentProposal.VotedAgainst.Remove(user.Id);
+            currentProposal.VotedFor.Add(user.Id);
             await ComponentWriter.SaveChanges();
 
             return Ok();
@@ -558,11 +558,11 @@ namespace API.Controllers
             if (!currentProposal.IsPublicVote && user.CanReview)
                 return Unauthorized();
 
-            if (currentProposal.VotedAgainst.Contains(user))
+            if (currentProposal.VotedAgainst.Contains(user.Id))
                 return Conflict();
 
-            currentProposal.VotedFor.Remove(user);
-            currentProposal.VotedAgainst.Add(user);
+            currentProposal.VotedFor.Remove(user.Id);
+            currentProposal.VotedAgainst.Add(user.Id);
             await ComponentWriter.SaveChanges();
 
             return Ok();
@@ -598,7 +598,7 @@ namespace API.Controllers
             if (!currentProposal.IsPublicVote && user.CanCommit)
                 return Unauthorized();
 
-            currentProposal.ClosedBy = user;
+            currentProposal.ClosedBy = user.Id;
             currentProposal.ClosedOn = DateTime.Now;
             currentProposal.Merged = merge;
 
@@ -636,14 +636,14 @@ namespace API.Controllers
                 Id = proposalMappingEntry.Id,
                 ProposedFor = proposalMappingEntry.Mapping.Id,
                 GameVersion = proposalMappingEntry.Mapping.GameVersion.Id,
-                ProposedBy = proposalMappingEntry.ProposedBy.Id,
+                ProposedBy = proposalMappingEntry.ProposedBy,
                 ProposedOn = proposalMappingEntry.ProposedOn,
                 IsOpen = proposalMappingEntry.IsOpen,
                 IsPublicVote = proposalMappingEntry.IsPublicVote,
-                VotedFor = proposalMappingEntry.VotedFor.ToList().Select(user => user.Id),
-                VotedAgainst = proposalMappingEntry.VotedAgainst.ToList().Select(user => user.Id),
+                VotedFor = proposalMappingEntry.VotedFor.ToList(),
+                VotedAgainst = proposalMappingEntry.VotedAgainst.ToList(),
                 Comment = proposalMappingEntry.Comment,
-                ClosedBy = proposalMappingEntry.ClosedBy.Id,
+                ClosedBy = proposalMappingEntry.ClosedBy,
                 ClosedOn = proposalMappingEntry.ClosedOn,
                 In = proposalMappingEntry.InputMapping,
                 Out = proposalMappingEntry.OutputMapping,

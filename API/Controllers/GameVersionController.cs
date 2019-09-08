@@ -173,7 +173,7 @@ namespace API.Controllers
 
             var gameVersion = new GameVersion
             {
-                CreatedBy = user,
+                CreatedBy = user.Id,
                 CreatedOn = DateTime.Now,
                 IsPreRelease = mapping.IsPreRelease,
                 IsSnapshot = mapping.IsSnapshot,
@@ -192,7 +192,7 @@ namespace API.Controllers
             return new GameVersionReadModel
             {
                 Id = gameVersion.Id,
-                CreatedBy = gameVersion.CreatedBy.Id,
+                CreatedBy = gameVersion.CreatedBy,
                 CreatedOn = gameVersion.CreatedOn,
                 IsPreRelease = gameVersion.IsPreRelease,
                 IsSnapshot = gameVersion.IsSnapshot,

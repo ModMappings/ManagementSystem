@@ -15,8 +15,6 @@ namespace Data.Core.Readers.Core
 
         Task<IQueryable<MappingType>> GetMadeBy(Guid userId);
 
-        Task<IQueryable<MappingType>> GetMadeBy(User user);
-
         Task<IQueryable<MappingType>> GetMadeOn(DateTime date);
     }
 }
