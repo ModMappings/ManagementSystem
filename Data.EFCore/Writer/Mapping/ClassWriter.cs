@@ -1,13 +1,18 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.MetaData;
+using Data.Core.Writers.Mapping;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Data.EFCore.Writer.Mapping
 {
     public class ClassWriter
-        : ComponentWriterBase
+        : ComponentWriterBase, IClassComponentWriter
     {
         public ClassWriter(MCPContext mcpContext) : base(mcpContext)
         {
@@ -35,6 +40,33 @@ namespace Data.EFCore.Writer.Mapping
                 .Include("VersionedMappings.Metadata.Component")
                 .Include("VersionedMappings.Metadata.Outer")
                 .Include("VersionedMappings.Metadata.InheritsFrom"));
+        }
+
+        public async Task<IQueryable<Component>> GetByPackageInVersion(string package, Guid versionId)
+        {
+            var queryable = await AsQueryable();
+
+            return queryable.Where(c => c.VersionedMappings.Any(vc =>
+                vc.GameVersion.Id == versionId && (vc.Metadata as ClassMetadata).Package == package));
+        }
+
+        public async Task<IQueryable<Component>> GetByPackageInVersion(string package, GameVersion gameVersion)
+        {
+            return await GetByPackageInVersion(package, gameVersion.Id);
+        }
+
+        public async Task<IQueryable<Component>> GetByPackageInRelease(string package, Guid releaseId)
+        {
+            var queryable = await AsQueryable();
+
+            return queryable.Where(c => c.VersionedMappings.Any(vc =>
+                (vc.Metadata as ClassMetadata).Package == package &&
+                vc.Mappings.Any(m => m.Releases.Any(rc => rc.Release.Id == releaseId))));
+        }
+
+        public async Task<IQueryable<Component>> GetByPackageInRelease(string package, Release release)
+        {
+            return await GetByPackageInRelease(package, release.Id);
         }
     }
 }

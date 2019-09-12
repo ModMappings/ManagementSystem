@@ -1,13 +1,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
+using Data.Core.Writers.Mapping;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.EFCore.Writer.Mapping
 {
     public class FieldWriter
-        : ComponentWriterBase
+        : ComponentWriterBase, IFieldComponentWriter
     {
         public FieldWriter(MCPContext mcpContext) : base(mcpContext)
         {

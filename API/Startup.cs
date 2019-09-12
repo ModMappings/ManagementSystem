@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using API.Initialization;
 using API.Services.Core;
 using API.Services.UserResolving;
@@ -9,6 +10,7 @@ using Data.Core.Writers.Core;
 using Data.EFCore.Context;
 using Data.EFCore.Writer.Core;
 using Data.EFCore.Writer.Mapping;
+using Data.MCPImport.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -72,6 +74,8 @@ namespace API
             services.AddTransient<IMappingTypeReader, MappingTypeWriter>();
             services.AddTransient<IMappingTypeWriter, MappingTypeWriter>();
             services.AddTransient<ComponentWriterFactory>();
+
+            services.AddMCPImportDataHandlers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,12 +103,7 @@ namespace API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "MCP.API - OpenAPI Documentation");
             });
 
-            UpdateDatabase(app);
-        }
-
-        private static void UpdateDatabase(IApplicationBuilder app)
-        {
-            MCPDataInitializer.InitializeData(app);
+            app.AddMCPImport();
         }
     }
 }

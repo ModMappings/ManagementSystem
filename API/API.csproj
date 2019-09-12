@@ -29,6 +29,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Data.Core\Data.Core.csproj" />
       <ProjectReference Include="..\Data.EFCore\Data.EFCore.csproj" />
+      <ProjectReference Include="..\Data.MCPImport\Data.MCPImport.csproj" />
     </ItemGroup>
 
 </Project>
