@@ -8,7 +8,10 @@ RUN echo "Target: " $TARGET
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY API/*.csproj ./API/
-COPY Auth/*.csproj ./Auth/
+COPY Auth.Admin/*.csproj ./Auth.Admin/
+COPY Auth.Admin.Api/*.csproj ./Auth.Admin.Api/
+COPY Auth.Admin.EntityFramework.Shared/*.csproj ./Auth.Admin.EntityFramework.Shared/
+COPY Auth.STS.Identity/*.csproj ./Auth.STS.Identity/
 COPY Data.Core/*.csproj ./Data.Core/
 COPY Data.EFCore/*.csproj ./Data.EFCore/
 COPY Data.MCPImport/*.csproj ./Data.MCPImport/
