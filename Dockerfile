@@ -22,7 +22,6 @@ COPY ./ ./
 WORKDIR /solution/$TARGET
 RUN dotnet publish -c Release -o out
 
-
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine AS runtime
 
 # Setup multi target building from the same solution and docker file.
@@ -31,4 +30,6 @@ RUN echo "Target: " $TARGET
 
 WORKDIR /app
 COPY --from=build /solution/$TARGET/out ./
-ENTRYPOINT ["dotnet", "$TARGET.dll"]
+RUN echo "dotnet /app/$TARGET.dll" >> entrypoint.sh
+RUN chmod +x entrypoint.sh
+CMD /app/entrypoint.sh

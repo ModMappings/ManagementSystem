@@ -7,6 +7,8 @@ services:
       - service
     expose:
       - "5432"
+    ports:
+      - "6432:5432"
     environment:
       POSTGRES_USER: "auth-configuration"
       POSTGRES_PASSWORD: "auth-configuration"
@@ -18,6 +20,8 @@ services:
       - service
     expose:
       - "5432"
+    ports:
+      - "6433:5432"
     environment:
       POSTGRES_USER: "auth-persisted"
       POSTGRES_PASSWORD: "auth-persisted"
@@ -29,6 +33,8 @@ services:
       - service
     expose:
       - "5432"
+    ports:
+      - "6434:5432"
     environment:
       POSTGRES_USER: "auth-identity"
       POSTGRES_PASSWORD: "auth-identity"
@@ -40,6 +46,8 @@ services:
       - service
     expose:
       - "5432"
+    ports:
+      - "6435:5432"
     environment:
       POSTGRES_USER: "auth-admin-log"
       POSTGRES_PASSWORD: "auth-admin-log"
@@ -61,7 +69,7 @@ services:
       - auth_persisted_database
       - auth_identity_database
     environment:
-      VIRTUAL_HOST: "sts.mcp.localhost"
+      VIRTUAL_HOST: "sts.mcp.testdemo.ldtteam.com"
       VIRTUAL_PORT: 5000
       VIRTUAL_PROTO: http
       ConnectionStrings__ConfigurationDbConnection: "host=auth_configuration_database;port=5432;database=configuration;username=auth-configuration;password=auth-configuration;"
@@ -78,21 +86,22 @@ services:
       - service
       - frontend
     expose:
-      - 5000
+      - 80
     links:
       - auth_configuration_database
       - auth_persisted_database
       - auth_identity_database
       - auth_admin_log_database
+      - auth_sts
     environment:
-      VIRTUAL_HOST: "api.admin.mcp.localhost"
-      VIRTUAL_PORT: 5000
+      VIRTUAL_HOST: "api.admin.mcp.testdemo.ldtteam.com"
+      VIRTUAL_PORT: 80
       VIRTUAL_PROTO: http
       ConnectionStrings__ConfigurationDbConnection: "host=auth_configuration_database;port=5432;database=configuration;username=auth-configuration;password=auth-configuration;"
       ConnectionStrings__PersistedGrantDbConnection: "host=auth_persisted_database;port=5432;database=persisted;username=auth-persisted;password=auth-persisted;"
       ConnectionStrings__IdentityDbConnection: "host=auth_identity_database;port=5432;database=identity;username=auth-identity;password=auth-identity;"
       ConnectionStrings__AdminLogDbConnection: "host=auth_admin_log_database;port=5432;database=admin-log;username=auth-admin-log;password=auth-admin-log;"
-      AdminApiConfiguration__IdentityServerBaseUrl: "http://sts.mcp.localhost"
+      AdminConfiguration__IdentityServerBaseUrl: "http://sts.mcp.testdemo.ldtteam.com"
 
   auth_admin:
     build:
@@ -104,24 +113,25 @@ services:
       - service
       - frontend
     expose:
-      - 5000
+      - 80
     links:
       - auth_configuration_database
       - auth_persisted_database
       - auth_identity_database
       - auth_admin_log_database
+      - auth_sts
     environment:
-      VIRTUAL_HOST: "admin.mcp.localhost"
-      VIRTUAL_PORT: 5000
+      VIRTUAL_HOST: "admin.mcp.testdemo.ldtteam.com"
+      VIRTUAL_PORT: 80
       VIRTUAL_PROTO: http
       ConnectionStrings__ConfigurationDbConnection: "host=auth_configuration_database;port=5432;database=configuration;username=auth-configuration;password=auth-configuration;"
       ConnectionStrings__PersistedGrantDbConnection: "host=auth_persisted_database;port=5432;database=persisted;username=auth-persisted;password=auth-persisted;"
       ConnectionStrings__IdentityDbConnection: "host=auth_identity_database;port=5432;database=identity;username=auth-identity;password=auth-identity;"
       ConnectionStrings__AdminLogDbConnection: "host=auth_admin_log_database;port=5432;database=admin-log;username=auth-admin-log;password=auth-admin-log;"
-      AdminApiConfiguration__IdentityServerBaseUrl: "http://sts.mcp.localhost"
-      AdminApiConfiguration__IdentityAdminRedirectUri: "http://admin.mcp.localhost/signin-oidc"
-      AdminApiConfiguration__IdentityAdminBaseUrl: "http://admin.mcp.localhost"
-      AdminApiConfiguration__IdentityAdminApiSwaggerUIRedirectUrl: "http://admin.mcp.localhost/swagger/oauth2-redirect.html"
+      AdminConfiguration__IdentityServerBaseUrl: "http://sts.mcp.testdemo.ldtteam.com"
+      AdminConfiguration__IdentityAdminRedirectUri: "http://admin.mcp.testdemo.ldtteam.com/signin-oidc"
+      AdminConfiguration__IdentityAdminBaseUrl: "http://admin.mcp.testdemo.ldtteam.com"
+      AdminConfiguration__IdentityAdminApiSwaggerUIRedirectUrl: "http://admin.mcp.testdemo.ldtteam.com/swagger/oauth2-redirect.html"
 
   auth_admin_seed:
     build:
@@ -129,9 +139,9 @@ services:
       dockerfile: Dockerfile
       args:
         TARGET: "Auth.Admin"
+    command: ["dotnet", "Auth.Admin.dll", "/seed"]
     networks:
       - service
-    entrypoint: "dotnet Auth.Admin.dll /seed"
     links:
       - auth_configuration_database
       - auth_persisted_database
@@ -142,6 +152,9 @@ services:
       ConnectionStrings__PersistedGrantDbConnection: "host=auth_persisted_database;port=5432;database=persisted;username=auth-persisted;password=auth-persisted;"
       ConnectionStrings__IdentityDbConnection: "host=auth_identity_database;port=5432;database=identity;username=auth-identity;password=auth-identity;"
       ConnectionStrings__AdminLogDbConnection: "host=auth_admin_log_database;port=5432;database=admin-log;username=auth-admin-log;password=auth-admin-log;"
+      AdminSeedConfiguration__AdminUserName: "test_admin"
+      AdminSeedConfiguration__AdminPassword: "Password12345"
+      AdminSeedConfiguration__AdminEmail: "admin@test.com"
 
 networks:
   frontend:

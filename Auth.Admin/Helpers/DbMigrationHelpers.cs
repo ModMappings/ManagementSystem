@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Auth.Admin.Configuration.Constants;
 using Auth.Admin.Configuration.IdentityServer;
 using Auth.Admin.Configuration.Interfaces;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using Skoruba.IdentityServer4.Admin.EntityFramework.Interfaces;
 
 namespace Auth.Admin.Helpers
@@ -46,21 +48,29 @@ namespace Auth.Admin.Helpers
             {
                 using (var context = scope.ServiceProvider.GetRequiredService<TPersistedGrantDbContext>())
                 {
+                    scope.ServiceProvider.GetRequiredService<ILogger<TPersistedGrantDbContext>>().LogWarning(
+                        $"Migrations are being applied using connection string: {context.Database.GetDbConnection().ConnectionString}");
                     await context.Database.MigrateAsync();
                 }
 
                 using (var context = scope.ServiceProvider.GetRequiredService<TIdentityDbContext>())
                 {
+                    scope.ServiceProvider.GetRequiredService<ILogger<TIdentityDbContext>>().LogWarning(
+                        $"Migrations are being applied using connection string: {context.Database.GetDbConnection().ConnectionString}");
                     await context.Database.MigrateAsync();
                 }
 
                 using (var context = scope.ServiceProvider.GetRequiredService<TConfigurationDbContext>())
                 {
+                    scope.ServiceProvider.GetRequiredService<ILogger<TConfigurationDbContext>>().LogWarning(
+                        $"Migrations are being applied using connection string: {context.Database.GetDbConnection().ConnectionString}");
                     await context.Database.MigrateAsync();
                 }
 
                 using (var context = scope.ServiceProvider.GetRequiredService<TLogDbContext>())
                 {
+                    scope.ServiceProvider.GetRequiredService<ILogger<TLogDbContext>>().LogWarning(
+                        $"Migrations are being applied using connection string: {context.Database.GetDbConnection().ConnectionString}");
                     await context.Database.MigrateAsync();
                 }
             }
