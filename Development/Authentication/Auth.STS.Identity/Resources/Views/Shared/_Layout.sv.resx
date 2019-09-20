@@ -127,7 +127,7 @@
     <value>Externa inlogg</value>
   </data>
   <data name="Footer" xml:space="preserve">
-    <value>MCMS - Authentication</value>
+    <value>MCMS - Account Management</value>
   </data>
   <data name="FooterCopyright" xml:space="preserve">
     <value>© 2019</value>
@@ -154,6 +154,6 @@
     <value>Logga ut</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>MCMS - Authentication</value>
+    <value>MCMS - Account Management</value>
   </data>
 </root>

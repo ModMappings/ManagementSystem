@@ -139,9 +139,9 @@
     <value>我的个人资料</value>
   </data>
   <data name="SubTitle" xml:space="preserve">
-    <value>欢迎来到 MCMS - Authentication</value>
+    <value>欢迎来到 MCMS - Account Management</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>MCMS - Authentication</value>
+    <value>MCMS - Account Management</value>
   </data>
 </root>
