@@ -121,7 +121,7 @@
     <value>&amp;copy; 2018</value>
   </data>
   <data name="FooterTitle" xml:space="preserve">
-    <value>MCP.Service.Auth</value>
+    <value>MCMS.Auth</value>
   </data>
   <data name="LinkApiResources" xml:space="preserve">
     <value>Api Resources</value>
@@ -148,7 +148,7 @@
     <value>Menu</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>MCP.Service.Auth</value>
+    <value>MCMS.Auth</value>
   </data>
   <data name="TitleConfiguration" xml:space="preserve">
     <value>Clients/Resources</value>

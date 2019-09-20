@@ -142,6 +142,6 @@
     <value>Administration för IdentityServer4 och Asp.Net Core Identity</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>MCP.Service.Auth</value>
+    <value>MCMS.Auth</value>
   </data>
 </root>

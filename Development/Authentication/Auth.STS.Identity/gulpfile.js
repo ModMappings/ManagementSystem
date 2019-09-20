@@ -1,13 +1,13 @@
-﻿var gulp = require('gulp');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var sass = require('gulp-sass');
-var minifyCSS = require('gulp-clean-css');
-var del = require('del');
+﻿const gulp = require('gulp');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const sass = require('gulp-sass');
+const minifyCSS = require('gulp-clean-css');
+const del = require('del');
 
-var distFolder = './wwwroot/dist/';
-var jsFolder = `${distFolder}js/`;
-var cssFolder = `${distFolder}css/`;
+const distFolder = './wwwroot/dist/';
+const jsFolder = `${distFolder}js/`;
+const cssFolder = `${distFolder}css/`;
 
 function processClean() {
 	return del(`${distFolder}**`, { force: true });
@@ -63,15 +63,16 @@ function processStyles() {
 			'./node_modules/bootstrap/dist/css/bootstrap.css',
 			'./node_modules/open-iconic/font/css/open-iconic-bootstrap.css',
             './node_modules/font-awesome/css/font-awesome.css',
-            './node_modules/cookieconsent/build/cookieconsent.min.css'
+            './node_modules/cookieconsent/build/cookieconsent.min.css',
+			'Styles/bootstrap_custom.min.css'
 		])
 		.pipe(minifyCSS())
 		.pipe(concat('bundle.min.css'))
 		.pipe(gulp.dest(cssFolder));
 }
 
-var buildStyles = gulp.series(processStyles, processSass, processSassMin);
-var build = gulp.parallel(buildStyles, processScripts);
+const buildStyles = gulp.series(processStyles, processSass, processSassMin);
+const build = gulp.parallel(buildStyles, processScripts);
 
 gulp.task('clean', processClean);
 gulp.task('styles', buildStyles);

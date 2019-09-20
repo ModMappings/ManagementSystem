@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 <div class="welcome-block px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4"><img class="icon" alt="Logo" src="~/images/skoruba-icon.png"><br />@Localizer["Title"]</h1>
+    <h1 class="display-4"><img class="icon" alt="Logo" src="~/images/Logo.png"><br />@Localizer["Title"]</h1>
     <p class="lead">@Localizer["SubTitle"]</p>
 </div>
 
@@ -21,7 +21,7 @@
             </div>
         </div>
     }
-   
+
     @if (User.IsAuthenticated())
     {
     <div class="card mb-4 box-shadow">
@@ -36,7 +36,7 @@
         </div>
     </div>
     }
-    
+
      <div class="card mb-4 box-shadow">
         <div class="card-header">
             <h4 class="my-0 font-weight-normal">@Localizer["Discovery"]</h4>
@@ -105,14 +105,3 @@
         </div>
     </div>
 }
-
-
-<div class="row">
-    <div class="col-sm-8">
-        <p>
-            @Localizer["LinkTitle"]
-            <a href="https://github.com/identityserver/IdentityServer4">@Localizer["LinkSource"]</a>,
-            <a href="https://github.com/identityserver/IdentityServer4.Samples">@Localizer["LinkSamples"]</a>.
-        </p>
-    </div>
-</div>

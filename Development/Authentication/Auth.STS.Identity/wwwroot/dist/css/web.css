@@ -36,6 +36,9 @@
   color: black;
   text-decoration: none; }
 
+img.icon {
+  max-height: 180px; }
+
 .col-m-5 {
   margin: 5px; }
 

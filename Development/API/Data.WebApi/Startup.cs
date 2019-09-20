@@ -56,7 +56,7 @@ namespace Data.WebApi
                         Url = new Uri("https://mcptest.ldtteam.com"),
                         Name = "mcp.service - Development team"
                     },
-                    Description = "OpenAPI documentation for the MCP.Service Data.WebApi.",
+                    Description = "OpenAPI documentation for the MCMS Data.WebApi.",
                     License = new OpenApiLicense
                     {
                         Name = "GPL v3",

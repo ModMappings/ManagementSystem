@@ -142,6 +142,6 @@
     <value>IdentityServer4 和 Asp.Net Core Identity 管理</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
-    <value>MCP.Service.Auth</value>
+    <value>MCMS.Auth</value>
   </data>
 </root>
