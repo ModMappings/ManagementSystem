@@ -9,6 +9,7 @@ using Auth.Admin.Configuration.Interfaces;
 using Auth.Admin.EntityFramework.Shared.DbContexts;
 using Auth.Admin.EntityFramework.Shared.Entities.Identity;
 using Auth.Admin.Helpers;
+using Microsoft.IdentityModel.Logging;
 
 namespace Auth.Admin
 {
@@ -49,7 +50,7 @@ namespace Auth.Admin
 
             // Add Asp.Net Core Identity Configuration and OpenIdConnect auth as well
             services.AddAuthenticationServices<AdminIdentityDbContext, UserIdentity, UserIdentityRole>(HostingEnvironment, rootConfiguration.AdminConfiguration);
-            
+
             // Add exception filters in MVC
             services.AddMvcExceptionFilters();
 
@@ -86,6 +87,7 @@ namespace Auth.Admin
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                IdentityModelEventSource.ShowPII = true;
             }
             else
             {
