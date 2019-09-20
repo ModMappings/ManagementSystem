@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ContentModelUserStore">
     <attachedFolders>
-      <Path>Documentation</Path>
-      <Path>Operations</Path>
+      <Path>../../MCP.Service</Path>
     </attachedFolders>
     <explicitIncludes />
     <explicitExcludes />

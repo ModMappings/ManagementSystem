@@ -1,20 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{2A83B630-90F0-4E1A-B4EE-5FEB317E9443}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WebApi", "Development\API\Data.WebApi\Data.WebApi.csproj", "{2A83B630-90F0-4E1A-B4EE-5FEB317E9443}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Core", "Data.Core\Data.Core.csproj", "{3BC7EA15-800F-42E6-947F-B33F8AA925B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Core", "Development\API\Data.Core\Data.Core.csproj", "{3BC7EA15-800F-42E6-947F-B33F8AA925B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.EFCore", "Data.EFCore\Data.EFCore.csproj", "{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.EFCore", "Development\API\Data.EFCore\Data.EFCore.csproj", "{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.MCPImport", "Data.MCPImport\Data.MCPImport.csproj", "{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.MCPImport", "Development\API\Data.MCPImport\Data.MCPImport.csproj", "{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Admin", "Auth.Admin\Auth.Admin.csproj", "{EDB8FEDF-9DF4-4921-9A0A-A9D5C615B4CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Admin", "Development\Authentication\Auth.Admin\Auth.Admin.csproj", "{EDB8FEDF-9DF4-4921-9A0A-A9D5C615B4CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Admin.Api", "Auth.Admin.Api\Auth.Admin.Api.csproj", "{6B687B93-DFA8-4AA7-BED2-F8498A8DD9DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Admin.Api", "Development\Authentication\Auth.Admin.Api\Auth.Admin.Api.csproj", "{6B687B93-DFA8-4AA7-BED2-F8498A8DD9DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Admin.EntityFramework.Shared", "Auth.Admin.EntityFramework.Shared\Auth.Admin.EntityFramework.Shared.csproj", "{9EF5E729-E935-4079-9B02-12C74E3416C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Admin.EntityFramework.Shared", "Development\Authentication\Auth.Admin.EntityFramework.Shared\Auth.Admin.EntityFramework.Shared.csproj", "{9EF5E729-E935-4079-9B02-12C74E3416C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.STS.Identity", "Auth.STS.Identity\Auth.STS.Identity.csproj", "{DC6A2EDA-B351-4529-8DEC-0F88A98C19B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.STS.Identity", "Development\Authentication\Auth.STS.Identity\Auth.STS.Identity.csproj", "{DC6A2EDA-B351-4529-8DEC-0F88A98C19B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
