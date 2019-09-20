@@ -258,13 +258,25 @@ namespace Auth.STS.Identity.Helpers
         {
             var externalProviderConfiguration = configuration.GetSection(nameof(ExternalProvidersConfiguration)).Get<ExternalProvidersConfiguration>();
 
-            if (externalProviderConfiguration.UseGitHubProvider)
+            if (externalProviderConfiguration.GitHub != null && externalProviderConfiguration.GitHub.Active)
             {
                 authenticationBuilder.AddGitHub(options =>
                 {
-                    options.ClientId = externalProviderConfiguration.GitHubClientId;
-                    options.ClientSecret = externalProviderConfiguration.GitHubClientSecret;
+                    options.ClientId = externalProviderConfiguration.GitHub.ClientId;
+                    options.ClientSecret = externalProviderConfiguration.GitHub.ClientSecret;
                     options.Scope.Add("user:email");
+                    options.Scope.Add("read:user");
+                });
+            }
+
+            if (externalProviderConfiguration.Discord != null && externalProviderConfiguration.Discord.Active)
+            {
+                authenticationBuilder.AddDiscord(options =>
+                {
+                    options.ClientId = externalProviderConfiguration.Discord.ClientId;
+                    options.ClientSecret = externalProviderConfiguration.Discord.ClientSecret;
+                    options.Scope.Add("identity");
+                    options.Scope.Add("email");
                 });
             }
         }

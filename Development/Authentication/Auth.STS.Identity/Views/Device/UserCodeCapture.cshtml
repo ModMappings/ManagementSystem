@@ -5,21 +5,21 @@
     <h1>
         @Localizer["Title"]
     </h1>
-    
+
     <div class="col-sm-6">
         <div class="card mt-3">
             <h5 class="card-header">@Localizer["Title"]</h5>
             <div class="card-body">
 
                 <form asp-action="UserCodeCapture" method="post">
-                    
+
                     <fieldset>
                         <div class="form-group row">
                             <div class="col-sm-12">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="input-usercode">
-                                            <i class="fa fa-barcode"></i>
+                                            <i class="fas fa-barcode"></i>
                                         </span>
                                     </div>
                                     <input for="userCode" placeholder="@Localizer["EnterCode"]" class="form-control" name="userCode" aria-describedby="input-usercode"/>

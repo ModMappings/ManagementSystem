@@ -2,8 +2,8 @@
 {
     public class ExternalProvidersConfiguration
     {
-        public bool UseGitHubProvider { get; set; }
-        public string GitHubClientId { get; set; }
-        public string GitHubClientSecret { get; set; }
+        public SingleExternalProviderConfiguration GitHub { get; set; } = null;
+
+        public SingleExternalProviderConfiguration Discord { get; set; } = null;
     }
 }

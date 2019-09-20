@@ -35,7 +35,7 @@ function processScripts() {
 
 function processFonts() {
 	return gulp
-		.src(['./node_modules/font-awesome/fonts/**', './node_modules/open-iconic/font/fonts/**'])
+		.src(['./node_modules/@fortawesome/fontawesome-free/webfonts/**', './node_modules/open-iconic/font/fonts/**'])
 		.pipe(gulp.dest(`${distFolder}fonts/`));
 }
 
@@ -62,7 +62,7 @@ function processStyles() {
 		.src([
 			'./node_modules/bootstrap/dist/css/bootstrap.css',
 			'./node_modules/open-iconic/font/css/open-iconic-bootstrap.css',
-            './node_modules/font-awesome/css/font-awesome.css',
+            './node_modules/@fortawesome/fontawesome-free/css/all.css',
             './node_modules/cookieconsent/build/cookieconsent.min.css',
 			'Styles/bootstrap_custom.min.css'
 		])

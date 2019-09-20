@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @using Auth.STS.Identity.Configuration.Intefaces
 @using Auth.STS.Identity.Helpers.Localization
+@using Microsoft.EntityFrameworkCore.Internal
 @inject IViewLocalizer Localizer
 @model Auth.STS.Identity.ViewModels.Account.LoginViewModel
 @inject IRootConfiguration RootConfiguration
@@ -29,7 +30,7 @@
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="input-username">
-                                                    <i class="fa fa-user"></i>
+                                                    <i class="fas fa-user"></i>
                                                 </span>
                                             </div>
                                             <input class="form-control" placeholder="@Localizer[LoginPolicyResolutionLocalizer.GetUserNameLocalizationKey(Model.LoginResolutionPolicy)]" asp-for="Username" aria-label="Username" aria-describedby="input-username" autofocus>
@@ -69,7 +70,7 @@
                                     <div class="col-sm-12">
                                         <button class="btn btn-primary" name="button" value="login">@Localizer["Login"]</button>
                                         <button class="btn btn-secondary" name="button" value="cancel">@Localizer["Cancel"]</button>
-                                        <a asp-action="ForgotPassword" asp-controller="Account" class="btn btn-info" value="forgot">@Localizer["Forgot"]</a>                                        
+                                        <a asp-action="ForgotPassword" asp-controller="Account" class="btn btn-info" value="forgot">@Localizer["Forgot"]</a>
                                         @if (RootConfiguration.RegisterConfiguration.Enabled)
                                         {
                                             <a asp-action="Register" asp-controller="Account" class="btn btn-dark" value="forgot">@Localizer["Register"]</a>
@@ -92,12 +93,12 @@
                         <ul class="list-inline">
                             @foreach (var provider in Model.VisibleExternalProviders)
                             {
-                                <li class="list-inline-item">
-                                    <a class="btn btn-primary"
+                                <li class="list-item w-100 @(Model.VisibleExternalProviders.IndexOf(provider) == 0 ? "" : "mt-3")">
+                                    <a class="btn btn-primary w-100 mt-3"
                                        asp-action="ExternalLogin"
                                        asp-route-provider="@provider.AuthenticationScheme"
                                        asp-route-returnUrl="@Model.ReturnUrl">
-                                        @provider.DisplayName
+                                        <i class="fas fa-@provider.DisplayName.ToLower()"></i> @provider.DisplayName
                                     </a>
                                 </li>
                             }
