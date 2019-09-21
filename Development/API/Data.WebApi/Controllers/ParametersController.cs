@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.MetaData;
+using Data.Core.Models.Mapping.Metadata;
 using Data.Core.Readers.Core;
 using Data.Core.Writers.Core;
 using Data.EFCore.Writer.Mapping;
-using Data.WebApi.Controllers;
 using Data.WebApi.Model.Creation.Parameter;
 using Data.WebApi.Model.Read.Parameter;
 using Data.WebApi.Services.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Data.WebApi
+namespace Data.WebApi.Controllers
 {
     /// <summary>
     /// Controller that handles interactions on parameter levels.

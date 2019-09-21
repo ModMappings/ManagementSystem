@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.MetaData;
+using Data.Core.Models.Mapping.Metadata;
 using Data.EFCore.Context;
 using Data.MCPImport.Extensions;
 using Data.MCPImport.Maven;

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Auth.Admin.EntityFramework.Shared.DbContexts;
 using Auth.Admin.EntityFramework.Shared.Entities.Identity;
 using Auth.STS.Identity.Helpers;
+using NWebsec.Core.Common.Middleware.Options;
 
 namespace Auth.STS.Identity
 {
@@ -66,6 +67,22 @@ namespace Auth.STS.Identity
 
             // Add custom security headers
             app.UseSecurityHeaders();
+
+            //Setup csp policy to allow pulling of fontawesome data from cdn.
+            app.UseCsp(cspOptions =>
+            {
+                cspOptions
+                    .FontSources(fsc =>
+                    {
+                        fsc.SelfSrc = true;
+                        fsc.CustomSources = new[] {"cdnjs.cloudflare.com"};
+                    })
+                    .StyleSources(fsc =>
+                    {
+                        fsc.SelfSrc = true;
+                        fsc.CustomSources = new[] {"cdnjs.cloudflare.com"};
+                    });
+            });
 
             app.UseStaticFiles();
             app.UseIdentityServer();

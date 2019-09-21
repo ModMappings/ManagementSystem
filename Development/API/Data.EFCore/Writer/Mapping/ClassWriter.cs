@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.MetaData;
+using Data.Core.Models.Mapping.Metadata;
 using Data.Core.Writers.Mapping;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;

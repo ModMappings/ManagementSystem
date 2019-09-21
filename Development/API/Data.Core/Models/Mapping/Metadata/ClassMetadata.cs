@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Data.Core.Models.Mapping.MetaData
+namespace Data.Core.Models.Mapping.Metadata
 {
     public class ClassMetadata
         : VersionedComponentMetadataBase

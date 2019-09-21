@@ -1,6 +1,6 @@
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.MetaData;
+using Data.Core.Models.Mapping.Metadata;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.EFCore.Context

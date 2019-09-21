@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Data.Core.Models.Core;
-using Data.Core.Models.Mapping.MetaData;
+using Data.Core.Models.Mapping.Metadata;
 
 namespace Data.Core.Models.Mapping
 {

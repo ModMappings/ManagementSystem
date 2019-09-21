@@ -33,9 +33,10 @@ function processScripts() {
 		.pipe(gulp.dest(jsFolder));
 }
 
-function processFonts() {
+function processOpenIconicFonts()
+{
 	return gulp
-		.src(['./node_modules/@fortawesome/fontawesome-free/webfonts/**', './node_modules/open-iconic/font/fonts/**'])
+		.src(['./node_modules/open-iconic/font/fonts/**'])
 		.pipe(gulp.dest(`${distFolder}fonts/`));
 }
 
@@ -62,7 +63,6 @@ function processStyles() {
 		.src([
 			'./node_modules/bootstrap/dist/css/bootstrap.css',
 			'./node_modules/open-iconic/font/css/open-iconic-bootstrap.css',
-            './node_modules/@fortawesome/fontawesome-free/css/all.css',
             './node_modules/cookieconsent/build/cookieconsent.min.css',
 			'Styles/bootstrap_custom.min.css'
 		])
@@ -71,8 +71,11 @@ function processStyles() {
 		.pipe(gulp.dest(cssFolder));
 }
 
+const processFonts = gulp.parallel(processOpenIconicFonts);
+const setup = gulp.series(processClean, processFonts);
 const buildStyles = gulp.series(processStyles, processSass, processSassMin);
-const build = gulp.parallel(buildStyles, processScripts);
+const buildAssets = gulp.parallel(buildStyles, processScripts);
+const build = gulp.series(setup, buildAssets);
 
 gulp.task('clean', processClean);
 gulp.task('styles', buildStyles);
