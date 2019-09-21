@@ -37,7 +37,32 @@ namespace Auth.Admin.Configuration.IdentityServer
                             Required = true
                         }
                     }
-                }
+                },
+                new ApiResource
+                {
+                    Name = "MCMS.WebApi",
+                    Scopes = new List<Scope>
+                    {
+                        new Scope
+                        {
+                            Name =  "MCMS.WebApi",
+                            DisplayName = "MCMS - WebApi",
+                            Description = "Grant access to the MCMS WebApi in your name.",
+                            Emphasize = true,
+                            Required = true,
+                            ShowInDiscoveryDocument = true,
+                            UserClaims = new List<string>
+                            {
+                                "CanCommit",
+                                "CanRelease",
+                                "CanEdit",
+                                "CanReview",
+                                "CanCreateGameVersions",
+                                "CanCreateMappingTypes"
+                            }
+                        }
+                    }
+                },
             };
         }
     }

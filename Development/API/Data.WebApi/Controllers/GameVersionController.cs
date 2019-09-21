@@ -7,6 +7,7 @@ using Data.Core.Writers.Core;
 using Data.WebApi.Model.Creation.Core;
 using Data.WebApi.Model.Read.Core;
 using Data.WebApi.Services.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -165,6 +166,7 @@ namespace Data.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [Produces("application/json")]
+        [Authorize()]
         public async Task<ActionResult> Add([FromBody] CreateGameVersionModel mapping)
         {
             var user = await _userResolvingService.Get();

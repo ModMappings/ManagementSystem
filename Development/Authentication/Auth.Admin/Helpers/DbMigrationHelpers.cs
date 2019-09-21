@@ -17,11 +17,6 @@ namespace Auth.Admin.Helpers
 {
     public static class DbMigrationHelpers
     {
-        /// <summary>
-        /// Generate migrations before running this method, you can use these steps bellow:
-        /// https://github.com/skoruba/IdentityServer4.Admin#ef-core--data-access
-        /// </summary>
-        /// <param name="host"></param>
         public static async Task EnsureSeedData<TIdentityServerDbContext, TIdentityDbContext, TPersistedGrantDbContext, TLogDbContext, TUser, TRole>(IWebHost host)
             where TIdentityServerDbContext : DbContext, IAdminConfigurationDbContext
             where TIdentityDbContext : DbContext

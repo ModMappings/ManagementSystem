@@ -10,6 +10,7 @@ using Data.EFCore.Writer.Mapping;
 using Data.WebApi.Model.Creation.Field;
 using Data.WebApi.Model.Read.Field;
 using Data.WebApi.Services.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,6 +44,7 @@ namespace Data.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [Produces("application/json")]
+        [Authorize()]
         public async Task<ActionResult> AddToLatest([FromBody] CreateFieldModel mapping)
         {
             var currentLatestGameVersion = await GameVersionReader.GetLatest();
@@ -113,6 +115,7 @@ namespace Data.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [Consumes("application/json")]
         [Produces("application/json")]
+        [Authorize()]
         public async Task<ActionResult> AddToVersion([FromBody] CreateVersionedFieldModel mapping)
         {
             var currentGameVersion = await GameVersionReader.GetById(mapping.GameVersion);

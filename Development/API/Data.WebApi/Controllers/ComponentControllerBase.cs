@@ -9,6 +9,7 @@ using Data.Core.Writers.Core;
 using Data.WebApi.Model.Creation.Core;
 using Data.WebApi.Model.Read.Core;
 using Data.WebApi.Services.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -450,6 +451,7 @@ namespace Data.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize()]
         public async Task<ActionResult> Propose([FromBody] CreateProposalModel proposalModel)
         {
             var classVersionedEntry = await ComponentWriter.GetVersionedMapping(proposalModel.ProposedFor);
@@ -504,6 +506,7 @@ namespace Data.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Consumes("application/json")]
         [Produces("application/json")]
+        [Authorize()]
         public async Task<ActionResult> VoteFor(Guid proposalId)
         {
             var currentProposal = await ComponentWriter.GetProposalMapping(proposalId);
@@ -542,6 +545,7 @@ namespace Data.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Consumes("application/json")]
         [Produces("application/json")]
+        [Authorize()]
         public async Task<ActionResult> VoteAgainst(Guid proposalId)
         {
             var currentProposal = await ComponentWriter.GetProposalMapping(proposalId);
@@ -582,6 +586,7 @@ namespace Data.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [Consumes("application/json")]
         [Produces("application/json")]
+        [Authorize()]
         public async Task<ActionResult> Close(Guid proposalId, bool merge)
         {
             var currentProposal = await ComponentWriter.GetProposalMapping(proposalId);

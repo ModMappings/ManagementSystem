@@ -7,6 +7,7 @@ using Data.Core.Writers.Core;
 using Data.WebApi.Model.Creation.Core;
 using Data.WebApi.Model.Read.Core;
 using Data.WebApi.Services.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -170,6 +171,7 @@ namespace Data.WebApi.Controllers
         /// <returns>A 201 status code.</returns>
         [HttpPost("add")]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [Authorize()]
         public async Task<ActionResult> Add([FromBody] CreateMappingTypeModel createMappingModel)
         {
             var createdBy = await _userResolvingService.Get();
