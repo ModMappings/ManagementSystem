@@ -15,6 +15,7 @@ namespace Auth.Admin.Configuration
         public string IdentityAdminApiSwaggerUIClientId { get; } = AuthenticationConsts.IdentityAdminApiSwaggerClientId;
         public string IdentityAdminApiSwaggerUIRedirectUrl { get; } = "http://localhost:5001/swagger/oauth2-redirect.html";
         public string IdentityAdminApiScope { get; } = AuthenticationConsts.IdentityAdminApiScope;
+        public bool RequireHttpsMetadata { get; set; } = false;
 
         public string ClientSecret { get; set; } = AuthenticationConsts.OidcClientSecret;
         public string OidcResponseType { get; set; } = AuthenticationConsts.OidcResponseType;

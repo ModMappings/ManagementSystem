@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Auth.STS.Identity.Configuration.Intefaces;
+﻿using Auth.STS.Identity.Configuration.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.STS.Identity.ViewComponents
 {

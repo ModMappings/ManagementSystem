@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Auth.Admin.EntityFramework.Shared.DbContexts;
 using Auth.Admin.EntityFramework.Shared.Entities.Identity;
+using Auth.STS.Identity.Configuration.Interfaces;
 using Auth.STS.Identity.Helpers;
 using NWebsec.Core.Common.Middleware.Options;
 
@@ -66,7 +67,7 @@ namespace Auth.STS.Identity
             }
 
             // Add custom security headers
-            app.UseSecurityHeaders();
+            app.UseSecurityHeaders(app.ApplicationServices.GetRequiredService<IRootConfiguration>());
 
             //Setup csp policy to allow pulling of fontawesome data from cdn.
             app.UseCsp(cspOptions =>

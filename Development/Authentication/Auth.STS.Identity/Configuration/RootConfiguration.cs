@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using Auth.STS.Identity.Configuration.Intefaces;
+﻿using Auth.STS.Identity.Configuration.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace Auth.STS.Identity.Configuration
 {

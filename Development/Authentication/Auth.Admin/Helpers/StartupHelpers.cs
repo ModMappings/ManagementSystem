@@ -439,9 +439,7 @@ namespace Auth.Admin.Helpers
                     {
                         options.Authority = adminConfiguration.IdentityServerBaseUrl;
 
-                        // NOTE: This is only for development set for false
-                        // For production use - set RequireHttpsMetadata to true!
-                        options.RequireHttpsMetadata = false;
+                        options.RequireHttpsMetadata = adminConfiguration.RequireHttpsMetadata;
                         options.ClientId = adminConfiguration.ClientId;
                         options.ClientSecret = adminConfiguration.ClientSecret;
                         options.ResponseType = adminConfiguration.OidcResponseType;

@@ -1,4 +1,4 @@
-﻿using Auth.STS.Identity.Configuration.Intefaces;
+﻿using Auth.STS.Identity.Configuration.Interfaces;
 
 namespace Auth.STS.Identity.Configuration
 {

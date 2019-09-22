@@ -22,7 +22,7 @@ using Serilog;
 using Auth.STS.Identity.Configuration;
 using Auth.STS.Identity.Configuration.ApplicationParts;
 using Auth.STS.Identity.Configuration.Constants;
-using Auth.STS.Identity.Configuration.Intefaces;
+using Auth.STS.Identity.Configuration.Interfaces;
 using Auth.STS.Identity.Helpers.Localization;
 using Auth.STS.Identity.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -79,8 +79,18 @@ namespace Auth.STS.Identity.Helpers
         /// Using of Forwarded Headers and Referrer Policy
         /// </summary>
         /// <param name="app"></param>
-        public static void UseSecurityHeaders(this IApplicationBuilder app)
+        /// <param name="configuration"></param>
+        public static void UseSecurityHeaders(this IApplicationBuilder app, IRootConfiguration configuration)
         {
+            if (configuration.AdminConfiguration.ForgeHttpsProtocol)
+            {
+                app.Use(async (context, next) =>
+                {
+                    context.Request.Scheme = "https";
+                    await next.Invoke();
+                });
+            }
+
             app.UseForwardedHeaders(new ForwardedHeadersOptions()
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
