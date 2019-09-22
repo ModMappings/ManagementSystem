@@ -6,6 +6,6 @@ namespace Data.MCPImport
 {
     public interface IDataImportHandler
     {
-        Task Import(MCPContext context);
+        Task Import(MCMSContext context);
     }
 }

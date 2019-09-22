@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
-    [DbContext(typeof(MCPContext))]
+    [DbContext(typeof(MCMSContext))]
     [Migration("20190901102753_MCP Initialization support ready.")]
     partial class MCPInitializationsupportready
     {

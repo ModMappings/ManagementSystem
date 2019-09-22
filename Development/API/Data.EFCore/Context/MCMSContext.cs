@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.EFCore.Context
 {
-    public class MCPContext
+    public class MCMSContext
         : DbContext
     {
-        public MCPContext(DbContextOptions<MCPContext> options) : base(options)
+        public MCMSContext(DbContextOptions<MCMSContext> options) : base(options)
         {
         }
 

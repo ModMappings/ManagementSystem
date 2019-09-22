@@ -12,11 +12,11 @@ namespace Data.EFCore.Writer.Core
         : IMappingTypeWriter
     {
 
-        private readonly MCPContext _mcpContext;
+        private readonly MCMSContext _mcmsContext;
 
-        public MappingTypeWriter(MCPContext mcpContext)
+        public MappingTypeWriter(MCMSContext mcmsContext)
         {
-            _mcpContext = mcpContext;
+            _mcmsContext = mcmsContext;
         }
 
         public async Task<MappingType> GetById(Guid id)
@@ -31,7 +31,7 @@ namespace Data.EFCore.Writer.Core
 
         public async Task<IQueryable<MappingType>> AsQueryable()
         {
-            return await Task.FromResult(_mcpContext.MappingTypes
+            return await Task.FromResult(_mcmsContext.MappingTypes
                 .Include(m => m.CreatedBy)
                 .Include(m => m.Releases));
         }
@@ -48,17 +48,17 @@ namespace Data.EFCore.Writer.Core
 
         public async Task SaveChanges()
         {
-            await _mcpContext.SaveChangesAsync();
+            await _mcmsContext.SaveChangesAsync();
         }
 
         public async Task Add(MappingType mapping)
         {
-            await _mcpContext.MappingTypes.AddAsync(mapping);
+            await _mcmsContext.MappingTypes.AddAsync(mapping);
         }
 
         public async Task Update(MappingType mapping)
         {
-            _mcpContext.MappingTypes.Update(mapping);
+            _mcmsContext.MappingTypes.Update(mapping);
             await Task.CompletedTask;
         }
     }

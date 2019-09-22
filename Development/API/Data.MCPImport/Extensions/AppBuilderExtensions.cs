@@ -19,7 +19,7 @@ namespace Data.MCPImport.Extensions
                 var mcpConfiguration =
                     app.ApplicationServices.GetRequiredService<IConfiguration>().GetSection("MCPImport");
                 var logger = app.ApplicationServices.GetRequiredService<ILogger<IDataImportHandler>>();
-                var database = app.ApplicationServices.GetRequiredService<MCPContext>();
+                var database = app.ApplicationServices.GetRequiredService<MCMSContext>();
                 var dataImportHandlers = app.ApplicationServices.GetServices<IDataImportHandler>().ToList();
 
                 if (!mcpConfiguration.GetValue<bool>("Enabled"))

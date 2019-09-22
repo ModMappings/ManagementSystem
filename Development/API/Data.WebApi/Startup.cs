@@ -38,11 +38,11 @@ namespace Data.WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddHealthChecks()
-                .AddDbContextCheck<MCPContext>();
+                .AddDbContextCheck<MCMSContext>();
 
             services.AddEntityFrameworkProxies();
 
-            services.AddDbContext<MCPContext>(opt =>
+            services.AddDbContext<MCMSContext>(opt =>
                 opt.UseNpgsql(Configuration["ConnectionStrings:DefaultConnection"])
                     .UseLazyLoadingProxies());
 
@@ -62,16 +62,16 @@ namespace Data.WebApi
                 {
                     Contact = new Contact()
                     {
-                        Email = "mcp.service@test.com",
-                        Url = "https://mcptest.ldtteam.com",
-                        Name = "mcp.service - Development team"
+                        Email = "mcms.service@test.com",
+                        Url = "https://mcmstest.ldtteam.com",
+                        Name = "mcms.service - Development team"
                     },
                     Description = "OpenAPI documentation for the MCMS Data.WebApi.",
                     License = new License()
                     {
                         Name = "GPL v3",
                     },
-                    Title = "MCP.Data.WebApi - OpenAPI Documentation",
+                    Title = "MCMS.Data.WebApi - OpenAPI Documentation",
                     Version = "0.1"
                 });
 
@@ -127,7 +127,7 @@ namespace Data.WebApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MCP.Data.WebApi - OpenAPI Documentation");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MCMS.Data.WebApi - OpenAPI Documentation");
 
                 c.OAuthClientId(customBoundJwtOptions.SwaggerUIClientId);
                 c.OAuthClientSecret(customBoundJwtOptions.SwaggerUIClientSecret);

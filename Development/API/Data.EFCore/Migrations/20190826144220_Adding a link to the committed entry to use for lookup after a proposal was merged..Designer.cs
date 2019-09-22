@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
-    [DbContext(typeof(MCPContext))]
+    [DbContext(typeof(MCMSContext))]
     [Migration("20190826144220_Adding a link to the committed entry to use for lookup after a proposal was merged.")]
     partial class Addingalinktothecommittedentrytouseforlookupafteraproposalwasmerged
     {

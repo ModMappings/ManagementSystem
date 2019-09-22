@@ -11,9 +11,9 @@ namespace Data.EFCore.Writer.Core
     public class GameVersionWriter
         : IGameVersionWriter
     {
-        private readonly MCPContext _context;
+        private readonly MCMSContext _context;
 
-        public GameVersionWriter(MCPContext context)
+        public GameVersionWriter(MCMSContext context)
         {
             _context = context;
         }

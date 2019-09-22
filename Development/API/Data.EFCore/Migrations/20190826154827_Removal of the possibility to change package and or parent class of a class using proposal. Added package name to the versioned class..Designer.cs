@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
-    [DbContext(typeof(MCPContext))]
+    [DbContext(typeof(MCMSContext))]
     [Migration("20190826154827_Removal of the possibility to change package and or parent class of a class using proposal. Added package name to the versioned class.")]
     partial class RemovalofthepossibilitytochangepackageandorparentclassofaclassusingproposalAddedpackagenametotheversionedclass
     {

@@ -7,11 +7,11 @@ namespace Data.EFCore.Writer.Mapping
 {
     public class ComponentWriterFactory
     {
-        private readonly MCPContext _mcpContext;
+        private readonly MCMSContext _mcmsContext;
 
-        public ComponentWriterFactory(MCPContext mcpContext)
+        public ComponentWriterFactory(MCMSContext mcmsContext)
         {
-            _mcpContext = mcpContext;
+            _mcmsContext = mcmsContext;
         }
 
         public IComponentWriter Build(ComponentType type)
@@ -19,13 +19,13 @@ namespace Data.EFCore.Writer.Mapping
             switch (type)
             {
                 case ComponentType.CLASS:
-                    return new ClassWriter(_mcpContext);
+                    return new ClassWriter(_mcmsContext);
                 case ComponentType.METHOD:
-                    return new MethodWriter(_mcpContext);
+                    return new MethodWriter(_mcmsContext);
                 case ComponentType.FIELD:
-                    return new FieldWriter(_mcpContext);
+                    return new FieldWriter(_mcmsContext);
                 case ComponentType.PARAMETER:
-                    return new ParameterWriter(_mcpContext);
+                    return new ParameterWriter(_mcmsContext);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

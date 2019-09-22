@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
-    [DbContext(typeof(MCPContext))]
+    [DbContext(typeof(MCMSContext))]
     [Migration("20190826121503_Removal of mapping type")]
     partial class Removalofmappingtype
     {

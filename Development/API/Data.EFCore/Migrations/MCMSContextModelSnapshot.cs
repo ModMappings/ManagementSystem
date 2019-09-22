@@ -8,8 +8,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
-    [DbContext(typeof(MCPContext))]
-    partial class MCPContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MCMSContext))]
+    partial class MCMSContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

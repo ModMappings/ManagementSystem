@@ -26,7 +26,7 @@ namespace Data.MCPImport.TSRG
             _logger = logger;
         }
 
-        public async Task Import(MCPContext context)
+        public async Task Import(MCMSContext context)
         {
             _logger.LogInformation(
                 $"Attempting import of TSRG data into context with database name: {context.Database.GetDbConnection().Database}");
@@ -81,7 +81,7 @@ namespace Data.MCPImport.TSRG
             await SaveData(context, classes, methods, fields);
         }
 
-        private static async Task<MappingType> GetOrCreateTSRGMappingType(MCPContext context) =>
+        private static async Task<MappingType> GetOrCreateTSRGMappingType(MCMSContext context) =>
             await context.MappingTypes.FirstOrDefaultAsync(m => m.Name == Constants.OBF_TO_TSRG_MAPPING_NAME) ??
             await CreateTSRGMappingType();
 
@@ -104,7 +104,7 @@ namespace Data.MCPImport.TSRG
                 .ToList());
 
         private static async Task<Dictionary<string, GameVersion>> GetOrCreateGameVersionsForMCVersions(
-            MCPContext context,
+            MCMSContext context,
             IEnumerable<string> mcVersions)
         {
             var newMcVersions = mcVersions.Except(await context.GameVersions.Select(g => g.Name).ToListAsync());
@@ -123,7 +123,7 @@ namespace Data.MCPImport.TSRG
         }
 
         private static async Task<Dictionary<string, Release>> DetermineMCPConfigReleasesToImport(
-            MCPContext context,
+            MCMSContext context,
             IReadOnlyDictionary<string, MavenArtifact> mcpConfigArtifacts,
             IReadOnlyDictionary<string, GameVersion> gameVersions,
             MappingType tsrgMappingType) =>
@@ -142,7 +142,7 @@ namespace Data.MCPImport.TSRG
                 })
                 .ToDictionary(r => r.Name);
 
-        private static async Task SaveInitialData(MCPContext context, IEnumerable<GameVersion> gameVersions,
+        private static async Task SaveInitialData(MCMSContext context, IEnumerable<GameVersion> gameVersions,
             IEnumerable<Release> releases, MappingType tsrgMappingType)
         {
             await context.GameVersions.AddRangeAsync(gameVersions);
@@ -360,7 +360,7 @@ namespace Data.MCPImport.TSRG
             return classVersionedMappings;
         }
 
-        private Task<List<Component>> DetermineCrossVersionClassHistory(MCPContext context, MappingType tsrgMappingType,
+        private Task<List<Component>> DetermineCrossVersionClassHistory(MCMSContext context, MappingType tsrgMappingType,
             IEnumerable<IEnumerable<VersionedComponent>> mcVersionClassVersionMappings)
         {
             _logger.LogWarning(
@@ -395,7 +395,7 @@ namespace Data.MCPImport.TSRG
             return Task.FromResult(classes);
         }
 
-        private Task<List<Component>> DetermineCrossVersionMethodHistory(MCPContext context,
+        private Task<List<Component>> DetermineCrossVersionMethodHistory(MCMSContext context,
             MappingType tsrgMappingType, List<Component> classesComponents)
         {
             _logger.LogWarning(
@@ -440,7 +440,7 @@ namespace Data.MCPImport.TSRG
             return Task.FromResult(methods);
         }
 
-        private Task<List<Component>> DetermineCrossVersionFieldHistory(MCPContext context,
+        private Task<List<Component>> DetermineCrossVersionFieldHistory(MCMSContext context,
             MappingType tsrgMappingType, List<Component> classesComponents)
         {
             _logger.LogWarning(
@@ -485,7 +485,7 @@ namespace Data.MCPImport.TSRG
             return Task.FromResult(fields);
         }
 
-        private Task SaveData(MCPContext context, IEnumerable<Component> classes, IEnumerable<Component> methods,
+        private Task SaveData(MCMSContext context, IEnumerable<Component> classes, IEnumerable<Component> methods,
             IEnumerable<Component> fields)
         {
             _logger.LogWarning($"Found: {classes.Count()} classes, {methods.Count()} methods and {fields.Count()} fields.");

@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
-    [DbContext(typeof(MCPContext))]
+    [DbContext(typeof(MCMSContext))]
     [Migration("20190826142145_Adding support for keeping track of none merged proposals.")]
     partial class Addingsupportforkeepingtrackofnonemergedproposals
     {

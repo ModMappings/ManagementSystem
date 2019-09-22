@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
-    [DbContext(typeof(MCPContext))]
+    [DbContext(typeof(MCMSContext))]
     [Migration("20190826160423_Move all method and parameter specific options to their respective versioned instances instead of their entries.-")]
     partial class Moveallmethodandparameterspecificoptionstotheirrespectiveversionedinstancesinsteadoftheirentries
     {

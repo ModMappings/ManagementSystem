@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.EFCore.Migrations
 {
-    [DbContext(typeof(MCPContext))]
+    [DbContext(typeof(MCMSContext))]
     [Migration("20190826141937_Adding support for closing of proposals, and marking properties as Required.")]
     partial class AddingsupportforclosingofproposalsandmarkingpropertiesasRequired
     {

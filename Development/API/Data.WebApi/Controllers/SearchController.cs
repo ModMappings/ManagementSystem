@@ -13,9 +13,9 @@ namespace Data.WebApi.Controllers
     [ApiController]
     public class SearchController : Controller
     {
-        private readonly MCPContext _context;
+        private readonly MCMSContext _context;
 
-        public SearchController(MCPContext context)
+        public SearchController(MCMSContext context)
         {
             _context = context;
         }

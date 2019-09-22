@@ -10,13 +10,13 @@ namespace Data.EFCore.Writer.Mapping
     public class MethodWriter
         : ComponentWriterBase, IMethodComponentWriter
     {
-        public MethodWriter(MCPContext mcpContext) : base(mcpContext)
+        public MethodWriter(MCMSContext mcmsContext) : base(mcmsContext)
         {
         }
 
         public override async Task<IQueryable<Component>> AsQueryable()
         {
-            return await Task.FromResult(McpContext.Components
+            return await Task.FromResult(McmsContext.Components
                 .Where(c => c.Type == ComponentType.METHOD)
                 .Include(c => c.VersionedMappings)
                 .Include("VersionedMappings.GameVersion")

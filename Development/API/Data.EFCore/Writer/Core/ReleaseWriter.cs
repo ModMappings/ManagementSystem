@@ -13,9 +13,9 @@ namespace Data.EFCore.Writer.Core
         : IReleaseWriter
     {
 
-        private readonly MCPContext _context;
+        private readonly MCMSContext _context;
 
-        public ReleaseWriter(MCPContext context)
+        public ReleaseWriter(MCMSContext context)
         {
             _context = context;
         }

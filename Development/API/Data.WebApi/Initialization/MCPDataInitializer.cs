@@ -34,7 +34,7 @@ namespace Data.WebApi.Initialization
                 .GetRequiredService<IServiceScopeFactory>()
                 .CreateScope())
             {
-                using (var context = serviceScope.ServiceProvider.GetService<MCPContext>())
+                using (var context = serviceScope.ServiceProvider.GetService<MCMSContext>())
                 {
                     InitializeDummyUser(app, context);
                     InitializeMCPConfigData(app, context);
@@ -43,7 +43,7 @@ namespace Data.WebApi.Initialization
 
         }
 
-        private static void InitializeDummyUser(IApplicationBuilder app, MCPContext context)
+        private static void InitializeDummyUser(IApplicationBuilder app, MCMSContext context)
         {
             var logger = app.ApplicationServices.GetRequiredService <ILogger<MCPDataInitializer>>();
 
@@ -60,7 +60,7 @@ namespace Data.WebApi.Initialization
                 initUser = Guid.NewGuid();
         }
 
-        private static void InitializeMCPConfigData(IApplicationBuilder app, MCPContext context)
+        private static void InitializeMCPConfigData(IApplicationBuilder app, MCMSContext context)
         {
             var logger = app.ApplicationServices.GetRequiredService <ILogger<MCPDataInitializer>>();
 

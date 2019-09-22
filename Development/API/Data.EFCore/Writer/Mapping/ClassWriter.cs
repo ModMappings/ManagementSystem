@@ -14,13 +14,13 @@ namespace Data.EFCore.Writer.Mapping
     public class ClassWriter
         : ComponentWriterBase, IClassComponentWriter
     {
-        public ClassWriter(MCPContext mcpContext) : base(mcpContext)
+        public ClassWriter(MCMSContext mcmsContext) : base(mcmsContext)
         {
         }
 
         public override async Task<IQueryable<Component>> AsQueryable()
         {
-            return await Task.FromResult(McpContext.Components
+            return await Task.FromResult(McmsContext.Components
                 .Where(c => c.Type == ComponentType.CLASS)
                 .Include(c => c.VersionedMappings)
                 .Include("VersionedMappings.GameVersion")
