@@ -54,6 +54,8 @@ services:
       VIRTUAL_HOST: "account.${PRIMARY_DOMAIN}"
       VIRTUAL_PORT: 80
       VIRTUAL_PROTO: http
+      LETSENCRYPT_HOST: "account.${PRIMARY_DOMAIN}"
+      LETSENCRYPT_EMAIL: "${PRIMARY_EMAIL}"
       ConnectionStrings__ConfigurationDbConnection: "host=auth_configuration_database;port=5432;database=configuration;username=auth-configuration;password=auth-configuration;"
       ConnectionStrings__PersistedGrantDbConnection: "host=auth_persisted_database;port=5432;database=persisted;username=auth-persisted;password=auth-persisted;"
       ConnectionStrings__IdentityDbConnection: "host=auth_identity_database;port=5432;database=identity;username=auth-identity;password=auth-identity;"
@@ -78,6 +80,8 @@ services:
       VIRTUAL_HOST: "api.admin.account.${PRIMARY_DOMAIN}"
       VIRTUAL_PORT: 80
       VIRTUAL_PROTO: http
+      LETSENCRYPT_HOST: "api.admin.account.${PRIMARY_DOMAIN}"
+      LETSENCRYPT_EMAIL: "${PRIMARY_EMAIL}"
       ConnectionStrings__ConfigurationDbConnection: "host=auth_configuration_database;port=5432;database=configuration;username=auth-configuration;password=auth-configuration;"
       ConnectionStrings__PersistedGrantDbConnection: "host=auth_persisted_database;port=5432;database=persisted;username=auth-persisted;password=auth-persisted;"
       ConnectionStrings__IdentityDbConnection: "host=auth_identity_database;port=5432;database=identity;username=auth-identity;password=auth-identity;"
@@ -104,6 +108,8 @@ services:
       VIRTUAL_HOST: "admin.account.${PRIMARY_DOMAIN}"
       VIRTUAL_PORT: 80
       VIRTUAL_PROTO: http
+      LETSENCRYPT_HOST: "admin.account.${PRIMARY_DOMAIN}"
+      LETSENCRYPT_EMAIL: "${PRIMARY_EMAIL}"
       ConnectionStrings__ConfigurationDbConnection: "host=auth_configuration_database;port=5432;database=configuration;username=auth-configuration;password=auth-configuration;"
       ConnectionStrings__PersistedGrantDbConnection: "host=auth_persisted_database;port=5432;database=persisted;username=auth-persisted;password=auth-persisted;"
       ConnectionStrings__IdentityDbConnection: "host=auth_identity_database;port=5432;database=identity;username=auth-identity;password=auth-identity;"
@@ -151,9 +157,11 @@ services:
       - auth_sts
       - mcms_database
     environment:
-      VIRTUAL_HOST: "api.mcms.${PRIMARY_DOMAIN}"
+      VIRTUAL_HOST: "api.${PRIMARY_DOMAIN}"
       VIRTUAL_PORT: 80
       VIRTUAL_PROTO: http
+      LETSENCRYPT_HOST: "api.${PRIMARY_DOMAIN}"
+      LETSENCRYPT_EMAIL: "${PRIMARY_EMAIL}"
       ConnectionStrings__DefaultConnection: "host=mcms_database;port=5432;database=mcms;username=mcms-data;password=mcms-data;"
       AuthenticationServerConfig__Authority: "https://account.${PRIMARY_DOMAIN}"
       AuthenticationServerConfig__RequireHttpsMetadata: "true"
