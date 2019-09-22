@@ -1,0 +1,51 @@
+version: '3.4'
+
+services:
+  auth_sts:
+    build:
+      context: ../../../../
+      dockerfile: Operations/Docker/Dockerfiles/Gulp-Node-ASPNetCore.Dockerfile
+      args:
+        SERVICE_NAME: "Auth.STS.Identity"
+        SERVICE_TYPE: "Authentication"
+    network_mode: "host"
+    environment:
+      ASPNETCORE_URLS: "http://+:5000"
+
+  auth_admin_api:
+    build:
+      context: ../../../../
+      dockerfile: Operations/Docker/Dockerfiles/ASPNetCore.Dockerfile
+      args:
+        SERVICE_NAME: "Auth.Admin.Api"
+        SERVICE_TYPE: "Authentication"
+    depends_on:
+      - auth_sts
+    network_mode: "host"
+    environment:
+      ASPNETCORE_URLS: "http://+:5002"
+
+  auth_admin:
+    build:
+      context: ../../../../
+      dockerfile: Operations/Docker/Dockerfiles/Gulp-Node-ASPNetCore.Dockerfile
+      args:
+        SERVICE_NAME: "Auth.Admin"
+        SERVICE_TYPE: "Authentication"
+    depends_on:
+      - auth_sts
+    network_mode: "host"
+    environment:
+      ASPNETCORE_URLS: "http://+:9000"
+
+  auth_admin_seed:
+    build:
+      context: ../../../../
+      dockerfile: Operations/Docker/Dockerfiles/ASPNetCore.Dockerfile
+      args:
+        SERVICE_NAME: "Auth.Admin"
+        SERVICE_TYPE: "Authentication"
+    command: ["dotnet", "Auth.Admin.dll", "/seed"]
+    depends_on:
+      - auth_admin
+    network_mode: "host"
