@@ -168,7 +168,6 @@ namespace Auth.Admin.Helpers
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-            app.UseHsts(options => options.MaxAge(days: 365));
             app.UseXXssProtection(options => options.EnabledWithBlockMode());
             app.UseXContentTypeOptions();
             app.UseXfo(options => options.SameOrigin());
