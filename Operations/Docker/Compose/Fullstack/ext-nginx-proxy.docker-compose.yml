@@ -151,6 +151,9 @@ services:
       - auth_sts
       - mcms_database
     environment:
+      VIRTUAL_HOST: "api.mcms.${PRIMARY_DOMAIN}"
+      VIRTUAL_PORT: 80
+      VIRTUAL_PROTO: http
       ConnectionStrings__DefaultConnection: "host=mcms_database;port=5432;database=mcms;username=mcms-data;password=mcms-data;"
       AuthenticationServerConfig__Authority: "https://account.${PRIMARY_DOMAIN}"
       AuthenticationServerConfig__RequireHttpsMetadata: "true"
