@@ -82,6 +82,11 @@ namespace Auth.STS.Identity.Helpers
         /// <param name="configuration"></param>
         public static void UseSecurityHeaders(this IApplicationBuilder app, IRootConfiguration configuration)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions()
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             if (configuration.AdminConfiguration.ForgeHttpsProtocol)
             {
                 app.Use(async (context, next) =>
@@ -90,11 +95,6 @@ namespace Auth.STS.Identity.Helpers
                     await next.Invoke();
                 });
             }
-
-            app.UseForwardedHeaders(new ForwardedHeadersOptions()
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
 
             app.UseHsts(options => options.MaxAge(days: 365));
             app.UseReferrerPolicy(options => options.NoReferrer());
