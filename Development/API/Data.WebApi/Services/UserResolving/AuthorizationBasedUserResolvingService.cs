@@ -41,6 +41,8 @@ namespace Data.WebApi.Services.UserResolving
                 CanReview = claimsPrinciple.HasClaim("CanReview", "true"),
                 CanCreateGameVersions = claimsPrinciple.HasClaim("CanCreateGameVersions", "true"),
                 CanCreateMappingTypes = claimsPrinciple.HasClaim("CanCreateMappingTypes", "true"),
+                CanLock = claimsPrinciple.HasClaim("CanLock", "true"),
+                CanUnlock = claimsPrinciple.HasClaim("CanUnlock", "true")
             };
 
             return await Task.FromResult(user);
