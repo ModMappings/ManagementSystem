@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
 using Data.Core.Models.Mapping.Metadata;
 using Data.Core.Readers.Core;
-using Data.Core.Writers.Core;
-using Data.EFCore.Writer.Mapping;
+using Data.Core.Readers.Mapping;
+using Data.Core.Writers.Mapping;
 using Data.WebApi.Model.Creation.Field;
 using Data.WebApi.Model.Read.Field;
 using Data.WebApi.Services.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.WebApi.Controllers
 {
@@ -23,12 +24,161 @@ namespace Data.WebApi.Controllers
     [ApiController]
     public class FieldsController : ComponentControllerBase<FieldReadModel, FieldVersionedReadModel>
     {
-
-        private readonly IComponentWriter _classWriter;
-
-        public FieldsController(ComponentWriterFactory componentWriterFactory, IReleaseReader releaseReader, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService) : base(componentWriterFactory.Build(ComponentType.FIELD), releaseReader, gameVersionReader, userResolvingService)
+        public FieldsController(IFieldComponentWriter fieldComponentWriter, IClassComponentReader classComponentReader, IReleaseReader releaseReader, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService, IMappingTypeReader mappingTypeReader) : base(fieldComponentWriter, releaseReader, gameVersionReader, userResolvingService, mappingTypeReader)
         {
-            this._classWriter = componentWriterFactory.Build(ComponentType.CLASS);
+            FieldComponentWriter = fieldComponentWriter;
+            ClassComponentReader = classComponentReader;
+        }
+
+        private IFieldComponentWriter FieldComponentWriter { get; }
+
+        private IClassComponentReader ClassComponentReader { get; }
+
+        /// <summary>
+        /// Gets the fields which are part of a given class.
+        /// those fields also need to have at least one mapping (regardless of type) within the latest gameversion.
+        /// </summary>
+        /// <remarks>Has pagination support via request route parameters.</remarks>
+        /// <param name="classId">The id of the class the field needs to be part of.</param>
+        /// <param name="pageSize">The size of a single page in the pagination.</param>
+        /// <param name="pageIndex">The index of the page.</param>
+        /// <returns>The fields who's class match the id, and are part of the latest gameversion.</returns>
+        [HttpGet("class/version/{classId}/latest/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json")]
+        public async Task<ActionResult<IEnumerable<FieldReadModel>>> GetByClassInLatestGameVersion(Guid classId, int pageSize, int pageIndex)
+        {
+            var dbModels = await FieldComponentWriter.GetByClassInLatestGameVersion(classId);
+
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
+        }
+
+        /// <summary>
+        /// Counts the fields which are part of a given class
+        /// those fields also need to have at least one mapping (regardless of type) within the latest gameversion.
+        /// </summary>
+        /// <param name="classId">The id of the class the field needs to be part of.</param>
+        /// <returns>The count of fields who's class match the id, and are part of the latest gameversion.</returns>
+        [HttpGet("class/version/{classId}/latest/count")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> CountClassInLatestGameVersion(Guid classId)
+        {
+            var dbModels = await FieldComponentWriter.GetByClassInLatestGameVersion(classId);
+
+            return Content((await dbModels.CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// Gets the fields which are part of a given class.
+        /// those fields also need to have at least one mapping (regardless of type) within a gameversion that has the given id.
+        /// </summary>
+        /// <remarks>Has pagination support via request route parameters.</remarks>
+        /// <param name="classId">The id of the class which the field has to be part of.</param>
+        /// <param name="gameVersionId">The id of the gameversion that the component needs to be in.</param>
+        /// <param name="pageSize">The size of a single page in the pagination.</param>
+        /// <param name="pageIndex">The index of the page.</param>
+        /// <returns>The fields who's class match the id, and are part of the given gameversion.</returns>
+        [HttpGet("class/version/{classId}/{gameVersionId}/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json")]
+        public async Task<ActionResult<IEnumerable<FieldReadModel>>> GetByClassInGameVersion(Guid classId, Guid gameVersionId, int pageSize, int pageIndex)
+        {
+            var dbModels = await FieldComponentWriter.GetByClassInGameVersion(classId, gameVersionId);
+
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
+        }
+
+        /// <summary>
+        /// Counts the fields which are part of a given class.
+        /// those fields also need to have at least one mapping (regardless of type) within a gameversion that has the given id.
+        /// </summary>
+        /// <remarks>Has pagination support via request route parameters.</remarks>
+        /// <param name="classId">The id of the class the field has to be part of.</param>
+        /// <param name="gameVersionId">The id of the gameversion that the component needs to be in.</param>
+        /// <returns>The count of fields who's class match the id, and are part of the given gameversion.</returns>
+        [HttpGet("class/version/{classId}/{gameVersionId}/count")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> CountClassInGameVersion(Guid classId, Guid gameVersionId)
+        {
+            var dbModels = await FieldComponentWriter.GetByClassInGameVersion(classId, gameVersionId);
+
+            return Content((await dbModels.CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// Gets the fields which are part of a given class
+        /// those fields also need to have at least one mapping (regardless of type) within the latest release.
+        /// </summary>
+        /// <remarks>Has pagination support via request route parameters.</remarks>
+        /// <param name="classId">The id of the class the field has to be part of.</param>
+        /// <param name="pageSize">The size of a single page in the pagination.</param>
+        /// <param name="pageIndex">The index of the page.</param>
+        /// <returns>The fields who's class match the id, and are part of the latest release.</returns>
+        [HttpGet("class/release/{classId}/latest/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json")]
+        public async Task<ActionResult<IEnumerable<FieldReadModel>>> GetByClassInLatestRelease(Guid classId, int pageSize, int pageIndex)
+        {
+            var dbModels = await FieldComponentWriter.GetByClassInLatestRelease(classId);
+
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
+        }
+
+        /// <summary>
+        /// Counts the fields which are part of a given class
+        /// those fields also need to have at least one mapping (regardless of type) within the latest release.
+        /// </summary>
+        /// <remarks>Has pagination support via request route parameters.</remarks>
+        /// <param name="classId">The id of the class the field has to be part of.</param>
+        /// <returns>The count of  fields who's class match the id, and are part of the latest release.</returns>
+        [HttpGet("class/release/{classId}/latest/count")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> CountClassInLatestRelease(Guid classId)
+        {
+            var dbModels = await FieldComponentWriter.GetByClassInLatestRelease(classId);
+
+            return Content((await dbModels.CountAsync()).ToString());
+        }
+
+        /// <summary>
+        /// Gets the fields which are part of a given class
+        /// those fields also need to have at least one mapping (regardless of type) within a release that has the given id.
+        /// </summary>
+        /// <remarks>Has pagination support via request route parameters.</remarks>
+        /// <param name="classId">The id of the class the field has to be part of.</param>
+        /// <param name="releaseId">The id of the release that the component needs to be in.</param>
+        /// <param name="pageSize">The size of a single page in the pagination.</param>
+        /// <param name="pageIndex">The index of the page.</param>
+        /// <returns>The fields who's class match the id, and are part of the given release.</returns>
+        [HttpGet("class/release/{classId}/{releaseId}/{pageSize}/{pageIndex}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("application/json")]
+        public async Task<ActionResult<IEnumerable<FieldReadModel>>> GetByClassInRelease(Guid classId, Guid releaseId, int pageSize, int pageIndex)
+        {
+            var dbModels = await FieldComponentWriter.GetByClassInRelease(classId, releaseId);
+
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
+        }
+
+        /// <summary>
+        /// Counts the fields which are part of a given class
+        /// those fields also need to have at least one mapping (regardless of type) within a release that has the given id.
+        /// </summary>
+        /// <remarks>Has pagination support via request route parameters.</remarks>
+        /// <param name="classId">The id of the class the field has to be part of.</param>
+        /// <param name="releaseId">The id of the release that the component needs to be in.</param>
+        /// <returns>The count of fields who's class match the id, and are part of the given release.</returns>
+        [HttpGet("class/release/{classId}/{releaseId}/count")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces("text/plain")]
+        public async Task<ActionResult<int>> GetByClassInRelease(Guid classId, Guid releaseId)
+        {
+            var dbModels = await FieldComponentWriter.GetByClassInRelease(classId, releaseId);
+
+            return Content((await dbModels.CountAsync()).ToString());
         }
 
         /// <summary>
@@ -55,7 +205,7 @@ namespace Data.WebApi.Controllers
             if (user == null || !user.CanCommit)
                 return Unauthorized();
 
-            VersionedComponent memberOf = await _classWriter.GetVersionedMapping(mapping.MemberOf);
+            VersionedComponent memberOf = await ClassComponentReader.GetVersionedComponent(mapping.MemberOf);
             if (memberOf == null)
                 return BadRequest("Unknown memberOf class.");
 
@@ -70,23 +220,25 @@ namespace Data.WebApi.Controllers
 
             versionedFieldMapping.Metadata = new FieldMetadata
             {
-                Component = versionedFieldMapping,
+                VersionedComponent = versionedFieldMapping,
                 MemberOf = memberOf.Metadata as ClassMetadata,
                 IsStatic = mapping.IsStatic
             };
 
-            var initialCommittedMappingEntry = new LiveMappingEntry()
-            {
-                Documentation = mapping.Documentation,
-                InputMapping = mapping.In,
-                OutputMapping = mapping.Out,
-                Proposal = null,
-                Releases = new List<ReleaseComponent>(),
-                Mapping = versionedFieldMapping,
-                CreatedOn = DateTime.Now
-            };
+            var initialLiveMappings = mapping.Mappings
+                .Select(mappingData => new LiveMappingEntry()
+                {
+                    Documentation = mappingData.Documentation,
+                    InputMapping = mappingData.In,
+                    OutputMapping = mappingData.Out,
+                    MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
+                    Proposal = null,
+                    Releases = new List<ReleaseComponent>(),
+                    Mapping = versionedFieldMapping,
+                    CreatedOn = DateTime.Now
+                });
 
-            versionedFieldMapping.Mappings.Add(initialCommittedMappingEntry);
+            versionedFieldMapping.Mappings.AddRange(initialLiveMappings);
 
             var fieldMapping = new Component
             {
@@ -126,7 +278,7 @@ namespace Data.WebApi.Controllers
             if (user == null || !user.CanCommit)
                 return Unauthorized();
 
-            VersionedComponent memberOf = await _classWriter.GetVersionedMapping(mapping.MemberOf);
+            VersionedComponent memberOf = await ClassComponentReader.GetVersionedComponent(mapping.MemberOf);
             if (memberOf == null)
                 return BadRequest("Unknown memberOf class.");
 
@@ -149,23 +301,25 @@ namespace Data.WebApi.Controllers
 
             versionedFieldMapping.Metadata = new FieldMetadata
             {
-                Component = versionedFieldMapping,
+                VersionedComponent = versionedFieldMapping,
                 MemberOf = memberOf.Metadata as ClassMetadata,
                 IsStatic = mapping.IsStatic
             };
 
-            var initialCommittedMappingEntry = new LiveMappingEntry()
-            {
-                Documentation = mapping.Documentation,
-                InputMapping = mapping.In,
-                OutputMapping = mapping.Out,
-                Proposal = null,
-                Releases = new List<ReleaseComponent>(),
-                Mapping = versionedFieldMapping,
-                CreatedOn = DateTime.Now
-            };
+            var initialLiveMappings = mapping.Mappings
+                .Select(mappingData => new LiveMappingEntry()
+                {
+                    Documentation = mappingData.Documentation,
+                    InputMapping = mappingData.In,
+                    OutputMapping = mappingData.Out,
+                    MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
+                    Proposal = null,
+                    Releases = new List<ReleaseComponent>(),
+                    Mapping = versionedFieldMapping,
+                    CreatedOn = DateTime.Now
+                });
 
-            versionedFieldMapping.Mappings.Add(initialCommittedMappingEntry);
+            versionedFieldMapping.Mappings.AddRange(initialLiveMappings);
             await ComponentWriter.SaveChanges();
 
             return CreatedAtAction("GetById", fieldMapping.Id, fieldMapping);
@@ -194,8 +348,9 @@ namespace Data.WebApi.Controllers
                 GameVersion = versionedComponent.GameVersion.Id,
                 CurrentMappings = versionedComponent.Mappings.ToList().Select(ConvertLiveDbModelToMappingReadModel),
                 Proposals = versionedComponent.Proposals.ToList().Select(ConvertProposalDbModelToProposalReadModel),
-                MemberOf = fieldMetaData.MemberOf.Component.Id,
+                MemberOf = fieldMetaData.MemberOf.VersionedComponent.Id,
                 IsStatic = fieldMetaData.IsStatic,
+                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name)
             };
         }
     }

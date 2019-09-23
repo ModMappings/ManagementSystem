@@ -38,7 +38,7 @@ namespace Data.Core.Readers.Core
 
         Task<IQueryable<Component>> GetByMappingInRelease(string name, Release release);
 
-        Task<VersionedComponent> GetVersionedMapping(Guid id);
+        Task<VersionedComponent> GetVersionedComponent(Guid id);
 
         Task<ProposalMappingEntry> GetProposalMapping(Guid id);
 

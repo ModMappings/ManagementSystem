@@ -1,3 +1,4 @@
+using Castle.Core.Internal;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
 using Data.Core.Models.Mapping.Metadata;
@@ -27,6 +28,8 @@ namespace Data.EFCore.Context
         public DbSet<ProposalMappingEntry> ProposalMappingEntries { get; set; }
 
         public DbSet<ReleaseComponent> ReleaseComponents { get; set; }
+
+        public DbSet<LockingEntry> LockingEntries { get; set; }
 
         public DbSet<VersionedComponentMetadataBase> VersionedComponentMetadata { get; set; }
 

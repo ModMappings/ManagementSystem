@@ -31,5 +31,7 @@ namespace Data.Core.Models.Mapping
         public virtual List<LiveMappingEntry> Mappings { get; set; }
 
         public virtual List<ProposalMappingEntry> Proposals { get; set; }
+
+        public virtual List<LockingEntry> LockedMappingTypes { get; set; }
     }
 }

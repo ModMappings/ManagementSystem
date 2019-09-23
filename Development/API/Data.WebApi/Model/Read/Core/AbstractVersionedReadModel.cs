@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.IdentityModel.Protocols.WsFederation;
 
 namespace Data.WebApi.Model.Read.Core
 {
@@ -32,5 +33,10 @@ namespace Data.WebApi.Model.Read.Core
         /// The proposals made for this versioned view model.
         /// </summary>
         public IEnumerable<ProposalReadModel> Proposals { get; set; }
+
+        /// <summary>
+        /// The names of the mappings who have been locked.
+        /// </summary>
+        public IEnumerable<string> LockedMappingNames { get; set; }
     }
 }

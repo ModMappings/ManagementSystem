@@ -1,35 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Data.WebApi.Model.Creation.Core;
 
 namespace Data.WebApi.Model.Creation.Parameter
 {
     /// <summary>
     /// Model to create a new parameter.
     /// </summary>
-    /// <example>
-    /// {
-    ///     "in": "string1",
-    ///     "out": "name",
-    ///     "parameterOf": "00000000-0000-0000-0000-000000000000",
-    ///     "index": 0
-    /// }
-    /// </example>
     public class CreateParameterModel
     {
-        /// <summary>
-        /// The input mapping of the new parameter.
-        /// </summary>
-        [Required]
-        public string In { get; set; }
 
         /// <summary>
-        /// The output mapping of the new parameter.
+        /// The initial mappings for this parameter.
         /// </summary>
         [Required]
-        public string Out { get; set; }
+        public IEnumerable<CreateMappingModel> Mappings { get; set; }
 
         /// <summary>
-        /// The id of the method that this parameter is part of.
+        /// The id of the version method that this parameter is part of.
         /// </summary>
         [Required]
         public Guid ParameterOf { get; set; }
@@ -39,11 +28,5 @@ namespace Data.WebApi.Model.Creation.Parameter
         /// </summary>
         [Required]
         public int Index { get; set; }
-
-        /// <summary>
-        /// The documentation for the new parameter.
-        /// </summary>
-        [Required]
-        public string Documentation { get; set; }
     }
 }

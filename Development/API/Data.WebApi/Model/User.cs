@@ -16,6 +16,10 @@ namespace Data.WebApi.Model
 
         public bool CanRelease { get; set; }
 
+        public bool CanLock { get; set; }
+
+        public bool CanUnlock { get; set; }
+
         public bool CanCreateGameVersions { get; set; }
 
         public bool CanCreateMappingTypes { get; set; }

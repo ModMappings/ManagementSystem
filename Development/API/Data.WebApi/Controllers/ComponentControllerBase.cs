@@ -6,6 +6,7 @@ using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
 using Data.Core.Readers.Core;
 using Data.Core.Writers.Core;
+using Data.WebApi.Model;
 using Data.WebApi.Model.Creation.Core;
 using Data.WebApi.Model.Read.Core;
 using Data.WebApi.Services.Core;
@@ -28,12 +29,15 @@ namespace Data.WebApi.Controllers
 
         protected readonly IUserResolvingService UserResolvingService;
 
-        protected ComponentControllerBase(IComponentWriter componentWriter, IReleaseReader releaseReader, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService)
+        protected readonly IMappingTypeReader MappingTypeReader;
+
+        protected ComponentControllerBase(IComponentWriter componentWriter, IReleaseReader releaseReader, IGameVersionReader gameVersionReader, IUserResolvingService userResolvingService, IMappingTypeReader mappingTypeReader)
         {
             ComponentWriter = componentWriter;
             ReleaseReader = releaseReader;
             GameVersionReader = gameVersionReader;
             UserResolvingService = userResolvingService;
+            MappingTypeReader = mappingTypeReader;
         }
 
         /// <summary>
@@ -65,11 +69,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("all/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> AsQueryable(int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> AsQueryable(int pageSize, int pageIndex)
         {
             var dbModels = await ComponentWriter.AsQueryable();
 
-            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).Select(ConvertDbModelToReadModel));
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
         }
 
         /// <summary>
@@ -79,7 +83,7 @@ namespace Data.WebApi.Controllers
         [HttpGet("all/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> Count()
+        public async Task<ActionResult<int>> Count()
         {
             var dbModels = await ComponentWriter.AsQueryable();
 
@@ -96,11 +100,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("release/latest/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByLatestRelease(int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByLatestRelease(int pageSize, int pageIndex)
         {
             var latestRelease = await ReleaseReader.GetLatest();
 
-            return await GetByRelease(latestRelease.Id, pageSize, pageIndex);
+            return await GetByReleaseById(latestRelease.Id, pageSize, pageIndex);
         }
 
         /// <summary>
@@ -110,11 +114,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("release/latest/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByLatestRelease()
+        public async Task<ActionResult<int>> CountByLatestRelease()
         {
             var latestRelease = await ReleaseReader.GetLatest();
 
-            return await CountByRelease(latestRelease.Id);
+            return await CountByReleaseById(latestRelease.Id);
         }
 
         /// <summary>
@@ -128,11 +132,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("release/{releaseId}/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByRelease(Guid releaseId, int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByReleaseById(Guid releaseId, int pageSize, int pageIndex)
         {
             var dbModels = await ComponentWriter.GetByRelease(releaseId);
 
-            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).Select(ConvertDbModelToReadModel));
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
         }
 
         /// <summary>
@@ -143,7 +147,7 @@ namespace Data.WebApi.Controllers
         [HttpGet("release/{releaseId}/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByRelease(Guid releaseId)
+        public async Task<ActionResult<int>> CountByReleaseById(Guid releaseId)
         {
             var dbModels = await ComponentWriter.GetByRelease(releaseId);
 
@@ -161,11 +165,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("release/{releaseName}/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByRelease(string releaseName, int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByReleaseByName(string releaseName, int pageSize, int pageIndex)
         {
             var latestRelease = await ReleaseReader.GetByName(releaseName);
 
-            return await GetByRelease(latestRelease.Id, pageSize, pageIndex);
+            return await GetByReleaseById(latestRelease.Id, pageSize, pageIndex);
         }
 
         /// <summary>
@@ -176,7 +180,7 @@ namespace Data.WebApi.Controllers
         [HttpGet("release/{releaseName}/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByRelease(string releaseName)
+        public async Task<ActionResult<int>> CountByReleaseByName(string releaseName)
         {
             var dbModels = await ComponentWriter.GetByRelease(releaseName);
 
@@ -193,11 +197,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("version/latest/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByLatestVersion(int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByLatestVersion(int pageSize, int pageIndex)
         {
             var latestVersion = await GameVersionReader.GetLatest();
 
-            return await GetByVersion(latestVersion.Id, pageSize, pageIndex);
+            return await GetByVersionById(latestVersion.Id, pageSize, pageIndex);
         }
 
         /// <summary>
@@ -207,11 +211,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("version/latest/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByLatestVersion()
+        public async Task<ActionResult<int>> CountByLatestVersion()
         {
             var latestVersion = await GameVersionReader.GetLatest();
 
-            return await CountByVersion(latestVersion.Id);
+            return await CountByVersionById(latestVersion.Id);
         }
 
         /// <summary>
@@ -225,11 +229,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("version/{versionId}/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByVersion(Guid versionId, int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByVersionById(Guid versionId, int pageSize, int pageIndex)
         {
             var dbModels = await ComponentWriter.GetByVersion(versionId);
 
-            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).Select(ConvertDbModelToReadModel));
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
         }
 
         /// <summary>
@@ -240,7 +244,7 @@ namespace Data.WebApi.Controllers
         [HttpGet("version/{versionId}/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByVersion(Guid versionId)
+        public async Task<ActionResult<int>> CountByVersionById(Guid versionId)
         {
             var dbModels = await ComponentWriter.GetByVersion(versionId);
 
@@ -258,11 +262,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("version/{versionName}/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByVersion(string versionName, int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByVersionByName(string versionName, int pageSize, int pageIndex)
         {
             var latestVersion = await GameVersionReader.GetByName(versionName);
 
-            return await GetByVersion(latestVersion.Id, pageSize, pageIndex);
+            return await GetByVersionById(latestVersion.Id, pageSize, pageIndex);
         }
 
         /// <summary>
@@ -273,7 +277,7 @@ namespace Data.WebApi.Controllers
         [HttpGet("version/{versionName}/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByVersion(string versionName)
+        public async Task<ActionResult<int>> CountByVersionByName(string versionName)
         {
             var dbModels = await ComponentWriter.GetByVersion(versionName);
 
@@ -291,11 +295,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("mapping/latest/{name}/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByLatestMapping(string name, int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByLatestMapping(string name, int pageSize, int pageIndex)
         {
             var dbModels = await ComponentWriter.GetByLatestMapping(name);
 
-            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).Select(ConvertDbModelToReadModel));
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
         }
 
         /// <summary>
@@ -306,7 +310,7 @@ namespace Data.WebApi.Controllers
         [HttpGet("mapping/latest/{name}/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByLatestMapping(string name)
+        public async Task<ActionResult<int>> CountByLatestMapping(string name)
         {
             var dbModels = await ComponentWriter.GetByLatestMapping(name);
 
@@ -325,11 +329,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("mapping/version/{versionId}/{name}/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByMappingInVersion(string name, Guid versionId, int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByMappingInVersion(string name, Guid versionId, int pageSize, int pageIndex)
         {
             var dbModels = await ComponentWriter.GetByMappingInVersion(name, versionId);
 
-            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).Select(ConvertDbModelToReadModel));
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
         }
 
         /// <summary>
@@ -341,7 +345,7 @@ namespace Data.WebApi.Controllers
         [HttpGet("mapping/version/{versionId}/{name}/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByMappingInVersion(string name, Guid versionId)
+        public async Task<ActionResult<int>> CountByMappingInVersion(string name, Guid versionId)
         {
             var dbModels = await ComponentWriter.GetByMappingInVersion(name, versionId);
 
@@ -360,11 +364,11 @@ namespace Data.WebApi.Controllers
         [HttpGet("mapping/release/{releaseId}/{name}/{pageSize}/{pageIndex}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> GetByMappingInRelease(string name, Guid releaseId, int pageSize, int pageIndex)
+        public async Task<ActionResult<IEnumerable<TReadModel>>> GetByMappingInRelease(string name, Guid releaseId, int pageSize, int pageIndex)
         {
             var dbModels = await ComponentWriter.GetByMappingInRelease(name, releaseId);
 
-            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).Select(ConvertDbModelToReadModel));
+            return Json(dbModels.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(ConvertDbModelToReadModel));
         }
 
         /// <summary>
@@ -376,7 +380,7 @@ namespace Data.WebApi.Controllers
         [HttpGet("mapping/release/{releaseId}/{name}/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<ActionResult<IQueryable<TReadModel>>> CountByMappingInRelease(string name, Guid releaseId)
+        public async Task<ActionResult<int>> CountByMappingInRelease(string name, Guid releaseId)
         {
             var dbModels = await ComponentWriter.GetByMappingInRelease(name, releaseId);
 
@@ -394,7 +398,7 @@ namespace Data.WebApi.Controllers
         [Produces("application/json")]
         public async Task<ActionResult<TVersionedReadModel>> GetVersionedMapping(Guid id)
         {
-            var versionComponent = await ComponentWriter.GetVersionedMapping(id);
+            var versionComponent = await ComponentWriter.GetVersionedComponent(id);
 
             if (versionComponent == null)
                 return NotFound();
@@ -454,7 +458,7 @@ namespace Data.WebApi.Controllers
         [Authorize()]
         public async Task<ActionResult> Propose([FromBody] CreateProposalModel proposalModel)
         {
-            var classVersionedEntry = await ComponentWriter.GetVersionedMapping(proposalModel.ProposedFor);
+            var classVersionedEntry = await ComponentWriter.GetVersionedComponent(proposalModel.ProposedFor);
             if (classVersionedEntry == null)
                 return NotFound(
                     $"Their is no component with a version component with id: {proposalModel.ProposedFor}");
@@ -603,30 +607,206 @@ namespace Data.WebApi.Controllers
             if (!currentProposal.IsPublicVote && user.CanCommit)
                 return Unauthorized();
 
-            currentProposal.ClosedBy = user.Id;
-            currentProposal.ClosedOn = DateTime.Now;
-            currentProposal.Merged = merge;
+            return await ProcessClosing(merge, currentProposal, user);
+        }
 
-            if (merge)
+
+        /// <summary>
+        /// Locks the mappings of the given type in the versioned component of the component with the given game version.
+        /// Closes all open proposals for the given mapping type.
+        /// </summary>
+        /// <param name="componentId">The id of the component to lock.</param>
+        /// <param name="gameVersionId">The id of the gameversion to lock.</param>
+        /// <param name="mappingTypeName">The name of the mappingtype to lock.</param>
+        /// <returns>An http status code: 401-No component with the id exists, or the given component does not exist in the given gameversion, 400-If the component is already locked, 403-Forbidden the user does not have the right to lock a component, 202-If the locking was successful.</returns>
+        [HttpPost("lock/{componentId}/{gameVersionId}/{mappingTypeName}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [Authorize()]
+        public async Task<ActionResult> LockByComponentAndGameVersion(Guid componentId, Guid gameVersionId, string mappingTypeName)
+        {
+            var currentComponent = await ComponentWriter.GetById(componentId);
+            if (currentComponent == null)
+                return NotFound("No component with the given id exists.");
+
+            var versionedComponent =
+                currentComponent.VersionedMappings.FirstOrDefault(vc => vc.GameVersion.Id == gameVersionId);
+            if (versionedComponent == null)
+                return NotFound("The component does not contain a gameversion with the given id.");
+
+            if (versionedComponent.LockedMappingTypes.Any(lmt => lmt.MappingType.Name == mappingTypeName))
+                return BadRequest("The component is already locked for the given version");
+
+            var user = await UserResolvingService.Get();
+            if (user == null)
+                return Unauthorized();
+
+            if (!user.CanLock)
+                return Forbid();
+
+            var lockingMappingEntry = new LockingEntry()
             {
-                var newCommittedMapping = new LiveMappingEntry()
-                {
-                    InputMapping = currentProposal.InputMapping,
-                    OutputMapping = currentProposal.OutputMapping,
-                    Proposal = currentProposal,
-                    Releases = new List<ReleaseComponent>(),
-                    Mapping = currentProposal.Mapping,
-                    CreatedOn = DateTime.Now
-                };
+                Id = Guid.NewGuid(),
+                MappingType = await MappingTypeReader.GetByName(mappingTypeName),
+                VersionedComponent = versionedComponent
+            };
 
-                currentProposal.Mapping.Mappings.Add(newCommittedMapping);
-                await ComponentWriter.SaveChanges();
+            versionedComponent.LockedMappingTypes.Add(lockingMappingEntry);
 
-                return CreatedAtAction("GetById", newCommittedMapping.Mapping.Component.Id, newCommittedMapping);
+            foreach (var proposalMappingEntry in versionedComponent.Proposals.Where(p => p.MappingType.Name == mappingTypeName && p.IsOpen))
+            {
+                await ProcessClosing(false, proposalMappingEntry, user);
             }
 
+            await ComponentWriter.Update(versionedComponent);
             await ComponentWriter.SaveChanges();
-            return Ok();
+
+            return Accepted();
+        }
+
+        /// <summary>
+        /// Locks the mappings of the given type in the versioned component.
+        /// Closes all open proposals for the given mapping type.
+        /// </summary>
+        /// <param name="versionedComponentId">The id of the versioned component to lock.</param>
+        /// <param name="mappingTypeName">The name of the mappingtype to lock.</param>
+        /// <returns>An http status code: 401-No component with the id exists, or the given component does not exist in the given gameversion, 400-If the component is already locked, 403-Forbidden the user does not have the right to lock a component, 202-If the locking was successful.</returns>
+        [HttpPost("lock/{versionedComponentId}/{mappingTypeName}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [Authorize()]
+        public async Task<ActionResult> LockByVersionedComponent(Guid versionedComponentId, string mappingTypeName)
+        {
+            var versionedComponent = await ComponentWriter.GetVersionedComponent(versionedComponentId);
+            if (versionedComponent == null)
+                return NotFound("The component does not contain a gameversion with the given id.");
+
+            if (versionedComponent.LockedMappingTypes.Any(lmt => lmt.MappingType.Name == mappingTypeName))
+                return BadRequest("The component is already locked for the given version");
+
+            var user = await UserResolvingService.Get();
+            if (user == null)
+                return Unauthorized();
+
+            if (!user.CanLock)
+                return Forbid();
+
+            var lockingMappingEntry = new LockingEntry()
+            {
+                Id = Guid.NewGuid(),
+                MappingType = await MappingTypeReader.GetByName(mappingTypeName),
+                VersionedComponent = versionedComponent
+            };
+
+            versionedComponent.LockedMappingTypes.Add(lockingMappingEntry);
+
+            foreach (var proposalMappingEntry in versionedComponent.Proposals.Where(p => p.MappingType.Name == mappingTypeName && p.IsOpen))
+            {
+                await ProcessClosing(false, proposalMappingEntry, user);
+            }
+
+            await ComponentWriter.Update(versionedComponent);
+            await ComponentWriter.SaveChanges();
+
+            return Accepted();
+        }
+
+        /// <summary>
+        /// Unlocks the mappings of the given type in the versioned component of the component with the given game version.
+        /// </summary>
+        /// <param name="componentId">The id of the component to unlock.</param>
+        /// <param name="gameVersionId">The id of the gameversion to unlock.</param>
+        /// <param name="mappingTypeName">The name of the mappingtype to unlock.</param>
+        /// <returns>An http status code: 401-No component with the id exists, or the given component does not exist in the given gameversion, 400-If the component is already unlocked, 403-Forbidden the user does not have the right to unlock a component, 202-If the unlocking was successful.</returns>
+        [HttpPost("unlock/{componentId}/{gameVersionId}/{mappingTypeName}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [Authorize()]
+        public async Task<ActionResult> UnlockByComponentAndGameVersion(Guid componentId, Guid gameVersionId, string mappingTypeName)
+        {
+            var currentComponent = await ComponentWriter.GetById(componentId);
+            if (currentComponent == null)
+                return NotFound("No component with the given id exists.");
+
+            var versionedComponent =
+                currentComponent.VersionedMappings.FirstOrDefault(vc => vc.GameVersion.Id == gameVersionId);
+            if (versionedComponent == null)
+                return NotFound("The component does not contain a gameversion with the given id.");
+
+            if (versionedComponent.LockedMappingTypes.All(lmt => lmt.MappingType.Name != mappingTypeName))
+                return BadRequest("The component is not locked for the given version");
+
+            var user = await UserResolvingService.Get();
+            if (user == null)
+                return Unauthorized();
+
+            if (!user.CanUnlock)
+                return Forbid();
+
+            var lockedMappingType =
+                versionedComponent.LockedMappingTypes.FirstOrDefault(lmt => lmt.MappingType.Name != mappingTypeName);
+            versionedComponent.LockedMappingTypes.Remove(lockedMappingType);
+
+            await ComponentWriter.Update(versionedComponent);
+            await ComponentWriter.SaveChanges();
+
+            return Accepted();
+        }
+
+        /// <summary>
+        /// Unlocks the mappings of the given type in the versioned component.
+        /// </summary>
+        /// <param name="versionedComponentId">The id of the versioned component to unlock.</param>
+        /// <param name="mappingTypeName">The name of the mappingtype to unlock.</param>
+        /// <returns>An http status code: 401-No component with the id exists, or the given component does not exist in the given gameversion, 400-If the component is already unlocked, 403-Forbidden the user does not have the right to unlock a component, 202-If the unlocking was successful.</returns>
+        [HttpPost("unlock/{versionedComponentId}/{mappingTypeName}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [Authorize()]
+        public async Task<ActionResult> UnlockByVersionedComponent(Guid versionedComponentId, string mappingTypeName)
+        {
+            var versionedComponent = await ComponentWriter.GetVersionedComponent(versionedComponentId);
+            if (versionedComponent == null)
+                return NotFound("The component does not contain a gameversion with the given id.");
+
+            if (versionedComponent.LockedMappingTypes.All(lmt => lmt.MappingType.Name == mappingTypeName))
+                return BadRequest("The component is not locked for the given version");
+
+            var user = await UserResolvingService.Get();
+            if (user == null)
+                return Unauthorized();
+
+            if (!user.CanUnlock)
+                return Forbid();
+
+            var lockedMappingType =
+                versionedComponent.LockedMappingTypes.FirstOrDefault(lmt => lmt.MappingType.Name != mappingTypeName);
+            versionedComponent.LockedMappingTypes.Remove(lockedMappingType);
+
+            await ComponentWriter.Update(versionedComponent);
+            await ComponentWriter.SaveChanges();
+
+            return Accepted();
         }
 
         protected abstract TReadModel ConvertDbModelToReadModel(Component component);
@@ -694,6 +874,34 @@ namespace Data.WebApi.Controllers
                 Documentation = liveMappingEntry.Documentation,
                 MappingName = liveMappingEntry.MappingType.Name
             };
+        }
+
+        private async Task<ActionResult> ProcessClosing(bool merge, ProposalMappingEntry currentProposal, User user)
+        {
+            currentProposal.ClosedBy = user.Id;
+            currentProposal.ClosedOn = DateTime.Now;
+            currentProposal.Merged = merge;
+
+            if (merge)
+            {
+                var newCommittedMapping = new LiveMappingEntry()
+                {
+                    InputMapping = currentProposal.InputMapping,
+                    OutputMapping = currentProposal.OutputMapping,
+                    Proposal = currentProposal,
+                    Releases = new List<ReleaseComponent>(),
+                    Mapping = currentProposal.Mapping,
+                    CreatedOn = DateTime.Now
+                };
+
+                currentProposal.Mapping.Mappings.Add(newCommittedMapping);
+                await ComponentWriter.SaveChanges();
+
+                return CreatedAtAction("GetById", newCommittedMapping.Mapping.Component.Id, newCommittedMapping);
+            }
+
+            await ComponentWriter.SaveChanges();
+            return Ok();
         }
     }
 }

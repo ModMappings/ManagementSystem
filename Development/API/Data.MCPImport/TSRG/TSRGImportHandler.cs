@@ -246,7 +246,7 @@ namespace Data.MCPImport.TSRG
                         Package = package,
                         Fields = new List<FieldMetadata>(),
                         Methods = new List<MethodMetadata>(),
-                        Component = currentClass
+                        VersionedComponent = currentClass
                     };
 
                     committedMapping.Mapping = currentClass;
@@ -410,7 +410,7 @@ namespace Data.MCPImport.TSRG
                         classMapping.VersionedMappings
                             .Select(mapping => mapping.Metadata as ClassMetadata)
                             .SelectMany(clsmd => clsmd.Methods)
-                            .Select(mthmd => mthmd.MemberOf.Component)
+                            .Select(mthmd => mthmd.MemberOf.VersionedComponent)
                             .GroupBy(method =>
                                 new MethodIdentification(method.Mappings.First().OutputMapping))
                             .Select(
@@ -455,7 +455,7 @@ namespace Data.MCPImport.TSRG
                         classMapping.VersionedMappings
                             .Select(mapping => mapping.Metadata as ClassMetadata)
                             .SelectMany(clsmd => clsmd.Fields)
-                            .Select(mthmd => mthmd.MemberOf.Component)
+                            .Select(mthmd => mthmd.MemberOf.VersionedComponent)
                             .GroupBy(field =>
                                 new FieldIdentification(field.Mappings.First().OutputMapping))
                             .Select(

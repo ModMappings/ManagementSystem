@@ -43,7 +43,7 @@ namespace Data.WebApi.Services.UserResolving
                 CanCreateMappingTypes = claimsPrinciple.HasClaim("CanCreateMappingTypes", "true"),
             };
 
-            return user;
+            return await Task.FromResult(user);
         }
     }
 }

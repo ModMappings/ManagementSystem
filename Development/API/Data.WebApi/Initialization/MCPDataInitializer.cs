@@ -28,9 +28,7 @@ namespace Data.WebApi.Initialization
 
         public static void InitializeData(IApplicationBuilder app)
         {
-            return;
-
-            using (var serviceScope = app.ApplicationServices
+            /*using (var serviceScope = app.ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
                 .CreateScope())
             {
@@ -39,8 +37,7 @@ namespace Data.WebApi.Initialization
                     InitializeDummyUser(app, context);
                     InitializeMCPConfigData(app, context);
                 }
-            }
-
+            }*/
         }
 
         private static void InitializeDummyUser(IApplicationBuilder app, MCMSContext context)
@@ -183,7 +180,7 @@ namespace Data.WebApi.Initialization
                         classMapping.VersionedMappings
                             .Select(mapping => mapping.Metadata as ClassMetadata)
                             .SelectMany(clsmd => clsmd.Methods)
-                            .Select(mthmd => mthmd.MemberOf.Component)
+                            .Select(mthmd => mthmd.MemberOf.VersionedComponent)
                             .GroupBy(method =>
                                 method.Mappings.First().OutputMapping + "%" + (method.Metadata as MethodMetadata).Descriptor + "%" + (method.Metadata as MethodMetadata).IsStatic).Select(
                                 methodGrouping => new Component()
@@ -204,7 +201,7 @@ namespace Data.WebApi.Initialization
                     classMapping.VersionedMappings
                         .Select(mapping => mapping.Metadata as ClassMetadata)
                         .SelectMany(mapping => mapping.Fields)
-                        .Select(fldmd => fldmd.MemberOf.Component)
+                        .Select(fldmd => fldmd.MemberOf.VersionedComponent)
                         .GroupBy(field =>
                     field.Mappings.First().OutputMapping + "%" + (field.Metadata as FieldMetadata).IsStatic).Select(
                     fieldGrouping => new Component()
@@ -333,7 +330,7 @@ namespace Data.WebApi.Initialization
                             Package = package,
                             Fields = new List<FieldMetadata>(),
                             Methods = new List<MethodMetadata>(),
-                            Component = currentClass
+                            VersionedComponent = currentClass
                         };
 
                         committedMapping.Mapping = currentClass;

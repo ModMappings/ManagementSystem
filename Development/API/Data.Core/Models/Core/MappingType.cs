@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Data.Core.Models.Mapping;
 
 namespace Data.Core.Models.Core
 {
@@ -26,5 +27,7 @@ namespace Data.Core.Models.Core
         public DateTime CreatedOn { get; set; }
 
         public virtual List<Release> Releases { get; set; }
+
+        public virtual List<LockingEntry> LockedVersionedComponents { get; set; }
     }
 }

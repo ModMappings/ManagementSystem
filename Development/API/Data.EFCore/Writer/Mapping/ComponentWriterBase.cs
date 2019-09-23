@@ -13,11 +13,11 @@ namespace Data.EFCore.Writer.Mapping
     public abstract class ComponentWriterBase
         : IComponentWriter
     {
-        protected readonly MCMSContext McmsContext;
+        protected readonly MCMSContext MCMSContext;
 
         protected ComponentWriterBase(MCMSContext mcmsContext)
         {
-            McmsContext = mcmsContext;
+            MCMSContext = mcmsContext;
         }
 
         public async Task<Component> GetById(Guid id)
@@ -31,7 +31,7 @@ namespace Data.EFCore.Writer.Mapping
 
         public async Task<IQueryable<Component>> GetByLatestRelease()
         {
-            var latestRelease = await McmsContext.Releases.OrderByDescending(r => r.CreatedOn).FirstOrDefaultAsync();
+            var latestRelease = await MCMSContext.Releases.OrderByDescending(r => r.CreatedOn).FirstOrDefaultAsync();
 
             return await GetByRelease(latestRelease);
         }
@@ -46,7 +46,7 @@ namespace Data.EFCore.Writer.Mapping
 
         public async Task<IQueryable<Component>> GetByRelease(string releaseName)
         {
-            var namedRelease = await McmsContext.Releases.FirstOrDefaultAsync(r => r.Name.Equals(releaseName));
+            var namedRelease = await MCMSContext.Releases.FirstOrDefaultAsync(r => r.Name.Equals(releaseName));
 
             return await GetByRelease(namedRelease);
         }
@@ -59,7 +59,7 @@ namespace Data.EFCore.Writer.Mapping
         public async Task<IQueryable<Component>> GetByLatestVersion()
         {
             var latestVersion =
-                await McmsContext.GameVersions.OrderByDescending(v => v.CreatedOn).FirstOrDefaultAsync();
+                await MCMSContext.GameVersions.OrderByDescending(v => v.CreatedOn).FirstOrDefaultAsync();
 
             return await GetByVersion(latestVersion);
         }
@@ -73,7 +73,7 @@ namespace Data.EFCore.Writer.Mapping
 
         public async Task<IQueryable<Component>> GetByVersion(string versionName)
         {
-            var namedVersion = await McmsContext.GameVersions.FirstOrDefaultAsync(v => v.Name == versionName);
+            var namedVersion = await MCMSContext.GameVersions.FirstOrDefaultAsync(v => v.Name == versionName);
 
             return await GetByVersion(namedVersion);
         }
@@ -122,9 +122,9 @@ namespace Data.EFCore.Writer.Mapping
             return await GetByMappingInRelease(name, release.Id);
         }
 
-        public async Task<VersionedComponent> GetVersionedMapping(Guid id)
+        public async Task<VersionedComponent> GetVersionedComponent(Guid id)
         {
-            return await McmsContext.VersionedComponents
+            return await MCMSContext.VersionedComponents
                 .Include(vc => vc.Component)
                 .Include(vc => vc.Mappings)
                 .Include(vc => vc.Metadata)
@@ -134,61 +134,61 @@ namespace Data.EFCore.Writer.Mapping
 
         public async Task<ProposalMappingEntry> GetProposalMapping(Guid id)
         {
-            return await McmsContext.ProposalMappingEntries.FirstOrDefaultAsync(p => p.Id == id);
+            return await MCMSContext.ProposalMappingEntries.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<LiveMappingEntry> GetLiveMapping(Guid id)
         {
-            return await McmsContext.LiveMappingEntries.FirstOrDefaultAsync(m => m.Id == id);
+            return await MCMSContext.LiveMappingEntries.FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task Add(Component mapping)
         {
-            await McmsContext.Components.AddAsync(mapping);
+            await MCMSContext.Components.AddAsync(mapping);
         }
 
         public async Task Update(Component mapping)
         {
-            McmsContext.Components.Update(mapping);
+            MCMSContext.Components.Update(mapping);
             await Task.CompletedTask;
         }
 
         public async Task Add(VersionedComponent mapping)
         {
-            await McmsContext.VersionedComponents.AddAsync(mapping);
+            await MCMSContext.VersionedComponents.AddAsync(mapping);
         }
 
         public async Task Update(VersionedComponent mapping)
         {
-            McmsContext.VersionedComponents.Update(mapping);
+            MCMSContext.VersionedComponents.Update(mapping);
             await Task.CompletedTask;
         }
 
         public async Task Add(LiveMappingEntry mapping)
         {
-            await McmsContext.LiveMappingEntries.AddAsync(mapping);
+            await MCMSContext.LiveMappingEntries.AddAsync(mapping);
         }
 
         public async Task Update(LiveMappingEntry mapping)
         {
-            McmsContext.LiveMappingEntries.Update(mapping);
+            MCMSContext.LiveMappingEntries.Update(mapping);
             await Task.CompletedTask;
         }
 
         public async Task Add(ProposalMappingEntry mapping)
         {
-            await McmsContext.ProposalMappingEntries.AddAsync(mapping);
+            await MCMSContext.ProposalMappingEntries.AddAsync(mapping);
         }
 
         public async Task Update(ProposalMappingEntry mapping)
         {
-            McmsContext.ProposalMappingEntries.Update(mapping);
+            MCMSContext.ProposalMappingEntries.Update(mapping);
             await Task.CompletedTask;
         }
 
         public async Task SaveChanges()
         {
-            await McmsContext.SaveChangesAsync();
+            await MCMSContext.SaveChangesAsync();
         }
     }
 }
