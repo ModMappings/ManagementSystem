@@ -13,9 +13,9 @@ namespace Data.Core.Models.Mapping
         public Guid Id { get; set; }
 
         [Required]
-        public VersionedComponent VersionedComponent { get; set; }
+        public virtual VersionedComponent VersionedComponent { get; set; }
 
         [Required]
-        public MappingType MappingType { get; set; }
+        public virtual MappingType MappingType { get; set; }
     }
 }

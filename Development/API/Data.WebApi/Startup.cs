@@ -5,6 +5,7 @@ using System.Reflection;
 using Data.Core.Readers.Core;
 using Data.Core.Writers.Core;
 using Data.EFCore.Context;
+using Data.EFCore.Extensions;
 using Data.EFCore.Writer.Core;
 using Data.EFCore.Writer.Mapping;
 using Data.MCPImport.Extensions;
@@ -40,11 +41,12 @@ namespace Data.WebApi
             services.AddHealthChecks()
                 .AddDbContextCheck<MCMSContext>();
 
-            services.AddEntityFrameworkProxies();
+            //services.AddEntityFrameworkProxies();
 
             services.AddDbContext<MCMSContext>(opt =>
                 opt.UseNpgsql(Configuration["ConnectionStrings:DefaultConnection"])
-                    .UseLazyLoadingProxies());
+                //    .UseLazyLoadingProxies()
+                );
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
@@ -91,13 +93,7 @@ namespace Data.WebApi
             });
 
             services.AddTransient<IUserResolvingService, AuthorizationBasedUserResolvingService>();
-            services.AddTransient<IGameVersionReader, GameVersionWriter>();
-            services.AddTransient<IGameVersionWriter, GameVersionWriter>();
-            services.AddTransient<IReleaseReader, ReleaseWriter>();
-            services.AddTransient<IReleaseWriter, ReleaseWriter>();
-            services.AddTransient<IMappingTypeReader, MappingTypeWriter>();
-            services.AddTransient<IMappingTypeWriter, MappingTypeWriter>();
-            services.AddTransient<ComponentWriterFactory>();
+            services.AddMCMSDataServices();
 
             services.AddMCPImportDataHandlers();
         }
@@ -134,6 +130,7 @@ namespace Data.WebApi
                 c.OAuthAppName(customBoundJwtOptions.ApiName);
             });
 
+            app.AddDatabaseMigrations();
             app.AddMCPImport();
         }
     }

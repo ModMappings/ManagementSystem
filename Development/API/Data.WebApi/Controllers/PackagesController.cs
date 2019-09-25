@@ -31,7 +31,7 @@ namespace Data.WebApi.Controllers
         public async Task<ActionResult<IEnumerable<string>>> GetByLatestVersion()
         {
             return Json((await _classes.GetByLatestRelease()).Select(mapping =>
-                (mapping.VersionedMappings.OrderByDescending(versionedMapping => versionedMapping.CreatedOn)
+                (mapping.VersionedComponents.OrderByDescending(versionedMapping => versionedMapping.CreatedOn)
                     .FirstOrDefault().Metadata as ClassMetadata).Package).Distinct().OrderBy(s => s));
         }
 
@@ -47,7 +47,7 @@ namespace Data.WebApi.Controllers
         public async Task<ActionResult<IEnumerable<string>>> GetByVersion(Guid versionId)
         {
             return Json((await _classes.GetByVersion(versionId)).Select(mapping =>
-                (mapping.VersionedMappings
+                (mapping.VersionedComponents
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion.Id == versionId).Metadata as ClassMetadata).Package).Distinct().OrderBy(s => s));
         }
 
@@ -63,7 +63,7 @@ namespace Data.WebApi.Controllers
         public async Task<ActionResult<IEnumerable<string>>> GetByRelease(Guid releaseId)
         {
             return Json((await _classes.GetByRelease(releaseId))
-                .SelectMany(mapping => mapping.VersionedMappings)
+                .SelectMany(mapping => mapping.VersionedComponents)
                 .Where(versionedMapping => versionedMapping.Mappings.Any(committedMapping =>
                     committedMapping.Releases.Any(release => release.Id == releaseId)))
                 .Select(versionedMapping => (versionedMapping.Metadata as ClassMetadata).Package).Distinct().OrderBy(s => s));

@@ -472,7 +472,7 @@ namespace Data.WebApi.Controllers
 
             var proposalEntry = new ProposalMappingEntry()
             {
-                Mapping = classVersionedEntry,
+                VersionedComponent = classVersionedEntry,
                 InputMapping = proposalModel.NewInput,
                 OutputMapping = proposalModel.NewOutput,
                 ProposedBy = user.Id,
@@ -495,7 +495,7 @@ namespace Data.WebApi.Controllers
             await this.ComponentWriter.Update(classVersionedEntry);
             await this.ComponentWriter.SaveChanges();
 
-            return CreatedAtAction("GetById", proposalEntry.Mapping.Component.Id, proposalEntry);
+            return CreatedAtAction("GetById", proposalEntry.VersionedComponent.Component.Id, proposalEntry);
         }
 
         /// <summary>
@@ -635,7 +635,7 @@ namespace Data.WebApi.Controllers
                 return NotFound("No component with the given id exists.");
 
             var versionedComponent =
-                currentComponent.VersionedMappings.FirstOrDefault(vc => vc.GameVersion.Id == gameVersionId);
+                currentComponent.VersionedComponents.FirstOrDefault(vc => vc.GameVersion.Id == gameVersionId);
             if (versionedComponent == null)
                 return NotFound("The component does not contain a gameversion with the given id.");
 
@@ -744,7 +744,7 @@ namespace Data.WebApi.Controllers
                 return NotFound("No component with the given id exists.");
 
             var versionedComponent =
-                currentComponent.VersionedMappings.FirstOrDefault(vc => vc.GameVersion.Id == gameVersionId);
+                currentComponent.VersionedComponents.FirstOrDefault(vc => vc.GameVersion.Id == gameVersionId);
             if (versionedComponent == null)
                 return NotFound("The component does not contain a gameversion with the given id.");
 
@@ -819,8 +819,8 @@ namespace Data.WebApi.Controllers
             return new ProposalReadModel()
             {
                 Id = proposalMappingEntry.Id,
-                ProposedFor = proposalMappingEntry.Mapping.Id,
-                GameVersion = proposalMappingEntry.Mapping.GameVersion.Id,
+                ProposedFor = proposalMappingEntry.VersionedComponent.Id,
+                GameVersion = proposalMappingEntry.VersionedComponent.GameVersion.Id,
                 ProposedBy = proposalMappingEntry.ProposedBy,
                 ProposedOn = proposalMappingEntry.ProposedOn,
                 IsOpen = proposalMappingEntry.IsOpen,
@@ -833,7 +833,8 @@ namespace Data.WebApi.Controllers
                 In = proposalMappingEntry.InputMapping,
                 Out = proposalMappingEntry.OutputMapping,
                 Documentation = proposalMappingEntry.Documentation,
-                MappingName = proposalMappingEntry.MappingType.Name
+                MappingName = proposalMappingEntry.MappingType.Name,
+                Distribution = proposalMappingEntry.Distribution
             };
         }
 
@@ -845,7 +846,8 @@ namespace Data.WebApi.Controllers
                 In = proposalMappingEntry.InputMapping,
                 Out = proposalMappingEntry.OutputMapping,
                 Documentation = proposalMappingEntry.Documentation,
-                MappingName = proposalMappingEntry.MappingType.Name
+                MappingName = proposalMappingEntry.MappingType.Name,
+                Distribution = proposalMappingEntry.Distribution
             };
         }
 
@@ -858,9 +860,10 @@ namespace Data.WebApi.Controllers
                 Out = liveMappingEntry.OutputMapping,
                 Proposal = liveMappingEntry.Proposal.Id,
                 Releases = liveMappingEntry.Releases.Select(release => release.Id),
-                VersionedMapping = liveMappingEntry.Mapping.Id,
+                VersionedMapping = liveMappingEntry.VersionedComponent.Id,
                 Documentation = liveMappingEntry.Documentation,
-                MappingName = liveMappingEntry.MappingType.Name
+                MappingName = liveMappingEntry.MappingType.Name,
+                Distribution = liveMappingEntry.Distribution
             };
         }
 
@@ -872,7 +875,8 @@ namespace Data.WebApi.Controllers
                 In = liveMappingEntry.InputMapping,
                 Out = liveMappingEntry.OutputMapping,
                 Documentation = liveMappingEntry.Documentation,
-                MappingName = liveMappingEntry.MappingType.Name
+                MappingName = liveMappingEntry.MappingType.Name,
+                Distribution = liveMappingEntry.Distribution
             };
         }
 
@@ -890,14 +894,14 @@ namespace Data.WebApi.Controllers
                     OutputMapping = currentProposal.OutputMapping,
                     Proposal = currentProposal,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = currentProposal.Mapping,
+                    VersionedComponent = currentProposal.VersionedComponent,
                     CreatedOn = DateTime.Now
                 };
 
-                currentProposal.Mapping.Mappings.Add(newCommittedMapping);
+                currentProposal.VersionedComponent.Mappings.Add(newCommittedMapping);
                 await ComponentWriter.SaveChanges();
 
-                return CreatedAtAction("GetById", newCommittedMapping.Mapping.Component.Id, newCommittedMapping);
+                return CreatedAtAction("GetById", newCommittedMapping.VersionedComponent.Component.Id, newCommittedMapping);
             }
 
             await ComponentWriter.SaveChanges();

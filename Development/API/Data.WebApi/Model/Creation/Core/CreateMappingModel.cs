@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Data.Core.Models.Core;
 
 namespace Data.WebApi.Model.Creation.Core
 {
@@ -31,5 +32,10 @@ namespace Data.WebApi.Model.Creation.Core
         /// The documentation for the mapping, if applicable.
         /// </summary>
         public string Documentation { get; set; }
+
+        /// <summary>
+        /// The distribution that the mapping is part of.
+        /// </summary>
+        public Distribution Distribution { get; set; }
     }
 }

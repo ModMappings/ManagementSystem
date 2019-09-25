@@ -28,5 +28,7 @@ namespace Data.Core.Models.Core
         public virtual MappingType MappingType { get; set; }
 
         public virtual List<ReleaseComponent> Components { get; set; }
+
+        public bool IsSnapshot { get; set; } = false;
     }
 }

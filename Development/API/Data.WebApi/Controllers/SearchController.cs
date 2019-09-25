@@ -29,7 +29,7 @@ namespace Data.WebApi.Controllers
                     (searchInputs && Regex.IsMatch(entry.InputMapping, pattern)) ||
                     Regex.IsMatch(entry.OutputMapping, pattern))
                 .Where(entry => releaseId == null || entry.Releases.Any(rc => rc.Release.Id == releaseId))
-                .Where(entry => gameVersionId == null || entry.Mapping.GameVersion.Id == gameVersionId)
+                .Where(entry => gameVersionId == null || entry.VersionedComponent.GameVersion.Id == gameVersionId)
                 .Select(entry => new SearchResult()
                 {
                     Input = entry.InputMapping,
@@ -37,7 +37,7 @@ namespace Data.WebApi.Controllers
                     MappingId = entry.Id,
                     MappingTypeName = entry.MappingType.Name,
                     Output = entry.OutputMapping,
-                    Type = entry.Mapping.Component.Type
+                    Type = entry.VersionedComponent.Component.Type
                 })
                 .Union(
                     _context.ProposalMappingEntries
@@ -45,7 +45,7 @@ namespace Data.WebApi.Controllers
                             (searchInputs && Regex.IsMatch(entry.InputMapping, pattern)) ||
                             Regex.IsMatch(entry.OutputMapping, pattern))
                         .Where(entry => releaseId == null)
-                        .Where(entry => gameVersionId == null || entry.Mapping.GameVersion.Id == gameVersionId)
+                        .Where(entry => gameVersionId == null || entry.VersionedComponent.GameVersion.Id == gameVersionId)
                         .Select(entry => new SearchResult()
                         {
                             Input = entry.InputMapping,
@@ -53,7 +53,7 @@ namespace Data.WebApi.Controllers
                             MappingId = entry.Id,
                             MappingTypeName = entry.MappingType.Name,
                             Output = entry.OutputMapping,
-                            Type = entry.Mapping.Component.Type
+                            Type = entry.VersionedComponent.Component.Type
                         }))
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)

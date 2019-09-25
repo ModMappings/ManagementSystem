@@ -221,6 +221,7 @@ namespace Data.WebApi.Controllers
             versionedParameterMapping.Metadata = new ParameterMetadata
             {
                 VersionedComponent = versionedParameterMapping,
+                VersionedComponentForeignKey = versionedParameterMapping.Id,
                 ParameterOf = memberOf.Metadata as MethodMetadata,
                 Index = mapping.Index
             };
@@ -229,12 +230,13 @@ namespace Data.WebApi.Controllers
                 .Select(mappingData => new LiveMappingEntry()
                 {
                     Documentation = mappingData.Documentation,
+                    Distribution = mappingData.Distribution,
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
                     Proposal = null,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = versionedParameterMapping,
+                    VersionedComponent = versionedParameterMapping,
                     CreatedOn = DateTime.Now
                 });
 
@@ -244,7 +246,7 @@ namespace Data.WebApi.Controllers
             {
                 Id = Guid.NewGuid(),
                 Type = ComponentType.PARAMETER,
-                VersionedMappings = new List<VersionedComponent>() {versionedParameterMapping}
+                VersionedComponents = new List<VersionedComponent>() {versionedParameterMapping}
             };
 
             await ComponentWriter.Add(parameterMapping);
@@ -286,7 +288,7 @@ namespace Data.WebApi.Controllers
             if (parameterMapping == null)
                 return BadRequest("Unknown parameter mapping to create the versioned mapping for.");
 
-            if (parameterMapping.VersionedMappings.Any(versionedMapping =>
+            if (parameterMapping.VersionedComponents.Any(versionedMapping =>
                 versionedMapping.GameVersion.Id == mapping.GameVersion))
                 return Conflict();
 
@@ -302,6 +304,7 @@ namespace Data.WebApi.Controllers
             versionedParameterMapping.Metadata = new ParameterMetadata
             {
                 VersionedComponent = versionedParameterMapping,
+                VersionedComponentForeignKey = versionedParameterMapping.Id,
                 ParameterOf = memberOf.Metadata as MethodMetadata,
                 Index = mapping.Index
             };
@@ -310,12 +313,13 @@ namespace Data.WebApi.Controllers
                 .Select(mappingData => new LiveMappingEntry()
                 {
                     Documentation = mappingData.Documentation,
+                    Distribution = mappingData.Distribution,
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
                     Proposal = null,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = versionedParameterMapping,
+                    VersionedComponent = versionedParameterMapping,
                     CreatedOn = DateTime.Now
                 });
 
@@ -331,7 +335,7 @@ namespace Data.WebApi.Controllers
             return new ParameterReadModel
             {
                 Id = component.Id,
-                Versioned = component.VersionedMappings.ToList().Select(ConvertVersionedDbModelToReadModel)
+                Versioned = component.VersionedComponents.ToList().Select(ConvertVersionedDbModelToReadModel)
             };
         }
 

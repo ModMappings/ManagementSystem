@@ -34,6 +34,16 @@ namespace Data.WebApi.Model.Read.Core
         public DateTime CreatedOn { get; set; }
 
         /// <summary>
+        /// Indicates if this release is a snapshot or not.
+        /// </summary>
+        public bool IsSnapshot { get; set; }
+
+        /// <summary>
+        /// The mapping type name for which the release was created.
+        /// </summary>
+        public string MappingTypeName { get; set; }
+
+        /// <summary>
         /// The ids of the versioned classes that are part of this release.
         /// </summary>
         public List<Guid> Classes { get; set; }

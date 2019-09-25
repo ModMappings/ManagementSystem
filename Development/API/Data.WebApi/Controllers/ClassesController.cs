@@ -230,6 +230,7 @@ namespace Data.WebApi.Controllers
             versionedClassMapping.Metadata = new ClassMetadata
             {
                 VersionedComponent = versionedClassMapping,
+                VersionedComponentForeignKey = versionedClassMapping.Id,
                 Outer=outer?.Metadata as ClassMetadata,
                 Package = mapping.Package,
                 InheritsFrom = inheritsFrom,
@@ -239,12 +240,13 @@ namespace Data.WebApi.Controllers
                 .Select(mappingData => new LiveMappingEntry()
                 {
                     Documentation = mappingData.Documentation,
+                    Distribution = mappingData.Distribution,
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
                     Proposal = null,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = versionedClassMapping,
+                    VersionedComponent = versionedClassMapping,
                     CreatedOn = DateTime.Now
                 });
 
@@ -254,7 +256,7 @@ namespace Data.WebApi.Controllers
             {
                 Id = Guid.NewGuid(),
                 Type = ComponentType.CLASS,
-                VersionedMappings = new List<VersionedComponent>() {versionedClassMapping}
+                VersionedComponents = new List<VersionedComponent>() {versionedClassMapping}
             };
 
             await ComponentWriter.Add(classMapping);
@@ -307,7 +309,7 @@ namespace Data.WebApi.Controllers
             if (classMapping == null)
                 return BadRequest("Unknown class mapping to create the versioned mapping for.");
 
-            if (classMapping.VersionedMappings.Any(versionedMapping =>
+            if (classMapping.VersionedComponents.Any(versionedMapping =>
                 versionedMapping.GameVersion.Id == mapping.GameVersion))
                 return Conflict();
 
@@ -323,6 +325,7 @@ namespace Data.WebApi.Controllers
             versionedClassMapping.Metadata = new ClassMetadata
             {
                 VersionedComponent = versionedClassMapping,
+                VersionedComponentForeignKey = versionedClassMapping.Id,
                 Outer=outer?.Metadata as ClassMetadata,
                 Package = mapping.Package,
                 InheritsFrom = inheritsFrom,
@@ -332,12 +335,13 @@ namespace Data.WebApi.Controllers
                 .Select(mappingData => new LiveMappingEntry()
                 {
                     Documentation = mappingData.Documentation,
+                    Distribution = mappingData.Distribution,
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
                     Proposal = null,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = versionedClassMapping,
+                    VersionedComponent = versionedClassMapping,
                     CreatedOn = DateTime.Now
                 });
 
@@ -352,7 +356,7 @@ namespace Data.WebApi.Controllers
             return new ClassReadModel
             {
                 Id = component.Id,
-                Versioned = component.VersionedMappings.ToList().Select(ConvertVersionedDbModelToReadModel)
+                Versioned = component.VersionedComponents.ToList().Select(ConvertVersionedDbModelToReadModel)
             };
         }
 
