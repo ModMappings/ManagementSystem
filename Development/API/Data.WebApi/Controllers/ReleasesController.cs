@@ -1,10 +1,13 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
 using Data.Core.Readers.Core;
+using Data.Core.Readers.Mapping;
 using Data.Core.Writers.Core;
+using Data.Core.Writers.Mapping;
 using Data.EFCore.Writer.Mapping;
 using Data.WebApi.Model.Creation.Core;
 using Data.WebApi.Model.Read.Core;
@@ -15,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Data.WebApi.Controllers
 {
+    //TODO: Add lookup of mapping types to releases.
     /// <summary>
     /// A controller for access to game version.
     /// </summary>
@@ -33,17 +37,19 @@ namespace Data.WebApi.Controllers
         private readonly IUserResolvingService _userResolvingService;
 
         /// <summary>
-        /// Game versoin reader.
+        /// Game version reader.
         /// </summary>
         private readonly IGameVersionReader _gameVersionReader;
 
-        private readonly ClassWriter _classes;
+        private readonly IMappingTypeReader _mappingTypeReader;
 
-        private readonly MethodWriter _methods;
+        private readonly IClassComponentReader _classes;
 
-        private readonly FieldWriter _fields;
+        private readonly IMethodComponentReader _methods;
 
-        private readonly ParameterWriter _parameters;
+        private readonly IFieldComponentReader _fields;
+
+        private readonly IParameterComponentReader _parameters;
 
         /// <summary>
         /// Creates a new game version controller.
@@ -51,16 +57,25 @@ namespace Data.WebApi.Controllers
         /// <param name="releaseWriter">The writer and reader for releases.</param>
         /// <param name="userResolvingService">The user resolving service.</param>
         /// <param name="gameVersionReader">The reader for releases.</param>
+        /// <param name="mappingTypeReader">The mapping type reader.</param>
         /// <param name="classes">The class mapping reader.</param>
         /// <param name="methods">The method mapping reader.</param>
         /// <param name="fields">The field mapping reader.</param>
         /// <param name="parameters">The parameter mapping reader.</param>
-        public ReleaseController(IReleaseWriter releaseWriter, IUserResolvingService userResolvingService,
-            IGameVersionReader gameVersionReader, ClassWriter classes, MethodWriter methods, FieldWriter fields, ParameterWriter parameters)
+        public ReleaseController(
+            IReleaseWriter releaseWriter,
+            IUserResolvingService userResolvingService,
+            IGameVersionReader gameVersionReader,
+            IMappingTypeReader mappingTypeReader,
+            IClassComponentReader classes,
+            IMethodComponentReader methods,
+            IFieldComponentReader fields,
+            IParameterComponentReader parameters)
         {
             _releaseWriter = releaseWriter;
             _userResolvingService = userResolvingService;
             _gameVersionReader = gameVersionReader;
+            _mappingTypeReader = mappingTypeReader;
             _classes = classes;
             _methods = methods;
             _fields = fields;
@@ -204,6 +219,7 @@ namespace Data.WebApi.Controllers
                 return Unauthorized();
 
             var gameVersion = await _gameVersionReader.GetById(mapping.GameVersion);
+            var mappingType = await _mappingTypeReader.GetByName(mapping.MappingTypeName);
 
             var release = new Release
             {
@@ -211,11 +227,13 @@ namespace Data.WebApi.Controllers
                 CreatedOn = DateTime.Now,
                 Name = mapping.Name,
                 Id = Guid.NewGuid(),
-                GameVersion = gameVersion
+                GameVersion = gameVersion,
+                MappingType = mappingType,
+                IsSnapshot = mapping.IsSnapshot
             };
 
             var releaseClasses = (await _classes.GetByVersion(gameVersion)).Select(classMapping =>
-                classMapping.VersionedMappings
+                classMapping.VersionedComponents
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
                 committedMapping => new ReleaseComponent
@@ -227,7 +245,7 @@ namespace Data.WebApi.Controllers
                 }).ToList();
 
             var releaseMethods = (await _methods.GetByVersion(gameVersion)).Select(methodMapping =>
-                methodMapping.VersionedMappings
+                methodMapping.VersionedComponents
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
                 committedMapping => new ReleaseComponent()
@@ -239,7 +257,7 @@ namespace Data.WebApi.Controllers
                 }).ToList();
 
             var releaseFields = (await _fields.GetByVersion(gameVersion)).Select(fieldMapping =>
-                fieldMapping.VersionedMappings
+                fieldMapping.VersionedComponents
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
                 committedMapping => new ReleaseComponent()
@@ -251,7 +269,7 @@ namespace Data.WebApi.Controllers
                 }).ToList();
 
             var releaseParameters = (await _parameters.GetByVersion(gameVersion)).Select(parameterMapping =>
-                parameterMapping.VersionedMappings
+                parameterMapping.VersionedComponents
                     .FirstOrDefault(versionedMapping => versionedMapping.GameVersion == gameVersion).Mappings
                     .OrderByDescending(committedMappings => committedMappings.CreatedOn).FirstOrDefault()).Select(
                 committedMapping => new ReleaseComponent()
@@ -281,6 +299,9 @@ namespace Data.WebApi.Controllers
                 CreatedBy = release.CreatedBy,
                 CreatedOn = release.CreatedOn,
                 Name = release.Name,
+                MappingTypeName = release.MappingType.Name,
+                IsSnapshot = release.IsSnapshot,
+                GameVersion = release.GameVersion.Id,
                 Classes = release.Components.Where(rc => rc.ComponentType == ComponentType.CLASS).Select(member => member.Id).ToList(),
                 Methods = release.Components.Where(rc => rc.ComponentType == ComponentType.METHOD).Select(member => member.Id).ToList(),
                 Fields = release.Components.Where(rc => rc.ComponentType == ComponentType.FIELD).Select(member => member.Id).ToList(),

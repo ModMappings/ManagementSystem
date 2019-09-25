@@ -12,7 +12,7 @@ namespace Data.Core.Models.Mapping
         public Guid Id { get; set; }
 
         [Required]
-        public virtual VersionedComponent Mapping { get; set; }
+        public virtual VersionedComponent VersionedComponent { get; set; }
 
         [Required]
         public DateTime CreatedOn { get; set; }
@@ -29,6 +29,6 @@ namespace Data.Core.Models.Mapping
         public Distribution Distribution { get; set; }
 
         [Required]
-        public MappingType MappingType { get; set; }
+        public virtual MappingType MappingType { get; set; }
     }
 }

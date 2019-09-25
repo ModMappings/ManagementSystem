@@ -14,6 +14,6 @@ namespace Data.Core.Models.Mapping
         [Required]
         public ComponentType Type { get; set; }
 
-        public virtual List<VersionedComponent> VersionedMappings { get; set; }
+        public virtual List<VersionedComponent> VersionedComponents { get; set; }
     }
 }

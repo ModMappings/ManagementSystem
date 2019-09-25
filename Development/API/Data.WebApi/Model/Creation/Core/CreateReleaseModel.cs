@@ -25,5 +25,16 @@ namespace Data.WebApi.Model.Creation.Core
         /// </summary>
         [Required]
         public Guid GameVersion { get; set; }
+
+        /// <summary>
+        /// Indicates if this new release is a snapshot.
+        /// </summary>
+        public bool IsSnapshot { get; set; }
+
+        /// <summary>
+        /// The mapping type name for which a release gets made.
+        /// </summary>
+        [Required]
+        public string MappingTypeName { get; set; }
     }
 }

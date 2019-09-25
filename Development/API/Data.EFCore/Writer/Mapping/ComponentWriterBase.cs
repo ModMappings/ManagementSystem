@@ -41,7 +41,7 @@ namespace Data.EFCore.Writer.Mapping
             var componentQueryable = await AsQueryable();
 
             return componentQueryable.Where(c =>
-                c.VersionedMappings.Any(v => v.Mappings.Any(m => m.Releases.Any(r => r.Release.Id == releaseId))));
+                c.VersionedComponents.Any(v => v.Mappings.Any(m => m.Releases.Any(r => r.Release.Id == releaseId))));
         }
 
         public async Task<IQueryable<Component>> GetByRelease(string releaseName)
@@ -68,7 +68,7 @@ namespace Data.EFCore.Writer.Mapping
         {
             var componentQueryable = await AsQueryable();
 
-            return componentQueryable.Where(c => c.VersionedMappings.Any(v => v.GameVersion.Id == versionId));
+            return componentQueryable.Where(c => c.VersionedComponents.Any(v => v.GameVersion.Id == versionId));
         }
 
         public async Task<IQueryable<Component>> GetByVersion(string versionName)
@@ -87,7 +87,7 @@ namespace Data.EFCore.Writer.Mapping
         {
             var componentQueryable = await AsQueryable();
 
-            return componentQueryable.Where(c => c.VersionedMappings.Any(v =>
+            return componentQueryable.Where(c => c.VersionedComponents.Any(v =>
                 v.Mappings.Any() && v.Mappings.OrderByDescending(m => m.CreatedOn).FirstOrDefault().InputMapping ==
                 name));
         }
@@ -96,7 +96,7 @@ namespace Data.EFCore.Writer.Mapping
         {
             var componentQueryable = await AsQueryable();
 
-            return componentQueryable.Where(c => c.VersionedMappings.Any(v =>
+            return componentQueryable.Where(c => c.VersionedComponents.Any(v =>
                 v.GameVersion.Id == versionId && v.Mappings.Any() &&
                 v.Mappings.OrderByDescending(m => m.CreatedOn).FirstOrDefault().InputMapping ==
                 name));
@@ -111,7 +111,7 @@ namespace Data.EFCore.Writer.Mapping
         {
             var componentQueryable = await AsQueryable();
 
-            return componentQueryable.Where(c => c.VersionedMappings.Any(v =>
+            return componentQueryable.Where(c => c.VersionedComponents.Any(v =>
                 v.Mappings.Any() &&
                 v.Mappings.OrderByDescending(m => m.CreatedOn).First().InputMapping == name &&
                 v.Mappings.OrderByDescending(m => m.CreatedOn).First().Releases.Any(r => r.Id == releaseId)));

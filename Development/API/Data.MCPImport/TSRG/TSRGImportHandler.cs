@@ -12,6 +12,7 @@ using Data.MCPImport.Extensions;
 using Data.MCPImport.Maven;
 using Flurl.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace Data.MCPImport.TSRG
@@ -54,6 +55,8 @@ namespace Data.MCPImport.TSRG
                 return;
             }
 
+            releases = releases.Take(1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
             _logger.LogWarning("Importing: " + releases.Count + " new MCP config releases");
             _logger.LogInformation("Importing the following MCP Config releases:");
             foreach (var releaseName in releases.Keys)
@@ -62,7 +65,7 @@ namespace Data.MCPImport.TSRG
             }
 
             _logger.LogDebug("Saving newly created data.");
-            await SaveInitialData(context, gameVersions.Values, releases.Values, tsrgMappingType);
+            //await SaveInitialData(context, gameVersions.Values, releases.Values, tsrgMappingType);
             _logger.LogInformation("Saved initial import data into database. Attempting data import.");
 
             var mcVersionClassVersionMappings = (await Task.WhenAll(releases.Keys.Select(r =>
@@ -160,13 +163,23 @@ namespace Data.MCPImport.TSRG
             var release = releases[mcpConfigArtifact.Version];
             var gameVersion = release.GameVersion;
 
-            var zip = new ZipArchive(await mcpConfigArtifact.Path.GetStreamAsync());
+            ZipArchive zip;
+            try
+            {
+                zip = new ZipArchive(await mcpConfigArtifact.Path.GetStreamAsync());
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e, "Failed to download the MCP Config artifact data.");
+                return new List<VersionedComponent>();
+            }
+
             var tsrgJoinedFileContents = zip.ReadAllLines(Constants.TSRG_JOINED_DATA, Encoding.UTF8).ToList();
             var staticMethodsFileContents = zip.ReadAllLines(Constants.TSRG_STATIC_METHOD_DATA, Encoding.UTF8).ToList();
 
             _logger.LogInformation($"Found: {tsrgJoinedFileContents.Count()} entries in the tsrg information.");
 
-            var classVersionedMappings = new List<VersionedComponent>();
+            var classVersionedComponents = new List<VersionedComponent>();
             VersionedComponent currentClass = null;
 
             var totalLineCount = tsrgJoinedFileContents.Count;
@@ -190,7 +203,7 @@ namespace Data.MCPImport.TSRG
                     //Register previous class:
                     if (currentClass != null)
                     {
-                        classVersionedMappings.Add(currentClass);
+                        classVersionedComponents.Add(currentClass);
                         currentClass = null;
                     }
 
@@ -211,12 +224,13 @@ namespace Data.MCPImport.TSRG
                     {
                         CreatedOn = DateTime.Now,
                         Documentation = "",
+                        Distribution = Distribution.UNKNOWN,
                         Id = Guid.NewGuid(),
                         InputMapping = inputMapping,
                         OutputMapping = outputMapping,
                         Proposal = null,
                         Releases = new List<ReleaseComponent>(),
-                        Mapping = null,
+                        VersionedComponent = null,
                         MappingType = tsrgMappingType
                     };
 
@@ -246,10 +260,11 @@ namespace Data.MCPImport.TSRG
                         Package = package,
                         Fields = new List<FieldMetadata>(),
                         Methods = new List<MethodMetadata>(),
-                        VersionedComponent = currentClass
+                        VersionedComponent = currentClass,
+                        VersionedComponentForeignKey = currentClass.Id
                     };
 
-                    committedMapping.Mapping = currentClass;
+                    committedMapping.VersionedComponent = currentClass;
                 }
                 else if (tsrgLine.Contains('('))
                 {
@@ -267,11 +282,12 @@ namespace Data.MCPImport.TSRG
                         Id = Guid.NewGuid(),
                         CreatedOn = DateTime.Now,
                         Documentation = "",
+                        Distribution = Distribution.UNKNOWN,
                         InputMapping = inputMapping,
                         OutputMapping = outputMapping,
                         Proposal = null,
                         Releases = new List<ReleaseComponent>(),
-                        Mapping = null,
+                        VersionedComponent = null,
                         MappingType = tsrgMappingType
                     };
 
@@ -290,6 +306,7 @@ namespace Data.MCPImport.TSRG
                         CreatedBy = Guid.Empty,
                         CreatedOn = DateTime.Now,
                         GameVersion = gameVersion,
+                        Component = null,
                         Id = Guid.NewGuid(),
                     };
 
@@ -299,11 +316,12 @@ namespace Data.MCPImport.TSRG
                         IsStatic = staticMethodsFileContents.Contains(outputMapping),
                         MemberOf = currentClass.Metadata as ClassMetadata,
                         Parameters = new List<ParameterMetadata>(),
+                        VersionedComponent = methodVersionedMapping,
+                        VersionedComponentForeignKey = methodVersionedMapping.Id
                     };
 
-                    committedMappingEntry.Mapping = methodVersionedMapping;
-                    (currentClass.Metadata as ClassMetadata).Methods.Add(
-                        methodVersionedMapping.Metadata as MethodMetadata);
+                    committedMappingEntry.VersionedComponent = methodVersionedMapping;
+                    (currentClass.Metadata as ClassMetadata).Methods.Add(methodVersionedMapping.Metadata as MethodMetadata);
                 }
                 else
                 {
@@ -319,11 +337,12 @@ namespace Data.MCPImport.TSRG
                         Id = Guid.NewGuid(),
                         CreatedOn = DateTime.Now,
                         Documentation = "",
+                        Distribution = Distribution.UNKNOWN,
                         InputMapping = inputMapping,
                         OutputMapping = outputMapping,
                         Proposal = null,
                         Releases = new List<ReleaseComponent>(),
-                        Mapping = null,
+                        VersionedComponent = null,
                         MappingType = tsrgMappingType
                     };
 
@@ -349,152 +368,454 @@ namespace Data.MCPImport.TSRG
                     versionedMapping.Metadata = new FieldMetadata()
                     {
                         IsStatic = false,
-                        MemberOf = currentClass.Metadata as ClassMetadata
+                        MemberOf = currentClass.Metadata as ClassMetadata,
+                        VersionedComponent = versionedMapping,
+                        VersionedComponentForeignKey = versionedMapping.Id
                     };
 
-                    committedMappingEntry.Mapping = versionedMapping;
+                    committedMappingEntry.VersionedComponent = versionedMapping;
                     (currentClass.Metadata as ClassMetadata).Fields.Add(versionedMapping.Metadata as FieldMetadata);
                 }
             }
 
-            return classVersionedMappings;
+            //Register last class:
+            if (currentClass != null)
+            {
+                classVersionedComponents.Add(currentClass);
+            }
+
+            return classVersionedComponents;
         }
 
         private Task<List<Component>> DetermineCrossVersionClassHistory(MCMSContext context, MappingType tsrgMappingType,
             IEnumerable<IEnumerable<VersionedComponent>> mcVersionClassVersionMappings)
         {
-            _logger.LogWarning(
+            try
+            {
+                _logger.LogWarning(
                 $"Starting the linear processing of MCP data. Attempting to determine cross version history of classes.");
 
-            var classes = mcVersionClassVersionMappings
-                .SelectMany(entry => entry)
-                .GroupBy(mapping => new ClassIdentification((mapping.Metadata as ClassMetadata).Package,
-                    mapping.Mappings.First().OutputMapping))
-                .Select(matchingGrouping =>
+                var groupedClassData = mcVersionClassVersionMappings
+                    .SelectMany(entry => entry)
+                    .GroupBy(mapping => new ClassIdentification((mapping.Metadata as ClassMetadata).Package,
+                        mapping.Mappings.First().OutputMapping))
+                    .ToList();
+
+                var groupedClassKeys = groupedClassData.Select(g => g.Key).Distinct().ToList();
+                var existingData = context.Components.Where(c =>
+                        c.Type == ComponentType.CLASS)
+                    .Include(c => c.VersionedComponents)
+                    .Include("VersionedComponents.Metadata")
+                    .Include("VersionedComponents.Metadata.Methods")
+                    .Include("VersionedComponents.Metadata.Fields")
+                    .Include("VersionedComponents.Mappings")
+                    .Include("VersionedComponents.Mappings.MappingType")
+                    .Include("VersionedComponents.Mappings.Releases")
+                    .Include("VersionedComponents.Mappings.Releases.Release")
+                    .ToList()
+                    .Where(c =>
+                        c.VersionedComponents.Any(vc =>
+                            groupedClassKeys.Any(k =>
+                                (vc.Metadata as ClassMetadata).Package == k.Package &&
+                                vc.Mappings.Any(lm =>
+                                    lm.OutputMapping == k.TSRGOutputMapping && lm.MappingType == tsrgMappingType)
+                            )))
+                    .AsEnumerable()
+                    .Join(groupedClassKeys,
+                        c => groupedClassKeys.FirstOrDefault(k => c.VersionedComponents.Any(vc =>
+                            (vc.Metadata as ClassMetadata).Package == k.Package &&
+                            vc.Mappings.Any(lm =>
+                                lm.OutputMapping == k.TSRGOutputMapping && lm.MappingType == tsrgMappingType)
+                        )),
+                        k => k,
+                        (c, k) => new Tuple<ClassIdentification, Component>(k, c))
+                    .GroupBy(t => t.Item1)
+                    .Where(g => g.Count() == 1)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.ToList()[0].Item2
+                    );
+
+                var analysisData =
+                    groupedClassData
+                    .Select(matchingGrouping =>
+                    {
+                        var usingExisting = existingData.ContainsKey(matchingGrouping.Key);
+                        var component = existingData.GetValueOrDefault(matchingGrouping.Key, new Component
+                            {
+                                Id = Guid.NewGuid(),
+                                VersionedComponents = new List<VersionedComponent>(),
+                                Type = ComponentType.CLASS
+                            });
+
+                        return (component: component, usingExisting: usingExisting, matchingGrouping: matchingGrouping);
+                    }).ToList();
+
+                foreach (var (component, usingExisting, matchingGrouping) in analysisData)
                 {
-                    var existing = context.VersionedComponents.Where(vc =>
-                                           vc.Component.Type == ComponentType.CLASS &&
-                                           (vc.Metadata as ClassMetadata).Package == matchingGrouping.Key.Package && vc.Mappings.Any(
-                                               lme =>
-                                                   lme.OutputMapping == matchingGrouping.Key.TSRGOutputMappingName))
-                                       .Select(vc => vc.Component)
-                                       .FirstOrDefault() ?? new Component()
-                                   {
-                                       Id = Guid.NewGuid(),
-                                       VersionedMappings = new List<VersionedComponent>(),
-                                       Type = ComponentType.CLASS
-                                   };
+                    component.VersionedComponents.AddRange(matchingGrouping.Where(vc => component.VersionedComponents.All(exvc => exvc.Id != vc.Id)));
 
-                    existing.VersionedMappings.AddRange(matchingGrouping.ToList());
+                    var reducedVersionedComponents =
+                        component.VersionedComponents
+                            .GroupBy(vc => vc.GameVersion)
+                            .ToList();
 
-                    return existing;
-                }).ToList();
+                    var reducedProcessedVersionedComponents = reducedVersionedComponents.Select(reducedVersionedMapping =>
+                    {
+                        if (reducedVersionedMapping.Count() == 1)
+                            return reducedVersionedMapping.ToList()[0];
 
-            classes.ForEach(cls => cls.VersionedMappings.ForEach(clsvm => clsvm.Component = cls));
+                        var oldestVersionedComponent = reducedVersionedMapping.OrderBy(vm => vm.CreatedOn).First();
+                        var liveMappings = reducedVersionedMapping.SelectMany(r => r.Mappings).ToList();
+                        var groupedLiveMappings = liveMappings.GroupBy(lm => lm.OutputMapping).ToList();
+                        var processedLiveMappings = groupedLiveMappings.Select(groupedLiveMapping =>
+                        {
+                            if (groupedLiveMapping.Count() == 1)
+                                return groupedLiveMapping.ToList()[0];
 
-            return Task.FromResult(classes);
+                            var oldestLiveMappings = groupedLiveMapping.OrderBy(lm => lm.CreatedOn).First();
+                            var releaseComponents = groupedLiveMapping.SelectMany(lm => lm.Releases).ToList();
+                            oldestLiveMappings.Releases.Clear();
+                            foreach (var releaseComponent in releaseComponents)
+                            {
+                                releaseComponent.Member = oldestLiveMappings;
+                                oldestLiveMappings.Releases.Add(releaseComponent);
+                            }
+
+                            return oldestLiveMappings;
+                        });
+
+                        oldestVersionedComponent.Mappings = processedLiveMappings.ToList();
+
+                        return oldestVersionedComponent;
+                    });
+
+                    component.VersionedComponents = reducedProcessedVersionedComponents.ToList();
+
+                    foreach (var versionedComponent in component.VersionedComponents)
+                    {
+                        versionedComponent.Component = component;
+                    }
+                }
+
+                var classes = analysisData.Select(d => d.component).ToList();
+                return Task.FromResult(classes);
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e, "Failed to process class data linearly.");
+                throw;
+            }
         }
 
         private Task<List<Component>> DetermineCrossVersionMethodHistory(MCMSContext context,
             MappingType tsrgMappingType, List<Component> classesComponents)
         {
-            _logger.LogWarning(
+            try
+            {
+                _logger.LogWarning(
                 $"Continuing the linear processing of MCP data. Attempting to determine cross version history of methods.");
 
-            var methods = new List<Component>();
+                var methods = new List<Component>();
 
-            classesComponents.ForEach(classMapping =>
+                var globalExistingMethodData = context.Components.Where(c =>
+                        c.Type == ComponentType.METHOD)
+                    .Include(c => c.VersionedComponents)
+                    .Include("VersionedComponents.Metadata")
+                    .Include("VersionedComponents.Mappings")
+                    .Include("VersionedComponents.Mappings.MappingType")
+                    .Include("VersionedComponents.Mappings.Releases")
+                    .Include("VersionedComponents.Mappings.Releases.Release")
+                    .ToList();
+
+                var methodVersionedComponents = classesComponents
+                    .SelectMany(c => c.VersionedComponents)
+                    .Select(mapping => mapping.Metadata as ClassMetadata)
+                    .SelectMany(clsmd => clsmd.Methods)
+                    .Select(mthmd => mthmd.VersionedComponent);
+
+                var groupedMethodData = methodVersionedComponents
+                    .GroupBy(method =>
+                        new MethodIdentification(method.Mappings.First().OutputMapping))
+                    .ToList();
+
+                var groupedMethodKeys = groupedMethodData.Select(g => g.Key).Distinct().ToList();
+
+                var existingData =
+                    globalExistingMethodData
+                        .Where(c =>
+                            c.VersionedComponents.Any(vc =>
+                                groupedMethodKeys.Any(k =>
+                                    vc.Mappings.Any(lm =>
+                                        lm.OutputMapping == k.TSRGOutputMapping && lm.MappingType == tsrgMappingType)
+                                )))
+                        .AsEnumerable()
+                        .Join(groupedMethodKeys,
+                            c => groupedMethodKeys.FirstOrDefault(k => c.VersionedComponents.Any(vc =>
+                                vc.Mappings.Any(lm =>
+                                    lm.OutputMapping == k.TSRGOutputMapping && lm.MappingType == tsrgMappingType)
+                            )),
+                            k => k,
+                            (c, k) => new Tuple<MethodIdentification, Component>(k, c))
+                        .GroupBy(t => t.Item1)
+                        .Where(g => g.Count() == 1)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.ToList()[0].Item2
+                        );
+
+                var analysisData =
+                    groupedMethodData
+                        .Select(matchingGrouping =>
+                        {
+                            var usingExisting = existingData.ContainsKey(matchingGrouping.Key);
+                            var component = existingData.GetValueOrDefault(matchingGrouping.Key, new Component
+                            {
+                                Id = Guid.NewGuid(),
+                                VersionedComponents = new List<VersionedComponent>(),
+                                Type = ComponentType.METHOD
+                            });
+
+                            return (component: component, usingExisting: usingExisting, matchingGrouping: matchingGrouping);
+                        }).ToList();
+
+                foreach (var (component, usingExisting, matchingGrouping) in analysisData)
+                {
+                    component.VersionedComponents.AddRange(matchingGrouping.Where(vc => component.VersionedComponents.All(exvc => exvc.Id != vc.Id)));
+                    var reducedVersionedComponents =
+                        component.VersionedComponents
+                            .GroupBy(vc => vc.GameVersion)
+                            .ToList();
+
+                    var reducedProcessedVersionedComponents = reducedVersionedComponents.Select(reducedVersionedMapping =>
+                    {
+                        if (reducedVersionedMapping.Count() == 1)
+                            return reducedVersionedMapping.ToList()[0];
+
+                        var oldestVersionedComponent = reducedVersionedMapping.OrderBy(vm => vm.CreatedOn).First();
+                        var liveMappings = reducedVersionedMapping.SelectMany(r => r.Mappings).ToList();
+                        var groupedLiveMappings = liveMappings.GroupBy(lm => lm.OutputMapping).ToList();
+                        var processedLiveMappings = groupedLiveMappings.Select(groupedLiveMapping =>
+                        {
+                            if (groupedLiveMapping.Count() == 1)
+                                return groupedLiveMapping.ToList()[0];
+
+                            var oldestLiveMappings = groupedLiveMapping.OrderBy(lm => lm.CreatedOn).First();
+                            var releaseComponents = groupedLiveMapping.SelectMany(lm => lm.Releases).ToList();
+                            oldestLiveMappings.Releases.Clear();
+                            foreach (var releaseComponent in releaseComponents)
+                            {
+                                releaseComponent.Member = oldestLiveMappings;
+                                oldestLiveMappings.Releases.Add(releaseComponent);
+                            }
+
+                            return oldestLiveMappings;
+                        });
+
+                        oldestVersionedComponent.Mappings = processedLiveMappings.ToList();
+
+                        return oldestVersionedComponent;
+                    });
+
+                    component.VersionedComponents = reducedProcessedVersionedComponents.ToList();
+
+                    foreach (var versionedComponent in component.VersionedComponents)
+                    {
+                        versionedComponent.Component = component;
+                    }
+
+                    methods.Add(component);
+                }
+
+                return Task.FromResult(methods);
+            }
+            catch (Exception e)
             {
-                methods
-                    .AddRange(
-                        classMapping.VersionedMappings
-                            .Select(mapping => mapping.Metadata as ClassMetadata)
-                            .SelectMany(clsmd => clsmd.Methods)
-                            .Select(mthmd => mthmd.MemberOf.VersionedComponent)
-                            .GroupBy(method =>
-                                new MethodIdentification(method.Mappings.First().OutputMapping))
-                            .Select(
-                                methodGrouping =>
-                                {
-                                    var existing = context.VersionedComponents.Where(vc =>
-                                                           vc.Component.Type == ComponentType.METHOD &&
-                                                           vc.Mappings.Any(
-                                                               lme =>
-                                                                   lme.OutputMapping == methodGrouping.Key.TSRGOutputMapping))
-                                                       .Select(vc => vc.Component)
-                                                       .FirstOrDefault() ?? new Component()
-                                                   {
-                                                       Id = Guid.NewGuid(),
-                                                       VersionedMappings = new List<VersionedComponent>(),
-                                                       Type = ComponentType.METHOD
-                                                   };
-
-                                    existing.VersionedMappings.AddRange(methodGrouping.ToList());
-
-                                    return existing;
-                                }));
-            });
-
-            methods.ForEach(mtd => mtd.VersionedMappings.ForEach(mtdvm => mtdvm.Component = mtd));
-
-            return Task.FromResult(methods);
+                _logger.LogCritical(e, "Failed to process method data linearly.");
+                throw;
+            }
         }
 
         private Task<List<Component>> DetermineCrossVersionFieldHistory(MCMSContext context,
             MappingType tsrgMappingType, List<Component> classesComponents)
         {
-            _logger.LogWarning(
+            try
+            {
+                _logger.LogWarning(
                 $"Continuing the linear processing of MCP data. Attempting to determine cross version history of fields.");
 
-            var fields = new List<Component>();
+                var fields = new List<Component>();
 
-            classesComponents.ForEach(classMapping =>
+                var globalExistingFieldData = context.Components.Where(c =>
+                        c.Type == ComponentType.FIELD)
+                    .Include(c => c.VersionedComponents)
+                    .Include("VersionedComponents.Metadata")
+                    .Include("VersionedComponents.Mappings")
+                    .Include("VersionedComponents.Mappings.MappingType")
+                    .Include("VersionedComponents.Mappings.Releases")
+                    .Include("VersionedComponents.Mappings.Releases.Release")
+                    .ToList();
+
+                var fieldVersionedComponents = classesComponents
+                    .SelectMany(c => c.VersionedComponents)
+                    .Select(mapping => mapping.Metadata as ClassMetadata)
+                    .SelectMany(clsmd => clsmd.Fields)
+                    .Select(mthmd => mthmd.VersionedComponent);
+
+                var groupedFieldData = fieldVersionedComponents
+                    .GroupBy(field =>
+                        new FieldIdentification(field.Mappings.First().OutputMapping))
+                    .ToList();
+
+                var groupedFieldKeys = groupedFieldData.Select(g => g.Key).Distinct().ToList();
+
+                var existingData =
+                    globalExistingFieldData
+                        .Where(c =>
+                            c.VersionedComponents.Any(vc =>
+                                groupedFieldKeys.Any(k =>
+                                    vc.Mappings.Any(lm =>
+                                        lm.OutputMapping == k.TSRGOutputMapping && lm.MappingType == tsrgMappingType)
+                                )))
+                        .AsEnumerable()
+                        .Join(groupedFieldKeys,
+                            c => groupedFieldKeys.FirstOrDefault(k => c.VersionedComponents.Any(vc =>
+                                vc.Mappings.Any(lm =>
+                                    lm.OutputMapping == k.TSRGOutputMapping && lm.MappingType == tsrgMappingType)
+                            )),
+                            k => k,
+                            (c, k) => new Tuple<FieldIdentification, Component>(k, c))
+                        .GroupBy(t => t.Item1)
+                        .Where(g => g.Count() == 1)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.ToList()[0].Item2
+                        );
+
+                var analysisData =
+                    groupedFieldData
+                        .Select(matchingGrouping =>
+                        {
+                            var usingExisting = existingData.ContainsKey(matchingGrouping.Key);
+                            var component = existingData.GetValueOrDefault(matchingGrouping.Key, new Component
+                            {
+                                Id = Guid.NewGuid(),
+                                VersionedComponents = new List<VersionedComponent>(),
+                                Type = ComponentType.FIELD
+                            });
+
+                            return (component: component, usingExisting: usingExisting, matchingGrouping: matchingGrouping);
+                        }).ToList();
+
+                foreach (var (component, usingExisting, matchingGrouping) in analysisData)
+                {
+                    component.VersionedComponents.AddRange(matchingGrouping.Where(vc => component.VersionedComponents.All(exvc => exvc.Id != vc.Id)));
+                    var reducedVersionedComponents =
+                        component.VersionedComponents
+                            .GroupBy(vc => vc.GameVersion)
+                            .ToList();
+
+                    var reducedProcessedVersionedComponents = reducedVersionedComponents.Select(reducedVersionedMapping =>
+                    {
+                        if (reducedVersionedMapping.Count() == 1)
+                            return reducedVersionedMapping.ToList()[0];
+
+                        var oldestVersionedComponent = reducedVersionedMapping.OrderBy(vm => vm.CreatedOn).First();
+                        var liveMappings = reducedVersionedMapping.SelectMany(r => r.Mappings).ToList();
+                        var groupedLiveMappings = liveMappings.GroupBy(lm => lm.OutputMapping).ToList();
+                        var processedLiveMappings = groupedLiveMappings.Select(groupedLiveMapping =>
+                        {
+                            if (groupedLiveMapping.Count() == 1)
+                                return groupedLiveMapping.ToList()[0];
+
+                            var oldestLiveMappings = groupedLiveMapping.OrderBy(lm => lm.CreatedOn).First();
+                            var releaseComponents = groupedLiveMapping.SelectMany(lm => lm.Releases).ToList();
+                            oldestLiveMappings.Releases.Clear();
+                            foreach (var releaseComponent in releaseComponents)
+                            {
+                                releaseComponent.Member = oldestLiveMappings;
+                                oldestLiveMappings.Releases.Add(releaseComponent);
+                            }
+
+                            return oldestLiveMappings;
+                        });
+
+                        oldestVersionedComponent.Mappings = processedLiveMappings.ToList();
+
+                        return oldestVersionedComponent;
+                    });
+
+                    component.VersionedComponents = reducedProcessedVersionedComponents.ToList();
+
+                    foreach (var versionedComponent in component.VersionedComponents)
+                    {
+                        versionedComponent.Component = component;
+                    }
+
+                    fields.Add(component);
+                }
+
+                return Task.FromResult(fields);
+            }
+            catch (Exception e)
             {
-                fields
-                    .AddRange(
-                        classMapping.VersionedMappings
-                            .Select(mapping => mapping.Metadata as ClassMetadata)
-                            .SelectMany(clsmd => clsmd.Fields)
-                            .Select(mthmd => mthmd.MemberOf.VersionedComponent)
-                            .GroupBy(field =>
-                                new FieldIdentification(field.Mappings.First().OutputMapping))
-                            .Select(
-                                fieldGrouping =>
-                                {
-                                    var existing = context.VersionedComponents.Where(vc =>
-                                                           vc.Component.Type == ComponentType.FIELD &&
-                                                           vc.Mappings.Any(
-                                                               lme =>
-                                                                   lme.OutputMapping == fieldGrouping.Key.TSRGOutputMapping))
-                                                       .Select(vc => vc.Component)
-                                                       .FirstOrDefault() ?? new Component()
-                                                   {
-                                                       Id = Guid.NewGuid(),
-                                                       VersionedMappings = new List<VersionedComponent>(),
-                                                       Type = ComponentType.FIELD
-                                                   };
-
-                                    existing.VersionedMappings.AddRange(fieldGrouping.ToList());
-
-                                    return existing;
-                                }));
-            });
-
-            fields.ForEach(mtd => mtd.VersionedMappings.ForEach(fdvm => fdvm.Component = mtd));
-
-            return Task.FromResult(fields);
+                _logger.LogCritical(e, "Failed to process field data linearly.");
+                throw;
+            }
         }
 
-        private Task SaveData(MCMSContext context, IEnumerable<Component> classes, IEnumerable<Component> methods,
-            IEnumerable<Component> fields)
+        private async Task SaveData(MCMSContext context, List<Component> classes, List<Component> methods,
+            List<Component> fields)
         {
             _logger.LogWarning($"Found: {classes.Count()} classes, {methods.Count()} methods and {fields.Count()} fields.");
 
-            context.Components.AddRange(classes);
-            context.Components.AddRange(methods);
-            context.Components.AddRange(fields);
+            await AttachComponents(context, classes, "class");
+            //await AttachComponents(context, methods, "method");
+            //await AttachComponents(context, fields, "field");
 
-            context.SaveChanges();
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to save imported data!");
+                throw;
+            }
+        }
+
+        private Task AttachComponents(MCMSContext context, List<Component> componentsToAttach, string displayName)
+        {
+            _logger.LogWarning($"Attaching {componentsToAttach.Count} {displayName} components to the context.");
+            var totalComponentCount = componentsToAttach.Count;
+            var currentlyProcessed = 0;
+            var lastOutputPercentage = -1;
+
+            foreach (var component in componentsToAttach.ToList())
+            {
+                currentlyProcessed++;
+                var currentPercentage = (int) Math.Floor(currentlyProcessed / (double) totalComponentCount * 100);
+                if (lastOutputPercentage < currentPercentage)
+                {
+                    lastOutputPercentage = currentPercentage;
+                    _logger.LogInformation(
+                        $"  > Attached: {currentPercentage}% ({currentlyProcessed}/{totalComponentCount}) {displayName} components.");
+                }
+
+                try
+                {
+                    if (context.Entry(component).State == EntityState.Detached)
+                        context.Add(component);
+
+                    context.SaveChanges();
+                    context.Attach(component);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogCritical(ex, "Failed to save imported data!");
+                    throw;
+                }
+            }
 
             return Task.CompletedTask;
         }
@@ -505,20 +826,20 @@ namespace Data.MCPImport.TSRG
             public ClassIdentification(string package, string tsrgOutputMappingName)
             {
                 Package = package ?? throw new ArgumentNullException(nameof(package));
-                TSRGOutputMappingName = tsrgOutputMappingName ??
+                TSRGOutputMapping = tsrgOutputMappingName ??
                                         throw new ArgumentNullException(nameof(tsrgOutputMappingName));
             }
 
             public string Package { get; }
 
-            public string TSRGOutputMappingName { get; }
+            public string TSRGOutputMapping { get; }
 
 
             public bool Equals(ClassIdentification other)
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return Package == other.Package && TSRGOutputMappingName == other.TSRGOutputMappingName;
+                return Package == other.Package && TSRGOutputMapping == other.TSRGOutputMapping;
             }
 
             public override bool Equals(object obj)
@@ -534,7 +855,7 @@ namespace Data.MCPImport.TSRG
                 unchecked
                 {
                     return ((Package != null ? Package.GetHashCode() : 0) * 397) ^
-                           (TSRGOutputMappingName != null ? TSRGOutputMappingName.GetHashCode() : 0);
+                           (TSRGOutputMapping != null ? TSRGOutputMapping.GetHashCode() : 0);
                 }
             }
         }

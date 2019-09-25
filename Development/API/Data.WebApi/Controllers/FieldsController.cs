@@ -221,6 +221,7 @@ namespace Data.WebApi.Controllers
             versionedFieldMapping.Metadata = new FieldMetadata
             {
                 VersionedComponent = versionedFieldMapping,
+                VersionedComponentForeignKey = versionedFieldMapping.Id,
                 MemberOf = memberOf.Metadata as ClassMetadata,
                 IsStatic = mapping.IsStatic
             };
@@ -229,12 +230,13 @@ namespace Data.WebApi.Controllers
                 .Select(mappingData => new LiveMappingEntry()
                 {
                     Documentation = mappingData.Documentation,
+                    Distribution = mappingData.Distribution,
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
                     Proposal = null,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = versionedFieldMapping,
+                    VersionedComponent = versionedFieldMapping,
                     CreatedOn = DateTime.Now
                 });
 
@@ -244,7 +246,7 @@ namespace Data.WebApi.Controllers
             {
                 Id = Guid.NewGuid(),
                 Type = ComponentType.FIELD,
-                VersionedMappings = new List<VersionedComponent>() {versionedFieldMapping}
+                VersionedComponents = new List<VersionedComponent>() {versionedFieldMapping}
             };
 
             await ComponentWriter.Add(fieldMapping);
@@ -286,7 +288,7 @@ namespace Data.WebApi.Controllers
             if (fieldMapping == null)
                 return BadRequest("Unknown field mapping to create the versioned mapping for.");
 
-            if (fieldMapping.VersionedMappings.Any(versionedMapping =>
+            if (fieldMapping.VersionedComponents.Any(versionedMapping =>
                 versionedMapping.GameVersion.Id == mapping.GameVersion))
                 return Conflict();
 
@@ -302,6 +304,7 @@ namespace Data.WebApi.Controllers
             versionedFieldMapping.Metadata = new FieldMetadata
             {
                 VersionedComponent = versionedFieldMapping,
+                VersionedComponentForeignKey = versionedFieldMapping.Id,
                 MemberOf = memberOf.Metadata as ClassMetadata,
                 IsStatic = mapping.IsStatic
             };
@@ -310,12 +313,13 @@ namespace Data.WebApi.Controllers
                 .Select(mappingData => new LiveMappingEntry()
                 {
                     Documentation = mappingData.Documentation,
+                    Distribution = mappingData.Distribution,
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
                     Proposal = null,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = versionedFieldMapping,
+                    VersionedComponent = versionedFieldMapping,
                     CreatedOn = DateTime.Now
                 });
 
@@ -330,7 +334,7 @@ namespace Data.WebApi.Controllers
             return new FieldReadModel
             {
                 Id = component.Id,
-                Versioned = component.VersionedMappings.ToList().Select(ConvertVersionedDbModelToReadModel)
+                Versioned = component.VersionedComponents.ToList().Select(ConvertVersionedDbModelToReadModel)
             };
         }
 

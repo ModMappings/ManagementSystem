@@ -223,6 +223,7 @@ namespace Data.WebApi.Controllers
             versionedMethodMapping.Metadata = new MethodMetadata
             {
                 VersionedComponent = versionedMethodMapping,
+                VersionedComponentForeignKey = versionedMethodMapping.Id,
                 MemberOf = memberOf.Metadata as ClassMetadata,
                 Parameters = new List<ParameterMetadata>(),
                 Descriptor = mapping.Descriptor,
@@ -233,12 +234,13 @@ namespace Data.WebApi.Controllers
                 .Select(mappingData => new LiveMappingEntry()
                 {
                     Documentation = mappingData.Documentation,
+                    Distribution = mappingData.Distribution,
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
                     Proposal = null,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = versionedMethodMapping,
+                    VersionedComponent = versionedMethodMapping,
                     CreatedOn = DateTime.Now
                 });
 
@@ -248,7 +250,7 @@ namespace Data.WebApi.Controllers
             {
                 Id = Guid.NewGuid(),
                 Type = ComponentType.METHOD,
-                VersionedMappings = new List<VersionedComponent>() {versionedMethodMapping}
+                VersionedComponents = new List<VersionedComponent>() {versionedMethodMapping}
             };
 
             await ComponentWriter.Add(methodMapping);
@@ -290,7 +292,7 @@ namespace Data.WebApi.Controllers
             if (methodMapping == null)
                 return BadRequest("Unknown method mapping to create the versioned mapping for.");
 
-            if (methodMapping.VersionedMappings.Any(versionedMapping =>
+            if (methodMapping.VersionedComponents.Any(versionedMapping =>
                 versionedMapping.GameVersion.Id == mapping.GameVersion))
                 return Conflict();
 
@@ -306,6 +308,7 @@ namespace Data.WebApi.Controllers
             versionedMethodMapping.Metadata = new MethodMetadata
             {
                 VersionedComponent = versionedMethodMapping,
+                VersionedComponentForeignKey = versionedMethodMapping.Id,
                 MemberOf = memberOf.Metadata as ClassMetadata,
                 Parameters = new List<ParameterMetadata>(),
                 Descriptor = mapping.Descriptor,
@@ -316,12 +319,13 @@ namespace Data.WebApi.Controllers
                 .Select(mappingData => new LiveMappingEntry()
                 {
                     Documentation = mappingData.Documentation,
+                    Distribution = mappingData.Distribution,
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = MappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
                     Proposal = null,
                     Releases = new List<ReleaseComponent>(),
-                    Mapping = versionedMethodMapping,
+                    VersionedComponent = versionedMethodMapping,
                     CreatedOn = DateTime.Now
                 });
 
@@ -336,7 +340,7 @@ namespace Data.WebApi.Controllers
             return new MethodReadModel
             {
                 Id = component.Id,
-                Versioned = component.VersionedMappings.ToList().Select(ConvertVersionedDbModelToReadModel)
+                Versioned = component.VersionedComponents.ToList().Select(ConvertVersionedDbModelToReadModel)
             };
         }
 

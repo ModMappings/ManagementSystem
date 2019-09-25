@@ -1,4 +1,5 @@
 using System;
+using Data.Core.Models.Core;
 
 namespace Data.WebApi.Model.Read.Core
 {
@@ -31,5 +32,10 @@ namespace Data.WebApi.Model.Read.Core
         /// The name of the mapping used.
         /// </summary>
         public string MappingName { get; set; }
+
+        /// <summary>
+        /// The distribution that the mapping is part of.
+        /// </summary>
+        public Distribution Distribution { get; set; }
     }
 }
