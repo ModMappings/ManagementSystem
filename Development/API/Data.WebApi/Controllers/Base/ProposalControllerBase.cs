@@ -72,6 +72,14 @@ namespace Data.WebApi.Controllers.Base
             if (user == null)
                 return Unauthorized();
 
+            var requestedMappingType = _mappingTypeReader.GetByName(proposalModel.MappingTypeName);
+            if (requestedMappingType == null)
+                return NotFound(
+                    $"Their is no mapping type with the given name: {proposalModel.MappingTypeName}");
+
+            if (classVersionedEntry.LockedMappingTypes.Any(l => l.MappingType.Name == proposalModel.MappingTypeName))
+                return Unauthorized("The component is locked for the given version and mapping name.");
+
             var initialVotedFor = new List<Guid> {user.Id};
             var initialVotedAgainst = new List<Guid>();
 

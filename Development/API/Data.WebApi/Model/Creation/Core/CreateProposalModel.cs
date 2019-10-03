@@ -8,14 +8,9 @@ namespace Data.WebApi.Model.Creation.Core
     public class CreateProposalModel
     {
         /// <summary>
-        /// The id of the type for which the proposal was made.
+        /// The id of the versioned component for which the proposal was made.
         /// </summary>
         public Guid ProposedFor { get; set; }
-
-        /// <summary>
-        /// The id of the game version for which the proposal is created.
-        /// </summary>
-        public Guid GameVersion { get; set; }
 
         /// <summary>
         /// Indicates if this vote is open to the public.
@@ -38,5 +33,10 @@ namespace Data.WebApi.Model.Creation.Core
         /// The proposed change to the mapping.
         /// </summary>
         public string NewOutput { get; set; }
+
+        /// <summary>
+        /// The name of the mapping type
+        /// </summary>
+        public string MappingTypeName { get; set; }
     }
 }
