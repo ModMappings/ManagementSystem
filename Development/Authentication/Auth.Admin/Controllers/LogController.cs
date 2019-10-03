@@ -30,14 +30,14 @@ namespace Auth.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteLogs(LogsDto logs)
+        public async Task<IActionResult> DeleteLogs(LogsDto logsDto)
         {
             if (!ModelState.IsValid)
             {
-                return View(nameof(ErrorsLog), logs);
+                return View(nameof(ErrorsLog), logsDto);
             }
-            
-            await _logService.DeleteLogsOlderThanAsync(logs.DeleteOlderThan.Value);
+
+            await _logService.DeleteLogsOlderThanAsync(logsDto.DeleteOlderThan.Value);
 
             return RedirectToAction(nameof(ErrorsLog));
         }
