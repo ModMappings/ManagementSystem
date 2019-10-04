@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
 
 namespace Data.WebApi
 {
@@ -47,6 +48,8 @@ namespace Data.WebApi
                 .UseSerilog((context, configuration) =>
                 {
                     configuration.ReadFrom.Configuration(context.Configuration, "Logging");
+                    configuration.MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command",
+                        LogEventLevel.Warning);
                 });
         }
     }

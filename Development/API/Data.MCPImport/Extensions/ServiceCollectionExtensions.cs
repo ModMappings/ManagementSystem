@@ -12,14 +12,15 @@ namespace Data.MCPImport.Extensions
         {
             return serviceCollection
                 .AddSingleton<IDataImportHandler, TSRGImportHandler>()
-                .AddSingleton<IDataImportHandler>(services => new MCPImportHandler(
+/*                .AddSingleton<IDataImportHandler>(services => new MCPImportHandler(
                     services.GetRequiredService<ILogger<MCPImportHandler>>(),
                     Constants.MCP_STABLE_NAME
                 ))
                 .AddSingleton<IDataImportHandler>(services => new MCPImportHandler(
                     services.GetRequiredService<ILogger<MCPImportHandler>>(),
                     Constants.MCP_SNAPSHOT_NAME
-                ));
+                ))*/
+                ;
         }
 
     }
