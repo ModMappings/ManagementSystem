@@ -122,18 +122,21 @@ namespace Data.MCPImport.TSRG
             HandleMappingCreation(inputMapping, outputMapping, _currentVersionedClass);
         }
 
-        public Task FinalizeCurrentClass()
+        public async Task FinalizeCurrentClass()
         {
             if (_currentClass == null)
-                return Task.CompletedTask;
+                return;
 
             if (_currentIsNew)
+            {
                 _newClassData.Add(_currentClass);
+                _context.Components.Add(_currentClass);
+            }
 
             _currentClass = null;
             _currentIsNew = false;
 
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public void AddMethod(string inputMapping, string outputMapping, string descriptor, bool isStatic)
