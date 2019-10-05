@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Data.MCPImport.MCP
+namespace Data.MCPTSRGImporter
 {
     public class MCPDataVersionConfiguration
     {

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 
-namespace Data.MCPImport.Maven
+namespace Data.MCPTSRGImporter
 {
     public class MavenArtifact
     {

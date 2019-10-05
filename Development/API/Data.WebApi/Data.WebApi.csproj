@@ -32,7 +32,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Data.Core\Data.Core.csproj" />
       <ProjectReference Include="..\Data.EFCore\Data.EFCore.csproj" />
-      <ProjectReference Include="..\Data.MCPImport\Data.MCPImport.csproj" />
+      <ProjectReference Include="..\Data.MCP-TSRG-Import\Data.MCP-TSRG-Import.csproj" />
     </ItemGroup>
 
 </Project>

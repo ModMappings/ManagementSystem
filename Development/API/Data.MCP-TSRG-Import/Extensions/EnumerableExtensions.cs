@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Data.MCPImport.Extensions
+namespace Data.MCPTSRGImporter
 {
     public static class EnumerableExtensions
     {

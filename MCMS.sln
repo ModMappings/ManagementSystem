@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Core", "Development\AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.EFCore", "Development\API\Data.EFCore\Data.EFCore.csproj", "{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.MCPImport", "Development\API\Data.MCPImport\Data.MCPImport.csproj", "{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.MCP-TSRG-Import", "Development\API\Data.MCP-TSRG-Import\Data.MCP-TSRG-Import.csproj", "{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.FabricImporter", "Development\API\Data.FabricImporter\Data.FabricImporter.csproj", "{C07C4BFC-150F-4693-B529-385D682B6EB0}"
 EndProject

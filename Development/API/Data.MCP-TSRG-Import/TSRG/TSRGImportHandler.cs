@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
 using Data.EFCore.Context;
-using Data.MCPImport.Extensions;
-using Data.MCPImport.Maven;
 using Flurl.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Data.MCPImport.TSRG
+namespace Data.MCPTSRGImporter
 {
     public class TSRGImportHandler
         : IDataImportHandler
@@ -25,7 +24,7 @@ namespace Data.MCPImport.TSRG
             _logger = logger;
         }
 
-        public async Task Import(MCMSContext context)
+        public async Task Import(MCMSContext context, IConfiguration configuration)
         {
             _logger.LogInformation(
                 $"Attempting import of TSRG data into context with database name: {context.Database.GetDbConnection().Database}");
@@ -53,14 +52,15 @@ namespace Data.MCPImport.TSRG
                 return;
             }
 
-            releases = releases.Take(2).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
             _logger.LogWarning("Importing: " + releases.Count + " new MCP config releases");
             _logger.LogInformation("Importing the following MCP Config releases:");
             foreach (var releaseName in releases.Keys)
             {
                 _logger.LogInformation($"  > {releaseName}");
             }
+
+            _logger.LogWarning("Saving initial data.");
+            await SaveInitialData(context, releases.Values, gameVersions.Values, tsrgMappingType);
 
             var newClassData = new List<Component>();
 
@@ -139,6 +139,33 @@ namespace Data.MCPImport.TSRG
                 })
                 .ToDictionary(r => r.Name);
 
+        private async Task SaveInitialData(
+            MCMSContext context,
+            IEnumerable<Release> releasesToSave,
+            IEnumerable<GameVersion> gameVersionsToSave,
+            MappingType tsrgMappingTypeToSave)
+        {
+            foreach (var release in releasesToSave)
+            {
+                var releaseEntityEntry = context.Entry(release);
+                if (releaseEntityEntry.State == EntityState.Detached)
+                    releaseEntityEntry.State = EntityState.Added;
+            }
+
+            foreach (var gameVersion in gameVersionsToSave)
+            {
+                var gameVersionEntityEntry = context.Entry(gameVersion);
+                if (gameVersionEntityEntry.State == EntityState.Detached)
+                    gameVersionEntityEntry.State = EntityState.Added;
+            }
+
+            var mappingTypeEntityEntry = context.Entry(tsrgMappingTypeToSave);
+            if (mappingTypeEntityEntry.State == EntityState.Detached)
+                mappingTypeEntityEntry.State = EntityState.Added;
+
+            await context.SaveChangesAsync();
+        }
+
         private async Task ProcessMCPConfigArtifact(
             MavenArtifact mcpConfigArtifact,
             IReadOnlyDictionary<string, Release> releases,
@@ -174,7 +201,7 @@ namespace Data.MCPImport.TSRG
                     _logger.LogDebug($"Processing tsrg line: {tsrgLine}");
                     if (!tsrgLine.StartsWith('\t'))
                     {
-                        await analysisHelper.FinalizeCurrentClass();
+                        analysisHelper.FinalizeCurrentClass();
 
                         //New class
                         var tsrgClassData = tsrgLine.Split(' ');
@@ -227,41 +254,11 @@ namespace Data.MCPImport.TSRG
         private async Task SaveData(MCMSContext context, List<Component> classes)
         {
             _logger.LogWarning(
-                $"Found: {classes.Count} classes");
+                $"Saving: {classes.Count} new classes");
 
-            await AttachComponents(context, classes, "class");
             await context.SaveChangesAsync();
-        }
 
-        private async Task AttachComponents(MCMSContext context, List<Component> componentsToAttach, string displayName)
-        {
-            _logger.LogWarning($"Attaching {componentsToAttach.Count} {displayName} components to the context.");
-
-            await componentsToAttach.ForEachWithProgressCallback(
-                async (component) =>
-                {
-                    try
-                    {
-                        if (context.Entry(component).State == EntityState.Detached)
-                            context.Add(component);
-                        else
-                            context.Attach(component);
-
-                        await context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogCritical(ex, "Failed to save imported data!");
-                        throw;
-                    }
-                }
-                ,
-                (count, current, percentage) =>
-                {
-                    _logger.LogInformation(
-                        $"  > Attached: {percentage}% ({current}/{count}) {displayName} components.");
-                }
-            );
+            _logger.LogWarning("TSRG Import saved.");
         }
     }
 }

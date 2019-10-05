@@ -1,9 +1,6 @@
-using Data.MCPImport.MCP;
-using Data.MCPImport.TSRG;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
-namespace Data.MCPImport.Extensions
+namespace Data.MCPTSRGImporter
 {
     public static class ServiceCollectionExtensions
     {

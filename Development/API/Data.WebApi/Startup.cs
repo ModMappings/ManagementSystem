@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Data.Core.Readers.Core;
-using Data.Core.Writers.Core;
 using Data.EFCore.Context;
 using Data.EFCore.Extensions;
-using Data.EFCore.Writer.Core;
-using Data.EFCore.Writer.Mapping;
-using Data.MCPImport.Extensions;
+using Data.MCPTSRGImporter;
 using Data.WebApi.Configuration;
 using Data.WebApi.Services.Authorization;
 using Data.WebApi.Services.Core;

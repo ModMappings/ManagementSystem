@@ -8,7 +8,7 @@ using Data.Core.Models.Mapping.Metadata;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.MCPImport.TSRG
+namespace Data.MCPTSRGImporter
 {
 
     /// <summary>
@@ -40,7 +40,7 @@ namespace Data.MCPImport.TSRG
 
         public async Task StartNewClass(string inputMapping, string outputMapping, string packageName)
         {
-            await FinalizeCurrentClass();
+            FinalizeCurrentClass();
 
             //outputMapping in TSRG is unique. Use this to detect if a new class is being imported.
             _currentClass = await _context.Components
@@ -53,6 +53,18 @@ namespace Data.MCPImport.TSRG
                 .Include("VersionedComponents.Metadata")
                 .Include("VersionedComponents.Metadata.Fields")
                 .Include("VersionedComponents.Metadata.Methods")
+                .Include("VersionedComponents.Metadata.Fields.VersionedComponent")
+                .Include("VersionedComponents.Metadata.Methods.VersionedComponent")
+                .Include("VersionedComponents.Metadata.Fields.VersionedComponent.Component")
+                .Include("VersionedComponents.Metadata.Methods.VersionedComponent.Component")
+                .Include("VersionedComponents.Metadata.Fields.VersionedComponent.Mappings")
+                .Include("VersionedComponents.Metadata.Methods.VersionedComponent.Mappings")
+                .Include("VersionedComponents.Metadata.Fields.VersionedComponent.Mappings.MappingType")
+                .Include("VersionedComponents.Metadata.Methods.VersionedComponent.Mappings.MappingType")
+                .Include("VersionedComponents.Metadata.Fields.VersionedComponent.Mappings.Releases")
+                .Include("VersionedComponents.Metadata.Methods.VersionedComponent.Mappings.Releases")
+                .Include("VersionedComponents.Metadata.Fields.VersionedComponent.Mappings.Releases.Release")
+                .Include("VersionedComponents.Metadata.Methods.VersionedComponent.Mappings.Releases.Release")
                 .Include("VersionedComponents.Metadata.InheritsFrom")
                 .Include("VersionedComponents.Metadata.Outer")
                 .Include("VersionedComponents.Metadata.Methods")
@@ -83,6 +95,8 @@ namespace Data.MCPImport.TSRG
                         Type = ComponentType.CLASS,
                         VersionedComponents = new List<VersionedComponent>()
                     };
+
+                    _context.Entry(_currentClass).State = EntityState.Added;
                 }
             }
 
@@ -104,6 +118,8 @@ namespace Data.MCPImport.TSRG
                     Proposals = new List<ProposalMappingEntry>()
                 };
 
+                _context.Entry(_currentVersionedClass).State = EntityState.Added;
+
                 _currentVersionedClass.Metadata = new ClassMetadata
                 {
                     Fields = new List<FieldMetadata>(),
@@ -115,6 +131,8 @@ namespace Data.MCPImport.TSRG
                     VersionedComponentForeignKey = _currentVersionedClass.Id
                 };
 
+                _context.Entry(_currentVersionedClass.Metadata).State = EntityState.Added;
+
                 _currentClass.VersionedComponents.Add(_currentVersionedClass);
             }
 
@@ -122,7 +140,7 @@ namespace Data.MCPImport.TSRG
             HandleMappingCreation(inputMapping, outputMapping, _currentVersionedClass);
         }
 
-        public async Task FinalizeCurrentClass()
+        public void FinalizeCurrentClass()
         {
             if (_currentClass == null)
                 return;
@@ -130,13 +148,10 @@ namespace Data.MCPImport.TSRG
             if (_currentIsNew)
             {
                 _newClassData.Add(_currentClass);
-                _context.Components.Add(_currentClass);
             }
 
             _currentClass = null;
             _currentIsNew = false;
-
-            await _context.SaveChangesAsync();
         }
 
         public void AddMethod(string inputMapping, string outputMapping, string descriptor, bool isStatic)
@@ -158,6 +173,8 @@ namespace Data.MCPImport.TSRG
                     VersionedComponents = new List<VersionedComponent>()
                 };
 
+                _context.Entry(newMethodComponent).State = EntityState.Added;
+
                 targetMethodVersionedComponent = new VersionedComponent
                 {
                     Id = Guid.NewGuid(),
@@ -171,6 +188,9 @@ namespace Data.MCPImport.TSRG
                     Proposals = new List<ProposalMappingEntry>()
                 };
 
+                newMethodComponent.VersionedComponents.Add(targetMethodVersionedComponent);
+                _context.Entry(targetMethodVersionedComponent).State = EntityState.Added;
+
                 var newMethodMetadata = new MethodMetadata
                 {
                     Descriptor = descriptor,
@@ -183,6 +203,7 @@ namespace Data.MCPImport.TSRG
 
                 targetMethodVersionedComponent.Metadata = newMethodMetadata;
                 classMetadata.Methods.Add(newMethodMetadata);
+                _context.Entry(newMethodMetadata).State = EntityState.Added;
             }
 
             //Create the mapping (if needed) and associate the release
@@ -208,6 +229,8 @@ namespace Data.MCPImport.TSRG
                     VersionedComponents = new List<VersionedComponent>()
                 };
 
+                _context.Entry(newFieldComponent).State = EntityState.Added;
+
                 targetFieldVersionedComponent = new VersionedComponent
                 {
                     Id = Guid.NewGuid(),
@@ -221,6 +244,8 @@ namespace Data.MCPImport.TSRG
                     Proposals = new List<ProposalMappingEntry>()
                 };
 
+                _context.Entry(targetFieldVersionedComponent).State = EntityState.Added;
+
                 var newFieldMetadata = new FieldMetadata
                 {
                     IsStatic = isStatic,
@@ -231,6 +256,7 @@ namespace Data.MCPImport.TSRG
 
                 targetFieldVersionedComponent.Metadata = newFieldMetadata;
                 classMetadata.Fields.Add(newFieldMetadata);
+                _context.Entry(newFieldMetadata).State = EntityState.Added;
             }
 
             //Create the mapping (if needed) and associate the release
@@ -260,6 +286,7 @@ namespace Data.MCPImport.TSRG
                 };
 
                 versionedComponent.Mappings.Add(liveMapping);
+                _context.Entry(liveMapping).State = EntityState.Added;
             }
 
             var releaseComponent = liveMapping.Releases.FirstOrDefault(r => r.Release == _release);
@@ -275,6 +302,7 @@ namespace Data.MCPImport.TSRG
                 };
 
                 liveMapping.Releases.Add(releaseComponent);
+                _context.Entry(releaseComponent).State = EntityState.Added;
             }
         }
     }

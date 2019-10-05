@@ -1,21 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Metadata;
 using Data.EFCore.Context;
-using Data.MCPImport.Extensions;
-using Data.MCPImport.Maven;
 using Flurl.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Data.MCPImport.MCP
+namespace Data.MCPTSRGImporter
 {
     public class MCPImportHandler : IDataImportHandler
     {
@@ -29,7 +26,7 @@ namespace Data.MCPImport.MCP
             _mcpType = mcpType;
         }
 
-        public async Task Import(MCMSContext context)
+        public async Task Import(MCMSContext context, IConfiguration configuration)
         {
             _logger.LogInformation(
                 $"Attempting import of MCP data into context with database name: {context.Database.GetDbConnection().Database} from type: {_mcpType}");

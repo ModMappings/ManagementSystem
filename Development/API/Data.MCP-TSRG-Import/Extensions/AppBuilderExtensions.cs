@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Data.MCPImport.Extensions
+namespace Data.MCPTSRGImporter
 {
     public static class AppBuilderExtensions
     {
@@ -23,8 +23,12 @@ namespace Data.MCPImport.Extensions
                     {
                         var mcpConfiguration =
                             scope.ServiceProvider.GetRequiredService<IConfiguration>().GetSection("MCPImport");
-                        var logger = scope.ServiceProvider.GetRequiredService<ILogger<MCPImport>>();
+                        var logger = scope.ServiceProvider.GetRequiredService<ILogger<MCPTSRGImport>>();
                         var database = scope.ServiceProvider.GetRequiredService<MCMSContext>();
+                        //When import is running, all objects should be added to the DB by the handler, else performance goes down the drain.
+                        database.ChangeTracker.AutoDetectChangesEnabled = false;
+                        database.ChangeTracker.LazyLoadingEnabled = false;
+
                         var dataImportHandlers = scope.ServiceProvider.GetServices<IDataImportHandler>().ToList();
 
                         if (!mcpConfiguration.GetValue<bool>("Enabled"))
@@ -36,14 +40,14 @@ namespace Data.MCPImport.Extensions
                         logger.LogWarning($"Attempting to import data using {dataImportHandlers.Count} handlers.");
                         foreach (var dataImportHandler in dataImportHandlers)
                         {
-                            await dataImportHandler.Import(database);
+                            await dataImportHandler.Import(database, mcpConfiguration);
                             await database.SaveChangesAsync();
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    var exceptionLogger = app.ApplicationServices.GetRequiredService<ILogger<MCPImport>>();
+                    var exceptionLogger = app.ApplicationServices.GetRequiredService<ILogger<MCPTSRGImport>>();
                     exceptionLogger.LogCritical(e, "Failed to import MCP data.");
                 }
             });

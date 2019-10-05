@@ -1,6 +1,6 @@
 using Flurl;
 
-namespace Data.MCPImport
+namespace Data.MCPTSRGImporter
 {
     public static class Constants
     {
