@@ -1,16 +1,16 @@
-using Data.MCPImport.MCP;
-using Data.MCPImport.TSRG;
+using Data.FabricImporter.Intermediary;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
-namespace Data.MCPImport.Extensions
+namespace Data.FabricImporter.Extensions
 {
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddMCPImportDataHandlers(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddFabricImportDataHandlers(this IServiceCollection serviceCollection)
         {
-;
+            return serviceCollection
+                .AddSingleton<IDataImportHandler, IntermediaryImportHandler>()
+                ;
         }
 
     }

@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Flurl;
 using Flurl.Http;
 
-namespace Data.MCPImport.Maven
+namespace Data.FabricImporter.Maven
 {
     /// <summary>
     /// Represents a single maven project.

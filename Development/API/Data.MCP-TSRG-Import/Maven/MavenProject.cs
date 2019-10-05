@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using Flurl;
 using Flurl.Http;
 
-namespace Data.MCPTSRGImporter
+namespace Data.MCP.TSRG.Importer
 {
     /// <summary>
     /// Represents a single maven project.

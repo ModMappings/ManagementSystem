@@ -8,15 +8,15 @@ using Data.Core.Models.Mapping.Metadata;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.MCP.TSRG.Importer.TSRG
+namespace Data.FabricImporter.Intermediary
 {
 
     /// <summary>
-    /// This class handles the creation and modification of intermediary data.
-    /// It is specifically designed to handle intermediary data.
+    /// This class handles the creation and modification of MCMS data.
+    /// It is specifically designed to handle TSRG data.
     /// As such no parameter mappings exists.
     /// </summary>
-    public class TSRGAnalysisHelper
+    public class IntermediaryAnalysisHelper
     {
         private readonly MCMSContext _context;
         private readonly List<Component> _newClassData;
@@ -28,7 +28,7 @@ namespace Data.MCP.TSRG.Importer.TSRG
         private Component _currentClass = null;
         private VersionedComponent _currentVersionedClass = null;
 
-        public TSRGAnalysisHelper(MCMSContext context, ref List<Component> newClassData, Release release,
+        public IntermediaryAnalysisHelper(MCMSContext context, ref List<Component> newClassData, Release release,
             GameVersion gameVersion, MappingType tsrgMappingType)
         {
             _context = context;

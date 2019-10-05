@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Data.MCP.TSRG.Importer.Extensions
+namespace Data.FabricImporter.Extensions
 {
     public static class EnumerableExtensions
     {

@@ -136,7 +136,8 @@ namespace Data.WebApi.Controllers.Methods
                 MemberOf = methodMetaData.MemberOf.VersionedComponent.Id,
                 Descriptor = methodMetaData.Descriptor,
                 IsStatic = methodMetaData.IsStatic,
-                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name)
+                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name),
+                Parameters = methodMetaData.Parameters.Select(p => p.VersionedComponent.Id)
             };
         }
     }

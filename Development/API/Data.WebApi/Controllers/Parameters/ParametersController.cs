@@ -49,7 +49,7 @@ namespace Data.WebApi.Controllers.Parameters
         [HttpGet("method/version/{methodId}/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IEnumerable<ParameterReadModel>>> GetByMethodInLatestGameVersion(Guid methodId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<IEnumerable<ParameterReadModel>>> GetByMethodInLatestGameVersion(Guid methodId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ParameterComponentWriter.GetByMethodInLatestGameVersion(methodId);
 
@@ -69,7 +69,7 @@ namespace Data.WebApi.Controllers.Parameters
         [HttpGet("method/version/{methodId}/{gameVersionId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IEnumerable<ParameterReadModel>>> GetByMethodInGameVersion(Guid methodId, Guid gameVersionId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<IEnumerable<ParameterReadModel>>> GetByMethodInGameVersion(Guid methodId, Guid gameVersionId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ParameterComponentWriter.GetByMethodInGameVersion(methodId, gameVersionId);
 
@@ -88,7 +88,7 @@ namespace Data.WebApi.Controllers.Parameters
         [HttpGet("method/release/{methodId}/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IEnumerable<ParameterReadModel>>> GetByMethodInLatestRelease(Guid methodId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<IEnumerable<ParameterReadModel>>> GetByMethodInLatestRelease(Guid methodId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ParameterComponentWriter.GetByMethodInLatestRelease(methodId);
 
@@ -108,7 +108,7 @@ namespace Data.WebApi.Controllers.Parameters
         [HttpGet("method/release/{methodId}/{releaseId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<IEnumerable<ParameterReadModel>>> GetByMethodInRelease(Guid methodId, Guid releaseId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<IEnumerable<ParameterReadModel>>> GetByMethodInRelease(Guid methodId, Guid releaseId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ParameterComponentWriter.GetByMethodInRelease(methodId, releaseId);
 

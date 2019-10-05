@@ -1,11 +1,11 @@
-using System;
 using System.Threading.Tasks;
 using Data.EFCore.Context;
+using Microsoft.Extensions.Configuration;
 
-namespace Data.MCPImport
+namespace Data.FabricImporter
 {
     public interface IDataImportHandler
     {
-        Task Import(MCMSContext context);
+        Task Import(MCMSContext context, IConfiguration configuration);
     }
 }

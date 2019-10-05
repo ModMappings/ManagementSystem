@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace Data.MCPTSRGImporter
+namespace Data.MCP.TSRG.Importer.Extensions
 {
     public static class ZipArchiveExtensions
     {

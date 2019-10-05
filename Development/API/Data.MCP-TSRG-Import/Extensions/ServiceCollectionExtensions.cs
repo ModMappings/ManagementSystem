@@ -1,6 +1,7 @@
+using Data.MCP.TSRG.Importer.TSRG;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Data.MCPTSRGImporter
+namespace Data.MCP.TSRG.Importer.Extensions
 {
     public static class ServiceCollectionExtensions
     {

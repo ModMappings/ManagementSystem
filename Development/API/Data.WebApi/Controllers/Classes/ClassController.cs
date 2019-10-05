@@ -46,7 +46,7 @@ namespace Data.WebApi.Controllers.Classes
         [HttpGet("package/version/{packagePattern}/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<ClassReadModel>>> GetByPackageInLatestGameVersion(string packagePattern, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<ClassReadModel>>> GetByPackageInLatestGameVersion(string packagePattern, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ClassComponentWriter.GetByPackageInLatestGameVersion(packagePattern);
 
@@ -66,7 +66,7 @@ namespace Data.WebApi.Controllers.Classes
         [HttpGet("package/version/{packagePattern}/{gameVersionId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<ClassReadModel>>> GetByPackageInGameVersion(string packagePattern, Guid gameVersionId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<ClassReadModel>>> GetByPackageInGameVersion(string packagePattern, Guid gameVersionId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ClassComponentWriter.GetByPackageInGameVersion(packagePattern, gameVersionId);
 
@@ -85,7 +85,7 @@ namespace Data.WebApi.Controllers.Classes
         [HttpGet("package/release/{packagePattern}/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<ClassReadModel>>> GetByPackageInLatestRelease(string packagePattern, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<ClassReadModel>>> GetByPackageInLatestRelease(string packagePattern, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ClassComponentWriter.GetByPackageInLatestRelease(packagePattern);
 
@@ -105,7 +105,7 @@ namespace Data.WebApi.Controllers.Classes
         [HttpGet("package/release/{packagePattern}/{releaseId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<ClassReadModel>>> GetByPackageInRelease(string packagePattern, Guid releaseId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<ClassReadModel>>> GetByPackageInRelease(string packagePattern, Guid releaseId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ClassComponentWriter.GetByPackageInRelease(packagePattern, releaseId);
 
@@ -221,7 +221,9 @@ namespace Data.WebApi.Controllers.Classes
                 InheritsFrom = (versionedComponent.Metadata as ClassMetadata)?.InheritsFrom.ToList().Select(parentClass => parentClass.VersionedComponent.Id),
                 CurrentMappings = versionedComponent.Mappings.ToList().Select(ConverterUtils.ConvertLiveDbModelToMappingReadModel),
                 Proposals = versionedComponent.Proposals.ToList().Select(ConverterUtils.ConvertProposalDbModelToProposalReadModel),
-                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name)
+                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name),
+                Methods = (versionedComponent.Metadata as ClassMetadata)?.Methods.Select(m => m.VersionedComponent.Id),
+                Fields = (versionedComponent.Metadata as ClassMetadata)?.Fields.Select(f => f.VersionedComponent.Id)
             };
         }
     }

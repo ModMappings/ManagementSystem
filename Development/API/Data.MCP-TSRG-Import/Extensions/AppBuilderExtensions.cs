@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Data.MCPTSRGImporter
+namespace Data.MCP.TSRG.Importer.Extensions
 {
     public static class AppBuilderExtensions
     {
@@ -23,7 +23,7 @@ namespace Data.MCPTSRGImporter
                     {
                         var mcpConfiguration =
                             scope.ServiceProvider.GetRequiredService<IConfiguration>().GetSection("MCPImport");
-                        var logger = scope.ServiceProvider.GetRequiredService<ILogger<MCPTSRGImport>>();
+                        var logger = scope.ServiceProvider.GetRequiredService<ILogger<MCPTSRGImporter>>();
                         var database = scope.ServiceProvider.GetRequiredService<MCMSContext>();
                         //When import is running, all objects should be added to the DB by the handler, else performance goes down the drain.
                         database.ChangeTracker.AutoDetectChangesEnabled = false;
@@ -47,7 +47,7 @@ namespace Data.MCPTSRGImporter
                 }
                 catch (Exception e)
                 {
-                    var exceptionLogger = app.ApplicationServices.GetRequiredService<ILogger<MCPTSRGImport>>();
+                    var exceptionLogger = app.ApplicationServices.GetRequiredService<ILogger<MCPTSRGImporter>>();
                     exceptionLogger.LogCritical(e, "Failed to import MCP data.");
                 }
             });

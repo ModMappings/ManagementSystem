@@ -28,11 +28,12 @@ namespace Data.EFCore.Writer.Mapping
                 .Include("VersionedComponents.Mappings")
                 .Include("VersionedComponents.Proposals")
                 .Include("VersionedComponents.Metadata")
+                .Include("VersionedComponents.LockedMappingTypes")
+                .Include("VersionedComponents.LockedMappingTypes.MappingType")
                 .Include("VersionedComponents.Mappings.Proposal")
+                .Include("VersionedComponents.Mappings.MappingType")
                 .Include("VersionedComponents.Mappings.Releases")
                 .Include("VersionedComponents.Mappings.Releases.Release")
-                .Include("VersionedComponents.Proposals.VotedFor")
-                .Include("VersionedComponents.Proposals.VotedAgainst")
                 .Include("VersionedComponents.Proposals.WentLiveWith")
                 .Include("VersionedComponents.Metadata.VersionedComponent")
                 .Include("VersionedComponents.Metadata.VersionedComponent.Component")
@@ -41,6 +42,7 @@ namespace Data.EFCore.Writer.Mapping
                 .Include("VersionedComponents.Metadata.MemberOf.VersionedComponent.Component")
                 .Include("VersionedComponents.Metadata.IsStatic")
                 .Include("VersionedComponents.Metadata.Parameters")
+                .Include("VersionedComponents.Metadata.Parameters.VersionedComponent")
                 .Include("VersionedComponents.Metadata.Descriptor"));
         }
 

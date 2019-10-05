@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Data.WebApi.Model.Read.Core;
 
 namespace Data.WebApi.Model.Read.Method
@@ -23,5 +24,10 @@ namespace Data.WebApi.Model.Read.Method
         /// Indicates if this method is a static member.
         /// </summary>
         public bool IsStatic { get; set; }
+
+        /// <summary>
+        /// The versioned id of the parameters that are part of this method.
+        /// </summary>
+        public IEnumerable<Guid> Parameters { get; set; }
     }
 }

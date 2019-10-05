@@ -4,7 +4,9 @@ using System.IO;
 using System.Reflection;
 using Data.EFCore.Context;
 using Data.EFCore.Extensions;
-using Data.MCPTSRGImporter;
+using Data.FabricImporter.Extensions;
+using Data.MCP.TSRG.Importer;
+using Data.MCP.TSRG.Importer.Extensions;
 using Data.WebApi.Configuration;
 using Data.WebApi.Services.Authorization;
 using Data.WebApi.Services.Core;
@@ -93,6 +95,7 @@ namespace Data.WebApi
             services.AddMCMSDataServices();
 
             services.AddMCPImportDataHandlers();
+            services.AddFabricImportDataHandlers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -129,6 +132,7 @@ namespace Data.WebApi
 
             app.AddDatabaseMigrations();
             app.AddMCPImport();
+            app.AddFabricImport();//TODO: Deal with threading... Abstraction needed.
         }
     }
 }

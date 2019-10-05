@@ -50,7 +50,7 @@ namespace Data.WebApi.Controllers.Methods
         [HttpGet("class/version/{classId}/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<MethodReadModel>>> GetByClassInLatestGameVersion(Guid classId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<MethodReadModel>>> GetByClassInLatestGameVersion(Guid classId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await MethodComponentWriter.GetByClassInLatestGameVersion(classId);
 
@@ -86,7 +86,7 @@ namespace Data.WebApi.Controllers.Methods
         [HttpGet("class/version/{classId}/{gameVersionId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<MethodReadModel>>> GetByClassInGameVersion(Guid classId, Guid gameVersionId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<MethodReadModel>>> GetByClassInGameVersion(Guid classId, Guid gameVersionId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await MethodComponentWriter.GetByClassInGameVersion(classId, gameVersionId);
 
@@ -105,7 +105,7 @@ namespace Data.WebApi.Controllers.Methods
         [HttpGet("class/release/{classId}/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<MethodReadModel>>> GetByClassInLatestRelease(Guid classId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<MethodReadModel>>> GetByClassInLatestRelease(Guid classId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await MethodComponentWriter.GetByClassInLatestRelease(classId);
 
@@ -125,7 +125,7 @@ namespace Data.WebApi.Controllers.Methods
         [HttpGet("class/release/{classId}/{releaseId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<MethodReadModel>>> GetByClassInRelease(Guid classId, Guid releaseId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<MethodReadModel>>> GetByClassInRelease(Guid classId, Guid releaseId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await MethodComponentWriter.GetByClassInRelease(classId, releaseId);
 
@@ -236,7 +236,8 @@ namespace Data.WebApi.Controllers.Methods
                 MemberOf = methodMetaData.MemberOf.VersionedComponent.Id,
                 Descriptor = methodMetaData.Descriptor,
                 IsStatic = methodMetaData.IsStatic,
-                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name)
+                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name),
+                Parameters = methodMetaData.Parameters.Select(p => p.VersionedComponent.Id)
             };
         }
     }

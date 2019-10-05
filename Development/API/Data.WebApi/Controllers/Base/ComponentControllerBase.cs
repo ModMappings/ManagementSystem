@@ -65,7 +65,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("all")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> AsQueryable([FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> AsQueryable([FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ComponentWriter.AsQueryable();
 
@@ -82,7 +82,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("release/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByLatestRelease([FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByLatestRelease([FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var latestRelease = await ReleaseReader.GetLatest();
 
@@ -101,7 +101,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("release/{releaseId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByReleaseById(Guid releaseId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByReleaseById(Guid releaseId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ComponentWriter.GetByRelease(releaseId);
 
@@ -119,7 +119,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("release/{releaseName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByReleaseByName(string releaseName, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByReleaseByName(string releaseName, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var latestRelease = await ReleaseReader.GetByName(releaseName);
 
@@ -136,7 +136,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("version/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByLatestVersion([FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByLatestVersion([FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var latestVersion = await GameVersionReader.GetLatest();
 
@@ -154,7 +154,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("version/{versionId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByVersionById(Guid versionId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByVersionById(Guid versionId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ComponentWriter.GetByVersion(versionId);
 
@@ -172,7 +172,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("version/{versionName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByVersionByName(string versionName, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByVersionByName(string versionName, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var latestVersion = await GameVersionReader.GetByName(versionName);
 
@@ -190,7 +190,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("mapping/latest/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByLatestMapping(string name, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByLatestMapping(string name, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ComponentWriter.GetByLatestMapping(name);
 
@@ -209,7 +209,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("mapping/version/{versionId}/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByMappingInVersion(string name, Guid versionId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByMappingInVersion(string name, Guid versionId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ComponentWriter.GetByMappingInVersion(name, versionId);
 
@@ -228,7 +228,7 @@ namespace Data.WebApi.Controllers.Base
         [HttpGet("mapping/release/{releaseId}/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<TReadModel>>> GetByMappingInRelease(string name, Guid releaseId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<TReadModel>>> GetByMappingInRelease(string name, Guid releaseId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await ComponentWriter.GetByMappingInRelease(name, releaseId);
 

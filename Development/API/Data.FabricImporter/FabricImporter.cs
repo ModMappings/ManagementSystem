@@ -1,7 +1,7 @@
 namespace Data.FabricImporter
 {
     /// <summary>
-    /// Dummy class used for logging.
+    /// Dummy class for getting logger.
     /// </summary>
     public class FabricImporter
     {

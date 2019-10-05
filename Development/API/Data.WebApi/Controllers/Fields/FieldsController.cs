@@ -50,7 +50,7 @@ namespace Data.WebApi.Controllers.Fields
         [HttpGet("class/version/{classId}/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<FieldReadModel>>> GetByClassInLatestGameVersion(Guid classId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<FieldReadModel>>> GetByClassInLatestGameVersion(Guid classId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await _fieldComponentWriter.GetByClassInLatestGameVersion(classId);
 
@@ -86,7 +86,7 @@ namespace Data.WebApi.Controllers.Fields
         [HttpGet("class/version/{classId}/{gameVersionId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<FieldReadModel>>> GetByClassInGameVersion(Guid classId, Guid gameVersionId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<FieldReadModel>>> GetByClassInGameVersion(Guid classId, Guid gameVersionId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await _fieldComponentWriter.GetByClassInGameVersion(classId, gameVersionId);
 
@@ -105,7 +105,7 @@ namespace Data.WebApi.Controllers.Fields
         [HttpGet("class/release/{classId}/latest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<FieldReadModel>>> GetByClassInLatestRelease(Guid classId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<FieldReadModel>>> GetByClassInLatestRelease(Guid classId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await _fieldComponentWriter.GetByClassInLatestRelease(classId);
 
@@ -125,7 +125,7 @@ namespace Data.WebApi.Controllers.Fields
         [HttpGet("class/release/{classId}/{releaseId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("application/json")]
-        public async Task<ActionResult<PagedList<FieldReadModel>>> GetByClassInRelease(Guid classId, Guid releaseId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
+        public async Task<ActionResult<PagedList<FieldReadModel>>> GetByClassInRelease(Guid classId, Guid releaseId, [FromQuery] int pageSize = 25, [FromQuery] int pageIndex = 0)
         {
             var dbModels = await _fieldComponentWriter.GetByClassInRelease(classId, releaseId);
 

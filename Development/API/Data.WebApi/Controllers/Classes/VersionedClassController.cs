@@ -140,7 +140,9 @@ namespace Data.WebApi.Controllers.Classes
                 InheritsFrom = (versionedComponent.Metadata as ClassMetadata)?.InheritsFrom.ToList().Select(parentClass => parentClass.VersionedComponent.Id),
                 CurrentMappings = versionedComponent.Mappings.ToList().Select(ConverterUtils.ConvertLiveDbModelToMappingReadModel),
                 Proposals = versionedComponent.Proposals.ToList().Select(ConverterUtils.ConvertProposalDbModelToProposalReadModel),
-                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name)
+                LockedMappingNames = versionedComponent.LockedMappingTypes.ToList().Select(lm => lm.MappingType.Name),
+                Methods = (versionedComponent.Metadata as ClassMetadata)?.Methods.Select(m => m.VersionedComponent.Id),
+                Fields = (versionedComponent.Metadata as ClassMetadata)?.Fields.Select(f => f.VersionedComponent.Id)
             };
         }
     }

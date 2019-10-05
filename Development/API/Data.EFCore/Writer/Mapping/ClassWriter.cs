@@ -31,15 +31,21 @@ namespace Data.EFCore.Writer.Mapping
                 .Include("VersionedComponents.Mappings")
                 .Include("VersionedComponents.Proposals")
                 .Include("VersionedComponents.Metadata")
+                .Include("VersionedComponents.LockedMappingTypes")
+                .Include("VersionedComponents.LockedMappingTypes.MappingType")
                 .Include("VersionedComponents.Mappings.Proposal")
+                .Include("VersionedComponents.Mappings.MappingType")
                 .Include("VersionedComponents.Mappings.Releases")
                 .Include("VersionedComponents.Mappings.Releases.Release")
-                .Include("VersionedComponents.Proposals.VotedFor")
-                .Include("VersionedComponents.Proposals.VotedAgainst")
                 .Include("VersionedComponents.Proposals.WentLiveWith")
-                .Include("VersionedComponents.Metadata.Component")
+                .Include("VersionedComponents.Metadata.VersionedComponent")
+                .Include("VersionedComponents.Metadata.VersionedComponent.Component")
                 .Include("VersionedComponents.Metadata.Outer")
-                .Include("VersionedComponents.Metadata.InheritsFrom"));
+                .Include("VersionedComponents.Metadata.InheritsFrom")
+                .Include("VersionedComponents.Metadata.Methods")
+                .Include("VersionedComponents.Metadata.Methods.VersionedComponent")
+                .Include("VersionedComponents.Metadata.Fields")
+                .Include("VersionedComponents.Metadata.Fields.VersionedComponent"));
         }
 
         public async Task<IQueryable<Component>> GetByPackageInLatestGameVersion(string packagePattern)

@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
 using Data.EFCore.Context;
+using Data.MCP.TSRG.Importer.Extensions;
 using Flurl.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Data.MCPTSRGImporter
+namespace Data.MCP.TSRG.Importer
 {
     public class MCPImportHandler : IDataImportHandler
     {

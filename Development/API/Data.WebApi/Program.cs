@@ -49,7 +49,7 @@ namespace Data.WebApi
                 {
                     configuration.ReadFrom.Configuration(context.Configuration, "Logging");
                     configuration.MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command",
-                        LogEventLevel.Warning);
+                        LogEventLevel.Error);
                 });
         }
     }

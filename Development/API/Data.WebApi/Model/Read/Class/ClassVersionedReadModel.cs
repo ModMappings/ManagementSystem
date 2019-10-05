@@ -23,5 +23,16 @@ namespace Data.WebApi.Model.Read.Class
         /// The class this class inherits from.
         /// </summary>
         public IEnumerable<Guid> InheritsFrom { get; set; }
+
+        /// <summary>
+        /// The versioned id of the methods that are part of the class in this version.
+        /// </summary>
+        public IEnumerable<Guid> Methods { get; set; }
+
+
+        /// <summary>
+        /// The versioned id of the fields that are part of the class in this version.
+        /// </summary>
+        public IEnumerable<Guid> Fields { get; set; }
     }
 }
