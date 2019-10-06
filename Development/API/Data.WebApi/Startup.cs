@@ -132,23 +132,6 @@ namespace Data.WebApi
                 c.OAuthAppName(customBoundJwtOptions.ApiName);
             });
 
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var database = scope.ServiceProvider.GetRequiredService<MCMSContext>();
-
-                var wrongNamedIntermediaryMapping = database.MappingTypes.FirstOrDefault(m => m.Name == "intermediary");
-
-                if (wrongNamedIntermediaryMapping == null)
-                {
-                    Console.Error.WriteLine("Could not find it!");
-                }
-                else
-                {
-                    wrongNamedIntermediaryMapping.Name = Constants.INTERMEDIARY_MAPPING_NAME;
-                    database.SaveChanges();
-                }
-            }
-
             app.AddDatabaseMigrations();
             app.AddMCPImport();
             app.AddFabricImport();//TODO: Deal with threading... Abstraction needed.

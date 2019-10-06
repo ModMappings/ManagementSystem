@@ -33,8 +33,6 @@ namespace Data.WebApi.Services.Converters
 
         public static MappingReadModel ConvertLiveDbModelToMappingReadModel(this LiveMappingEntry liveMappingEntry)
         {
-            Console.Out.WriteLine("Typename: " + liveMappingEntry.MappingType.Name);
-
             return new MappingReadModel()
             {
                 Id = liveMappingEntry.Id,
