@@ -34,7 +34,7 @@ namespace Data.FabricImporter.Intermediary
             var intermediaryMappingType = await GetOrCreateIntermediaryMappingType(context);
 
             var intermediaryConfigProject =
-                MavenProject.Create(Constants.FABRIC_MAVEN_URL, Constants.FABRIC_GROUP, Constants.INTERMEDIARY_NAME);
+                MavenProject.Create(Constants.FABRIC_MAVEN_URL, Constants.FABRIC_GROUP, Constants.INTERMEDIARY_PROJECT_NAME);
 
             var intermediaryConfigArtifacts = await intermediaryConfigProject.GetArtifacts();
 
@@ -81,7 +81,7 @@ namespace Data.FabricImporter.Intermediary
         }
 
         private static async Task<MappingType> GetOrCreateIntermediaryMappingType(MCMSContext context) =>
-            await context.MappingTypes.FirstOrDefaultAsync(m => m.Name == Constants.OBF_TO_INTERMEDIARY_MAPPING_NAME) ??
+            await context.MappingTypes.FirstOrDefaultAsync(m => m.Name == Constants.INTERMEDIARY_MAPPING_NAME) ??
             await CreateIntermediaryMappingType();
 
         private static Task<MappingType> CreateIntermediaryMappingType() =>
@@ -90,7 +90,7 @@ namespace Data.FabricImporter.Intermediary
                 Id = Guid.NewGuid(),
                 CreatedBy = Guid.Empty,
                 CreatedOn = DateTime.Now,
-                Name = Constants.OBF_TO_INTERMEDIARY_MAPPING_NAME,
+                Name = Constants.INTERMEDIARY_MAPPING_NAME,
                 Releases = new List<Release>()
             });
 

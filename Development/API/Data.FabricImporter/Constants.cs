@@ -7,9 +7,9 @@ namespace Data.FabricImporter
 
         public const string FABRIC_GROUP = "net.fabricmc";
 
-        public const string INTERMEDIARY_NAME = "intermediary";
+        public const string INTERMEDIARY_PROJECT_NAME = "Intermediary";
 
-        public const string OBF_TO_INTERMEDIARY_MAPPING_NAME = "intermediary";
+        public const string INTERMEDIARY_MAPPING_NAME = "Intermediary";
 
         public const string INTERMEDIARY_JOINED_DATA = "mappings/mappings.tiny";
     }

@@ -136,7 +136,7 @@ namespace Data.WebApi
             {
                 var database = scope.ServiceProvider.GetRequiredService<MCMSContext>();
 
-                var wrongNamedIntermediaryMapping = database.MappingTypes.FirstOrDefault(m => m.Name == "OBF <-> TSRG");
+                var wrongNamedIntermediaryMapping = database.MappingTypes.FirstOrDefault(m => m.Name == "intermediary");
 
                 if (wrongNamedIntermediaryMapping == null)
                 {
@@ -144,7 +144,7 @@ namespace Data.WebApi
                 }
                 else
                 {
-                    wrongNamedIntermediaryMapping.Name = Constants.INTERMEDIARY_NAME;
+                    wrongNamedIntermediaryMapping.Name = Constants.INTERMEDIARY_MAPPING_NAME;
                     database.SaveChanges();
                 }
             }
