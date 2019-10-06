@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Data.EFCore.Context;
 using Data.EFCore.Extensions;
@@ -19,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using Constants = Data.FabricImporter.Constants;
 
 namespace Data.WebApi
 {
@@ -129,6 +131,23 @@ namespace Data.WebApi
                 c.OAuthClientSecret(customBoundJwtOptions.SwaggerUIClientSecret);
                 c.OAuthAppName(customBoundJwtOptions.ApiName);
             });
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var database = scope.ServiceProvider.GetRequiredService<MCMSContext>();
+
+                var wrongNamedIntermediaryMapping = database.MappingTypes.FirstOrDefault(m => m.Name == "OBF <-> TSRG");
+
+                if (wrongNamedIntermediaryMapping == null)
+                {
+                    Console.Error.WriteLine("Could not find it!");
+                }
+                else
+                {
+                    wrongNamedIntermediaryMapping.Name = Constants.INTERMEDIARY_NAME;
+                    database.SaveChanges();
+                }
+            }
 
             app.AddDatabaseMigrations();
             app.AddMCPImport();
