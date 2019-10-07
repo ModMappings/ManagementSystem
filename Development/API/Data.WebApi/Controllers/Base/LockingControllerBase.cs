@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Proposals;
 using Data.Core.Readers.Core;
 using Data.Core.Writers.Core;
 using Data.WebApi.Model;
@@ -227,25 +228,25 @@ namespace Data.WebApi.Controllers.Base
             return Accepted();
         }
 
-        private async Task ProcessClosing(bool merge, ProposalMappingEntry currentProposal, User user)
+        private async Task ProcessClosing(bool merge, ProposedMapping currentProposedMapping, User user)
         {
-            currentProposal.ClosedBy = user.Id;
-            currentProposal.ClosedOn = DateTime.Now;
-            currentProposal.Merged = merge;
+            currentProposedMapping.ClosedBy = user.Id;
+            currentProposedMapping.ClosedOn = DateTime.Now;
+            currentProposedMapping.Merged = merge;
 
             if (merge)
             {
                 var newCommittedMapping = new LiveMappingEntry()
                 {
-                    InputMapping = currentProposal.InputMapping,
-                    OutputMapping = currentProposal.OutputMapping,
-                    Proposal = currentProposal,
+                    InputMapping = currentProposedMapping.InputMapping,
+                    OutputMapping = currentProposedMapping.OutputMapping,
+                    ProposedMapping = currentProposedMapping,
                     Releases = new List<ReleaseComponent>(),
-                    VersionedComponent = currentProposal.VersionedComponent,
+                    VersionedComponent = currentProposedMapping.VersionedComponent,
                     CreatedOn = DateTime.Now
                 };
 
-                currentProposal.VersionedComponent.Mappings.Add(newCommittedMapping);
+                currentProposedMapping.VersionedComponent.Mappings.Add(newCommittedMapping);
             }
 
             await _componentWriter.SaveChanges();

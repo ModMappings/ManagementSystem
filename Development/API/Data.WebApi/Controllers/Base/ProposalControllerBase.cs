@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Proposals;
 using Data.Core.Readers.Core;
 using Data.Core.Writers.Core;
 using Data.WebApi.Model;
@@ -83,7 +84,7 @@ namespace Data.WebApi.Controllers.Base
             var initialVotedFor = new List<Guid> {user.Id};
             var initialVotedAgainst = new List<Guid>();
 
-            var proposalEntry = new ProposalMappingEntry()
+            var proposalEntry = new ProposedMapping()
             {
                 VersionedComponent = classVersionedEntry,
                 InputMapping = proposalModel.NewInput,
@@ -223,49 +224,49 @@ namespace Data.WebApi.Controllers.Base
             return await ProcessClosing(merge, currentProposal, user);
         }
 
-        protected ProposalReadModel ConvertProposalDbModelToProposalReadModel(ProposalMappingEntry proposalMappingEntry)
+        protected ProposalReadModel ConvertProposalDbModelToProposalReadModel(ProposedMapping proposedMapping)
         {
             return new ProposalReadModel()
             {
-                Id = proposalMappingEntry.Id,
-                ProposedFor = proposalMappingEntry.VersionedComponent.Id,
-                GameVersion = proposalMappingEntry.VersionedComponent.GameVersion.Id,
-                ProposedBy = proposalMappingEntry.ProposedBy,
-                ProposedOn = proposalMappingEntry.ProposedOn,
-                IsOpen = proposalMappingEntry.IsOpen,
-                IsPublicVote = proposalMappingEntry.IsPublicVote,
-                VotedFor = proposalMappingEntry.VotedFor.ToList(),
-                VotedAgainst = proposalMappingEntry.VotedAgainst.ToList(),
-                Comment = proposalMappingEntry.Comment,
-                ClosedBy = proposalMappingEntry.ClosedBy,
-                ClosedOn = proposalMappingEntry.ClosedOn,
-                In = proposalMappingEntry.InputMapping,
-                Out = proposalMappingEntry.OutputMapping,
-                Documentation = proposalMappingEntry.Documentation,
-                MappingName = proposalMappingEntry.MappingType.Name,
-                Distribution = proposalMappingEntry.Distribution
+                Id = proposedMapping.Id,
+                ProposedFor = proposedMapping.VersionedComponent.Id,
+                GameVersion = proposedMapping.VersionedComponent.GameVersion.Id,
+                ProposedBy = proposedMapping.ProposedBy,
+                ProposedOn = proposedMapping.ProposedOn,
+                IsOpen = proposedMapping.IsOpen,
+                IsPublicVote = proposedMapping.IsPublicVote,
+                VotedFor = proposedMapping.VotedFor.ToList(),
+                VotedAgainst = proposedMapping.VotedAgainst.ToList(),
+                Comment = proposedMapping.Comment,
+                ClosedBy = proposedMapping.ClosedBy,
+                ClosedOn = proposedMapping.ClosedOn,
+                In = proposedMapping.InputMapping,
+                Out = proposedMapping.OutputMapping,
+                Documentation = proposedMapping.Documentation,
+                MappingName = proposedMapping.MappingType.Name,
+                Distribution = proposedMapping.Distribution
             };
         }
 
-        private async Task<ActionResult> ProcessClosing(bool merge, ProposalMappingEntry currentProposal, User user)
+        private async Task<ActionResult> ProcessClosing(bool merge, ProposedMapping currentProposedMapping, User user)
         {
-            currentProposal.ClosedBy = user.Id;
-            currentProposal.ClosedOn = DateTime.Now;
-            currentProposal.Merged = merge;
+            currentProposedMapping.ClosedBy = user.Id;
+            currentProposedMapping.ClosedOn = DateTime.Now;
+            currentProposedMapping.Merged = merge;
 
             if (merge)
             {
                 var newCommittedMapping = new LiveMappingEntry()
                 {
-                    InputMapping = currentProposal.InputMapping,
-                    OutputMapping = currentProposal.OutputMapping,
-                    Proposal = currentProposal,
+                    InputMapping = currentProposedMapping.InputMapping,
+                    OutputMapping = currentProposedMapping.OutputMapping,
+                    ProposedMapping = currentProposedMapping,
                     Releases = new List<ReleaseComponent>(),
-                    VersionedComponent = currentProposal.VersionedComponent,
+                    VersionedComponent = currentProposedMapping.VersionedComponent,
                     CreatedOn = DateTime.Now
                 };
 
-                currentProposal.VersionedComponent.Mappings.Add(newCommittedMapping);
+                currentProposedMapping.VersionedComponent.Mappings.Add(newCommittedMapping);
                 await _componentWriter.SaveChanges();
 
                 return CreatedAtAction("GetById", newCommittedMapping.VersionedComponent.Component.Id, newCommittedMapping);

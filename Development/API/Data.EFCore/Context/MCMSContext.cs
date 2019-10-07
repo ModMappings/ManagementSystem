@@ -2,6 +2,7 @@ using Castle.Core.Internal;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
 using Data.Core.Models.Mapping.Metadata;
+using Data.Core.Models.Mapping.Proposals;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.EFCore.Context
@@ -25,7 +26,7 @@ namespace Data.EFCore.Context
 
         public DbSet<LiveMappingEntry> LiveMappingEntries { get; set; }
 
-        public DbSet<ProposalMappingEntry> ProposalMappingEntries { get; set; }
+        public DbSet<ProposedMapping> ProposalMappingEntries { get; set; }
 
         public DbSet<ReleaseComponent> ReleaseComponents { get; set; }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
 using Data.Core.Models.Mapping.Metadata;
+using Data.Core.Models.Mapping.Proposals;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -115,7 +116,7 @@ namespace Data.FabricImporter.Intermediary
                     LockedMappingTypes = new List<LockingEntry>(),
                     Mappings = new List<LiveMappingEntry>(),
                     Metadata = null,
-                    Proposals = new List<ProposalMappingEntry>()
+                    Proposals = new List<ProposedMapping>()
                 };
 
                 _context.Entry(_currentVersionedClass).State = EntityState.Added;
@@ -185,7 +186,7 @@ namespace Data.FabricImporter.Intermediary
                     LockedMappingTypes = new List<LockingEntry>(),
                     Mappings = new List<LiveMappingEntry>(),
                     Metadata = null,
-                    Proposals = new List<ProposalMappingEntry>()
+                    Proposals = new List<ProposedMapping>()
                 };
 
                 newMethodComponent.VersionedComponents.Add(targetMethodVersionedComponent);
@@ -241,7 +242,7 @@ namespace Data.FabricImporter.Intermediary
                     LockedMappingTypes = new List<LockingEntry>(),
                     Mappings = new List<LiveMappingEntry>(),
                     Metadata = null,
-                    Proposals = new List<ProposalMappingEntry>()
+                    Proposals = new List<ProposedMapping>()
                 };
 
                 _context.Entry(targetFieldVersionedComponent).State = EntityState.Added;
@@ -280,7 +281,7 @@ namespace Data.FabricImporter.Intermediary
                     InputMapping = inputMapping,
                     MappingType = _tsrgMappingType,
                     OutputMapping = outputMapping,
-                    Proposal = null,
+                    ProposedMapping = null,
                     Releases = new List<ReleaseComponent>(),
                     VersionedComponent = versionedComponent
                 };

@@ -1,32 +1,33 @@
 using System.Linq;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Proposals;
 using Data.WebApi.Model.Read.Core;
 
 namespace Data.WebApi.Services.Converters
 {
     public static class ConverterUtils
     {
-        public static ProposalReadModel ConvertProposalDbModelToProposalReadModel(this ProposalMappingEntry proposalMappingEntry)
+        public static ProposalReadModel ConvertProposalDbModelToProposalReadModel(this ProposedMapping proposedMapping)
         {
             return new ProposalReadModel()
             {
-                Id = proposalMappingEntry.Id,
-                ProposedFor = proposalMappingEntry.VersionedComponent.Id,
-                GameVersion = proposalMappingEntry.VersionedComponent.GameVersion.Id,
-                ProposedBy = proposalMappingEntry.ProposedBy,
-                ProposedOn = proposalMappingEntry.ProposedOn,
-                IsOpen = proposalMappingEntry.IsOpen,
-                IsPublicVote = proposalMappingEntry.IsPublicVote,
-                VotedFor = proposalMappingEntry.VotedFor.ToList(),
-                VotedAgainst = proposalMappingEntry.VotedAgainst.ToList(),
-                Comment = proposalMappingEntry.Comment,
-                ClosedBy = proposalMappingEntry.ClosedBy,
-                ClosedOn = proposalMappingEntry.ClosedOn,
-                In = proposalMappingEntry.InputMapping,
-                Out = proposalMappingEntry.OutputMapping,
-                Documentation = proposalMappingEntry.Documentation,
-                MappingName = proposalMappingEntry.MappingType.Name,
-                Distribution = proposalMappingEntry.Distribution
+                Id = proposedMapping.Id,
+                ProposedFor = proposedMapping.VersionedComponent.Id,
+                GameVersion = proposedMapping.VersionedComponent.GameVersion.Id,
+                ProposedBy = proposedMapping.ProposedBy,
+                ProposedOn = proposedMapping.ProposedOn,
+                IsOpen = proposedMapping.IsOpen,
+                IsPublicVote = proposedMapping.IsPublicVote,
+                VotedFor = proposedMapping.VotedFor.ToList(),
+                VotedAgainst = proposedMapping.VotedAgainst.ToList(),
+                Comment = proposedMapping.Comment,
+                ClosedBy = proposedMapping.ClosedBy,
+                ClosedOn = proposedMapping.ClosedOn,
+                In = proposedMapping.InputMapping,
+                Out = proposedMapping.OutputMapping,
+                Documentation = proposedMapping.Documentation,
+                MappingName = proposedMapping.MappingType.Name,
+                Distribution = proposedMapping.Distribution
             };
         }
 

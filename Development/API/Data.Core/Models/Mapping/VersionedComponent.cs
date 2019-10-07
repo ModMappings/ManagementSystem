@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping.Metadata;
+using Data.Core.Models.Mapping.Proposals;
 
 namespace Data.Core.Models.Mapping
 {
@@ -30,7 +31,7 @@ namespace Data.Core.Models.Mapping
 
         public virtual List<LiveMappingEntry> Mappings { get; set; }
 
-        public virtual List<ProposalMappingEntry> Proposals { get; set; }
+        public virtual List<ProposedMapping> Proposals { get; set; }
 
         public virtual List<LockingEntry> LockedMappingTypes { get; set; }
     }

@@ -44,7 +44,7 @@ namespace Data.WebApi.Controllers.Base
                 Id = liveMappingEntry.Id,
                 In = liveMappingEntry.InputMapping,
                 Out = liveMappingEntry.OutputMapping,
-                Proposal = liveMappingEntry.Proposal.Id,
+                Proposal = liveMappingEntry.ProposedMapping.Id,
                 Releases = liveMappingEntry.Releases.Select(release => release.Id),
                 VersionedMapping = liveMappingEntry.VersionedComponent.Id,
                 Documentation = liveMappingEntry.Documentation,

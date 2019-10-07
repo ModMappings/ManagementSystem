@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
 using Data.Core.Models.Mapping.Metadata;
+using Data.Core.Models.Mapping.Proposals;
 using Data.Core.Readers.Core;
 using Data.Core.Readers.Mapping;
 using Data.Core.Writers.Core;
@@ -94,7 +95,7 @@ namespace Data.WebApi.Controllers.Classes
                 CreatedOn = DateTime.Now,
                 GameVersion = currentGameVersion,
                 Mappings = new List<LiveMappingEntry>(),
-                Proposals = new List<ProposalMappingEntry>()
+                Proposals = new List<ProposedMapping>()
             };
 
             versionedClassMapping.Metadata = new ClassMetadata
@@ -114,7 +115,7 @@ namespace Data.WebApi.Controllers.Classes
                     InputMapping = mappingData.In,
                     OutputMapping = mappingData.Out,
                     MappingType = _mappingTypeReader.GetByName(mappingData.MappingTypeName).Result,
-                    Proposal = null,
+                    ProposedMapping = null,
                     Releases = new List<ReleaseComponent>(),
                     VersionedComponent = versionedClassMapping,
                     CreatedOn = DateTime.Now

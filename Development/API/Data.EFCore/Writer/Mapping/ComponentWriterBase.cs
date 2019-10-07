@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Proposals;
 using Data.Core.Writers.Core;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
@@ -132,7 +133,7 @@ namespace Data.EFCore.Writer.Mapping
                 .FirstOrDefaultAsync(v => v.Id == id);
         }
 
-        public async Task<ProposalMappingEntry> GetProposalMapping(Guid id)
+        public async Task<ProposedMapping> GetProposalMapping(Guid id)
         {
             return await MCMSContext.ProposalMappingEntries.FirstOrDefaultAsync(p => p.Id == id);
         }
@@ -175,14 +176,14 @@ namespace Data.EFCore.Writer.Mapping
             await Task.CompletedTask;
         }
 
-        public async Task Add(ProposalMappingEntry mapping)
+        public async Task Add(ProposedMapping proposedMapping)
         {
-            await MCMSContext.ProposalMappingEntries.AddAsync(mapping);
+            await MCMSContext.ProposalMappingEntries.AddAsync(proposedMapping);
         }
 
-        public async Task Update(ProposalMappingEntry mapping)
+        public async Task Update(ProposedMapping proposedMapping)
         {
-            MCMSContext.ProposalMappingEntries.Update(mapping);
+            MCMSContext.ProposalMappingEntries.Update(proposedMapping);
             await Task.CompletedTask;
         }
 

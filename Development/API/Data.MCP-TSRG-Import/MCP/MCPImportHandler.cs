@@ -214,7 +214,7 @@ namespace Data.MCP.TSRG.Importer
                     Id = Guid.NewGuid(),
                     InputMapping = entryData[0],
                     OutputMapping = entryData[1],
-                    Proposal = null,
+                    ProposedMapping = null,
                     Releases = new List<ReleaseComponent>(),
                     VersionedComponent = null,
                     MappingType = mcpMappingType

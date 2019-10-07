@@ -5,7 +5,7 @@ using Data.Core.Models.Core;
 
 namespace Data.Core.Models.Mapping
 {
-    public abstract class MappingEntryBase
+    public abstract class MappingBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
