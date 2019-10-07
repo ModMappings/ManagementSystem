@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Writers.Core;
 using Data.WebApi.Model.Read.Core;
 using Microsoft.AspNetCore.Http;
@@ -37,19 +38,19 @@ namespace Data.WebApi.Controllers.Base
             return Json(ConvertLiveDbModelToDetailedMappingReadModel(liveMappingEntry));
         }
 
-        protected DetailedMappingReadModel ConvertLiveDbModelToDetailedMappingReadModel(LiveMappingEntry liveMappingEntry)
+        protected DetailedMappingReadModel ConvertLiveDbModelToDetailedMappingReadModel(CommittedMapping committedMapping)
         {
             return new DetailedMappingReadModel()
             {
-                Id = liveMappingEntry.Id,
-                In = liveMappingEntry.InputMapping,
-                Out = liveMappingEntry.OutputMapping,
-                Proposal = liveMappingEntry.ProposedMapping.Id,
-                Releases = liveMappingEntry.Releases.Select(release => release.Id),
-                VersionedMapping = liveMappingEntry.VersionedComponent.Id,
-                Documentation = liveMappingEntry.Documentation,
-                MappingName = liveMappingEntry.MappingType.Name,
-                Distribution = liveMappingEntry.Distribution
+                Id = committedMapping.Id,
+                In = committedMapping.InputMapping,
+                Out = committedMapping.OutputMapping,
+                Proposal = committedMapping.ProposedMapping.Id,
+                Releases = committedMapping.Releases.Select(release => release.Id),
+                VersionedMapping = committedMapping.VersionedComponent.Id,
+                Documentation = committedMapping.Documentation,
+                MappingName = committedMapping.MappingType.Name,
+                Distribution = committedMapping.Distribution
             };
         }
     }

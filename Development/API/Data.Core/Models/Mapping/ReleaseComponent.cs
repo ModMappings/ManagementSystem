@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Data.Core.Models.Core;
+using Data.Core.Models.Mapping.Mappings;
 
 namespace Data.Core.Models.Mapping
 {
@@ -18,6 +19,6 @@ namespace Data.Core.Models.Mapping
         public virtual Release Release { get; set; }
 
         [Required]
-        public virtual LiveMappingEntry Member { get; set; }
+        public virtual CommittedMapping Member { get; set; }
     }
 }

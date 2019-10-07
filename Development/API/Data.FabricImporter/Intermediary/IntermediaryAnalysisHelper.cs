@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Models.Mapping.Metadata;
-using Data.Core.Models.Mapping.Proposals;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -114,7 +114,7 @@ namespace Data.FabricImporter.Intermediary
                     CreatedOn = DateTime.Now,
                     GameVersion = _gameVersion,
                     LockedMappingTypes = new List<LockingEntry>(),
-                    Mappings = new List<LiveMappingEntry>(),
+                    Mappings = new List<CommittedMapping>(),
                     Metadata = null,
                     Proposals = new List<ProposedMapping>()
                 };
@@ -184,7 +184,7 @@ namespace Data.FabricImporter.Intermediary
                     CreatedOn = DateTime.Now,
                     GameVersion = _gameVersion,
                     LockedMappingTypes = new List<LockingEntry>(),
-                    Mappings = new List<LiveMappingEntry>(),
+                    Mappings = new List<CommittedMapping>(),
                     Metadata = null,
                     Proposals = new List<ProposedMapping>()
                 };
@@ -240,7 +240,7 @@ namespace Data.FabricImporter.Intermediary
                     CreatedOn = DateTime.Now,
                     GameVersion = _gameVersion,
                     LockedMappingTypes = new List<LockingEntry>(),
-                    Mappings = new List<LiveMappingEntry>(),
+                    Mappings = new List<CommittedMapping>(),
                     Metadata = null,
                     Proposals = new List<ProposedMapping>()
                 };
@@ -272,7 +272,7 @@ namespace Data.FabricImporter.Intermediary
 
             if (liveMapping == null)
             {
-                liveMapping = new LiveMappingEntry
+                liveMapping = new CommittedMapping
                 {
                     Id = Guid.NewGuid(),
                     CreatedOn = DateTime.Now,

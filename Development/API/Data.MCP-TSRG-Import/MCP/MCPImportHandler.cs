@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Mappings;
 using Data.EFCore.Context;
 using Data.MCP.TSRG.Importer.Extensions;
 using Flurl.Http;
@@ -171,7 +172,7 @@ namespace Data.MCP.TSRG.Importer
             await context.MappingTypes.AddAsync(tsrgMappingType);
         }
 
-        private async Task<IEnumerable<LiveMappingEntry>> ProcessMCPArtifactForData(
+        private async Task<IEnumerable<CommittedMapping>> ProcessMCPArtifactForData(
             MavenArtifact mcpArtifact,
             IReadOnlyDictionary<string, Release> releases,
             MappingType mcpMappingType,
@@ -188,7 +189,7 @@ namespace Data.MCP.TSRG.Importer
 
             _logger.LogInformation($"Found: {artifactEntries.Count} entries in {mcpArtifactDataType}");
 
-            var mappingEntries = new List<LiveMappingEntry>();
+            var mappingEntries = new List<CommittedMapping>();
             var totalLineCount = artifactEntries.Count;
             var currentlyProcessed = 0d;
             var currentPercentage = -1d;
@@ -206,7 +207,7 @@ namespace Data.MCP.TSRG.Importer
 
                 var entryData = entry.Split(";");
 
-                var mappingEntry = new LiveMappingEntry()
+                var mappingEntry = new CommittedMapping()
                 {
                     CreatedOn = DateTime.Now,
                     Documentation = entryData[3],
@@ -236,7 +237,7 @@ namespace Data.MCP.TSRG.Importer
 
         private async Task DetermineCrossVersionHistoryFromLiveMappings(
             MCMSContext context,
-            IEnumerable<LiveMappingEntry> liveMappingEntries,
+            IEnumerable<CommittedMapping> liveMappingEntries,
             MappingType tsrgMappingType)
         {
             foreach (var liveMappingEntry in liveMappingEntries)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Data.Core.Models.Mapping.Metadata
 {
     public class ClassMetadata
-        : VersionedComponentMetadataBase
+        : MetadataBase
     {
         public virtual ClassMetadata Outer { get; set; }
 

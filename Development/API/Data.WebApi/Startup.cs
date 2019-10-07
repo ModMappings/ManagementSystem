@@ -42,11 +42,8 @@ namespace Data.WebApi
             services.AddHealthChecks()
                 .AddDbContextCheck<MCMSContext>();
 
-            //services.AddEntityFrameworkProxies();
-
             services.AddDbContext<MCMSContext>(opt =>
                 opt.UseNpgsql(Configuration["ConnectionStrings:DefaultConnection"])
-                //    .UseLazyLoadingProxies()
                 );
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)

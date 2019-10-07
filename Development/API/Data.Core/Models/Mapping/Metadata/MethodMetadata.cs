@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Data.Core.Models.Mapping.Metadata
 {
     public class MethodMetadata
-        : ClassMemberComponentMetadataBase
+        : ClassMemberMetadataBase
     {
         public virtual List<ParameterMetadata> Parameters { get; set; }
 

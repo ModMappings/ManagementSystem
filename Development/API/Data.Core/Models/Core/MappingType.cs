@@ -13,21 +13,39 @@ namespace Data.Core.Models.Core
     public class MappingType
     {
 
+        /// <summary>
+        /// The id of the type.
+        /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// The name of the mapping type.
+        /// </summary>
         [Required]
         public string Name { get; set; }
 
+        /// <summary>
+        /// The if of the user who created the type.
+        /// </summary>
         [Required]
         public virtual Guid CreatedBy { get; set; }
 
+        /// <summary>
+        /// The moment the type was created within the system.
+        /// </summary>
         [Required]
         public DateTime CreatedOn { get; set; }
 
+        /// <summary>
+        /// The releases that where made for this type.
+        /// </summary>
         public virtual List<Release> Releases { get; set; }
 
+        /// <summary>
+        /// The versioned components that are locked for this mapping.
+        /// </summary>
         public virtual List<LockingEntry> LockedVersionedComponents { get; set; }
     }
 }

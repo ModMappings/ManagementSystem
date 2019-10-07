@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Proposals;
+using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Writers.Core;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
@@ -138,7 +138,7 @@ namespace Data.EFCore.Writer.Mapping
             return await MCMSContext.ProposalMappingEntries.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<LiveMappingEntry> GetLiveMapping(Guid id)
+        public async Task<CommittedMapping> GetLiveMapping(Guid id)
         {
             return await MCMSContext.LiveMappingEntries.FirstOrDefaultAsync(m => m.Id == id);
         }
@@ -165,12 +165,12 @@ namespace Data.EFCore.Writer.Mapping
             await Task.CompletedTask;
         }
 
-        public async Task Add(LiveMappingEntry mapping)
+        public async Task Add(CommittedMapping mapping)
         {
             await MCMSContext.LiveMappingEntries.AddAsync(mapping);
         }
 
-        public async Task Update(LiveMappingEntry mapping)
+        public async Task Update(CommittedMapping mapping)
         {
             MCMSContext.LiveMappingEntries.Update(mapping);
             await Task.CompletedTask;

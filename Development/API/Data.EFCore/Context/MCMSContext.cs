@@ -1,8 +1,8 @@
 using Castle.Core.Internal;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Models.Mapping.Metadata;
-using Data.Core.Models.Mapping.Proposals;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.EFCore.Context
@@ -24,7 +24,7 @@ namespace Data.EFCore.Context
 
         public DbSet<VersionedComponent> VersionedComponents { get; set; }
 
-        public DbSet<LiveMappingEntry> LiveMappingEntries { get; set; }
+        public DbSet<CommittedMapping> LiveMappingEntries { get; set; }
 
         public DbSet<ProposedMapping> ProposalMappingEntries { get; set; }
 
@@ -32,7 +32,7 @@ namespace Data.EFCore.Context
 
         public DbSet<LockingEntry> LockingEntries { get; set; }
 
-        public DbSet<VersionedComponentMetadataBase> VersionedComponentMetadata { get; set; }
+        public DbSet<MetadataBase> VersionedComponentMetadata { get; set; }
 
         public DbSet<ClassMetadata> ClassMetadata { get; set; }
 

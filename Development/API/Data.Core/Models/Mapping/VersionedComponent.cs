@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Data.Core.Models.Core;
+using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Models.Mapping.Metadata;
-using Data.Core.Models.Mapping.Proposals;
 
 namespace Data.Core.Models.Mapping
 {
@@ -27,9 +27,9 @@ namespace Data.Core.Models.Mapping
         public virtual Component Component { get; set; }
 
         [Required]
-        public virtual VersionedComponentMetadataBase Metadata { get; set; }
+        public virtual MetadataBase Metadata { get; set; }
 
-        public virtual List<LiveMappingEntry> Mappings { get; set; }
+        public virtual List<CommittedMapping> Mappings { get; set; }
 
         public virtual List<ProposedMapping> Proposals { get; set; }
 

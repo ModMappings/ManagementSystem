@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Models.Mapping.Metadata;
-using Data.Core.Models.Mapping.Proposals;
 using Data.Core.Readers.Core;
 using Data.Core.Writers.Mapping;
 using Data.WebApi.Controllers.Base;
@@ -157,7 +157,7 @@ namespace Data.WebApi.Controllers.Classes
                 CreatedBy = user.Id,
                 CreatedOn = DateTime.Now,
                 GameVersion = currentLatestGameVersion,
-                Mappings = new List<LiveMappingEntry>(),
+                Mappings = new List<CommittedMapping>(),
                 Proposals = new List<ProposedMapping>()
             };
 
@@ -171,7 +171,7 @@ namespace Data.WebApi.Controllers.Classes
             };
 
             var initialLiveMappings = mapping.Mappings
-                .Select(mappingData => new LiveMappingEntry()
+                .Select(mappingData => new CommittedMapping()
                 {
                     Documentation = mappingData.Documentation,
                     Distribution = mappingData.Distribution,

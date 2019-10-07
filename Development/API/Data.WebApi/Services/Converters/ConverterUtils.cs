@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Proposals;
+using Data.Core.Models.Mapping.Mappings;
 using Data.WebApi.Model.Read.Core;
 
 namespace Data.WebApi.Services.Converters
@@ -32,16 +32,16 @@ namespace Data.WebApi.Services.Converters
             };
         }
 
-        public static MappingReadModel ConvertLiveDbModelToMappingReadModel(this LiveMappingEntry liveMappingEntry)
+        public static MappingReadModel ConvertLiveDbModelToMappingReadModel(this CommittedMapping committedMapping)
         {
             return new MappingReadModel()
             {
-                Id = liveMappingEntry.Id,
-                In = liveMappingEntry.InputMapping,
-                Out = liveMappingEntry.OutputMapping,
-                Documentation = liveMappingEntry.Documentation,
-                MappingName = liveMappingEntry.MappingType.Name,
-                Distribution = liveMappingEntry.Distribution
+                Id = committedMapping.Id,
+                In = committedMapping.InputMapping,
+                Out = committedMapping.OutputMapping,
+                Documentation = committedMapping.Documentation,
+                MappingName = committedMapping.MappingType.Name,
+                Distribution = committedMapping.Distribution
             };
         }
     }

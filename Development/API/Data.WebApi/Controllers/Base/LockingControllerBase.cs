@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Proposals;
+using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Readers.Core;
 using Data.Core.Writers.Core;
 using Data.WebApi.Model;
@@ -236,7 +236,7 @@ namespace Data.WebApi.Controllers.Base
 
             if (merge)
             {
-                var newCommittedMapping = new LiveMappingEntry()
+                var newCommittedMapping = new CommittedMapping()
                 {
                     InputMapping = currentProposedMapping.InputMapping,
                     OutputMapping = currentProposedMapping.OutputMapping,

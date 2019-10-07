@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
 using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Proposals;
+using Data.Core.Models.Mapping.Mappings;
 
 namespace Data.Core.Readers.Core
 {
@@ -43,6 +43,6 @@ namespace Data.Core.Readers.Core
 
         Task<ProposedMapping> GetProposalMapping(Guid id);
 
-        Task<LiveMappingEntry> GetLiveMapping(Guid id);
+        Task<CommittedMapping> GetLiveMapping(Guid id);
     }
 }
