@@ -1,6 +1,8 @@
 using Castle.Core.Internal;
 using Data.Core.Models.Core;
+using Data.Core.Models.Core.Release;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Component;
 using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Models.Mapping.Metadata;
 using Microsoft.EntityFrameworkCore;

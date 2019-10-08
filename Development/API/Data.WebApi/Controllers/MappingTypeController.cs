@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Core;
+using Data.Core.Models.Core.Release;
 using Data.Core.Writers.Core;
 using Data.WebApi.Model.Creation.Core;
 using Data.WebApi.Model.Read.Core;

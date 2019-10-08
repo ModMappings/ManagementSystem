@@ -6,7 +6,7 @@ using Data.Core.Models.Core;
 using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Models.Mapping.Metadata;
 
-namespace Data.Core.Models.Mapping
+namespace Data.Core.Models.Mapping.Component
 {
     public class VersionedComponent
     {

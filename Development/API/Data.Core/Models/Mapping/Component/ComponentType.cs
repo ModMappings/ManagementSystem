@@ -1,4 +1,4 @@
-namespace Data.Core.Models.Mapping
+namespace Data.Core.Models.Mapping.Component
 {
     public enum ComponentType
     {

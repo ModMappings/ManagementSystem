@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Component;
 using Data.Core.Readers.Core;
 using Data.Core.Writers.Core;
 using Data.WebApi.Extensions;

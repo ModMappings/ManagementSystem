@@ -63,7 +63,7 @@ mono_crash.*
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
+./[Rr]elease/
 [Rr]eleases/
 x64/
 x86/
@@ -412,3 +412,9 @@ MigrationBackup/
 #
 #
 Data.EFCore/Context/Database/
+/.idea/.idea.MCMS.dir/.idea/indexLayout.xml
+/.idea/.idea.MCMS/.idea/misc.xml
+/.idea/.idea.MCMS/.idea/scopes/Project__Development_.xml
+/.idea/.idea.MCMS.dir/.idea/projectSettingsUpdater.xml
+/.idea/.idea.MCMS.dir/.idea/vcs.xml
+/.idea/.idea.MCMS/.idea/watcherTasks.xml

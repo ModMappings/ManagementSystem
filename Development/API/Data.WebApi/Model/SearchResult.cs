@@ -1,5 +1,6 @@
 using System;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Component;
 
 namespace Data.WebApi.Model
 {

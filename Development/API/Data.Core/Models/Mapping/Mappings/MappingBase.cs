@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Data.Core.Models.Core;
+using Data.Core.Models.Mapping.Component;
 
 namespace Data.Core.Models.Mapping.Mappings
 {

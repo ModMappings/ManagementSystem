@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Data.Core.Models.Comments;
-using Data.Core.Models.Mapping;
 
-namespace Data.Core.Models.Core
+namespace Data.Core.Models.Core.Release
 {
     /// <summary>
     /// Represents a single release of mapping data, for a given mapping type.

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Core.Models.Core.Release;
 using Data.Core.Models.Mapping;
 using Data.Core.Models.Mapping.Mappings;
 using Data.Core.Readers.Core;

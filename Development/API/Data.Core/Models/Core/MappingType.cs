@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Data.Core.Models.Mapping;
+using Data.Core.Models.Mapping.Component;
 
 namespace Data.Core.Models.Core
 {
@@ -41,7 +42,7 @@ namespace Data.Core.Models.Core
         /// <summary>
         /// The releases that where made for this type.
         /// </summary>
-        public virtual List<Release> Releases { get; set; }
+        public virtual List<Release.Release> Releases { get; set; }
 
         /// <summary>
         /// The versioned components that are locked for this mapping.

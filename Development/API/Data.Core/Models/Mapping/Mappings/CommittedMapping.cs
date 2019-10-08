@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Data.Core.Models.Core.Release;
 
 namespace Data.Core.Models.Mapping.Mappings
 {
