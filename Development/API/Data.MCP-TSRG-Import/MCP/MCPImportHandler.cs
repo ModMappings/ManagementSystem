@@ -226,7 +226,7 @@ namespace Data.MCP.TSRG.Importer
                 mappingEntry.Releases.Add(new ReleaseComponent()
                 {
                     Id = Guid.NewGuid(),
-                    Member = mappingEntry,
+                    Mapping = mappingEntry,
                     Release = release,
                     ComponentType = type
                 });

@@ -243,7 +243,7 @@ namespace Data.WebApi.Controllers
                     Id = new Guid(),
                     ComponentType = ComponentType.CLASS,
                     Release = release,
-                    Member = committedMapping
+                    Mapping = committedMapping
                 }).ToList();
 
             var releaseMethods = (await _methods.GetByVersion(gameVersion)).Select(methodMapping =>
@@ -255,7 +255,7 @@ namespace Data.WebApi.Controllers
                     Id = new Guid(),
                     ComponentType = ComponentType.METHOD,
                     Release = release,
-                    Member = committedMapping
+                    Mapping = committedMapping
                 }).ToList();
 
             var releaseFields = (await _fields.GetByVersion(gameVersion)).Select(fieldMapping =>
@@ -267,7 +267,7 @@ namespace Data.WebApi.Controllers
                     Id = new Guid(),
                     ComponentType = ComponentType.FIELD,
                     Release = release,
-                    Member = committedMapping
+                    Mapping = committedMapping
                 }).ToList();
 
             var releaseParameters = (await _parameters.GetByVersion(gameVersion)).Select(parameterMapping =>
@@ -279,7 +279,7 @@ namespace Data.WebApi.Controllers
                     Id = new Guid(),
                     ComponentType = ComponentType.FIELD,
                     Release = release,
-                    Member = committedMapping
+                    Mapping = committedMapping
                 }).ToList();
 
             release.Components.AddRange(releaseClasses);

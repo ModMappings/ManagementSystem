@@ -101,8 +101,8 @@ namespace Data.WebApi.Controllers.Base
                 ClosedBy = null,
                 ClosedOn = null,
                 Merged = null,
-                WentCommittedWith = null,
-                WentLiveWithId = null
+                CommittedWith = null,
+                CommittedWithId = null
             };
 
             classVersionedEntry.Proposals.Add(proposalEntry);

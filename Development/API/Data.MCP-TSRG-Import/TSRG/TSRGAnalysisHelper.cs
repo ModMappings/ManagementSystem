@@ -300,7 +300,7 @@ namespace Data.MCP.TSRG.Importer.TSRG
                 {
                     Id = Guid.NewGuid(),
                     ComponentType = versionedComponent.Component.Type,
-                    Member = liveMapping,
+                    Mapping = liveMapping,
                     Release = _release
                 };
 

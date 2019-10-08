@@ -48,7 +48,7 @@ namespace Data.Core.Models.Mapping.Mappings
         public string Documentation { get; set; }
 
         /// <summary>
-        /// The distribution that
+        /// The distribution that this mapping can be found in.
         /// </summary>
         [Required]
         public Distribution Distribution { get; set; }

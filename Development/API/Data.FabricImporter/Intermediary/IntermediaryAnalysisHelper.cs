@@ -300,7 +300,7 @@ namespace Data.FabricImporter.Intermediary
                 {
                     Id = Guid.NewGuid(),
                     ComponentType = versionedComponent.Component.Type,
-                    Member = liveMapping,
+                    Mapping = liveMapping,
                     Release = _release
                 };
 
