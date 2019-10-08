@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Core.Models.Core;
-using Data.Core.Models.Core.Release;
-using Data.Core.Readers.Core;
-using Data.Core.Writers.Core;
+using Mcms.Api.Data.Poco.Models.Core;
+using Mcms.Api.Data.Poco.Models.Core.Release;
+using Mcms.Api.Data.Poco.Readers.Core;
+using Mcms.Api.Data.Poco.Writers.Core;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 

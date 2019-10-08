@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Component;
-using Data.Core.Writers.Core;
+using Mcms.Api.Data.Poco.Models.Mapping;
+using Mcms.Api.Data.Poco.Models.Mapping.Component;
+using Mcms.Api.Data.Poco.Writers.Core;
 using Data.WebApi.Model.Read.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

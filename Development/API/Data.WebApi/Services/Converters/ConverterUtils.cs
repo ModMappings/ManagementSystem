@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Mappings;
+using Mcms.Api.Data.Poco.Models.Mapping;
+using Mcms.Api.Data.Poco.Models.Mapping.Mappings;
 using Data.WebApi.Model.Read.Core;
 
 namespace Data.WebApi.Services.Converters

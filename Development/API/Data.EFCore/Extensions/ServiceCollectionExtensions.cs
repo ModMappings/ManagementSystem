@@ -1,7 +1,7 @@
-using Data.Core.Readers.Core;
-using Data.Core.Readers.Mapping;
-using Data.Core.Writers.Core;
-using Data.Core.Writers.Mapping;
+using Mcms.Api.Data.Poco.Readers.Core;
+using Mcms.Api.Data.Poco.Readers.Mapping;
+using Mcms.Api.Data.Poco.Writers.Core;
+using Mcms.Api.Data.Poco.Writers.Mapping;
 using Data.EFCore.Writer.Core;
 using Data.EFCore.Writer.Mapping;
 using Microsoft.Extensions.DependencyInjection;

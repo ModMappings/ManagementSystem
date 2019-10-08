@@ -1,6 +1,6 @@
-using Data.Core.Readers.Core;
-using Data.Core.Writers.Core;
-using Data.Core.Writers.Mapping;
+using Mcms.Api.Data.Poco.Readers.Core;
+using Mcms.Api.Data.Poco.Writers.Core;
+using Mcms.Api.Data.Poco.Writers.Mapping;
 using Data.WebApi.Controllers.Base;
 using Data.WebApi.Services.Core;
 using Microsoft.AspNetCore.Mvc;

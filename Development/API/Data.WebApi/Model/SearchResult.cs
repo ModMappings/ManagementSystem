@@ -1,6 +1,6 @@
 using System;
-using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Component;
+using Mcms.Api.Data.Poco.Models.Mapping;
+using Mcms.Api.Data.Poco.Models.Mapping.Component;
 
 namespace Data.WebApi.Model
 {

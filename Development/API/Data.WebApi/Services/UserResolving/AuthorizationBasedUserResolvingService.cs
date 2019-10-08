@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Data.Core.Models.Core;
+using Mcms.Api.Data.Poco.Models.Core;
 using Data.WebApi.Model;
 using Data.WebApi.Services.Core;
 using Microsoft.AspNetCore.Http;

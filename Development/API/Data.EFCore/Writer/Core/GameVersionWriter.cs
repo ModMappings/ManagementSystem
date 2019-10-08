@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Core.Models.Core;
-using Data.Core.Writers.Core;
+using Mcms.Api.Data.Poco.Models.Core;
+using Mcms.Api.Data.Poco.Writers.Core;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -71,6 +71,7 @@ namespace Data.EFCore.Writer.Core
 
         public async Task SaveChanges()
         {
+            _context.Find
             await this._context.SaveChangesAsync();
         }
     }

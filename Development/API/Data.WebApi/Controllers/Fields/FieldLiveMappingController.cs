@@ -1,5 +1,5 @@
-using Data.Core.Writers.Core;
-using Data.Core.Writers.Mapping;
+using Mcms.Api.Data.Poco.Writers.Core;
+using Mcms.Api.Data.Poco.Writers.Mapping;
 using Data.WebApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 

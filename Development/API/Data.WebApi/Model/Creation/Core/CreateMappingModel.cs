@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Data.Core.Models.Core;
+using Mcms.Api.Data.Poco.Models.Core;
 
 namespace Data.WebApi.Model.Creation.Core
 {

@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
-using Data.Core.Models.Core;
-using Data.Core.Models.Core.Release;
-using Data.Core.Models.Mapping;
-using Data.Core.Models.Mapping.Component;
-using Data.Core.Models.Mapping.Mappings;
-using Data.Core.Writers.Core;
+using Mcms.Api.Data.Poco.Models.Core;
+using Mcms.Api.Data.Poco.Models.Core.Release;
+using Mcms.Api.Data.Poco.Models.Mapping;
+using Mcms.Api.Data.Poco.Models.Mapping.Component;
+using Mcms.Api.Data.Poco.Models.Mapping.Mappings;
+using Mcms.Api.Data.Poco.Writers.Core;
 using Data.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 

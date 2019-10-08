@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Core.Models.Mapping.Metadata;
+using Mcms.Api.Data.Poco.Models.Mapping.Metadata;
 using Data.EFCore.Writer.Mapping;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
