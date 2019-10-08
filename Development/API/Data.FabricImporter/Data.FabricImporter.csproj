@@ -11,6 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Data.EFCore\Data.EFCore.csproj" />
+      <ProjectReference Include="..\Mcms.Api.Business.EfCore\Mcms.Api.Business.EfCore.csproj" />
     </ItemGroup>
 </Project>

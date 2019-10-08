@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WebApi", "Development\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Poco", "Development\API\Mcms.Api.Poco\Mcms.Api.Poco.csproj", "{3BC7EA15-800F-42E6-947F-B33F8AA925B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.EFCore", "Development\API\Data.EFCore\Data.EFCore.csproj", "{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Business.EfCore", "Development\API\Mcms.Api.Business.EfCore\Mcms.Api.Business.EfCore.csproj", "{AF2AC5F2-63FD-415E-B201-8B5BC7769CE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.MCP-TSRG-Import", "Development\API\Data.MCP-TSRG-Import\Data.MCP-TSRG-Import.csproj", "{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}"
 EndProject

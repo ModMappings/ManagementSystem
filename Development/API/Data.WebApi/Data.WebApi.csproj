@@ -30,9 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Data.EFCore\Data.EFCore.csproj" />
       <ProjectReference Include="..\Data.FabricImporter\Data.FabricImporter.csproj" />
       <ProjectReference Include="..\Data.MCP-TSRG-Import\Data.MCP-TSRG-Import.csproj" />
+      <ProjectReference Include="..\Mcms.Api.Business.EfCore\Mcms.Api.Business.EfCore.csproj" />
       <ProjectReference Include="..\Mcms.Api.Poco\Mcms.Api.Poco.csproj" />
     </ItemGroup>
 
