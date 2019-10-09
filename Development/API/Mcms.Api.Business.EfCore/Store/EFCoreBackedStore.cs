@@ -12,6 +12,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Data.EFCore.Store
 {
+    /// <summary>
+    /// An EntityFramework core back implementation of the <see cref="IStore{TEntity}"/> interface.
+    /// </summary>
+    /// <typeparam name="TEntity">The entity type stored in the store.</typeparam>
     public class EfCoreBackedStore<TEntity>
         : IStore<TEntity> where TEntity : class
     {
