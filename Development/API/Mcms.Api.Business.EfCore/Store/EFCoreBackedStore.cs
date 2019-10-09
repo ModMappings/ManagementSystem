@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace Data.EFCore.Store
 {
     public class EfCoreBackedStore<TEntity>
-        : IStore<TEntity>
+        : IStore<TEntity> where TEntity : class
     {
 
         private readonly MCMSContext _context;
@@ -51,7 +51,18 @@ namespace Data.EFCore.Store
 
         public async Task<IQueryable<TEntity>> ReadAsync(IQueryFilter<TEntity> filter = null, CancellationToken? cancellationToken = null)
         {
-            throw new System.NotImplementedException();
+            _logger.LogDebug($"About to create a filtered query for: {nameof(TEntity)} using filter: {DescribeFilter(filter)}.");
+
+            var unfilteredQueryable = _context.Query<TEntity>().AsQueryable();
+
+            var filteredQueryable = unfilteredQueryable;
+            if (filter != null)
+            {
+                filteredQueryable = filter.Apply(filteredQueryable);
+            }
+
+            _logger.LogDebug($"Created a filtered query for: {nameof(TEntity)} using filter {DescribeFilter(filter)}");
+            return filteredQueryable;
         }
 
         public Task Update(TEntity entityToUpdate, CancellationToken? cancellationToken = null)
@@ -105,5 +116,13 @@ namespace Data.EFCore.Store
             await _context.SaveChangesAsync(cancellationToken ?? CancellationToken.None);
             _logger.LogInformation($"Saved all uncommitted changes of type: {nameof(TEntity)} to {_context.Database.GetDbConnection().Database}");
         }
+
+        /// <summary>
+        /// Describes a query filter using its <see cref="Object#toString()"/> method.
+        /// Returns 'none' when the given query filter is null.
+        /// </summary>
+        /// <param name="queryFilter">The describe the query filter.</param>
+        /// <returns>A string describing the given query filter, or none if null is given.</returns>
+        private string DescribeFilter(IQueryFilter<TEntity> queryFilter) => queryFilter == null ? "none" : queryFilter.ToString();
     }
 }
