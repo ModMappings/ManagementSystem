@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Text;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Data.EFCore.Extensions
@@ -17,8 +16,10 @@ namespace Data.EFCore.Extensions
         /// <returns>The human readable string representation of the key value of the given entity entry.</returns>
         public static string GetKeyPropertiesAsString(this EntityEntry entityEntry)
         {
+            //Find the primary key from the entity model metadata.
             var entityKey = entityEntry.Metadata.FindPrimaryKey();
 
+            //For each primary key entry, get the name and value, and return it together with the type name, properly formatted of course.
             return $"{entityEntry.Entity.GetType().Name}: (" +
                    entityKey.Properties.Select(p => $"{p.Name}={entityEntry.Property(p.Name)}")
                        .Aggregate((l, r) => $"{l}, {r}");
