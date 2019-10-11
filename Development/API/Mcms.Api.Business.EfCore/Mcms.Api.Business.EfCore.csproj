@@ -36,5 +36,4 @@
     <ItemGroup>
       <None Remove="Writer\**" />
     </ItemGroup>
-
 </Project>

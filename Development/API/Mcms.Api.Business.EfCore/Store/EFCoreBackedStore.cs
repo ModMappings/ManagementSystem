@@ -36,7 +36,7 @@ namespace Data.EFCore.Store
             _context.ChangeTracker.LazyLoadingEnabled = false;
         }
 
-        public Task CreateAsync(TEntity entityToCreate, CancellationToken? cancellationToken = null)
+        public Task Create(TEntity entityToCreate, CancellationToken? cancellationToken = null)
         {
             _logger.LogDebug($"About to create a new {nameof(TEntity)}, checking for valid entity state.");
             var entityEntry = _context.Entry(entityToCreate);

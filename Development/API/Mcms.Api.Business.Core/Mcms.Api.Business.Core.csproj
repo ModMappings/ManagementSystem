@@ -7,5 +7,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Mcms.Api.Poco\Mcms.Api.Poco.csproj" />
   </ItemGroup>
-
 </Project>

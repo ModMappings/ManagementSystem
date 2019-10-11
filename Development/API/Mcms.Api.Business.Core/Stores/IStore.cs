@@ -18,8 +18,8 @@ namespace Mcms.Api.Business.Core.Stores
         /// <param name="entityToCreate">The entity to create.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation, if none is supplied no cancellation is possible.</param>
         /// <returns>The task representing the creation of the entity.</returns>
-        /// <exception cref="InvalidOperationException">is thrown when this method is called on either a known entity or a uncommitted deleted entity.</exception>
-        Task CreateAsync(TEntity entityToCreate, CancellationToken? cancellationToken = null);
+        /// <exception cref="InvalidOperationException">is thrown when this method is called with either a known entity or a uncommitted deleted entity.</exception>
+        Task Create(TEntity entityToCreate, CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Gets all entities, that match the filter.
@@ -39,7 +39,7 @@ namespace Mcms.Api.Business.Core.Stores
         /// <param name="entityToUpdate">The entity to update.</param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation, if none is supplied no cancellation is possible.</param>
         /// <returns>The task representing the update of the entity.</returns>
-        /// <exception cref="InvalidOperationException">is thrown when this method is called on either an unknown entity (uncommitted deleted) or an uncommitted created entity.</exception>
+        /// <exception cref="InvalidOperationException">is thrown when this method is called with either an unknown entity (uncommitted deleted) or an uncommitted created entity.</exception>
         Task Update(TEntity entityToUpdate, CancellationToken? cancellationToken = null);
 
         /// <summary>
