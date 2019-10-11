@@ -27,7 +27,7 @@ namespace Data.EFCore.Manager.Mapping.Component
 
         public async Task<IQueryable<VersionedComponent>> FindById(Guid id)
         {
-            _logger.LogDebug($"Attempting to find component by id: '{id}'");
+            _logger.LogDebug($"Attempting to find versioned component by id: '{id}'");
             var filter = _queryFilterFactory.AddCallback(
                 (q) => q.Where(c => c.Id == id)
             ).Build();
@@ -37,7 +37,7 @@ namespace Data.EFCore.Manager.Mapping.Component
 
         public async Task<IQueryable<VersionedComponent>> FindByType(ComponentType type)
         {
-            _logger.LogDebug($"Attempting to find component by type: '{type}'");
+            _logger.LogDebug($"Attempting to find versioned component by type: '{type}'");
             var filter = _queryFilterFactory.AddCallback(
                 (q) => q.Where(c => c.Component.Type == type)
             ).Build();
@@ -45,9 +45,19 @@ namespace Data.EFCore.Manager.Mapping.Component
             return await _store.ReadAsync(filter);
         }
 
+        public async Task<IQueryable<VersionedComponent>> FindByComponentId(Guid componentId)
+        {
+            _logger.LogDebug($"Attempting to find versioned component by component id {componentId}");
+            var filter = _queryFilterFactory.AddCallback(
+                (q) => q.Where(vc => vc.Component.Id == componentId)
+            ).Build();
+
+            return await _store.ReadAsync(filter);
+        }
+
         public async Task<IQueryable<VersionedComponent>> FindByMapping(string mappingTypeNameRegex, string mappingRegex)
         {
-            _logger.LogDebug($"Attempting to find component by mapping type name regex: '{mappingTypeNameRegex}' and mapping regex: '{mappingRegex}'");
+            _logger.LogDebug($"Attempting to find versioned component by mapping type name regex: '{mappingTypeNameRegex}' and mapping regex: '{mappingRegex}'");
             var outputMappingQuery = await FindByOutputMapping(mappingTypeNameRegex, mappingRegex);
             var inputMappingQuery = await FindByInputMapping(mappingTypeNameRegex, mappingRegex);
 
@@ -56,7 +66,7 @@ namespace Data.EFCore.Manager.Mapping.Component
 
         public async Task<IQueryable<VersionedComponent>> FindByOutputMapping(string mappingTypeNameRegex, string mappingRegex)
         {
-            _logger.LogDebug($"Attempting to find component by mapping type name regex: '{mappingTypeNameRegex}' and output mapping regex: '{mappingRegex}'");
+            _logger.LogDebug($"Attempting to find versioned component by mapping type name regex: '{mappingTypeNameRegex}' and output mapping regex: '{mappingRegex}'");
             var filter = _queryFilterFactory.AddCallback(
                 (q) => q.Where(vc => vc.Mappings.Any(m =>
                     Regex.IsMatch(m.MappingType.Name, mappingTypeNameRegex) &&
@@ -68,7 +78,7 @@ namespace Data.EFCore.Manager.Mapping.Component
 
         public async Task<IQueryable<VersionedComponent>> FindByInputMapping(string mappingTypeNameRegex, string mappingRegex)
         {
-            _logger.LogDebug($"Attempting to find component by mapping type name regex: '{mappingTypeNameRegex}' and input mapping regex: '{mappingRegex}'");
+            _logger.LogDebug($"Attempting to find versioned component by mapping type name regex: '{mappingTypeNameRegex}' and input mapping regex: '{mappingRegex}'");
             var filter = _queryFilterFactory.AddCallback(
                 (q) => q.Where(vc => vc.Mappings.Any(m =>
                     Regex.IsMatch(m.MappingType.Name, mappingTypeNameRegex) &&
@@ -80,7 +90,7 @@ namespace Data.EFCore.Manager.Mapping.Component
 
         public async Task<IQueryable<VersionedComponent>> FindByRelease(string releaseNameRegex)
         {
-            _logger.LogDebug($"Attempting to find component by release name regex: '{releaseNameRegex}'");
+            _logger.LogDebug($"Attempting to find versioned component by release name regex: '{releaseNameRegex}'");
             var filter = _queryFilterFactory.AddCallback(
                 (q) => q.Where(vc => vc.Mappings.Any(m => m.Releases.Any(rc => Regex.IsMatch(rc.Release.Name, releaseNameRegex))))
             ).Build();
@@ -90,7 +100,7 @@ namespace Data.EFCore.Manager.Mapping.Component
 
         public async Task<IQueryable<VersionedComponent>> FindByGameVersion(string gameVersionRegex)
         {
-            _logger.LogDebug($"Attempting to find component by game version name regex: '{gameVersionRegex}'");
+            _logger.LogDebug($"Attempting to find versioned component by game version name regex: '{gameVersionRegex}'");
             var filter = _queryFilterFactory.AddCallback(
                 (q) => q.Where(vc => Regex.IsMatch(vc.GameVersion.Name, gameVersionRegex))
             ).Build();
@@ -98,15 +108,16 @@ namespace Data.EFCore.Manager.Mapping.Component
             return await _store.ReadAsync(filter);
         }
 
-        public async Task<IQueryable<VersionedComponent>> FindUsingFilter(Guid? id = null, ComponentType? type = null, string mappingTypeNameRegex = null,
-            string mappingRegex = null, string releaseNameRegex = null, string gameVersionRegex = null)
+        public async Task<IQueryable<VersionedComponent>> FindUsingFilter(Guid? id = null, ComponentType? type = null, Guid? componentId = null,
+            string mappingTypeNameRegex = null, string mappingRegex = null, string releaseNameRegex = null,
+            string gameVersionRegex = null)
         {
-            _logger.LogDebug($"Attempting to find component by filter data.");
+            _logger.LogDebug("Attempting to find component by filter data.");
             if (id != null)
             {
                 _logger.LogTrace($" > Id: '{id}'");
                 _queryFilterFactory.AddCallback(
-                    (q) => q.Where(c => c.Id == id)
+                    (q) => q.Where(vc => vc.Id == id)
                 );
             }
 
@@ -114,7 +125,15 @@ namespace Data.EFCore.Manager.Mapping.Component
             {
                 _logger.LogTrace($" > Type: '{type}'");
                 _queryFilterFactory.AddCallback(
-                    (q) => q.Where(c => c.Type == type)
+                    (q) => q.Where(vc => vc.Component.Type == type)
+                );
+            }
+
+            if (componentId != null)
+            {
+                _logger.LogTrace($" > ComponentId: '{componentId}'");
+                _queryFilterFactory.AddCallback(
+                    (q) => q.Where(vc => vc.Component.Id == componentId)
                 );
             }
 
@@ -123,13 +142,13 @@ namespace Data.EFCore.Manager.Mapping.Component
                 _logger.LogTrace($" > MappingTypeNameRegex: '{mappingTypeNameRegex}'");
                 _logger.LogTrace($" > MappingRegex: '{mappingRegex}'");
                 _queryFilterFactory.AddCallback(
-                    (q) => q.Where(c => c.VersionedVersionedComponents.Any(vc => vc.Mappings.Any(m =>
+                    (q) => q.Where(vc => vc.Mappings.Any(m =>
                         Regex.IsMatch(m.MappingType.Name, mappingTypeNameRegex) &&
                         (
                             Regex.IsMatch(m.OutputMapping, mappingRegex) ||
                             Regex.IsMatch(m.InputMapping, mappingRegex)
                         )
-                    )))
+                    ))
                 );
             }
 
@@ -137,8 +156,8 @@ namespace Data.EFCore.Manager.Mapping.Component
             {
                 _logger.LogTrace($" > ReleaseNameRegex: '{releaseNameRegex}'");
                 _queryFilterFactory.AddCallback(
-                    (q) => q.Where(c => c.VersionedVersionedComponents.Any(vc =>
-                        vc.Mappings.Any(m => m.Releases.Any(rc => Regex.IsMatch(rc.Release.Name, releaseNameRegex)))))
+                    (q) => q.Where(vc =>
+                        vc.Mappings.Any(m => m.Releases.Any(rc => Regex.IsMatch(rc.Release.Name, releaseNameRegex))))
                 );
             }
 
@@ -146,8 +165,7 @@ namespace Data.EFCore.Manager.Mapping.Component
             {
                 _logger.LogTrace($" > GameVersionRegex: '{gameVersionRegex}'");
                 _queryFilterFactory.AddCallback(
-                    (q) => q.Where(c =>
-                        c.VersionedVersionedComponents.Any(vc => Regex.IsMatch(vc.GameVersion.Name, gameVersionRegex)))
+                    (q) => q.Where(vc => Regex.IsMatch(vc.GameVersion.Name, gameVersionRegex))
                 );
             }
 

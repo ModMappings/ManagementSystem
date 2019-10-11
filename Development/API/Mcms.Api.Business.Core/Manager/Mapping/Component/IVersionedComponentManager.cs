@@ -119,7 +119,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Component
         /// <param name="versionedComponent">The versioned component to create.</param>
         /// <returns>The task that describes the creation of the versioned component.</returns>
         /// <exception cref="InvalidOperationException">is thrown when this method is called with either a known versioned component or a uncommitted deleted versioned component.</exception>
-        Task CreateComponent(
+        Task CreateVersionedComponent(
             VersionedComponent versionedComponent
         );
 
@@ -130,7 +130,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Component
         /// <param name="versionedComponent">The versioned component to update.</param>
         /// <returns>The task that describes the updating of the manager with the data from the versioned component.</returns>
         /// <exception cref="InvalidOperationException">is thrown when this method is called with either an unknown versioned component (uncommitted deleted) or an uncommitted created versioned component.</exception>
-        Task UpdateComponent(
+        Task UpdateVersionedComponent(
             VersionedComponent versionedComponent
         );
 
@@ -140,7 +140,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Component
         /// </summary>
         /// <param name="versionedComponent">The versioned component to delete.</param>
         /// <returns>The task that describes the deletion of the versioned component from the manager.</returns>
-        Task DeleteComponent(
+        Task DeleteVersionedComponent(
             VersionedComponent versionedComponent
         );
 
