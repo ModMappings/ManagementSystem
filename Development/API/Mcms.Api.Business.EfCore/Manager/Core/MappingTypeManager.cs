@@ -89,23 +89,27 @@ namespace Data.EFCore.Manager.Core
 
         public async Task CreateMappingType(MappingType mappingType)
         {
-            throw new NotImplementedException();
+            _logger.LogDebug($"Creating new mapping type: '{mappingType.Id}'");
+            await _store.Create(mappingType);
         }
 
         public async Task UpdateMappingType(MappingType mappingType)
         {
-            throw new NotImplementedException();
+            _logger.LogDebug($"Updating mapping type: '{mappingType.Id}'");
+            await _store.Update(mappingType);
         }
 
         public async Task DeleteMappingType(MappingType mappingType)
         {
-            throw new NotImplementedException();
+            _logger.LogDebug($"Deleting mapping type: '{mappingType.Id}'");
+            await _store.Delete(mappingType);
         }
 
-        public bool HasPendingChanges { get; }
+        public bool HasPendingChanges => _store.HasPendingChanges;
         public async Task SaveChanges()
         {
-            throw new NotImplementedException();
+            _logger.LogDebug("Attempting to save mapping type changes");
+            await _store.CommitChanges();
         }
     }
 }
