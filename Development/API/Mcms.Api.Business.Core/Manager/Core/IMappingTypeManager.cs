@@ -33,13 +33,6 @@ namespace Mcms.Api.Business.Core.Manager.Core
         Task<IQueryable<MappingType>> FindByRelease(string releaseNameRegex);
 
         /// <summary>
-        /// Finds all mapping types that are part of a game version who's name matches the given regex.
-        /// </summary>
-        /// <param name="gameVersionRegex">The regex to match game version names agents.</param>
-        /// <returns>The task that looks up mapping types with a versioned mapping type for a game version who's name matches the given regex.</returns>
-        Task<IQueryable<MappingType>> FindByGameVersion(string gameVersionRegex);
-
-        /// <summary>
         /// <para>
         /// Finds all mapping types who match the given filter data.
         /// </para>
@@ -47,8 +40,7 @@ namespace Mcms.Api.Business.Core.Manager.Core
         /// This methods finds the intersection between
         /// <see cref="FindById(Guid)"/> if the <paramref name="id"/> parameter is not <code>null</code>,
         /// <see cref="FindByName(string)"/> if the <paramref name="nameRegex"/> is not null,
-        /// <see cref="FindByRelease(string)"/> if the <paramref name="releaseNameRegex"/> parameter is not <code>null</code>, and
-        /// <see cref="FindByGameVersion(string)"/> if the <paramref name="gameVersionRegex"/> parameter is not <code>null</code>.
+        /// <see cref="FindByRelease(string)"/> if the <paramref name="releaseNameRegex"/> parameter is not <code>null</code>.
         /// </para>
         /// <para>
         /// This means that for a mapping type to be returned it has to match all the provided filter data.
@@ -60,13 +52,11 @@ namespace Mcms.Api.Business.Core.Manager.Core
         /// <param name="id">The given id to find mapping types by,</param>
         /// <param name="nameRegex">The regex to match the name of mapping types against.</param>
         /// <param name="releaseNameRegex">The regex to match release names against.</param>
-        /// <param name="gameVersionRegex">The regex to match game version names agents.</param>
         /// <returns>The task that represents the lookup of mapping types that match the filter data, based on intersection.</returns>
         Task<IQueryable<MappingType>> FindUsingFilter(
             Guid? id = null,
             string nameRegex = null,
-            string releaseNameRegex = null,
-            string gameVersionRegex = null
+            string releaseNameRegex = null
         );
 
         /// <summary>

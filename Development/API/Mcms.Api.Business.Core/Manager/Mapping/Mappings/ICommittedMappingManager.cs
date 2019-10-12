@@ -38,7 +38,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// </summary>
         /// <param name="versionedComponentId">The id of the versioned component to find the committed mappings for.</param>
         /// <returns>The task that looks up the committed mappings that are part of the versioned component who's id matches the given one.</returns>
-        Task<IQueryable<CommittedMapping>> FindByCommittedMappingId(Guid versionedComponentId);
+        Task<IQueryable<CommittedMapping>> FindByVersionedComponentId(Guid versionedComponentId);
 
         /// <summary>
         /// Finds a all committed mappings (either input or output) that matches the given
@@ -91,7 +91,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// This methods finds the intersection between <see cref="FindById(Guid)"/> if the <paramref name="id"/> parameter is not <code>null</code>,
         /// <see cref="FindByType(ComponentType)"/> if the <paramref name="type"/> is not null,
         /// <see cref="FindByComponentId(Guid)"/> if the <paramref name="componentId"/> parameter is not <code>null</code>,
-        /// <see cref="FindByCommittedMappingId(Guid)"/> if the <paramref name="versionedComponentId"/> parameter is not <code>null</code>,
+        /// <see cref="FindByVersionedComponentId(Guid)"/> if the <paramref name="versionedComponentId"/> parameter is not <code>null</code>,
         /// <see cref="FindByMapping(string, string)"/> if either, the <paramref name="mappingTypeNameRegex"/> and or <paramref name="mappingRegex"/> parameter is not <code>null</code>,
         /// <see cref="FindByRelease(string)"/> if the <paramref name="releaseNameRegex"/> parameter is not <code>null</code>, and
         /// <see cref="FindByGameVersion(string)"/> if the <paramref name="gameVersionRegex"/> parameter is not <code>null</code>.

@@ -176,19 +176,19 @@ namespace Data.EFCore.Manager.Mapping.Component
 
         public async Task CreateVersionedComponent(VersionedComponent component)
         {
-            _logger.LogDebug("Creating new component: " + component.Id);
+            _logger.LogDebug($"Creating new versioned component: {component.Id}");
             await _store.Create(component);
         }
 
         public async Task UpdateVersionedComponent(VersionedComponent component)
         {
-            _logger.LogDebug("Updating component: " + component.Id);
+            _logger.LogDebug($"Updating versioned component: {component.Id}");
             await _store.Update(component);
         }
 
         public async Task DeleteVersionedComponent(VersionedComponent component)
         {
-            _logger.LogDebug("Deleting component: " + component.Id);
+            _logger.LogDebug($"Deleting versioned component: {component.Id}");
             await _store.Delete(component);
         }
 
@@ -196,7 +196,7 @@ namespace Data.EFCore.Manager.Mapping.Component
 
         public async Task SaveChanges()
         {
-            _logger.LogDebug("Saving component changes.");
+            _logger.LogDebug("Saving versioned component changes.");
             await _store.CommitChanges();
         }
     }

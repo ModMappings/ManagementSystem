@@ -38,7 +38,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// </summary>
         /// <param name="versionedComponentId">The id of the versioned component to find the proposed mappings for.</param>
         /// <returns>The task that looks up the proposed mappings that are part of the versioned component who's id matches the given one.</returns>
-        Task<IQueryable<ProposedMapping>> FindByProposedMappingId(Guid versionedComponentId);
+        Task<IQueryable<ProposedMapping>> FindByVersionedComponentId(Guid versionedComponentId);
 
         /// <summary>
         /// Finds a all proposed mappings (either input or output) that matches the given
@@ -70,13 +70,6 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         Task<IQueryable<ProposedMapping>> FindByInputMapping(string mappingTypeNameRegex, string mappingRegex);
 
         /// <summary>
-        /// Finds all proposed mappings that are part of a release who's name matches the given regex.
-        /// </summary>
-        /// <param name="releaseNameRegex">The regex to match release names against.</param>
-        /// <returns>The task that looks up proposed mappings with at least a mapping that is part of a release who's name matches the given regex.</returns>
-        Task<IQueryable<ProposedMapping>> FindByRelease(string releaseNameRegex);
-
-        /// <summary>
         /// Finds all proposed mappings that are part of a game version who's name matches the given regex.
         /// </summary>
         /// <param name="gameVersionRegex">The regex to match game version names agents.</param>
@@ -91,9 +84,8 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// This methods finds the intersection between <see cref="FindById(Guid)"/> if the <paramref name="id"/> parameter is not <code>null</code>,
         /// <see cref="FindByType(ComponentType)"/> if the <paramref name="type"/> is not null,
         /// <see cref="FindByComponentId(Guid)"/> if the <paramref name="componentId"/> parameter is not <code>null</code>,
-        /// <see cref="FindByProposedMappingId(Guid)"/> if the <paramref name="versionedComponentId"/> parameter is not <code>null</code>,
+        /// <see cref="FindByVersionedComponentId(Guid)"/> if the <paramref name="versionedComponentId"/> parameter is not <code>null</code>,
         /// <see cref="FindByMapping(string, string)"/> if either, the <paramref name="mappingTypeNameRegex"/> and or <paramref name="mappingRegex"/> parameter is not <code>null</code>,
-        /// <see cref="FindByRelease(string)"/> if the <paramref name="releaseNameRegex"/> parameter is not <code>null</code>, and
         /// <see cref="FindByGameVersion(string)"/> if the <paramref name="gameVersionRegex"/> parameter is not <code>null</code>.
         /// </para>
         /// <para>
@@ -109,7 +101,6 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// <param name="versionedComponentId">The id of the versioned component to find the proposed mappings for.</param>
         /// <param name="mappingTypeNameRegex">The regex to match a mappings mapping type name against.</param>
         /// <param name="mappingRegex">The regex against which a mapping is matched, for which proposed mappings are found.</param>
-        /// <param name="releaseNameRegex">The regex to match release names against.</param>
         /// <param name="gameVersionRegex">The regex to match game version names agents.</param>
         /// <returns>The task that represents the lookup of proposed mappings that match the filter data, based on intersection.</returns>
         Task<IQueryable<ProposedMapping>> FindUsingFilter(
@@ -119,7 +110,6 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
             Guid? versionedComponentId = null,
             string mappingTypeNameRegex = null,
             string mappingRegex = null,
-            string releaseNameRegex = null,
             string gameVersionRegex = null
         );
 
