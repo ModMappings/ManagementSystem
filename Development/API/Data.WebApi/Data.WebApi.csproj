@@ -36,4 +36,20 @@
       <ProjectReference Include="..\Mcms.Api.Poco\Mcms.Api.Poco.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="ControllersOld\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="ControllersOld\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="ControllersOld\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="ControllersOld\**" />
+    </ItemGroup>
+
 </Project>
