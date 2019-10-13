@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Mcms.Api.Data.Poco.Models.Core.Release;
+using Mcms.Api.Data.Poco.Models.Mapping.Mappings;
 
 namespace Mcms.Api.Data.Poco.Models.Comments
 {
@@ -55,5 +57,15 @@ namespace Mcms.Api.Data.Poco.Models.Comments
         /// The user who deleted the comment, can be the creating user or any user with enough rights.
         /// </summary>
         public Guid DeletedBy { get; set; }
+
+        /// <summary>
+        /// The proposed mapping this comment was made on.
+        /// </summary>
+        public ProposedMapping ProposedMapping { get; set; }
+
+        /// <summary>
+        /// The release this comment was made on.
+        /// </summary>
+        public Release Release { get; set; }
     }
 }
