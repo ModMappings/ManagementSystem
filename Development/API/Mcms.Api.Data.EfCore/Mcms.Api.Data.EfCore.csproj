@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <RootNamespace>Data.EFCore</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <NoWarn>1998</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="2.2.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Mcms.Api.Data.Core\Mcms.Api.Data.Core.csproj" />
+      <ProjectReference Include="..\Mcms.Api.Data.Poco\Mcms.Api.Data.Poco.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Writer\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Writer\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Writer\**" />
+    </ItemGroup>
+</Project>

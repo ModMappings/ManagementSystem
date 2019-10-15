@@ -4,4 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Mcms.Api.Data.Poco\Mcms.Api.Data.Poco.csproj" />
+  </ItemGroup>
 </Project>
