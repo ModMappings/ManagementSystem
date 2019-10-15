@@ -10,14 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Data.EFCore.Manager.Mapping.Component
 {
-    public class EfCoreVersionedComponentDataManager
+    public class VersionedComponentDataManager
         : IVersionedComponentDataManager
     {
         private readonly IStore<VersionedComponent> _store;
         private readonly ICallbackBasedQueryFilterFactory<VersionedComponent> _queryFilterFactory;
-        private readonly ILogger<EfCoreVersionedComponentDataManager> _logger;
+        private readonly ILogger<VersionedComponentDataManager> _logger;
 
-        public EfCoreVersionedComponentDataManager(IStore<VersionedComponent> store, ICallbackBasedQueryFilterFactory<VersionedComponent> queryFilterFactory, ILogger<EfCoreVersionedComponentDataManager> logger)
+        public VersionedComponentDataManager(IStore<VersionedComponent> store, ICallbackBasedQueryFilterFactory<VersionedComponent> queryFilterFactory, ILogger<VersionedComponentDataManager> logger)
         {
             _store = store;
             _queryFilterFactory = queryFilterFactory;

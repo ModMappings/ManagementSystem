@@ -10,14 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Data.EFCore.Manager.Mapping.Component
 {
-    public class EfCoreComponentDataManager
+    public class ComponentDataManager
         : IComponentDataManager
     {
         private readonly IStore<Mcms.Api.Data.Poco.Models.Mapping.Component.Component> _store;
         private readonly ICallbackBasedQueryFilterFactory<Mcms.Api.Data.Poco.Models.Mapping.Component.Component> _queryFilterFactory;
-        private readonly ILogger<EfCoreComponentDataManager> _logger;
+        private readonly ILogger<ComponentDataManager> _logger;
 
-        public EfCoreComponentDataManager(IStore<Mcms.Api.Data.Poco.Models.Mapping.Component.Component> store, ICallbackBasedQueryFilterFactory<Mcms.Api.Data.Poco.Models.Mapping.Component.Component> queryFilterFactory, ILogger<EfCoreComponentDataManager> logger)
+        public ComponentDataManager(IStore<Mcms.Api.Data.Poco.Models.Mapping.Component.Component> store, ICallbackBasedQueryFilterFactory<Mcms.Api.Data.Poco.Models.Mapping.Component.Component> queryFilterFactory, ILogger<ComponentDataManager> logger)
         {
             _store = store;
             _queryFilterFactory = queryFilterFactory;
