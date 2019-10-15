@@ -119,8 +119,8 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// </summary>
         /// <param name="proposedMapping">The proposed mapping to create.</param>
         /// <returns>The task that describes the creation of the proposed mapping.</returns>
-        /// <exception cref="InvalidOperationException">is thrown when this method is called with either a known proposed mapping or a unproposed deleted proposed mapping.</exception>
-        Task CreateComponent(
+        /// <exception cref="InvalidOperationException">is thrown when this method is called with either a known proposed mapping or a deleted proposed mapping.</exception>
+        Task CreateProposedMapping(
             ProposedMapping proposedMapping
         );
 
@@ -131,7 +131,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// <param name="proposedMapping">The proposed mapping to update.</param>
         /// <returns>The task that describes the updating of the manager with the data from the proposed mapping.</returns>
         /// <exception cref="InvalidOperationException">is thrown when this method is called with either an unknown proposed mapping (unproposed deleted) or an unproposed created proposed mapping.</exception>
-        Task UpdateComponent(
+        Task UpdateProposedMapping(
             ProposedMapping proposedMapping
         );
 
@@ -141,7 +141,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// </summary>
         /// <param name="proposedMapping">The proposed mapping to delete.</param>
         /// <returns>The task that describes the deletion of the proposed mapping from the manager.</returns>
-        Task DeleteComponent(
+        Task DeleteProposedMapping(
             ProposedMapping proposedMapping
         );
 

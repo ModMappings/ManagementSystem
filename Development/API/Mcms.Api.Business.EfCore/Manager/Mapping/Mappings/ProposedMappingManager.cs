@@ -177,19 +177,19 @@ namespace Data.EFCore.Manager.Mapping.Mappings
             return await _store.ReadAsync(filter);
         }
 
-        public async Task CreateComponent(ProposedMapping proposedMapping)
+        public async Task CreateProposedMapping(ProposedMapping proposedMapping)
         {
             _logger.LogDebug($"Creating new proposed mapping: '{proposedMapping.Id}'");
             await _store.Create(proposedMapping);
         }
 
-        public async Task UpdateComponent(ProposedMapping proposedMapping)
+        public async Task UpdateProposedMapping(ProposedMapping proposedMapping)
         {
             _logger.LogDebug($"Updating proposed mapping: '{proposedMapping.Id}'");
             await _store.Update(proposedMapping);
         }
 
-        public async Task DeleteComponent(ProposedMapping proposedMapping)
+        public async Task DeleteProposedMapping(ProposedMapping proposedMapping)
         {
             _logger.LogDebug($"Deleting proposed mapping: '{proposedMapping.Id}'");
             await _store.Delete(proposedMapping);

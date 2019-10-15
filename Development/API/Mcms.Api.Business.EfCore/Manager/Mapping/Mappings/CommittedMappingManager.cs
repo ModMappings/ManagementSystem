@@ -196,19 +196,19 @@ namespace Data.EFCore.Manager.Mapping.Mappings
             return await _store.ReadAsync(filter);
         }
 
-        public async Task CreateComponent(CommittedMapping committedMapping)
+        public async Task CreateCommittedMapping(CommittedMapping committedMapping)
         {
             _logger.LogDebug($"Creating new committed mapping: '{committedMapping.Id}'");
             await _store.Create(committedMapping);
         }
 
-        public async Task UpdateComponent(CommittedMapping committedMapping)
+        public async Task UpdateCommittedMapping(CommittedMapping committedMapping)
         {
             _logger.LogDebug($"Updating committed mapping: '{committedMapping.Id}'");
             await _store.Update(committedMapping);
         }
 
-        public async Task DeleteComponent(CommittedMapping committedMapping)
+        public async Task DeleteCommittedMapping(CommittedMapping committedMapping)
         {
             _logger.LogDebug($"Deleting committed mapping: '{committedMapping.Id}'");
             await _store.Delete(committedMapping);

@@ -97,7 +97,7 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         /// <see cref="FindByGameVersion(string)"/> if the <paramref name="gameVersionRegex"/> parameter is not <code>null</code>.
         /// </para>
         /// <para>
-        /// This means that for a component to be returned it has to match all the provided filter data.
+        /// This means that for a committed mapping to be returned it has to match all the provided filter data.
         /// </para>
         /// <para>
         /// </para>
@@ -124,34 +124,34 @@ namespace Mcms.Api.Business.Core.Manager.Mapping.Mappings
         );
 
         /// <summary>
-        /// Creates a new mapping type.
-        /// The created mapping type is not saved directly, but has to be saved separately.
+        /// Creates a new committed mapping.
+        /// The created committed mapping is not saved directly, but has to be saved separately.
         /// </summary>
-        /// <param name="committedMapping">The mapping type to create.</param>
-        /// <returns>The task that describes the creation of the mapping type.</returns>
-        /// <exception cref="InvalidOperationException">is thrown when this method is called with either a known mapping type or a uncommitted deleted mapping type.</exception>
-        Task CreateComponent(
+        /// <param name="committedMapping">The committed mapping to create.</param>
+        /// <returns>The task that describes the creation of the committed mapping.</returns>
+        /// <exception cref="InvalidOperationException">is thrown when this method is called with either a known committed mapping or a uncommitted deleted committed mapping.</exception>
+        Task CreateCommittedMapping(
             CommittedMapping committedMapping
         );
 
         /// <summary>
-        /// Updates an already existing mapping type.
+        /// Updates an already existing committed mapping.
         /// Updates are not committed to the backing store directly, but have to be saved separately.
         /// </summary>
-        /// <param name="committedMapping">The mapping type to update.</param>
-        /// <returns>The task that describes the updating of the manager with the data from the mapping type.</returns>
-        /// <exception cref="InvalidOperationException">is thrown when this method is called with either an unknown mapping type (uncommitted deleted) or an uncommitted created mapping type.</exception>
-        Task UpdateComponent(
+        /// <param name="committedMapping">The committed mapping to update.</param>
+        /// <returns>The task that describes the updating of the manager with the data from the committed mapping.</returns>
+        /// <exception cref="InvalidOperationException">is thrown when this method is called with either an unknown committed mapping (uncommitted deleted) or an uncommitted created committed mapping.</exception>
+        Task UpdateCommittedMapping(
             CommittedMapping committedMapping
         );
 
         /// <summary>
-        /// Deletes an already existing mapping type.
+        /// Deletes an already existing committed mapping.
         /// Deletions are not committed to the backing store directly but have to be saved separately.
         /// </summary>
         /// <param name="committedMapping">The committed mapping to delete.</param>
-        /// <returns>The task that describes the deletion of the mapping type from the manager.</returns>
-        Task DeleteComponent(
+        /// <returns>The task that describes the deletion of the committed mapping from the manager.</returns>
+        Task DeleteCommittedMapping(
             CommittedMapping committedMapping
         );
 
