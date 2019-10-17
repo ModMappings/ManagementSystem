@@ -1,16 +1,13 @@
 using System;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Data.EFCore.QueryFilters.Factory;
 using Mcms.Api.Data.Core.Manager.Mapping.Mappings.Voting;
 using Mcms.Api.Data.Core.Stores;
+using Mcms.Api.Data.EfCore.QueryFilters.Factory;
 using Mcms.Api.Data.Poco.Models.Mapping.Mappings.Voting;
 using Microsoft.Extensions.Logging;
 
-namespace Data.EFCore.Manager.Mapping.Mappings.Voting
+namespace Mcms.Api.Data.EfCore.Manager.Mapping.Mappings.Voting
 {
     public class VotingRecordDataManager
         : IVotingRecordDataManager

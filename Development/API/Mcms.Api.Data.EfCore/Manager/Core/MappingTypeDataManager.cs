@@ -1,15 +1,14 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Data.EFCore.QueryFilters.Factory;
 using Mcms.Api.Data.Core.Manager.Core;
 using Mcms.Api.Data.Core.Stores;
+using Mcms.Api.Data.EfCore.QueryFilters.Factory;
 using Mcms.Api.Data.Poco.Models.Core;
 using Microsoft.Extensions.Logging;
 
-namespace Data.EFCore.Manager.Core
+namespace Mcms.Api.Data.EfCore.Manager.Core
 {
     public class MappingTypeDataManager
         : IMappingTypeDataManager

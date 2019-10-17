@@ -1,4 +1,4 @@
-namespace Data.EFCore
+namespace Mcms.Api.Data.EfCore
 {
     /// <summary>
     /// Dummy class for library wide logging.

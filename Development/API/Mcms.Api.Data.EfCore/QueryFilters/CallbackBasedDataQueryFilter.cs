@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mcms.Api.Data.Core.Stores;
-using Microsoft.Extensions.Logging;
 
-namespace Data.EFCore.QueryFilters
+namespace Mcms.Api.Data.EfCore.QueryFilters
 {
     public class CallbackBasedDataQueryFilter<TEntity>
         : IDataQueryFilter<TEntity>

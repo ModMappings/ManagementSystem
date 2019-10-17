@@ -1,22 +1,22 @@
 using System;
-using Data.EFCore.Context;
-using Data.EFCore.Manager.Comment;
-using Data.EFCore.Manager.Core;
-using Data.EFCore.Manager.Mapping.Component;
-using Data.EFCore.Manager.Mapping.Mappings;
-using Data.EFCore.Manager.Mapping.Mappings.Voting;
-using Data.EFCore.Store;
 using Mcms.Api.Data.Core.Manager.Comments;
 using Mcms.Api.Data.Core.Manager.Core;
 using Mcms.Api.Data.Core.Manager.Mapping.Component;
 using Mcms.Api.Data.Core.Manager.Mapping.Mappings;
 using Mcms.Api.Data.Core.Manager.Mapping.Mappings.Voting;
 using Mcms.Api.Data.Core.Stores;
+using Mcms.Api.Data.EfCore.Context;
+using Mcms.Api.Data.EfCore.Manager.Comment;
+using Mcms.Api.Data.EfCore.Manager.Core;
+using Mcms.Api.Data.EfCore.Manager.Mapping.Component;
+using Mcms.Api.Data.EfCore.Manager.Mapping.Mappings;
+using Mcms.Api.Data.EfCore.Manager.Mapping.Mappings.Voting;
+using Mcms.Api.Data.EfCore.Store;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Data.EFCore.Extensions
+namespace Mcms.Api.Data.EfCore.Extensions
 {
     /// <summary>
     /// A set of extension methods that inject new services into the dependency container.

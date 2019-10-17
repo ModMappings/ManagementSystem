@@ -2,13 +2,13 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Data.EFCore.QueryFilters.Factory;
 using Mcms.Api.Data.Core.Manager.Mapping.Component;
 using Mcms.Api.Data.Core.Stores;
+using Mcms.Api.Data.EfCore.QueryFilters.Factory;
 using Mcms.Api.Data.Poco.Models.Mapping.Component;
 using Microsoft.Extensions.Logging;
 
-namespace Data.EFCore.Manager.Mapping.Component
+namespace Mcms.Api.Data.EfCore.Manager.Mapping.Component
 {
     public class VersionedComponentDataManager
         : IVersionedComponentDataManager

@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Data.EFCore.QueryFilters.Factory;
 using Mcms.Api.Data.Core.Manager.Comments;
 using Mcms.Api.Data.Core.Stores;
+using Mcms.Api.Data.EfCore.QueryFilters.Factory;
 using Microsoft.Extensions.Logging;
 
-namespace Data.EFCore.Manager.Comment
+namespace Mcms.Api.Data.EfCore.Manager.Comment
 {
     public class CommentDataManager
         : ICommentDataManager

@@ -2,15 +2,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Data.EFCore.Context;
-using Data.EFCore.Extensions;
 using Mcms.Api.Data.Core.Stores;
+using Mcms.Api.Data.EfCore.Context;
+using Mcms.Api.Data.EfCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 
-namespace Data.EFCore.Store
+namespace Mcms.Api.Data.EfCore.Store
 {
     /// <summary>
     /// An EntityFramework core back implementation of the <see cref="IStore{TEntity}"/> interface.

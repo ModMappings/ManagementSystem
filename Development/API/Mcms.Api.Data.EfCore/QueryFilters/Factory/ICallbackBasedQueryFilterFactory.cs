@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Mcms.Api.Data.Core.Stores;
 
-namespace Data.EFCore.QueryFilters.Factory
+namespace Mcms.Api.Data.EfCore.QueryFilters.Factory
 {
     public interface ICallbackBasedQueryFilterFactory<TEntity>
     {

@@ -1,13 +1,11 @@
-using Castle.Core.Internal;
 using Mcms.Api.Data.Poco.Models.Core;
 using Mcms.Api.Data.Poco.Models.Core.Release;
-using Mcms.Api.Data.Poco.Models.Mapping;
 using Mcms.Api.Data.Poco.Models.Mapping.Component;
 using Mcms.Api.Data.Poco.Models.Mapping.Mappings;
 using Mcms.Api.Data.Poco.Models.Mapping.Metadata;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.EFCore.Context
+namespace Mcms.Api.Data.EfCore.Context
 {
     public class MCMSContext
         : DbContext

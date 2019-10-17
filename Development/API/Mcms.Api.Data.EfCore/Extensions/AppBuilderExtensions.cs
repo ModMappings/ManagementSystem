@@ -1,6 +1,5 @@
 using System.Linq;
-using System.Threading.Tasks;
-using Data.EFCore.Context;
+using Mcms.Api.Data.EfCore.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Data.EFCore.Extensions
+namespace Mcms.Api.Data.EfCore.Extensions
 {
     /// <summary>
     /// Contains extension methods for the <see cref="IApplicationBuilder"/> class.

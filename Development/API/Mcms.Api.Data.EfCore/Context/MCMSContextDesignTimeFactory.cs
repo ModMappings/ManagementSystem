@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace Data.EFCore.Context
+namespace Mcms.Api.Data.EfCore.Context
 {
     public class MCMSContextDesignTimeFactory
         : IDesignTimeDbContextFactory<MCMSContext>

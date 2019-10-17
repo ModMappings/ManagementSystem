@@ -4,7 +4,7 @@ using System.Linq;
 using Mcms.Api.Data.Core.Stores;
 using Microsoft.Extensions.Logging;
 
-namespace Data.EFCore.QueryFilters.Factory
+namespace Mcms.Api.Data.EfCore.QueryFilters.Factory
 {
     public class CallBackBasedQueryFilterFactory<TEntity> : ICallbackBasedQueryFilterFactory<TEntity>
     {

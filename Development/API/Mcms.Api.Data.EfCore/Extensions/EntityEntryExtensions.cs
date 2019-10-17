@@ -1,7 +1,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Data.EFCore.Extensions
+namespace Mcms.Api.Data.EfCore.Extensions
 {
     /// <summary>
     /// Contains extension methods for the <see cref="EntityEntry"/> class.
