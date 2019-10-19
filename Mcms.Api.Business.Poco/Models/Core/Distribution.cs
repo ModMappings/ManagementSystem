@@ -1,4 +1,4 @@
-namespace Mcms.Api.Data.Poco.Models.Core
+namespace Mcms.Api.Business.Poco.Models.Core
 {
     /// <summary>
     /// Represents the distribution that the mapping is part of.

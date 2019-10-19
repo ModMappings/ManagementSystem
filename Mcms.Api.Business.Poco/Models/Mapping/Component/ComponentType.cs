@@ -1,4 +1,4 @@
-namespace Mcms.Api.Data.Poco.Models.Mapping.Component
+namespace Mcms.Api.Business.Poco.Models.Mapping.Component
 {
     /// <summary>
     /// The type of mappable components.

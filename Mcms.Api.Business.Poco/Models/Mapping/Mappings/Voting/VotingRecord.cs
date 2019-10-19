@@ -1,8 +1,4 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings.Voting
+namespace Mcms.Api.Business.Poco.Models.Mapping.Mappings.Voting
 {
     /// <summary>
     /// Represents a single vote for or against a given proposal.

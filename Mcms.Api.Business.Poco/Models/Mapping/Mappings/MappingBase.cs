@@ -1,10 +1,7 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Mcms.Api.Data.Poco.Models.Core;
-using Mcms.Api.Data.Poco.Models.Mapping.Component;
+using Mcms.Api.Business.Poco.Models.Core;
+using Mcms.Api.Business.Poco.Models.Mapping.Component;
 
-namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings
+namespace Mcms.Api.Business.Poco.Models.Mapping.Mappings
 {
     /// <summary>
     /// A base class with the core data for each mapping.

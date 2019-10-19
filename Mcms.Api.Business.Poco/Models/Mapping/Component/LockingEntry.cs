@@ -1,9 +1,6 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Mcms.Api.Data.Poco.Models.Core;
+using Mcms.Api.Business.Poco.Models.Core;
 
-namespace Mcms.Api.Data.Poco.Models.Mapping.Component
+namespace Mcms.Api.Business.Poco.Models.Mapping.Component
 {
     /// <summary>
     /// An record that indicates a many to many relationship between a component in a given game version, as well

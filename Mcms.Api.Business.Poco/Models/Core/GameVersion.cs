@@ -1,9 +1,4 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-
-namespace Mcms.Api.Data.Poco.Models.Core
+namespace Mcms.Api.Business.Poco.Models.Core
 {
     /// <summary>
     /// Represents a single version of the game.

@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
+namespace Mcms.Api.Business.Poco.Models.Mapping.Metadata
 {
     /// <summary>
     /// An abstract metadata type that was created for fields and methods that holds a reference to the class in which they belong.

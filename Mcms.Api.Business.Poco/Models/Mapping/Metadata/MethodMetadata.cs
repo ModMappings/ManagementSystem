@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
+namespace Mcms.Api.Business.Poco.Models.Mapping.Metadata
 {
     /// <summary>
     /// Metadata for a versioned component that represents a method.

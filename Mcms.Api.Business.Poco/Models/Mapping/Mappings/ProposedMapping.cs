@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Mcms.Api.Data.Poco.Models.Comments;
-using Mcms.Api.Data.Poco.Models.Mapping.Mappings.Voting;
+using Mcms.Api.Business.Poco.Models.Comments;
+using Mcms.Api.Business.Poco.Models.Mapping.Mappings.Voting;
 
-namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings
+namespace Mcms.Api.Business.Poco.Models.Mapping.Mappings
 {
     /// <summary>
     /// Represents a single proposal for a mapping.

@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
+namespace Mcms.Api.Business.Poco.Models.Mapping.Metadata
 {
     /// <summary>
     /// Metadata for a versioned component representing a package.

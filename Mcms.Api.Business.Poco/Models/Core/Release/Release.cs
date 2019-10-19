@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Mcms.Api.Data.Poco.Models.Comments;
+using Mcms.Api.Business.Poco.Models.Comments;
 
-namespace Mcms.Api.Data.Poco.Models.Core.Release
+namespace Mcms.Api.Business.Poco.Models.Core.Release
 {
     /// <summary>
     /// Represents a single release of mapping data, for a given mapping type.

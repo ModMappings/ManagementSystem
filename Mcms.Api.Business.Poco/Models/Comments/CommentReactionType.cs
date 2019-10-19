@@ -1,4 +1,4 @@
-namespace Mcms.Api.Data.Poco.Models.Comments
+namespace Mcms.Api.Business.Poco.Models.Comments
 {
     /// <summary>
     /// Represents a single reaction type on a comment.

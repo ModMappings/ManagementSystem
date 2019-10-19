@@ -1,9 +1,6 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Mcms.Api.Data.Poco.Models.Mapping.Component;
+using Mcms.Api.Business.Poco.Models.Mapping.Component;
 
-namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
+namespace Mcms.Api.Business.Poco.Models.Mapping.Metadata
 {
     /// <summary>
     /// A base class that handles metadata on versioned components.

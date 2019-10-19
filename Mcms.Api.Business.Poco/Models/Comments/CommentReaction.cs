@@ -1,8 +1,4 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Mcms.Api.Data.Poco.Models.Comments
+namespace Mcms.Api.Business.Poco.Models.Comments
 {
     /// <summary>
     /// Represents a single reaction on a comment.

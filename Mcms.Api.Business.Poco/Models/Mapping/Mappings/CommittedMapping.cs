@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using Mcms.Api.Data.Poco.Models.Core.Release;
+using Mcms.Api.Business.Poco.Models.Core.Release;
 
-namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings
+namespace Mcms.Api.Business.Poco.Models.Mapping.Mappings
 {
 
     /// <summary>
