@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Managers\Core" />
+    <ProjectReference Include="..\Mcms.Api.Data.Poco\Mcms.Api.Data.Poco.csproj" />
   </ItemGroup>
 
 </Project>
