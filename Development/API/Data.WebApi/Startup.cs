@@ -42,7 +42,7 @@ namespace Data.WebApi
             services.AddHealthChecks()
                 .AddDbContextCheck<MCMSContext>();
 
-            services.AddDbContext<MCMSContext>(opt =>
+            services.AddEfCoreDataLayer(opt =>
                 opt.UseNpgsql(Configuration["ConnectionStrings:DefaultConnection"])
                 );
 
@@ -91,7 +91,6 @@ namespace Data.WebApi
             });
 
             services.AddTransient<IUserResolvingService, AuthorizationBasedUserResolvingService>();
-            services.AddMCMSDataServices();
 
             services.AddMCPImportDataHandlers();
             services.AddFabricImportDataHandlers();
