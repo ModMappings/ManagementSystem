@@ -32,7 +32,7 @@ namespace Mcms.Api.Data.Core.Manager.Mapping.Mappings.Voting
         /// <returns>The task that describes the look up of voting records by user.</returns>
         Task<IQueryable<VotingRecord>> FindByUser(Guid userId);
 
-         ///  <summary>
+        ///  <summary>
         /// <para>
         /// Finds all voting records who match the given filter data.
         /// </para>
@@ -49,8 +49,8 @@ namespace Mcms.Api.Data.Core.Manager.Mapping.Mappings.Voting
         /// If no parameter is provided, or all are <code>null</code>, then all entries are returned.
         /// </summary>
         /// <param name="id">The given id to find committed mappings by,</param>
-         /// <param name="proposalId">The id of the proposal to find the voting records for.</param>
-         /// <param name="userId">The user id to find the voting records for.</param>
+        /// <param name="proposalId">The id of the proposal to find the voting records for.</param>
+        /// <param name="userId">The user id to find the voting records for.</param>
         /// <returns>The task that represents the lookup of voting records that match the filter data, based on intersection.</returns>
         Task<IQueryable<VotingRecord>> FindUsingFilter(Guid? id = null, Guid? proposalId = null, Guid? userId = null);
 
