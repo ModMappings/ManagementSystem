@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Data.WebApi.Model.Read.Core;
+using Data.WebApi.Model;
 
 namespace Data.WebApi.Extensions
 {
@@ -13,6 +12,12 @@ namespace Data.WebApi.Extensions
         {
             var totalSize = source.Count();
             return new PagedList<TElement>(source.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(selectFunc), pageIndex, pageSize, totalSize);
+        }
+
+        public static PagedList<TSource> AsPagedList<TSource>(this IQueryable<TSource> source, int pageIndex, int pageSize)
+        {
+            var totalSize = source.Count();
+            return new PagedList<TSource>(source.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable(), pageIndex, pageSize, totalSize);
         }
     }
 }

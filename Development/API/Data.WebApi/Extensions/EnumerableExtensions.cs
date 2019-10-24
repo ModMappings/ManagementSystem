@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data.WebApi.Model.Read.Core;
+using Data.WebApi.Model;
 
 namespace Data.WebApi.Extensions
 {

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using Data.FabricImporter.Extensions;
-using Data.MCP.TSRG.Importer;
-using Data.MCP.TSRG.Importer.Extensions;
+using AutoMapper;
 using Data.WebApi.Configuration;
+using Data.WebApi.Mapping;
 using Data.WebApi.Services.Authorization;
 using Data.WebApi.Services.Core;
 using Data.WebApi.Services.UserResolving;
@@ -20,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using Constants = Data.FabricImporter.Constants;
 
 namespace Data.WebApi
 {
@@ -45,6 +42,10 @@ namespace Data.WebApi
             services.AddEfCoreDataLayer(opt =>
                 opt.UseNpgsql(Configuration["ConnectionStrings:DefaultConnection"])
                 );
+
+            services.AddAutoMapper(
+                typeof(ApiModelMappingProfile)
+            );
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
@@ -88,12 +89,12 @@ namespace Data.WebApi
                 });
 
                 config.OperationFilter<AuthorizeCheckOperationFilter>(customBoundJwtOptions);
+
+                config.DescribeAllEnumsAsStrings();
             });
 
             services.AddTransient<IUserResolvingService, AuthorizationBasedUserResolvingService>();
 
-            services.AddMCPImportDataHandlers();
-            services.AddFabricImportDataHandlers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -128,9 +129,7 @@ namespace Data.WebApi
                 c.OAuthAppName(customBoundJwtOptions.ApiName);
             });
 
-            app.AddDatabaseMigrations();
-            app.AddMCPImport();
-            app.AddFabricImport();//TODO: Deal with threading... Abstraction needed.
+            //app.AddDatabaseMigrations();
         }
     }
 }

@@ -33,8 +33,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Mcms.Api.Business.Poco\Mcms.Api.Business.Poco.csproj" />
-      <ProjectReference Include="..\Data.FabricImporter\Data.FabricImporter.csproj" />
-      <ProjectReference Include="..\Data.MCP-TSRG-Import\Data.MCP-TSRG-Import.csproj" />
       <ProjectReference Include="..\Mcms.Api.Business.Core\Mcms.Api.Business.Core.csproj" />
       <ProjectReference Include="..\Mcms.Api.Data.EfCore\Mcms.Api.Data.EfCore.csproj" />
       <ProjectReference Include="..\Mcms.Api.Data.Poco\Mcms.Api.Data.Poco.csproj" />
@@ -54,10 +52,6 @@
 
     <ItemGroup>
       <Content Remove="ControllersOld\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Model\Api\Mapping\Component" />
     </ItemGroup>
 
 </Project>
