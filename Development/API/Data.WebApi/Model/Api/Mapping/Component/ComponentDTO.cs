@@ -18,7 +18,8 @@ namespace Data.WebApi.Model.Api.Mapping.Component
         /// <summary>
         /// The id of the component.
         /// </summary>
-        public Guid Id { get; set; }
+        /// <remarks>Is readonly.</remarks>
+        public Guid Id { get; }
 
         /// <summary>
         /// The type of the component.
@@ -27,9 +28,10 @@ namespace Data.WebApi.Model.Api.Mapping.Component
         public ComponentType Type { get; set; }
 
         /// <summary>
-        /// The versioned variants of a give component.
+        /// The versioned variants of a given component.
         /// The keys of this dictionary are the game version names, values are the ids for the versioned components.
         /// </summary>
-        public Dictionary<string, Guid> VersionedComponents { get; set; }
+        /// <remarks>Is readonly. Changes can be made via workflows related to versioned components.</remarks>
+        public IReadOnlyDictionary<string, Guid> VersionedComponents { get; }
     }
 }
