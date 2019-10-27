@@ -14,6 +14,11 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
         public virtual PackageMetadata Parent { get; set; }
 
         /// <summary>
+        /// The packages which are part of the
+        /// </summary>
+        public virtual List<PackageMetadata> ChildPackages { get; set; }
+
+        /// <summary>
         /// The classes which are part of this package.
         /// Might be empty.
         /// </summary>

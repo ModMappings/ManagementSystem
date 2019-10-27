@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -24,7 +25,7 @@ namespace Data.WebApi.Controllers.REST
     /// or application does not have the rights to do it directly via this controller.
     /// </summary>
     [ApiController]
-    [Route("/rest/component")]
+    [Route("/rest/component/{type}")]
     public class ComponentController : Controller
     {
 
@@ -36,6 +37,12 @@ namespace Data.WebApi.Controllers.REST
             _componentDataManager = componentDataManager;
             _mapper = mapper;
         }
+
+        /// <summary>
+        /// The type of the component that is being looked up.
+        /// </summary>
+        [FromRoute(Name = "type")]
+        public ComponentType? Type { get; set; } = null;
 
         /// <summary>
         /// Get method to get a given component with a given id.
@@ -56,13 +63,17 @@ namespace Data.WebApi.Controllers.REST
 
             var rawResult = rawResultQuery.First();
 
+            if (rawResult.Type != Type)
+            {
+                return NotFound($"No component exists with the given id: {id}");
+            }
+
             return Ok(_mapper.Map<ComponentDto>(rawResult));
         }
 
         /// <summary>
         /// Method that looks up the components based on its properties.
         /// </summary>
-        /// <param name="type">The type of components to look for.</param>
         /// <param name="mappingTypeName">A regex that filters the components on having a given mapping in a mapping type who's name matches the given regex. Additionally a mapping regex has to be given to find any.</param>
         /// <param name="mapping">A regex that filters the components on having a mapping who's input or output matches the regex. A mappingTypeName regex is needed to find any.</param>
         /// <param name="releaseName">A regex that filters the components on being part of a release who's name matches the regex.</param>
@@ -73,7 +84,6 @@ namespace Data.WebApi.Controllers.REST
         [HttpGet()]
         [Route("list")]
         public async Task<ActionResult<PagedList<ComponentDto>>> List(
-            [FromQuery(Name = "type")] ComponentType? type =  null,
             [FromQuery(Name = "mapping_type_name")] string mappingTypeName = null,
             [FromQuery(Name = "mapping")] string mapping = null,
             [FromQuery(Name = "releaseName")] string releaseName = null,
@@ -84,7 +94,7 @@ namespace Data.WebApi.Controllers.REST
         {
             var rawQueryable = await _componentDataManager.FindUsingFilter(
                 null,
-                type,
+                Type,
                 mappingTypeName,
                 mapping,
                 releaseName,
@@ -112,6 +122,11 @@ namespace Data.WebApi.Controllers.REST
             }
 
             var target = rawData.First();
+
+            if (target.Type != Type)
+            {
+                return NotFound($"No component can be found with a given id: {id}");
+            }
 
             await _componentDataManager.DeleteComponent(target);
             await _componentDataManager.SaveChanges();
@@ -141,6 +156,11 @@ namespace Data.WebApi.Controllers.REST
             }
 
             var rawData = rawDataQuery.First();
+
+            if (rawData.Type != Type)
+            {
+                return NotFound($"No component can be found with a given id: {id}");
+            }
 
             _mapper.Map(componentDto, rawData);
 
