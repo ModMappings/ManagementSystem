@@ -24,6 +24,18 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Component
         public ComponentType Type { get; set; }
 
         /// <summary>
+        /// The moment that the component was created.
+        /// </summary>
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        /// <summary>
+        /// The user id of the user who created this component.
+        /// </summary>
+        [Required]
+        public Guid CreatedBy { get; set; }
+
+        /// <summary>
         /// The components representations in the relevant game versions that it is part of.
         /// </summary>
         public virtual List<VersionedComponent> VersionedComponents { get; set; }

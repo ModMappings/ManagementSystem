@@ -131,7 +131,7 @@ namespace Data.MCP.TSRG.Importer.TSRG
                     Outer = null, //TODO: Do splitting on the name and attempt lookup. (Might need to happen in the post processing, possibly)
                     Package = packageName,
                     VersionedComponent = _currentVersionedClass,
-                    VersionedComponentForeignKey = _currentVersionedClass.Id
+                    Id = _currentVersionedClass.Id
                 };
 
                 _context.Entry(_currentVersionedClass.Metadata).State = EntityState.Added;
@@ -201,7 +201,7 @@ namespace Data.MCP.TSRG.Importer.TSRG
                     MemberOf = classMetadata,
                     Parameters = new List<ParameterMetadata>(),
                     VersionedComponent = targetMethodVersionedComponent,
-                    VersionedComponentForeignKey = targetMethodVersionedComponent.Id
+                    Id = targetMethodVersionedComponent.Id
                 };
 
                 targetMethodVersionedComponent.Metadata = newMethodMetadata;
@@ -254,7 +254,7 @@ namespace Data.MCP.TSRG.Importer.TSRG
                     IsStatic = isStatic,
                     MemberOf = classMetadata,
                     VersionedComponent = targetFieldVersionedComponent,
-                    VersionedComponentForeignKey = targetFieldVersionedComponent.Id
+                    Id = targetFieldVersionedComponent.Id
                 };
 
                 targetFieldVersionedComponent.Metadata = newFieldMetadata;

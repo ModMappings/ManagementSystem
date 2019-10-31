@@ -28,10 +28,18 @@ namespace Data.WebApi.Model.Api.Mapping.Component
         public ComponentType Type { get; set; }
 
         /// <summary>
-        /// The versioned variants of a given component.
-        /// The keys of this dictionary are the game version names, values are the ids for the versioned components.
+        /// The moment this component was created.
         /// </summary>
-        /// <remarks>Is readonly. Changes can be made via workflows related to versioned components.</remarks>
-        public IReadOnlyDictionary<string, Guid> VersionedComponents { get; }
+        public DateTime CreatedOn { get; }
+
+        /// <summary>
+        /// The id of the user who created the component.
+        /// </summary>
+        public Guid CreatedBy { get; }
+
+        /// <summary>
+        /// The versioned variants of a given component.
+        /// </summary>
+        public ISet<Guid> VersionedComponents { get; set; }
     }
 }

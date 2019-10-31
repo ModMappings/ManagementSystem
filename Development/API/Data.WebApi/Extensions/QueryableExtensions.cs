@@ -11,13 +11,19 @@ namespace Data.WebApi.Extensions
             Func<TSource, TElement> selectFunc, int pageIndex, int pageSize)
         {
             var totalSize = source.Count();
-            return new PagedList<TElement>(source.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable().Select(selectFunc), pageIndex, pageSize, totalSize);
+            return new PagedList<TElement>(source.PerformPaging(pageIndex, pageSize).AsEnumerable().Select(selectFunc), pageIndex, pageSize, totalSize);
         }
 
         public static PagedList<TSource> AsPagedList<TSource>(this IQueryable<TSource> source, int pageIndex, int pageSize)
         {
             var totalSize = source.Count();
-            return new PagedList<TSource>(source.Skip(pageSize * pageIndex).Take(pageSize).AsEnumerable(), pageIndex, pageSize, totalSize);
+            return new PagedList<TSource>(source.PerformPaging(pageIndex, pageSize).AsEnumerable(), pageIndex, pageSize, totalSize);
+        }
+
+        public static IQueryable<TElement> PerformPaging<TElement>(this IQueryable<TElement> source, int pageIndex,
+            int pageSize)
+        {
+            return source.Skip(pageSize * pageIndex).Take(pageSize);
         }
     }
 }

@@ -13,16 +13,15 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
         /// <summary>
         /// The versioned component this is metadata for.
         /// </summary>
-        [ForeignKey("VersionedComponentForeignKey")]
+        [ForeignKey("Id")]
         [Required]
         public virtual VersionedComponent VersionedComponent { get; set; }
 
         /// <summary>
-        /// The id of the versioned component this is metadata for.
-        /// Doubles as the metadatas id, since there is a one to one relation ship between a metadata instance and a versioned component.
+        /// The id of the metadata, is equal to the id of the versioned component the metadata belongs to.
         /// </summary>
         [Key]
         [Required]
-        public Guid VersionedComponentForeignKey { get; set; }
+        public Guid Id { get; set; }
     }
 }

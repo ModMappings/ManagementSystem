@@ -1,16 +1,19 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Data.WebApi.Extensions;
 using Data.WebApi.Model;
 using Data.WebApi.Model.Api.Mapping.Component;
+using Data.WebApi.Services.Core;
 using Mcms.Api.Data.Core.Manager.Mapping.Component;
 using Mcms.Api.Data.Poco.Models.Mapping.Component;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Component = Mcms.Api.Data.Poco.Models.Mapping.Component.Component;
 
 namespace Data.WebApi.Controllers.REST
 {
@@ -32,10 +35,13 @@ namespace Data.WebApi.Controllers.REST
         private readonly IComponentDataManager _componentDataManager;
         private readonly IMapper _mapper;
 
-        public ComponentController(IComponentDataManager componentDataManager, IMapper mapper)
+        private readonly IUserResolvingService _userResolvingService;
+
+        public ComponentController(IComponentDataManager componentDataManager, IMapper mapper, IUserResolvingService userResolvingService)
         {
             _componentDataManager = componentDataManager;
             _mapper = mapper;
+            _userResolvingService = userResolvingService;
         }
 
         /// <summary>
@@ -135,9 +141,34 @@ namespace Data.WebApi.Controllers.REST
         }
 
         /// <summary>
-        /// Updates an existing component with the data given by the  dto.
-        /// For components only <see cref="ComponentDto.Type"/> can be updated this way.
-        /// All other data is treated as readonly.
+        /// Creates a new component from the given data.
+        /// The api will create a new Id.
+        ///
+        /// The system returns the data after it has been saved in the database.
+        /// </summary>
+        /// <param name="componentDto">The data to create the new component from.</param>
+        /// <returns>200 - The updated component data (should be identical to the input), with the id set.</returns>
+        [HttpPost]
+        [Route("create")]
+        public async Task<ActionResult<ComponentDto>> Create(
+            [FromBody()] ComponentDto componentDto
+        )
+        {
+            var newId = Guid.NewGuid();
+            var component = _mapper.Map<Component>(componentDto);
+
+            component.Id = newId;
+            component.CreatedOn = DateTime.Now;
+            component.CreatedBy = Guid.Parse(ClaimsPrincipal.Current.FindFirstValue(ClaimTypes.Sid));
+
+            await _componentDataManager.CreateComponent(component);
+            var rawNewData = _componentDataManager.FindById(newId);
+
+            return Ok(_mapper.Map<ComponentDto>(rawNewData));
+        }
+
+        /// <summary>
+        /// Updates an existing component with the data given by the dto.
         /// </summary>
         /// <param name="id">The id of the component to update the data with.</param>
         /// <param name="componentDto">The data to update the component with.</param>
