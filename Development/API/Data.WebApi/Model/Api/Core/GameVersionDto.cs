@@ -1,6 +1,6 @@
 using System;
 
-namespace Data.WebApi.Model.Api.Mapping.Component
+namespace Data.WebApi.Model.Api.Core
 {
     /// <summary>
     /// Represents a single version of the game.

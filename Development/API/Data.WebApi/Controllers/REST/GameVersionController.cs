@@ -7,6 +7,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Data.WebApi.Extensions;
 using Data.WebApi.Model;
+using Data.WebApi.Model.Api.Core;
 using Data.WebApi.Model.Api.Mapping.Component;
 using Data.WebApi.Services.Core;
 using Mcms.Api.Data.Core.Manager.Core;
