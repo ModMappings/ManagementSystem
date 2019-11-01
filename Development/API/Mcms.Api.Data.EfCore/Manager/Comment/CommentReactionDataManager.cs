@@ -85,19 +85,19 @@ namespace Mcms.Api.Data.EfCore.Manager.Comment
             return await _store.ReadAsync(filter);
         }
 
-        public async Task CreateComment(CommentReaction commentReaction)
+        public async Task CreateCommentReaction(CommentReaction commentReaction)
         {
             _logger.LogDebug($"Creating new comment reaction: '{commentReaction.Id}'");
             await _store.Create(commentReaction);
         }
 
-        public async Task UpdateComment(CommentReaction commentReaction)
+        public async Task UpdateCommentReaction(CommentReaction commentReaction)
         {
             _logger.LogDebug($"Updating comment reaction: '{commentReaction.Id}'");
             await _store.Update(commentReaction);
         }
 
-        public async Task DeleteComment(CommentReaction commentReaction)
+        public async Task DeleteCommentReaction(CommentReaction commentReaction)
         {
             _logger.LogDebug($"Deleting comment reaction: '{commentReaction.Id}'");
             await _store.Delete(commentReaction);

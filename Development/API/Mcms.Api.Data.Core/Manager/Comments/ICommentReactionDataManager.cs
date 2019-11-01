@@ -67,7 +67,7 @@ namespace Mcms.Api.Data.Core.Manager.Comments
         /// <param name="commentReaction">The comment reaction to create.</param>
         /// <returns>The task that describes the creation of the comment reaction.</returns>
         /// <exception cref="InvalidOperationException">is thrown when this method is called with either a known comment reaction or a uncommitted deleted comment reaction.</exception>
-        Task CreateComment(
+        Task CreateCommentReaction(
             CommentReaction commentReaction
         );
 
@@ -78,7 +78,7 @@ namespace Mcms.Api.Data.Core.Manager.Comments
         /// <param name="commentReaction">The comment reaction to update.</param>
         /// <returns>The task that describes the updating of the manager with the data from the comment reaction.</returns>
         /// <exception cref="InvalidOperationException">is thrown when this method is called with either an unknown comment reaction (uncommitted deleted) or an uncommitted created comment reaction.</exception>
-        Task UpdateComment(
+        Task UpdateCommentReaction(
             CommentReaction commentReaction
         );
 
@@ -88,7 +88,7 @@ namespace Mcms.Api.Data.Core.Manager.Comments
         /// </summary>
         /// <param name="commentReaction">The comment reaction to delete.</param>
         /// <returns>The task that describes the deletion of the comment reaction from the manager.</returns>
-        Task DeleteComment(
+        Task DeleteCommentReaction(
             CommentReaction commentReaction
         );
 

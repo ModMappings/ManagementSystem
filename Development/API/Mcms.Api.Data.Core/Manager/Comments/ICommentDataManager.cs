@@ -62,12 +62,14 @@ namespace Mcms.Api.Data.Core.Manager.Comments
         /// <param name="contentRegex">The regex to match the content of comments against.</param>
         /// <param name="releaseNameRegex">The regex to match release names against.</param>
         /// <param name="proposedMappingId">The id of the proposed mapping to get the comments for.</param>
+        /// <param name="parentCommentId">The id of the parent comment to look comments up for.</param>
         /// <returns>The task that represents the lookup of comments that match the filter data, based on intersection.</returns>
         Task<IQueryable<Comment>> FindUsingFilter(
             Guid? id = null,
             string contentRegex = null,
             string releaseNameRegex = null,
-            Guid? proposedMappingId = null
+            Guid? proposedMappingId = null,
+            Guid? parentCommentId = null
         );
 
         /// <summary>

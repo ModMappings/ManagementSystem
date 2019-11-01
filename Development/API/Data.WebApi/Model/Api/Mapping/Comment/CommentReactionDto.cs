@@ -1,43 +1,36 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Mcms.Api.Data.Poco.Models.Comments;
 
-namespace Mcms.Api.Data.Poco.Models.Comments
+namespace Data.WebApi.Model.Api.Mapping.Comment
 {
     /// <summary>
-    /// Represents a single reaction on a comment.
+    /// Represents a single reaction to a given comment.
     /// </summary>
-    public class CommentReaction
+    public class CommentReactionDto
     {
         /// <summary>
         /// The id of the reaction.
         /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public Guid Id { get; }
 
         /// <summary>
         /// The id of the user who created the reaction.
         /// </summary>
-        [Required]
-        public Guid CreatedBy { get; set; }
+        public Guid CreatedBy { get; }
 
         /// <summary>
         /// The moment the reaction was created.
         /// </summary>
-        [Required]
-        public DateTime CreatedOn { get; set; }
+        public Guid CreatedOn { get; }
 
         /// <summary>
         /// The type of reaction.
         /// </summary>
-        [Required]
         public CommentReactionType Type { get; set; }
 
         /// <summary>
         /// The comments content.
         /// </summary>
-        [Required]
-        public Comment Comment { get; set; }
+        public Guid Comment { get; set; }
     }
 }

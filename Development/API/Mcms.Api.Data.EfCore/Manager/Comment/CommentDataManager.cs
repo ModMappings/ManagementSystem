@@ -67,7 +67,8 @@ namespace Mcms.Api.Data.EfCore.Manager.Comment
         }
 
         public async Task<IQueryable<Mcms.Api.Data.Poco.Models.Comments.Comment>> FindUsingFilter(Guid? id = null, string contentRegex = null, string releaseNameRegex = null,
-            Guid? proposedMappingId = null)
+            Guid? proposedMappingId = null,
+            Guid? parentCommentId = null)
         {
             _logger.LogDebug("Attempting to find comment by filter data.");
             if (id != null)
@@ -99,6 +100,14 @@ namespace Mcms.Api.Data.EfCore.Manager.Comment
                 _logger.LogTrace($" > Proposed mapping id: '{proposedMappingId}'");
                 _queryFilterFactory.AddCallback(
                     (q) => q.Where(c => c.ProposedMapping.Id == proposedMappingId)
+                );
+            }
+
+            if (proposedMappingId != null)
+            {
+                _logger.LogTrace($" > Parent comment id: '{parentCommentId}'");
+                _queryFilterFactory.AddCallback(
+                    (q) => q.Where(c => c.Parent.Id == parentCommentId)
                 );
             }
 

@@ -1,10 +1,13 @@
 using System;
 using System.Linq;
 using AutoMapper;
+using Castle.Core.Internal;
 using Data.WebApi.Model.Api.Core;
 using Data.WebApi.Model.Api.Core.Releases;
+using Data.WebApi.Model.Api.Mapping.Comment;
 using Data.WebApi.Model.Api.Mapping.Component;
 using Data.WebApi.Model.Api.Mapping.Mappings;
+using Data.WebApi.Model.Api.Mapping.Mappings.Voting;
 using Mcms.Api.Data.Poco.Models.Comments;
 using Mcms.Api.Data.Poco.Models.Core;
 using Mcms.Api.Data.Poco.Models.Core.Release;
@@ -51,6 +54,15 @@ namespace Data.WebApi.Mapping
 
             SetupProposedMappingToDtoMapping();
             SetupDtoToProposedMappingMapping();
+
+            SetupVotingRecordToDtoMapping();
+            SetupDtoToVotingRecordMapping();
+
+            SetupCommentToDtoMapping();
+            SetupDtoToCommentMapping();
+
+            SetupCommentReactionToDtoMapping();
+            SetupDtoToCommentReactionMapping();
         }
 
         private void SetupComponentToDtoMapping()
@@ -516,6 +528,124 @@ namespace Data.WebApi.Mapping
             dtoToProposedMappingMapping.ForMember(d => d.CommittedWith,
                 opts => opts.MapFrom(d =>
                     d.CommittedWith.HasValue ? new CommittedMapping {Id = d.CommittedWith.Value} : null));
+        }
+
+        private void SetupVotingRecordToDtoMapping()
+        {
+            var votingRecordToDtoMapping = CreateMap<VotingRecord, VotingRecordDto>();
+            votingRecordToDtoMapping.ForAllMembers(d => d.Ignore());
+            votingRecordToDtoMapping.ForMember(d => d.Id,
+                opts => opts.MapFrom(d => d.Id));
+            votingRecordToDtoMapping.ForMember(d => d.Proposal,
+                opts => opts.MapFrom(d => d.Proposal.Id));
+            votingRecordToDtoMapping.ForMember(d => d.CreatedOn,
+                opts => opts.MapFrom(d => d.CreatedOn));
+            votingRecordToDtoMapping.ForMember(d => d.VotedBy,
+                opts => opts.MapFrom(d => d.VotedBy));
+            votingRecordToDtoMapping.ForMember(d => d.IsForVote,
+                opts => opts.MapFrom(d => d.IsForVote));
+            votingRecordToDtoMapping.ForMember(d => d.HasBeenRescinded,
+                opts => opts.MapFrom(d => d.HasBeenRescinded));
+        }
+
+        private void SetupDtoToVotingRecordMapping()
+        {
+            var dtoToVotingRecordMapping = CreateMap<VotingRecordDto, VotingRecord>();
+            dtoToVotingRecordMapping.ForAllMembers(d => d.Ignore());
+            dtoToVotingRecordMapping.ForMember(d => d.Proposal,
+                opts => opts.MapFrom(d => new ProposedMapping {Id = d.Proposal}));
+            dtoToVotingRecordMapping.ForMember(d => d.IsForVote,
+                opts => opts.MapFrom(d => d.IsForVote));
+            dtoToVotingRecordMapping.ForMember(d => d.HasBeenRescinded,
+                opts => opts.MapFrom(d => d.HasBeenRescinded));
+        }
+
+        private void SetupCommentToDtoMapping()
+        {
+            var commentToDtoMapping = CreateMap<Comment, CommentDto>();
+            commentToDtoMapping.ForAllMembers(d => d.Ignore());
+            commentToDtoMapping.ForMember(d => d.Id,
+                opts => opts.MapFrom(d => d.Id));
+            commentToDtoMapping.ForMember(d => d.CreatedBy,
+                opts => opts.MapFrom(d => d.CreatedBy));
+            commentToDtoMapping.ForMember(d => d.CreatedOn,
+                opts => opts.MapFrom(d => d.CreatedOn));
+            commentToDtoMapping.ForMember(d => d.Content,
+                opts => opts.MapFrom(d => d.Content));
+            commentToDtoMapping.ForMember(d => d.Reactions,
+                opts => opts.MapFrom(d => d.Reactions.Select(r => r.Id).ToHashSet()));
+            commentToDtoMapping.ForMember(d => d.HasBeenEdited,
+                opts => opts.MapFrom(d => d.HasBeenEdited));
+            commentToDtoMapping.ForMember(d => d.IsDeleted,
+                opts => opts.MapFrom(d => d.IsDeleted));
+            commentToDtoMapping.ForMember(d => d.DeletedBy,
+                opts => opts.MapFrom(d => d.DeletedBy));
+            commentToDtoMapping.ForMember(d => d.DeletedOn,
+                opts => opts.MapFrom(d => d.DeletedOn));
+            commentToDtoMapping.ForMember(d => d.ProposedMapping,
+                opts => opts.MapFrom(d => d.ProposedMapping != null ? (Guid?) d.ProposedMapping.Id : (Guid?) null));
+            commentToDtoMapping.ForMember(d => d.Release,
+                opts => opts.MapFrom(d => d.Release != null ? (Guid?) d.Release.Id : (Guid?) null));
+            commentToDtoMapping.ForMember(d => d.Parent,
+                opts => opts.MapFrom(d => d.Parent != null ? (Guid?) d.Parent.Id : (Guid?) null));
+            commentToDtoMapping.ForMember(d => d.Children,
+                opts => opts.MapFrom(d => d.Children.Select(c => c.Id).ToHashSet()));
+        }
+
+        private void SetupDtoToCommentMapping()
+        {
+            var dtoToCommentMapping = CreateMap<CommentDto, Comment>();
+            dtoToCommentMapping.ForAllMembers(d => d.Ignore());
+            dtoToCommentMapping.ForMember(d => d.Content,
+                opts => opts.MapFrom(d => d.Content));
+            dtoToCommentMapping.ForMember(d => d.Reactions,
+                opts => opts.MapFrom(d => d.Reactions.Select(id => new CommentReaction {Id = id}).ToList()));
+            dtoToCommentMapping.ForMember(d => d.IsDeleted,
+                opts => opts.MapFrom(d => d.IsDeleted));
+            dtoToCommentMapping.ForMember(d => d.ProposedMapping,
+                opts => opts.MapFrom(d => d.ProposedMapping.HasValue ? new ProposedMapping {Id = d.ProposedMapping.Value} : null));
+            dtoToCommentMapping.ForMember(d => d.Release,
+                opts => opts.MapFrom(d => d.Release.HasValue ? new Release {Id = d.Release.Value} : null));
+            dtoToCommentMapping.ForMember(d => d.Parent,
+                opts => opts.MapFrom(d => d.Parent.HasValue ? new Comment {Id = d.Parent.Value} : null));
+            dtoToCommentMapping.ForMember(d => d.Children,
+                opts => opts.MapFrom(d => d.Children.Select(c => new Comment {Id = c}).ToList()));
+            dtoToCommentMapping.BeforeMap((dto, comment) =>
+            {
+                if (!comment.Content.IsNullOrEmpty())
+                {
+                    if (comment.Content != dto.Content)
+                    {
+                        comment.HasBeenEdited = true;
+                    }
+                }
+            });
+        }
+
+        private void SetupCommentReactionToDtoMapping()
+        {
+            var commentReactionToDtoMapping = CreateMap<CommentReaction, CommentReactionDto>();
+            commentReactionToDtoMapping.ForAllMembers(d => d.Ignore());
+            commentReactionToDtoMapping.ForMember(d => d.Id,
+                opts => opts.MapFrom(d => d.Id));
+            commentReactionToDtoMapping.ForMember(d => d.CreatedBy,
+                opts => opts.MapFrom(d => d.CreatedBy));
+            commentReactionToDtoMapping.ForMember(d => d.CreatedOn,
+                opts => opts.MapFrom(d => d.CreatedOn));
+            commentReactionToDtoMapping.ForMember(d => d.Type,
+                opts => opts.MapFrom(d => d.Type));
+            commentReactionToDtoMapping.ForMember(d => d.Comment,
+                opts => opts.MapFrom(d => d.Comment));
+        }
+
+        private void SetupDtoToCommentReactionMapping()
+        {
+            var dtoToCommentReactionMapping = CreateMap<CommentReactionDto, CommentReaction>();
+            dtoToCommentReactionMapping.ForAllMembers(d => d.Ignore());
+            dtoToCommentReactionMapping.ForMember(d => d.Type,
+                opts => opts.MapFrom(d => d.Type));
+            dtoToCommentReactionMapping.ForMember(d => d.Comment,
+                opts => opts.MapFrom(d => d.Comment));
         }
     }
 }
