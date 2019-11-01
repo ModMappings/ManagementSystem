@@ -1,11 +1,16 @@
+using System;
 using System.Linq;
 using AutoMapper;
 using Data.WebApi.Model.Api.Core;
+using Data.WebApi.Model.Api.Core.Releases;
 using Data.WebApi.Model.Api.Mapping.Component;
+using Data.WebApi.Model.Api.Mapping.Mappings;
+using Mcms.Api.Data.Poco.Models.Comments;
 using Mcms.Api.Data.Poco.Models.Core;
 using Mcms.Api.Data.Poco.Models.Core.Release;
 using Mcms.Api.Data.Poco.Models.Mapping.Component;
 using Mcms.Api.Data.Poco.Models.Mapping.Mappings;
+using Mcms.Api.Data.Poco.Models.Mapping.Mappings.Voting;
 using Mcms.Api.Data.Poco.Models.Mapping.Metadata;
 
 namespace Data.WebApi.Mapping
@@ -37,6 +42,15 @@ namespace Data.WebApi.Mapping
 
             SetupMappingTypeToDtoMapping();
             SetupDtoToMappingTypeMapping();
+
+            SetupReleaseToDtoMapping();
+            SetupDtoToReleaseMapping();
+
+            SetupCommittedMappingToDtoMapping();
+            SetupDtoToCommittedMappingMapping();
+
+            SetupProposedMappingToDtoMapping();
+            SetupDtoToProposedMappingMapping();
         }
 
         private void SetupComponentToDtoMapping()
@@ -331,6 +345,177 @@ namespace Data.WebApi.Mapping
                 opts => opts.MapFrom(d => d.Name));
             dtoToMappingTypeMapping.ForMember(d => d.Releases,
                 opts => opts.MapFrom(d => d.Releases.Select(id => new Release() {Id = id}).ToList()));
+        }
+
+        private void SetupReleaseToDtoMapping()
+        {
+            var releaseToDtoMapping = CreateMap<Release, ReleaseDto>();
+            releaseToDtoMapping.ForAllMembers(d => d.Ignore());
+            releaseToDtoMapping.ForMember(d => d.Id,
+                opts => opts.MapFrom(d => d.Id));
+            releaseToDtoMapping.ForMember(d => d.Name,
+                opts => opts.MapFrom(d => d.Name));
+            releaseToDtoMapping.ForMember(d => d.CreatedOn,
+                opts => opts.MapFrom(d => d.CreatedOn));
+            releaseToDtoMapping.ForMember(d => d.CreatedBy,
+                opts => opts.MapFrom(d => d.CreatedBy));
+            releaseToDtoMapping.ForMember(d => d.GameVersion,
+                opts => opts.MapFrom(d => d.GameVersion.Id));
+            releaseToDtoMapping.ForMember(d => d.MappingType,
+                opts => opts.MapFrom(d => d.MappingType.Id));
+            releaseToDtoMapping.ForMember(d => d.IsSnapshot,
+                opts => opts.MapFrom(d => d.IsSnapshot));
+            releaseToDtoMapping.ForMember(d => d.PackageMappings,
+                opts => opts.MapFrom(d =>
+                    d.Components.Where(c => c.Mapping.VersionedComponent.Component.Type == ComponentType.PACKAGE)
+                        .Select(c => c.Id).ToHashSet()));
+            releaseToDtoMapping.ForMember(d => d.ClassMappings,
+                opts => opts.MapFrom(d =>
+                    d.Components.Where(c => c.Mapping.VersionedComponent.Component.Type == ComponentType.CLASS)
+                        .Select(c => c.Id).ToHashSet()));
+            releaseToDtoMapping.ForMember(d => d.MethodMappings,
+                opts => opts.MapFrom(d =>
+                    d.Components.Where(c => c.Mapping.VersionedComponent.Component.Type == ComponentType.METHOD)
+                        .Select(c => c.Id).ToHashSet()));
+            releaseToDtoMapping.ForMember(d => d.FieldMappings,
+                opts => opts.MapFrom(d =>
+                    d.Components.Where(c => c.Mapping.VersionedComponent.Component.Type == ComponentType.FIELD)
+                        .Select(c => c.Id).ToHashSet()));
+            releaseToDtoMapping.ForMember(d => d.ParameterMappings,
+                opts => opts.MapFrom(d =>
+                    d.Components.Where(c => c.Mapping.VersionedComponent.Component.Type == ComponentType.PARAMETER)
+                        .Select(c => c.Id).ToHashSet()));
+            releaseToDtoMapping.ForMember(d => d.Comments,
+                opts => opts.MapFrom(d =>
+                    d.Comments.Select(c => c.Id).ToHashSet()));
+        }
+
+        private void SetupDtoToReleaseMapping()
+        {
+            var dtoToReleaseMapping = CreateMap<ReleaseDto, Release>();
+            dtoToReleaseMapping.ForAllMembers(d => d.Ignore());
+            dtoToReleaseMapping.ForMember(d => d.Name,
+                opts => opts.MapFrom(d => d.Name));
+            dtoToReleaseMapping.ForMember(d => d.Comments,
+                opts => opts.MapFrom(d => d.Comments.Select(id => new Comment {Id = id})));
+        }
+
+        private void SetupCommittedMappingToDtoMapping()
+        {
+            var committedMappingToDtoMapping = CreateMap<CommittedMapping, CommittedMappingDto>();
+            committedMappingToDtoMapping.ForAllMembers(d => d.Ignore());
+            committedMappingToDtoMapping.ForMember(d => d.Id,
+                opts => opts.MapFrom(d => d.Id));
+            committedMappingToDtoMapping.ForMember(d => d.VersionedComponent,
+                opts => opts.MapFrom(d => d.VersionedComponent.Id));
+            committedMappingToDtoMapping.ForMember(d => d.CreatedOn,
+                opts => opts.MapFrom(d => d.CreatedOn));
+            committedMappingToDtoMapping.ForMember(d => d.CreatedBy,
+                opts => opts.MapFrom(d => d.CreatedBy));
+            committedMappingToDtoMapping.ForMember(d => d.InputMapping,
+                opts => opts.MapFrom(d => d.InputMapping));
+            committedMappingToDtoMapping.ForMember(d => d.OutputMapping,
+                opts => opts.MapFrom(d => d.OutputMapping));
+            committedMappingToDtoMapping.ForMember(d => d.Documentation,
+                opts => opts.MapFrom(d => d.Documentation));
+            committedMappingToDtoMapping.ForMember(d => d.Distribution,
+                opts => opts.MapFrom(d => d.Distribution));
+            committedMappingToDtoMapping.ForMember(d => d.MappingType,
+                opts => opts.MapFrom(d => d.MappingType.Id));
+            committedMappingToDtoMapping.ForMember(d => d.Proposal,
+                opts => opts.MapFrom(d => d.ProposedMapping != null ? (Guid?) d.ProposedMapping.Id : (Guid?) null));
+            committedMappingToDtoMapping.ForMember(d => d.Releases,
+                opts => opts.MapFrom(d => d.Releases.Select(r => r.Release.Id).ToHashSet()));
+        }
+
+        private void SetupDtoToCommittedMappingMapping()
+        {
+            var dtoToCommittedMappingMapping = CreateMap<CommittedMappingDto, CommittedMapping>();
+            dtoToCommittedMappingMapping.ForAllMembers(d => d.Ignore());
+            dtoToCommittedMappingMapping.ForMember(d => d.InputMapping,
+                opts => opts.MapFrom(d => d.InputMapping));
+            dtoToCommittedMappingMapping.ForMember(d => d.OutputMapping,
+                opts => opts.MapFrom(d => d.OutputMapping));
+            dtoToCommittedMappingMapping.ForMember(d => d.Documentation,
+                opts => opts.MapFrom(d => d.Documentation));
+            dtoToCommittedMappingMapping.ForMember(d => d.Distribution,
+                opts => opts.MapFrom(d => d.Distribution));
+            dtoToCommittedMappingMapping.ForMember(d => d.ProposedMapping,
+                opts => opts.MapFrom(d => d.Proposal.HasValue ? new ProposedMapping {Id = d.Proposal.Value} : null));
+        }
+
+        private void SetupProposedMappingToDtoMapping()
+        {
+            var proposedMappingToDtoMapping = CreateMap<ProposedMapping, ProposedMappingDto>();
+            proposedMappingToDtoMapping.ForAllMembers(d => d.Ignore());
+            proposedMappingToDtoMapping.ForMember(d => d.Id,
+                opts => opts.MapFrom(d => d.Id));
+            proposedMappingToDtoMapping.ForMember(d => d.VersionedComponent,
+                opts => opts.MapFrom(d => d.VersionedComponent.Id));
+            proposedMappingToDtoMapping.ForMember(d => d.CreatedOn,
+                opts => opts.MapFrom(d => d.CreatedOn));
+            proposedMappingToDtoMapping.ForMember(d => d.CreatedBy,
+                opts => opts.MapFrom(d => d.CreatedBy));
+            proposedMappingToDtoMapping.ForMember(d => d.InputMapping,
+                opts => opts.MapFrom(d => d.InputMapping));
+            proposedMappingToDtoMapping.ForMember(d => d.OutputMapping,
+                opts => opts.MapFrom(d => d.OutputMapping));
+            proposedMappingToDtoMapping.ForMember(d => d.Documentation,
+                opts => opts.MapFrom(d => d.Documentation));
+            proposedMappingToDtoMapping.ForMember(d => d.Distribution,
+                opts => opts.MapFrom(d => d.Distribution));
+            proposedMappingToDtoMapping.ForMember(d => d.MappingType,
+                opts => opts.MapFrom(d => d.MappingType.Id));
+            proposedMappingToDtoMapping.ForMember(d => d.IsOpen,
+                opts => opts.MapFrom(d => d.IsOpen));
+            proposedMappingToDtoMapping.ForMember(d => d.IsPublicVote,
+                opts => opts.MapFrom(d => d.IsPublicVote));
+            proposedMappingToDtoMapping.ForMember(d => d.Votes,
+                opts => opts.MapFrom(d => d.Votes.Select(v => v.Id).ToHashSet()));
+            proposedMappingToDtoMapping.ForMember(d => d.Comments,
+                opts => opts.MapFrom(d => d.Comments.Select(c => c.Id).ToHashSet()));
+            proposedMappingToDtoMapping.ForMember(d => d.ClosedBy,
+                opts => opts.MapFrom(d => d.ClosedBy));
+            proposedMappingToDtoMapping.ForMember(d => d.ClosedOn,
+                opts => opts.MapFrom(d => d.ClosedOn));
+            proposedMappingToDtoMapping.ForMember(d => d.Merged,
+                opts => opts.MapFrom(d => d.Merged));
+            proposedMappingToDtoMapping.ForMember(d => d.CommittedWith,
+                opts => opts.MapFrom(d => d.CommittedWithId));
+
+        }
+
+        private void SetupDtoToProposedMappingMapping()
+        {
+            var dtoToProposedMappingMapping = CreateMap<ProposedMappingDto, ProposedMapping>();
+            dtoToProposedMappingMapping.ForAllMembers(d => d.Ignore());
+            dtoToProposedMappingMapping.ForMember(d => d.InputMapping,
+                opts => opts.MapFrom(d => d.InputMapping));
+            dtoToProposedMappingMapping.ForMember(d => d.OutputMapping,
+                opts => opts.MapFrom(d => d.OutputMapping));
+            dtoToProposedMappingMapping.ForMember(d => d.Documentation,
+                opts => opts.MapFrom(d => d.Documentation));
+            dtoToProposedMappingMapping.ForMember(d => d.Distribution,
+                opts => opts.MapFrom(d => d.Distribution));
+            dtoToProposedMappingMapping.ForMember(d => d.IsOpen,
+                opts => opts.MapFrom(d => d.IsOpen));
+            dtoToProposedMappingMapping.ForMember(d => d.IsPublicVote,
+                opts => opts.MapFrom(d => d.IsPublicVote));
+            dtoToProposedMappingMapping.ForMember(d => d.Votes,
+                opts => opts.MapFrom(d => d.Votes.Select(v => new VotingRecord {Id = v}).ToList()));
+            dtoToProposedMappingMapping.ForMember(d => d.Comments,
+                opts => opts.MapFrom(d => d.Comments.Select(c => new Comment {Id = c}).ToList()));
+            dtoToProposedMappingMapping.ForMember(d => d.ClosedBy,
+                opts => opts.MapFrom(d => d.ClosedBy));
+            dtoToProposedMappingMapping.ForMember(d => d.ClosedOn,
+                opts => opts.MapFrom(d => d.ClosedOn));
+            dtoToProposedMappingMapping.ForMember(d => d.Merged,
+                opts => opts.MapFrom(d => d.Merged));
+            dtoToProposedMappingMapping.ForMember(d => d.CommittedWithId,
+                opts => opts.MapFrom(d => d.CommittedWith));
+            dtoToProposedMappingMapping.ForMember(d => d.CommittedWith,
+                opts => opts.MapFrom(d =>
+                    d.CommittedWith.HasValue ? new CommittedMapping {Id = d.CommittedWith.Value} : null));
         }
     }
 }

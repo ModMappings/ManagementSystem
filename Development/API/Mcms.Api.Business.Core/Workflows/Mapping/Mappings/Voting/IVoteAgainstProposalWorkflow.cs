@@ -11,7 +11,7 @@ namespace Mcms.Api.Business.Core.Workflows.Mapping.Mappings.Voting
         /// Makes the current user vote against the proposal with the given id.
         /// </para>
         /// <para>
-        /// If the user has an open vote against the proposal, en exception is thrown.
+        /// If the user has an open vote against the proposal, an exception is thrown.
         /// </para>
         /// <para>
         /// If the user has an open vote in favor of the proposal, this vote is first rescinded before the vote against the proposal is created.

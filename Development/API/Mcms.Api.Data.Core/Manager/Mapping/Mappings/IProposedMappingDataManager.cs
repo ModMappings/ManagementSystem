@@ -102,7 +102,12 @@ namespace Mcms.Api.Data.Core.Manager.Mapping.Mappings
         /// <param name="mappingTypeNameRegex">The regex to match a mappings mapping type name against.</param>
         /// <param name="mappingRegex">The regex against which a mapping is matched, for which proposed mappings are found.</param>
         /// <param name="gameVersionRegex">The regex to match game version names agents.</param>
-        /// <returns>The task that represents the lookup of proposed mappings that match the filter data, based on intersection.</returns>
+        ///  <param name="isOpen">Indicator used to filter proposals which are open or closed.</param>
+        ///  <param name="isPublicVote">Indicator used to filter proposals which are public or not.</param>
+        ///  <param name="closedBy">Indicator used to filter by who closed the proposal.</param>
+        ///  <param name="closedOn">Indicator used to filter by the date the proposal was closed.</param>
+        ///  <param name="merged">Indicator used to filter the proposal on merged or not status.</param>
+        ///  <returns>The task that represents the lookup of proposed mappings that match the filter data, based on intersection.</returns>
         Task<IQueryable<ProposedMapping>> FindUsingFilter(
             Guid? id = null,
             ComponentType? type = null,
@@ -110,7 +115,12 @@ namespace Mcms.Api.Data.Core.Manager.Mapping.Mappings
             Guid? versionedComponentId = null,
             string mappingTypeNameRegex = null,
             string mappingRegex = null,
-            string gameVersionRegex = null
+            string gameVersionRegex = null,
+            bool? isOpen = null,
+            bool? isPublicVote = null,
+            Guid? closedBy = null,
+            DateTime? closedOn = null,
+            bool? merged = null
         );
 
         /// <summary>

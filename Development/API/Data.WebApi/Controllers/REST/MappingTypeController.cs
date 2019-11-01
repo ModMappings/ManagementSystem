@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Data.WebApi.Controllers.REST
 {
 
-    [Route("rest/game_version")]
+    [Route("rest/mapping_type")]
     [ApiController]
     public class MappingTypeController : Controller
     {

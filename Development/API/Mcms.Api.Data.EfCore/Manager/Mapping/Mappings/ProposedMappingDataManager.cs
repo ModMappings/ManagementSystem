@@ -114,7 +114,12 @@ namespace Mcms.Api.Data.EfCore.Manager.Mapping.Mappings
         }
 
         public async Task<IQueryable<ProposedMapping>> FindUsingFilter(Guid? id = null, ComponentType? type = null, Guid? componentId = null,
-            Guid? versionedComponentId = null, string mappingTypeNameRegex = null, string mappingRegex = null, string gameVersionRegex = null)
+            Guid? versionedComponentId = null, string mappingTypeNameRegex = null, string mappingRegex = null, string gameVersionRegex = null,
+            bool? isOpen = null,
+            bool? isPublicVote = null,
+            Guid? closedBy = null,
+            DateTime? closedOn = null,
+            bool? merged = null)
         {
             _logger.LogDebug("Attempting to find proposed mappings with filter data.");
             if (type != null)
@@ -170,6 +175,46 @@ namespace Mcms.Api.Data.EfCore.Manager.Mapping.Mappings
                 _logger.LogTrace($" > GameVersionNameRegex: '{gameVersionRegex}'");
                 _queryFilterFactory.AddCallback(
                     (q) => q.Where(m => Regex.IsMatch(m.VersionedComponent.GameVersion.Name, gameVersionRegex))
+                );
+            }
+
+            if (isOpen != null)
+            {
+                _logger.LogTrace($" > IsOpen: {isOpen}");
+                _queryFilterFactory.AddCallback(
+                    (q) => q.Where(m => m.IsOpen == isOpen)
+                );
+            }
+
+            if (isPublicVote != null)
+            {
+                _logger.LogTrace($" > IsPublicVote: {isPublicVote}");
+                _queryFilterFactory.AddCallback(
+                    (q) => q.Where(m => m.IsPublicVote == isPublicVote)
+                );
+            }
+
+            if (closedBy != null)
+            {
+                _logger.LogTrace($" > ClosedBy: {closedBy}");
+                _queryFilterFactory.AddCallback(
+                    (q) => q.Where(m => m.ClosedBy == closedBy)
+                );
+            }
+
+            if (closedOn != null)
+            {
+                _logger.LogTrace($" > ClosedOn: {closedOn}");
+                _queryFilterFactory.AddCallback(
+                    (q) => q.Where(m => m.ClosedOn == closedOn)
+                );
+            }
+
+            if (merged != null)
+            {
+                _logger.LogTrace($" > Merged: {merged}");
+                _queryFilterFactory.AddCallback(
+                    (q) => q.Where(m => m.Merged == merged)
                 );
             }
 

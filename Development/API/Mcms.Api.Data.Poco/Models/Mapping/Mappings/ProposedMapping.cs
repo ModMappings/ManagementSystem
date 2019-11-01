@@ -14,18 +14,6 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings
         : MappingBase
     {
         /// <summary>
-        /// The user who proposed the new mapping
-        /// </summary>
-        [Required]
-        public virtual Guid ProposedBy { get; set; }
-
-        /// <summary>
-        /// The moment the proposal was made.
-        /// </summary>
-        [Required]
-        public DateTime ProposedOn { get; set; }
-
-        /// <summary>
         /// Indicates if the proposal is still open, or if it has been closed.
         /// </summary>
         [Required]

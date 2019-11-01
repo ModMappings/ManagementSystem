@@ -107,8 +107,8 @@ namespace Mcms.Api.Data.Core.Manager.Mapping.Mappings
         /// <param name="type">The <see cref="ComponentType"/> to match the committed mappings against.</param>
         /// <param name="componentId">The id of the component to find the committed mappings for.</param>
         /// <param name="versionedComponentId">The id of the versioned component to find the committed mappings for.</param>
-        /// <param name="mappingTypeNameRegex">The regex to match a mappings mapping type name against.</param>
-        /// <param name="mappingRegex">The regex against which a mapping is matched, for which committed mappings are found.</param>
+        /// <param name="mappingTypeNameRegex">The regex to match a mappings mapping type name against. Also needs a mapping regex to be supplied to be effective.</param>
+        /// <param name="mappingRegex">The regex against which a mapping is matched, for which committed mappings are found. Also needs a mapping type name regex to be supplied to be effective.</param>
         /// <param name="releaseNameRegex">The regex to match release names against.</param>
         /// <param name="gameVersionRegex">The regex to match game version names agents.</param>
         /// <returns>The task that represents the lookup of committed mappings that match the filter data, based on intersection.</returns>

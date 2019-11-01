@@ -20,13 +20,6 @@ namespace Mcms.Api.Data.Poco.Models.Core.Release
         public Guid Id { get; set; }
 
         /// <summary>
-        /// The type that is being mapped.
-        /// Should be equal to the components type that can be found via the Mapping
-        /// </summary>
-        [Required]
-        public ComponentType ComponentType { get; set; }
-
-        /// <summary>
         /// The release that is release component is part of.
         /// </summary>
         [Required]

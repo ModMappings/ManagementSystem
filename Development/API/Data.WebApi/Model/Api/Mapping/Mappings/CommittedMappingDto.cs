@@ -1,34 +1,29 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 using Mcms.Api.Data.Poco.Models.Core;
-using Mcms.Api.Data.Poco.Models.Mapping.Component;
 
-namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings
+namespace Data.WebApi.Model.Api.Mapping.Mappings
 {
     /// <summary>
-    /// A base class with the core data for each mapping.
+    /// Represents a single committed mapping in the system.
+    /// Committed mappings are mappings which are actively visible to external systems and can be used during modding.
     /// </summary>
-    public abstract class MappingBase
+    public class CommittedMappingDto
     {
         /// <summary>
         /// The id of the mapping.
         /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public Guid Id { get; }
 
         /// <summary>
         /// The versioned component that this mapping is for.
         /// </summary>
-        [Required]
-        public virtual VersionedComponent VersionedComponent { get; set; }
+        public Guid VersionedComponent { get; }
 
         /// <summary>
         /// The moment the mapping was created.
         /// </summary>
-        [Required]
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; }
 
         /// <summary>
         /// The id of the user who created the mapping.
@@ -36,19 +31,16 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings
         ///
         /// To find the id of the user who proposed the mapping, see the referenced proposal.
         /// </summary>
-        [Required]
-        public Guid CreatedBy { get; set; }
+        public Guid CreatedBy { get; }
 
         /// <summary>
         /// The input of the mapping.
         /// </summary>
-        [Required]
         public string InputMapping { get; set; }
 
         /// <summary>
         /// The output of the mapping.
         /// </summary>
-        [Required]
         public string OutputMapping { get; set; }
 
         /// <summary>
@@ -59,13 +51,24 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings
         /// <summary>
         /// The distribution that this mapping can be found in.
         /// </summary>
-        [Required]
         public Distribution Distribution { get; set; }
 
         /// <summary>
         /// The mapping type for which this mapping is made.
         /// </summary>
-        [Required]
-        public virtual MappingType MappingType { get; set; }
+        public Guid MappingType { get; }
+
+        /// <summary>
+        /// The proposal with which this committed mapping was created.
+        /// If an admin created this mapping, then it might be possible that no proposal exists.
+        /// Additionally mappings for new MC versions also do not have a proposal since they where created by the system
+        /// once the game version was released.
+        /// </summary>
+        public Guid? Proposal { get; set; }
+
+        /// <summary>
+        /// The releases which contain this committed mapping.
+        /// </summary>
+        public ISet<Guid> Releases { get; }
     }
 }
