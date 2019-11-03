@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WebApi", "Development\API\Data.WebApi\Data.WebApi.csproj", "{2A83B630-90F0-4E1A-B4EE-5FEB317E9443}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.WebApi.Http", "Development\API\Mcms.Api.WebApi.Http\Mcms.Api.WebApi.Http.csproj", "{2A83B630-90F0-4E1A-B4EE-5FEB317E9443}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Data.Poco", "Development\API\Mcms.Api.Data.Poco\Mcms.Api.Data.Poco.csproj", "{3BC7EA15-800F-42E6-947F-B33F8AA925B2}"
 EndProject
@@ -25,6 +25,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Business.Core", "Development\API\Mcms.Api.Business.Core\Mcms.Api.Business.Core.csproj", "{424B78D9-4BB5-4ABA-BC5C-BDAE7AE52DCA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Business.Poco", "Development\API\Mcms.Api.Business.Poco\Mcms.Api.Business.Poco.csproj", "{E2D1C3AD-73CB-4162-9929-0BA2AA736034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Business.AutoMapper", "Development\API\Mcms.Api.Business.AutoMapper\Mcms.Api.Business.AutoMapper.csproj", "{58545862-5A88-4ED7-B294-1A670A7EF401}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,7 +71,6 @@ Global
 		{C07C4BFC-150F-4693-B529-385D682B6EB0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C07C4BFC-150F-4693-B529-385D682B6EB0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{EF0CA982-9F69-4027-A4F8-4CBA7C1A50A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF0CA982-9F69-4027-A4F8-4CBA7C1A50A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF0CA982-9F69-4027-A4F8-4CBA7C1A50A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF0CA982-9F69-4027-A4F8-4CBA7C1A50A3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF0CA982-9F69-4027-A4F8-4CBA7C1A50A3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
@@ -85,5 +86,9 @@ Global
 		{E2D1C3AD-73CB-4162-9929-0BA2AA736034}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2D1C3AD-73CB-4162-9929-0BA2AA736034}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2D1C3AD-73CB-4162-9929-0BA2AA736034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58545862-5A88-4ED7-B294-1A670A7EF401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58545862-5A88-4ED7-B294-1A670A7EF401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58545862-5A88-4ED7-B294-1A670A7EF401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58545862-5A88-4ED7-B294-1A670A7EF401}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
