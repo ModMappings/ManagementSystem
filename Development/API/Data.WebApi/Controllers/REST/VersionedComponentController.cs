@@ -6,7 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Data.WebApi.Extensions;
 using Data.WebApi.Model;
-using Data.WebApi.Model.Api.Mapping.Component;
+using Mcms.Api.Business.Poco.Api.REST.Mapping.Component;
 using Mcms.Api.Data.Core.Manager.Mapping.Component;
 using Mcms.Api.Data.Poco.Models.Mapping.Component;
 using Mcms.Api.Data.Poco.Models.Mapping.Metadata;

@@ -1,10 +1,10 @@
-namespace Mcms.Api.Data.Poco.Models.Mapping.Component
+namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Component
 {
     /// <summary>
     /// Represents a single type of a component,
     /// as such it represents a type of a piece of source code that can be remapped.
     /// </summary>
-    public enum ComponentType
+    public enum ComponentTypeDto
     {
         /// <summary>
         /// Represents a package.

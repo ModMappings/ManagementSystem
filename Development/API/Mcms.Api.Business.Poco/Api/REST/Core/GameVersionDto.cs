@@ -1,6 +1,6 @@
 using System;
 
-namespace Data.WebApi.Model.Api.Core
+namespace Mcms.Api.Business.Poco.Api.REST.Core
 {
     /// <summary>
     /// Represents a single version of the game.

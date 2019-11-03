@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Data.WebApi.Model.Api.Core.Releases
+namespace Mcms.Api.Business.Poco.Api.REST.Core
 {
     /// <summary>
     /// Represents a single release made from mappings within the system.

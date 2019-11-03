@@ -1,9 +1,9 @@
-namespace Mcms.Api.Data.Poco.Models.Comments
+namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Comment
 {
     /// <summary>
     /// Represents a single reaction type on a comment.
     /// </summary>
-    public enum CommentReactionType
+    public enum CommentReactionTypeDto
     {
         /// <summary>
         /// :+1:

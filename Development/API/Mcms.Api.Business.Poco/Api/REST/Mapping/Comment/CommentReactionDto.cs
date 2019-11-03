@@ -1,7 +1,6 @@
 using System;
-using Mcms.Api.Data.Poco.Models.Comments;
 
-namespace Data.WebApi.Model.Api.Mapping.Comment
+namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Comment
 {
     /// <summary>
     /// Represents a single reaction to a given comment.
@@ -26,7 +25,7 @@ namespace Data.WebApi.Model.Api.Mapping.Comment
         /// <summary>
         /// The type of reaction.
         /// </summary>
-        public CommentReactionType Type { get; set; }
+        public CommentReactionTypeDto Type { get; set; }
 
         /// <summary>
         /// The comments content.

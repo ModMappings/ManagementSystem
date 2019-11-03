@@ -1,6 +1,6 @@
 using System;
 
-namespace Data.WebApi.Model.Api.Mapping.Mappings.Voting
+namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Mappings.Voting
 {
     /// <summary>
     /// Represents a single voting action on a proposal.

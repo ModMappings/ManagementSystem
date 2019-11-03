@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Data.WebApi.Model.Api.Mapping.Comment
+namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Comment
 {
     /// <summary>
     /// Represents a single comment made on either:

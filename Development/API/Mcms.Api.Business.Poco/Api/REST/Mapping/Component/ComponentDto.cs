@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Mcms.Api.Data.Poco.Models.Mapping.Component;
 
-namespace Data.WebApi.Model.Api.Mapping.Component
+namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Component
 {
     /// <summary>
     /// A domain transitioning object that represents a single component that is mapped.
@@ -24,8 +23,8 @@ namespace Data.WebApi.Model.Api.Mapping.Component
         /// <summary>
         /// The type of the component.
         /// </summary>
-        /// <see cref="ComponentType"/>
-        public ComponentType Type { get; set; }
+        /// <see cref="ComponentTypeDto"/>
+        public ComponentTypeDto Type { get; set; }
 
         /// <summary>
         /// The moment this component was created.

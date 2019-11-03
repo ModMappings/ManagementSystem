@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Data.WebApi.Model.Api.Core
+namespace Mcms.Api.Business.Poco.Api.REST.Core
 {
     /// <summary>
     /// Represents a single mapping type in the system.

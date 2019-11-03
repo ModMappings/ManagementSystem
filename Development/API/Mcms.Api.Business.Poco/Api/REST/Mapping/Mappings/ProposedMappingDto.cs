@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Mcms.Api.Data.Poco.Models.Core;
+using Mcms.Api.Business.Poco.Api.REST.Mapping.Component;
 
-namespace Data.WebApi.Model.Api.Mapping.Mappings
+namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Mappings
 {
     /// <summary>
     /// Represents a single proposal for a new mapping that is to be merged into the system.
@@ -50,7 +50,7 @@ namespace Data.WebApi.Model.Api.Mapping.Mappings
         /// <summary>
         /// The distribution that this mapping can be found in.
         /// </summary>
-        public Distribution Distribution { get; set; }
+        public DistributionDto Distribution { get; set; }
 
         /// <summary>
         /// The mapping type for which this mapping is made.

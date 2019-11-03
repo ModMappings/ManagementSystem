@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Data.Core", "Devel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Business.Core", "Development\API\Mcms.Api.Business.Core\Mcms.Api.Business.Core.csproj", "{424B78D9-4BB5-4ABA-BC5C-BDAE7AE52DCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Business.Poco", "Mcms.Api.Business.Poco\Mcms.Api.Business.Poco.csproj", "{E2D1C3AD-73CB-4162-9929-0BA2AA736034}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Business.Poco", "Development\API\Mcms.Api.Business.Poco\Mcms.Api.Business.Poco.csproj", "{E2D1C3AD-73CB-4162-9929-0BA2AA736034}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

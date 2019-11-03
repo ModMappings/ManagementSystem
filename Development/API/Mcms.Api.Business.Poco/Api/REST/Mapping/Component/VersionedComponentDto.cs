@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Mcms.Api.Data.Poco.Models.Mapping.Component;
 
-namespace Data.WebApi.Model.Api.Mapping.Component
+namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Component
 {
     /// <summary>
     /// Represents a component that is mapped in a given MC version.
@@ -21,7 +20,7 @@ namespace Data.WebApi.Model.Api.Mapping.Component
         /// <summary>
         /// The type of the versioned component needs to be equal to the component type of its component
         /// </summary>
-        public ComponentType Type { get; }
+        public ComponentTypeDto Type { get; }
 
         /// <summary>
         /// The game version for this versioned component.
