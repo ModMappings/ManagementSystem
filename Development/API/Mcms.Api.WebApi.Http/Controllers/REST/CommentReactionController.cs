@@ -38,7 +38,7 @@ namespace Mcms.Api.WebApi.Http.Controllers.REST
         /// <param name="id">The id of a comment reaction to lookup.</param>
         /// <returns>200 - The comment reaction with the given id, 404 - If no comment reaction with the given id is found.</returns>
         [HttpGet()]
-        [Route("/{id}")]
+        [Route("{id}")]
         public async Task<ActionResult<CommentReactionDto>> Get(
             Guid id
         )

@@ -120,7 +120,7 @@ namespace Mcms.Api.WebApi.Http.Controllers.REST
         /// <param name="commentDto">The data to create the new comment from.</param>
         /// <returns>200 - The updated comment data (should be identical to the input), with the id set.</returns>
         [HttpPost]
-        [Route("{id}")]
+        [Route("")]
         public async Task<ActionResult<CommentDto>> Create(
             [FromBody()] CommentDto commentDto
         )
