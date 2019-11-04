@@ -10,6 +10,7 @@ using Mcms.Api.Data.Poco.Models.Mapping.Component;
 using Mcms.Api.Data.Poco.Models.Mapping.Mappings;
 using Mcms.Api.Data.Poco.Models.Mapping.Metadata;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32.SafeHandles;
 
 namespace Data.FabricImporter.Intermediary
 {
@@ -25,20 +26,20 @@ namespace Data.FabricImporter.Intermediary
         private readonly List<Component> _newClassData;
         private readonly Release _release;
         private readonly GameVersion _gameVersion;
-        private readonly MappingType _tsrgMappingType;
+        private readonly MappingType _intermediaryMappingType;
 
         private bool _currentIsNew = false;
         private Component _currentClass = null;
         private VersionedComponent _currentVersionedClass = null;
 
         public IntermediaryAnalysisHelper(MCMSContext context, ref List<Component> newClassData, Release release,
-            GameVersion gameVersion, MappingType tsrgMappingType)
+            GameVersion gameVersion, MappingType intermediaryMappingType)
         {
             _context = context;
             _newClassData = newClassData;
             _release = release;
             _gameVersion = gameVersion;
-            _tsrgMappingType = tsrgMappingType;
+            _intermediaryMappingType = intermediaryMappingType;
         }
 
         public async Task StartNewClass(string inputMapping, string outputMapping, string packageName)
@@ -75,7 +76,7 @@ namespace Data.FabricImporter.Intermediary
                                           c.VersionedComponents.Any(vc =>
                                               vc.Mappings.Any(m =>
                                                   m.MappingType ==
-                                                  _tsrgMappingType &&
+                                                  _intermediaryMappingType &&
                                                   m.OutputMapping ==
                                                   outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping))));
 
@@ -85,7 +86,7 @@ namespace Data.FabricImporter.Intermediary
                                                                   c.VersionedComponents.Any(vc =>
                                                                       vc.Mappings.Any(m =>
                                                                           m.MappingType ==
-                                                                          _tsrgMappingType &&
+                                                                          _intermediaryMappingType &&
                                                                           m.OutputMapping ==
                                                                           outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping))));
 
@@ -163,7 +164,7 @@ namespace Data.FabricImporter.Intermediary
                 throw new InvalidOperationException("The current versioned component does not contain class metadata");
 
             var targetMethodVersionedComponent = classMetadata.Methods.Select(m => m.VersionedComponent).FirstOrDefault(
-                vc => vc.Mappings.Any(m => m.MappingType == _tsrgMappingType && m.OutputMapping == outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping)));
+                vc => vc.Mappings.Any(m => m.MappingType == _intermediaryMappingType && m.OutputMapping == outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping)));
 
             //We need to create a new component and versioned component.
             //Then register the versioned components metadata properly in the class.
@@ -219,7 +220,7 @@ namespace Data.FabricImporter.Intermediary
                 throw new InvalidOperationException("The current versioned component does not contain class metadata");
 
             var targetFieldVersionedComponent = classMetadata.Fields.Select(m => m.VersionedComponent).FirstOrDefault(
-                vc => vc.Mappings.Any(m => m.MappingType == _tsrgMappingType && m.OutputMapping == outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping)));
+                vc => vc.Mappings.Any(m => m.MappingType == _intermediaryMappingType && m.OutputMapping == outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping)));
 
             //We need to create a new component and versioned component.
             //Then register the versioned components metadata properly in the class.
@@ -270,7 +271,7 @@ namespace Data.FabricImporter.Intermediary
             VersionedComponent versionedComponent)
         {
             var liveMapping = versionedComponent.Mappings.FirstOrDefault(m =>
-                m.MappingType == _tsrgMappingType && m.OutputMapping == outputMapping);
+                m.MappingType == _intermediaryMappingType && m.OutputMapping == outputMapping);
 
             if (liveMapping == null)
             {
@@ -281,7 +282,7 @@ namespace Data.FabricImporter.Intermediary
                     Distribution = Distribution.UNKNOWN,
                     Documentation = "",
                     InputMapping = inputMapping,
-                    MappingType = _tsrgMappingType,
+                    MappingType = _intermediaryMappingType,
                     OutputMapping = outputMapping,
                     ProposedMapping = null,
                     Releases = new List<ReleaseComponent>(),
@@ -299,7 +300,6 @@ namespace Data.FabricImporter.Intermediary
                 releaseComponent = new ReleaseComponent
                 {
                     Id = Guid.NewGuid(),
-                    ComponentType = versionedComponent.Component.Type,
                     Mapping = liveMapping,
                     Release = _release
                 };
@@ -307,6 +307,42 @@ namespace Data.FabricImporter.Intermediary
                 liveMapping.Releases.Add(releaseComponent);
                 _context.Entry(releaseComponent).State = EntityState.Added;
             }
+        }
+
+        private async Task<PackageMetadata> FindOrCreatePackage(string packageName)
+        {
+            if (string.IsNullOrEmpty(packageName))
+            {
+                //This is the root package, check if exists and return.
+                var rootTarget =  await _context.PackageMetadata.Where(m =>
+                                  m.VersionedComponent.Mappings.Any(map =>
+                                      map.MappingType == _intermediaryMappingType && map.OutputMapping == "")).FirstOrDefaultAsync() ??
+                              CreateNewPackage(null, "");
+
+                return rootTarget;
+            }
+
+            var lastIndexOfPackageSeparator = packageName.LastIndexOf(".", StringComparison.Ordinal);
+            var parent = lastIndexOfPackageSeparator == -1
+                ? await FindOrCreatePackage("")
+                : await FindOrCreatePackage(packageName.Substring(0, lastIndexOfPackageSeparator));
+
+            var targetName = packageName.Substring(lastIndexOfPackageSeparator + 1);
+            var target = parent.ChildPackages.FirstOrDefault(m => m.VersionedComponent.Mappings.Any(map =>
+                             map.MappingType == _intermediaryMappingType && map.OutputMapping == targetName)) ??
+                CreateNewPackage(parent, targetName);
+
+            return target;
+        }
+
+        private PackageMetadata CreateNewPackage(PackageMetadata parent, string name)
+        {
+
+
+            var newPackage = new PackageMetadata()
+            {
+
+            };
         }
     }
 }

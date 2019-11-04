@@ -42,6 +42,8 @@ namespace Mcms.Api.Data.EfCore.Context
 
         public DbSet<ParameterMetadata> ParameterMetadata { get; set; }
 
+        public DbSet<PackageMetadata> PackageMetadata { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
