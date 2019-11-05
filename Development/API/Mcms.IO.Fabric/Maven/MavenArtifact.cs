@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Flurl;
 
-namespace Data.FabricImporter.Maven
+namespace Mcms.IO.Fabric.Maven
 {
     public class MavenArtifact
     {

@@ -1,7 +1,7 @@
-using Data.FabricImporter.Intermediary;
+using Mcms.IO.Fabric.Intermediary;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Data.FabricImporter.Extensions
+namespace Mcms.IO.Fabric.Extensions
 {
     public static class ServiceCollectionExtensions
     {

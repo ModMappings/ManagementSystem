@@ -12,9 +12,8 @@ using Mcms.Api.Data.Poco.Models.Mapping.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32.SafeHandles;
 
-namespace Data.FabricImporter.Intermediary
+namespace Mcms.IO.Fabric.Intermediary
 {
-
     /// <summary>
     /// This class handles the creation and modification of MCMS data.
     /// It is specifically designed to handle TSRG data.
@@ -78,7 +77,9 @@ namespace Data.FabricImporter.Intermediary
                                                   m.MappingType ==
                                                   _intermediaryMappingType &&
                                                   m.OutputMapping ==
-                                                  outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping))));
+                                                  outputMapping) ||
+                                              (vc.GameVersion == _gameVersion &&
+                                               vc.Mappings.Any(m => m.InputMapping == inputMapping))));
 
             if (_currentClass == null)
             {
@@ -88,7 +89,10 @@ namespace Data.FabricImporter.Intermediary
                                                                           m.MappingType ==
                                                                           _intermediaryMappingType &&
                                                                           m.OutputMapping ==
-                                                                          outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping))));
+                                                                          outputMapping) ||
+                                                                      (vc.GameVersion == _gameVersion &&
+                                                                       vc.Mappings.Any(m =>
+                                                                           m.InputMapping == inputMapping))));
 
                 if (_currentClass == null)
                 {
@@ -130,7 +134,7 @@ namespace Data.FabricImporter.Intermediary
                     InheritsFrom = new List<ClassMetadata>(),
                     Methods = new List<MethodMetadata>(),
                     Outer = null, //TODO: Do splitting on the name and attempt lookup. (Might need to happen in the post processing, possibly)
-                    Package = packageName,
+                    Package = await FindOrCreatePackage(packageName),
                     VersionedComponent = _currentVersionedClass,
                     Id = _currentVersionedClass.Id
                 };
@@ -164,7 +168,9 @@ namespace Data.FabricImporter.Intermediary
                 throw new InvalidOperationException("The current versioned component does not contain class metadata");
 
             var targetMethodVersionedComponent = classMetadata.Methods.Select(m => m.VersionedComponent).FirstOrDefault(
-                vc => vc.Mappings.Any(m => m.MappingType == _intermediaryMappingType && m.OutputMapping == outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping)));
+                vc => vc.Mappings.Any(
+                          m => m.MappingType == _intermediaryMappingType && m.OutputMapping == outputMapping) ||
+                      (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping)));
 
             //We need to create a new component and versioned component.
             //Then register the versioned components metadata properly in the class.
@@ -220,7 +226,9 @@ namespace Data.FabricImporter.Intermediary
                 throw new InvalidOperationException("The current versioned component does not contain class metadata");
 
             var targetFieldVersionedComponent = classMetadata.Fields.Select(m => m.VersionedComponent).FirstOrDefault(
-                vc => vc.Mappings.Any(m => m.MappingType == _intermediaryMappingType && m.OutputMapping == outputMapping) || (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping)));
+                vc => vc.Mappings.Any(
+                          m => m.MappingType == _intermediaryMappingType && m.OutputMapping == outputMapping) ||
+                      (vc.GameVersion == _gameVersion && vc.Mappings.Any(m => m.InputMapping == inputMapping)));
 
             //We need to create a new component and versioned component.
             //Then register the versioned components metadata properly in the class.
@@ -308,16 +316,16 @@ namespace Data.FabricImporter.Intermediary
                 _context.Entry(releaseComponent).State = EntityState.Added;
             }
         }
-
         private async Task<PackageMetadata> FindOrCreatePackage(string packageName)
         {
             if (string.IsNullOrEmpty(packageName))
             {
                 //This is the root package, check if exists and return.
-                var rootTarget =  await _context.PackageMetadata.Where(m =>
-                                  m.VersionedComponent.Mappings.Any(map =>
-                                      map.MappingType == _intermediaryMappingType && map.OutputMapping == "")).FirstOrDefaultAsync() ??
-                              CreateNewPackage(null, "");
+                var rootTarget = await _context.PackageMetadata.Where(m =>
+                                         m.VersionedComponent.Mappings.Any(map =>
+                                             map.MappingType == _intermediaryMappingType && map.OutputMapping == ""))
+                                     .FirstOrDefaultAsync() ??
+                                 CreateNewPackage(null, "");
 
                 return rootTarget;
             }
@@ -330,13 +338,75 @@ namespace Data.FabricImporter.Intermediary
             var targetName = packageName.Substring(lastIndexOfPackageSeparator + 1);
             var target = parent.ChildPackages.FirstOrDefault(m => m.VersionedComponent.Mappings.Any(map =>
                              map.MappingType == _intermediaryMappingType && map.OutputMapping == targetName)) ??
-                CreateNewPackage(parent, targetName);
+                         CreateNewPackage(parent, targetName);
+
+            HandleMappingCreation("", targetName, target.VersionedComponent);
 
             return target;
         }
 
         private PackageMetadata CreateNewPackage(PackageMetadata parent, string name)
         {
+            if (parent == null && string.IsNullOrEmpty(name))
+            {
+                //Handle the creation of the root itself.
+                //We know it does not exists, because this method is called.
+                //If the root does not exist check if a component exists for the root or create it.
+                var rootComponent = _context.Components.FirstOrDefault(c => c.VersionedComponents.Any(vc =>
+                    vc.Mappings.Any(map =>
+                        map.MappingType == _intermediaryMappingType && map.InputMapping == "" &&
+                        map.OutputMapping == "")));
+
+                if (rootComponent == null)
+                {
+                    rootComponent = new Component()
+                    {
+                        Id = Guid.NewGuid(),
+                        VersionedComponents = new List<VersionedComponent>(),
+                        Type = ComponentType.PACKAGE,
+                        CreatedBy = Guid.Empty,
+                        CreatedOn = DateTime.Now
+                    };
+                    _context.Entry(rootComponent).State = EntityState.Added;
+                }
+
+                //We know that no versioned component exists for this game version that represents the root component.
+                //Lets create it.
+                var rootVersionedComponent = new VersionedComponent()
+                {
+                    Component = rootComponent,
+                    CreatedBy = Guid.Empty,
+                    CreatedOn = DateTime.Now,
+                    GameVersion = _gameVersion,
+                    Id = Guid.NewGuid(),
+                    LockedMappingTypes = new List<LockingEntry>(),
+                    Mappings = new List<CommittedMapping>(),
+                    Metadata = null,
+                    Proposals = new List<ProposedMapping>()
+                };
+                _context.Entry(rootVersionedComponent).State = EntityState.Added;
+
+                var rootPackageMetadata = new PackageMetadata()
+                {
+                    Id = rootVersionedComponent.Id,
+                    ChildPackages = new List<PackageMetadata>(),
+                    Classes = new List<ClassMetadata>(),
+                    Parent = null,
+                    VersionedComponent = rootVersionedComponent
+                };
+                rootVersionedComponent.Metadata = rootPackageMetadata;
+                _context.Entry(rootPackageMetadata).State = EntityState.Added;
+
+                HandleMappingCreation("", "", rootVersionedComponent);
+
+                return rootPackageMetadata;
+            }
+
+            if (parent == null)
+            {
+                throw new Exception("Can not create non root initial package. Parent is needed!");
+            }
+
             //We are creating a new package.
             //We know that for this mc version no package with the given name under the parent exists.
             //Grab the parents component, find any other game version who has a mapping that equals ours.
@@ -348,61 +418,89 @@ namespace Data.FabricImporter.Intermediary
                     p.VersionedComponent.Mappings.Any(m =>
                         m.MappingType == _intermediaryMappingType && m.OutputMapping == name)));
 
-            var packageVersionedComponentInOtherVersion =
-                ((PackageMetadata) versionedComponentWithCorrectChild.Metadata).ChildPackages.FirstOrDefault(p =>
-                    p.VersionedComponent.Mappings.Any(m =>
-                        m.MappingType == _intermediaryMappingType && m.OutputMapping == name)).VersionedComponent;
+            if (versionedComponentWithCorrectChild != null)
+            {
+                //Has to exists since versionedComponentWitCorrectChild is selected based on the same criteria.
+                var packageVersionedComponentInOtherVersion =
+                    ((PackageMetadata) versionedComponentWithCorrectChild.Metadata).ChildPackages.FirstOrDefault(p =>
+                        p.VersionedComponent.Mappings.Any(m =>
+                            m.MappingType == _intermediaryMappingType && m.OutputMapping == name)).VersionedComponent;
 
-            var targetComponent = packageVersionedComponentInOtherVersion.Component;
+                var targetComponent = packageVersionedComponentInOtherVersion.Component;
+
+                var appendedNewVersionedComponent = new VersionedComponent()
+                {
+                    Id = Guid.NewGuid(),
+                    Component = targetComponent,
+                    CreatedBy = Guid.Empty,
+                    CreatedOn = DateTime.Now,
+                    GameVersion = _gameVersion,
+                    LockedMappingTypes = new List<LockingEntry>(),
+                    Mappings = new List<CommittedMapping>(),
+                    Metadata = null,
+                    Proposals = new List<ProposedMapping>()
+                };
+                _context.Entry(appendedNewVersionedComponent).State = EntityState.Added;
+
+                var appendedNewPackage = new PackageMetadata()
+                {
+                    Id = appendedNewVersionedComponent.Id,
+                    ChildPackages = new List<PackageMetadata>(),
+                    Parent = parent,
+                    Classes = new List<ClassMetadata>(),
+                    VersionedComponent = appendedNewVersionedComponent
+                };
+                _context.Entry(appendedNewPackage).State = EntityState.Added;
+
+                appendedNewVersionedComponent.Metadata = appendedNewPackage;
+
+                HandleMappingCreation("", name, appendedNewVersionedComponent);
+
+                return appendedNewPackage;
+            }
+
+            //This seems to be an entirely new package.
+            var newComponent = new Component()
+            {
+                Id = Guid.NewGuid(),
+                CreatedBy = Guid.Empty,
+                CreatedOn = DateTime.Now,
+                Type = ComponentType.PACKAGE,
+                VersionedComponents = new List<VersionedComponent>()
+            };
+            _context.Entry(newComponent).State = EntityState.Added;
 
             var newVersionedComponent = new VersionedComponent()
             {
                 Id = Guid.NewGuid(),
-                Component = targetComponent,
                 CreatedBy = Guid.Empty,
                 CreatedOn = DateTime.Now,
+                Component = newComponent,
                 GameVersion = _gameVersion,
                 LockedMappingTypes = new List<LockingEntry>(),
                 Mappings = new List<CommittedMapping>(),
                 Metadata = null,
                 Proposals = new List<ProposedMapping>()
             };
+            _context.Entry(newVersionedComponent).State = EntityState.Added;
 
-            var newPackageMapping = new CommittedMapping()
+            newComponent.VersionedComponents.Add(newVersionedComponent);
+
+            var newMetadata = new PackageMetadata()
             {
-                Id = Guid.NewGuid(),
-                CreatedBy = Guid.Empty,
-                CreatedOn = DateTime.Now,
-                Distribution = Distribution.UNKNOWN,
-                Documentation = "",
-                InputMapping = "",
-                MappingType = _intermediaryMappingType,
-                OutputMapping = name,
-                ProposedMapping = null,
-                Releases = new List<ReleaseComponent>()
-            };
-
-            newPackageMapping.Releases.Add(new ReleaseComponent()
-            {
-                Id = Guid.NewGuid(),
-                Mapping = newPackageMapping,
-                Release = _release
-            });
-
-            newVersionedComponent.Mappings.Add(newPackageMapping);
-
-            var newPackage = new PackageMetadata()
-            {
-                Id = Guid.NewGuid(),
+                Id = newVersionedComponent.Id,
                 ChildPackages = new List<PackageMetadata>(),
                 Parent = parent,
                 Classes = new List<ClassMetadata>(),
                 VersionedComponent = newVersionedComponent
             };
+            _context.Entry(newMetadata).State = EntityState.Added;
 
-            newVersionedComponent.Metadata = newPackage;
+            newVersionedComponent.Metadata = newMetadata;
 
-            return newPackage;
+            HandleMappingCreation("", name, newVersionedComponent);
+
+            return newMetadata;
         }
     }
 }

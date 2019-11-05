@@ -1,4 +1,4 @@
-namespace Data.FabricImporter
+namespace Mcms.IO.Fabric
 {
     /// <summary>
     /// Dummy class for getting logger.

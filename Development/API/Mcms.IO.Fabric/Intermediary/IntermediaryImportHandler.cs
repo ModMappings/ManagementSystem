@@ -8,15 +8,15 @@ using Mcms.Api.Data.Poco.Models.Core;
 using Mcms.Api.Data.Poco.Models.Core.Release;
 using Mcms.Api.Data.Poco.Models.Mapping;
 using Mcms.Api.Data.Poco.Models.Mapping.Component;
-using Data.FabricImporter.Extensions;
-using Data.FabricImporter.Maven;
+using Mcms.IO.Fabric.Extensions;
 using Flurl.Http;
 using Mcms.Api.Data.EfCore.Context;
+using Mcms.IO.Fabric.Maven;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Data.FabricImporter.Intermediary
+namespace Mcms.IO.Fabric.Intermediary
 {
     public class IntermediaryImportHandler
         : IDataImportHandler

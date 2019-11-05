@@ -1,4 +1,4 @@
-namespace Data.FabricImporter
+namespace Mcms.IO.Fabric
 {
     public static class Constants
     {

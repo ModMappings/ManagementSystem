@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using Flurl;
 using Flurl.Http;
 
-namespace Data.FabricImporter.Maven
+namespace Mcms.IO.Fabric.Maven
 {
     /// <summary>
     /// Represents a single maven project.

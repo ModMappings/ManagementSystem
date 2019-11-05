@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Data.FabricImporter.Extensions
+namespace Mcms.IO.Fabric.Extensions
 {
     public static class AppBuilderExtensions
     {

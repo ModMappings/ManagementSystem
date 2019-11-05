@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace Data.FabricImporter.Extensions
+namespace Mcms.IO.Fabric.Extensions
 {
     public static class ZipArchiveExtensions
     {

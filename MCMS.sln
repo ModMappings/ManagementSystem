@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.Api.Data.EfCore", "Dev
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.MCP-TSRG-Import", "Development\API\Data.MCP-TSRG-Import\Data.MCP-TSRG-Import.csproj", "{75E6C190-2942-4C3C-B9CA-8887D2AAFECB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.FabricImporter", "Development\API\Data.FabricImporter\Data.FabricImporter.csproj", "{C07C4BFC-150F-4693-B529-385D682B6EB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.IO.Fabric", "Development\API\Mcms.IO.Fabric\Mcms.IO.Fabric.csproj", "{C07C4BFC-150F-4693-B529-385D682B6EB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Admin", "Development\Authentication\Auth.Admin\Auth.Admin.csproj", "{EDB8FEDF-9DF4-4921-9A0A-A9D5C615B4CA}"
 EndProject
