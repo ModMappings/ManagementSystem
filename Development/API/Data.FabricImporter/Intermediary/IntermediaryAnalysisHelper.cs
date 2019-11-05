@@ -337,12 +337,72 @@ namespace Data.FabricImporter.Intermediary
 
         private PackageMetadata CreateNewPackage(PackageMetadata parent, string name)
         {
+            //We are creating a new package.
+            //We know that for this mc version no package with the given name under the parent exists.
+            //Grab the parents component, find any other game version who has a mapping that equals ours.
+            //Then grab its component and create a versioned component for it.
+            //Then link the metadata of those elements all together.
+            var parentComponent = parent.VersionedComponent.Component;
+            var versionedComponentWithCorrectChild = parentComponent.VersionedComponents.FirstOrDefault(vc =>
+                vc.GameVersion != _gameVersion && ((PackageMetadata) vc.Metadata).ChildPackages.Any(p =>
+                    p.VersionedComponent.Mappings.Any(m =>
+                        m.MappingType == _intermediaryMappingType && m.OutputMapping == name)));
 
+            var packageVersionedComponentInOtherVersion =
+                ((PackageMetadata) versionedComponentWithCorrectChild.Metadata).ChildPackages.FirstOrDefault(p =>
+                    p.VersionedComponent.Mappings.Any(m =>
+                        m.MappingType == _intermediaryMappingType && m.OutputMapping == name)).VersionedComponent;
+
+            var targetComponent = packageVersionedComponentInOtherVersion.Component;
+
+            var newVersionedComponent = new VersionedComponent()
+            {
+                Id = Guid.NewGuid(),
+                Component = targetComponent,
+                CreatedBy = Guid.Empty,
+                CreatedOn = DateTime.Now,
+                GameVersion = _gameVersion,
+                LockedMappingTypes = new List<LockingEntry>(),
+                Mappings = new List<CommittedMapping>(),
+                Metadata = null,
+                Proposals = new List<ProposedMapping>()
+            };
+
+            var newPackageMapping = new CommittedMapping()
+            {
+                Id = Guid.NewGuid(),
+                CreatedBy = Guid.Empty,
+                CreatedOn = DateTime.Now,
+                Distribution = Distribution.UNKNOWN,
+                Documentation = "",
+                InputMapping = "",
+                MappingType = _intermediaryMappingType,
+                OutputMapping = name,
+                ProposedMapping = null,
+                Releases = new List<ReleaseComponent>()
+            };
+
+            newPackageMapping.Releases.Add(new ReleaseComponent()
+            {
+                Id = Guid.NewGuid(),
+                Mapping = newPackageMapping,
+                Release = _release
+            });
+
+            newVersionedComponent.Mappings.Add(newPackageMapping);
 
             var newPackage = new PackageMetadata()
             {
-
+                Id = Guid.NewGuid(),
+                ChildPackages = new List<PackageMetadata>(),
+                Parent = parent,
+                Classes = new List<ClassMetadata>(),
+                VersionedComponent = newVersionedComponent
             };
+
+            newVersionedComponent.Metadata = newPackage;
+
+            return newPackage;
         }
     }
 }
