@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Flurl;
+using Flurl.Http;
+using Mcms.IO.Core.Artifacts;
 
-namespace Mcms.IO.Fabric.Maven
+namespace Mcms.IO.Maven
 {
-    public class MavenArtifact
+    public abstract class MavenArtifact : IArtifact
     {
-        public static MavenArtifact Create(MavenProject project, string version, string classifier = null, string extension = "jar")
-        {
-            return new MavenArtifact(project, version, classifier, extension);
-        }
-
-        private MavenArtifact(MavenProject project, string version, string classifier = null, string extension = "jar")
+        protected MavenArtifact(MavenProject project, string version, string classifier = null, string extension = "jar")
         {
             Project = project ?? throw new ArgumentNullException(nameof(project));
             Version = version ?? throw new ArgumentNullException(nameof(version));
@@ -32,5 +32,15 @@ namespace Mcms.IO.Fabric.Maven
             $"{(new List<string> {Project.Name, Version, Classifier}).Where(s => !string.IsNullOrWhiteSpace(s)).AsEnumerable().Aggregate((s, s1) => $"{s}-{s1}")}.{Extension}";
 
         public Url Path => new Url(Project.Path).AppendPathSegment(Version).AppendPathSegment(FileName);
+
+        public abstract string Name { get; set; }
+
+        public abstract string GameVersion { get; set; }
+
+        public async Task<Stream> GetStreamAsync(
+            CancellationToken cancellationToken = default (CancellationToken))
+        {
+            return await Path.GetStreamAsync(cancellationToken);
+        }
     }
 }

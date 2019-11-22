@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
 {
     /// <summary>
@@ -6,5 +8,11 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
     public class FieldMetadata
         : ClassMemberMetadataBase
     {
+
+        /// <summary>
+        /// The type descriptor.
+        /// </summary>
+        [Required]
+        public string Type { get; set; }
     }
 }

@@ -47,3 +47,4 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Mappings.Voting
         public bool HasBeenRescinded { get; set; }
     }
 }
+

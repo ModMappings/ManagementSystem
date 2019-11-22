@@ -1,4 +1,4 @@
-namespace Mcms.IO.Fabric
+namespace Mcms.IO.TSRG
 {
     public static class Constants
     {

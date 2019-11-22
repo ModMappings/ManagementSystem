@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Mcms.IO.Core\Mcms.IO.Core.csproj" />
+      <ProjectReference Include="..\Mcms.IO.Maven\Mcms.IO.Maven.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+    </ItemGroup>
+</Project>

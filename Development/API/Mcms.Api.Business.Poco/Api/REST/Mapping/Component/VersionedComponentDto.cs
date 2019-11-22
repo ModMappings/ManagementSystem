@@ -137,10 +137,11 @@ namespace Mcms.Api.Business.Poco.Api.REST.Mapping.Component
         public bool? IsStatic { get; }
 
         /// <summary>
-        /// The descriptor of this method.
+        /// The descriptor of this method or the type of the field.
+        /// Is in obfuscated state.
         /// </summary>
         /// <remarks>
-        /// Only relevant for METHOD ComponentTypes.
+        /// Only relevant for METHOD and FIELD ComponentTypes.
         /// </remarks>
         public string Descriptor { get;  }
 

@@ -122,6 +122,8 @@ namespace Mcms.Api.Business.AutoMapper.Profiles
                 opts => { opts.MapFrom(v => v.MemberOf.Id); });
             fieldMetadataToDtoMapping.ForMember(d => d.IsStatic,
                 opts => { opts.MapFrom(v => v.IsStatic); });
+            fieldMetadataToDtoMapping.ForMember(v => v.Descriptor,
+                opts => opts.MapFrom(v => v.Type));
         }
 
         private void SetupParameterMetadataToDtoMapping()
@@ -227,6 +229,8 @@ namespace Mcms.Api.Business.AutoMapper.Profiles
                 opts => opts.MapFrom(d => new ClassMetadata() {Id = d.MemberOf.Value}));
             dtoToFieldMetadataMapping.ForMember(d => d.IsStatic,
                 opts => opts.MapFrom(d => d.IsStatic));
+            dtoToFieldMetadataMapping.ForMember(d => d.Type,
+                opts => opts.MapFrom(d => d.Descriptor));
         }
 
         private void SetupDtoToParameterMetadataMapping()
