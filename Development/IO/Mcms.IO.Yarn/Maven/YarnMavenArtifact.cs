@@ -17,7 +17,15 @@ namespace Mcms.IO.Yarn.Maven
         private YarnMavenArtifact(MavenProject project, string version, string classifier = null, string extension = "jar") : base(project, version, classifier, extension)
         {
             Name = version;
-            GameVersion = version;
+
+            if (version.Contains("+"))
+            {
+                GameVersion = version.Split("+")[0];
+            }
+            else
+            {
+                GameVersion = version.Split(".")[0];
+            }
         }
 
         public sealed override string Name { get; set; }

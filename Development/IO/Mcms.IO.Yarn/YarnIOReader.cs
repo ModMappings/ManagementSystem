@@ -13,14 +13,14 @@ using Microsoft.Extensions.Logging;
 namespace Mcms.IO.Yarn
 {
     /// <summary>
-    /// The IOReader for the intermediary file format.
+    /// The IOReader for the yarn file format.
     /// </summary>
-    public class MCPConfigIOReader
+    public class YarnIOReader
         : IIOReader
     {
-        private readonly ILogger<MCPConfigIOReader> _logger;
+        private readonly ILogger<YarnIOReader> _logger;
 
-        public MCPConfigIOReader(ILogger<MCPConfigIOReader> logger)
+        public YarnIOReader(ILogger<YarnIOReader> logger)
         {
             _logger = logger;
         }

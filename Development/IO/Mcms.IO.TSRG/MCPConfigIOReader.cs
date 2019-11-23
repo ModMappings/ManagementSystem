@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace Mcms.IO.TSRG
 {
     /// <summary>
-    /// The IOReader for the intermediary file format.
+    /// The IOReader for the mcp config file format.
     /// </summary>
     public class MCPConfigIOReader
         : IIOReader
