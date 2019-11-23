@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.IO.Maven", "Developmen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.IO.TSRG", "Development\IO\Mcms.IO.TSRG\Mcms.IO.TSRG.csproj", "{070CF271-E426-46D0-9E2A-C3F112ED82A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.IO.Yarn", "Development\IO\Mcms.IO.Yarn\Mcms.IO.Yarn.csproj", "{261884B1-6A85-443F-B0F5-36771623777D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,5 +110,9 @@ Global
 		{070CF271-E426-46D0-9E2A-C3F112ED82A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{070CF271-E426-46D0-9E2A-C3F112ED82A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{070CF271-E426-46D0-9E2A-C3F112ED82A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{261884B1-6A85-443F-B0F5-36771623777D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{261884B1-6A85-443F-B0F5-36771623777D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{261884B1-6A85-443F-B0F5-36771623777D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{261884B1-6A85-443F-B0F5-36771623777D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -17,7 +17,7 @@ namespace Mcms.IO.TSRG.Maven
         private MCPConfigMavenArtifact(MavenProject project, string version, string classifier = null, string extension = "jar") : base(project, version, classifier, extension)
         {
             Name = version;
-            GameVersion = version;
+            GameVersion = version.Split("-")[0];
         }
 
         public sealed override string Name { get; set; }
