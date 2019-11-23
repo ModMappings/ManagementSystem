@@ -51,7 +51,7 @@ namespace Mcms.IO.TSRG
             {
                 Name = artifact.Name,
                 GameVersion = artifact.GameVersion,
-                MappingType = Constants.INTERMEDIARY_MAPPING_NAME
+                MappingType = Constants.MCP_CONFIG_MAPPING_NAME
             };
 
             var packages = new Dictionary<string, ExternalPackage>();
@@ -67,19 +67,21 @@ namespace Mcms.IO.TSRG
             }
 
             var intermediaryJoinedFileContents =
-                zip.ReadAllLines(Constants.INTERMEDIARY_JOINED_DATA, Encoding.UTF8).ToList();
+                zip.ReadAllLines(Constants.TSRG_JOINED_DATA, Encoding.UTF8).ToList();
+            var staticMethodsFileContents =
+                zip.ReadAllLines(Constants.TSRG_STATIC_METHOD_DATA, Encoding.UTF8).ToDictionary(e => e, e => true);
 
             var analysisHelper = new MCPConfigAnalysisHelper(ref packages);
 
             intermediaryJoinedFileContents.ForEachWithProgressCallback((intermediaryLine) =>
                 {
                     _logger.LogDebug($"Processing intermediary line: {intermediaryLine}");
-                    if (intermediaryLine.StartsWith("CLASS"))
+                    if (!intermediaryLine.StartsWith('\t'))
                     {
                         //New class
-                        var intermediaryClassData = intermediaryLine.Split('\t');
-                        var inputMapping = intermediaryClassData[1].Trim();
-                        var outputMappingIncludingPackage = intermediaryClassData[2].Trim();
+                        var intermediaryClassData = intermediaryLine.Split(' ');
+                        var inputMapping = intermediaryClassData[0].Trim();
+                        var outputMappingIncludingPackage = intermediaryClassData[1].Trim();
 
                         var outputMapping =
                             outputMappingIncludingPackage.Substring(outputMappingIncludingPackage.LastIndexOf('/'));
@@ -91,30 +93,30 @@ namespace Mcms.IO.TSRG
 
                         analysisHelper.AddClass(inputMapping, outputMapping, package);
                     }
-                    else if (intermediaryLine.StartsWith("METHOD"))
+                    else if (intermediaryLine.StartsWith('('))
                     {
                         //New method
-                        var intermediaryMethodData = intermediaryLine.Trim().Split('\t');
-                        var inputMapping = intermediaryMethodData[3].Trim();
-                        var descriptor = intermediaryMethodData[2].Trim();
-                        var outputMapping = intermediaryMethodData[4].Trim();
+                        var intermediaryMethodData = intermediaryLine.Trim().Split(' ');
+                        var inputMapping = intermediaryMethodData[0].Trim();
+                        var descriptor = intermediaryMethodData[1].Trim();
+                        var outputMapping = intermediaryMethodData[2].Trim();
+                        var isStatic = staticMethodsFileContents.GetValueOrDefault(outputMapping, false);
 
                         _logger.LogDebug(
                             $"Processing entry as method, with mapping: {inputMapping} -> {outputMapping} and descriptor: {descriptor}");
 
-                        analysisHelper.AddMethod(inputMapping, outputMapping, descriptor, false);
+                        analysisHelper.AddMethod(inputMapping, outputMapping, descriptor, isStatic);
                     }
-                    else if (intermediaryLine.StartsWith("FIELD"))
+                    else
                     {
-                        var intermediaryFieldData = intermediaryLine.Split('\t');
-                        var type = intermediaryFieldData[2].Trim();
-                        var inputMapping = intermediaryFieldData[3].Trim();
-                        var outputMapping = intermediaryFieldData[4].Trim();
+                        var intermediaryFieldData = intermediaryLine.Split(' ');
+                        var inputMapping = intermediaryFieldData[0].Trim();
+                        var outputMapping = intermediaryFieldData[1].Trim();
 
                         _logger.LogDebug(
                             $"Processing entry as field, with mapping: {inputMapping} -> {outputMapping}");
 
-                        analysisHelper.AddField(inputMapping, outputMapping, false, type);
+                        analysisHelper.AddField(inputMapping, outputMapping, false, "");
                     }
                 },
                 (count, current, percentage) =>

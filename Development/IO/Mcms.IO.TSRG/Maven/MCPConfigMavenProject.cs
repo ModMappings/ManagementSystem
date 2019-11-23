@@ -7,9 +7,9 @@ namespace Mcms.IO.TSRG.Maven
         : MavenProject
     {
         public static MCPConfigMavenProject Instance { get; } = new MCPConfigMavenProject(
-            Constants.FABRIC_MAVEN_URL,
-            Constants.FABRIC_GROUP,
-            Constants.INTERMEDIARY_PROJECT_NAME);
+            Constants.MCP_MAVEN_URL,
+            Constants.MCP_CONFIG_GROUP,
+            Constants.MCP_CONFIG_PROJECT_NAME);
 
         private MCPConfigMavenProject(Url url, string @group, string name) : base(url, @group, name)
         {

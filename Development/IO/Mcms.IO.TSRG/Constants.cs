@@ -3,14 +3,16 @@ namespace Mcms.IO.TSRG
     public static class Constants
     {
 
-        public const string FABRIC_MAVEN_URL = "http://maven.modmuss50.me";
+        public const string MCP_MAVEN_URL = "https://files.minecraftforge.net/maven";
 
-        public const string FABRIC_GROUP = "net.fabricmc";
+        public const string MCP_CONFIG_GROUP = "de.oceanlabs.mcp";
 
-        public const string INTERMEDIARY_PROJECT_NAME = "Intermediary";
+        public const string MCP_CONFIG_PROJECT_NAME = "mcp_config";
 
-        public const string INTERMEDIARY_MAPPING_NAME = "Intermediary";
+        public const string MCP_CONFIG_MAPPING_NAME = "Intermediary";
 
-        public const string INTERMEDIARY_JOINED_DATA = "mappings/mappings.tiny";
+        public const string TSRG_JOINED_DATA = "config/joined.tsrg";
+
+        public const string TSRG_STATIC_METHOD_DATA = "config/static_methods.txt";
     }
 }
