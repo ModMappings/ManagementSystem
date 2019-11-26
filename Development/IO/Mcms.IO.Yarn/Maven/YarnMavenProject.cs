@@ -7,9 +7,9 @@ namespace Mcms.IO.Yarn.Maven
         : MavenProject
     {
         public static YarnMavenProject Instance { get; } = new YarnMavenProject(
-            Constants.MCP_MAVEN_URL,
-            Constants.MCP_CONFIG_GROUP,
-            Constants.MCP_CONFIG_PROJECT_NAME);
+            Constants.YARN_MAVEN_URL,
+            Constants.FABRIC_GROUP,
+            Constants.YARN_PROJECT_NAME);
 
         private YarnMavenProject(Url url, string @group, string name) : base(url, @group, name)
         {

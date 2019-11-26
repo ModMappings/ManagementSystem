@@ -51,7 +51,7 @@ namespace Mcms.IO.Yarn
             {
                 Name = artifact.Name,
                 GameVersion = artifact.GameVersion,
-                MappingType = Constants.MCP_CONFIG_MAPPING_NAME
+                MappingType = Constants.YARN_MAPPING_NAME
             };
 
             var packages = new Dictionary<string, ExternalPackage>();
@@ -62,26 +62,25 @@ namespace Mcms.IO.Yarn
             }
             catch (Exception e)
             {
-                _logger.LogCritical(e, "Failed to download the Intermediary Config artifact data.");
+                _logger.LogCritical(e, "Failed to download the yarn artifact data.");
                 return release;
             }
 
-            var intermediaryJoinedFileContents =
-                zip.ReadAllLines(Constants.TSRG_JOINED_DATA, Encoding.UTF8).ToList();
-            var staticMethodsFileContents =
-                zip.ReadAllLines(Constants.TSRG_STATIC_METHOD_DATA, Encoding.UTF8).ToDictionary(e => e, e => true);
+            var yarnJoinedFileContents =
+                zip.ReadAllLines(Constants.TINY_MAPPING_DATA, Encoding.UTF8).ToList();
 
-            var analysisHelper = new MCPConfigAnalysisHelper(ref packages);
+            var analysisHelper = new YarnAnalysisHelper(ref packages);
 
-            intermediaryJoinedFileContents.ForEachWithProgressCallback((intermediaryLine) =>
+            yarnJoinedFileContents.ForEachWithProgressCallback((yarnLine) =>
                 {
-                    _logger.LogDebug($"Processing intermediary line: {intermediaryLine}");
-                    if (!intermediaryLine.StartsWith('\t'))
+                    _logger.LogDebug($"Processing yarn line: {yarnLine}");
+                    if (yarnLine.StartsWith("CLASS"))
                     {
                         //New class
-                        var intermediaryClassData = intermediaryLine.Split(' ');
-                        var inputMapping = intermediaryClassData[0].Trim();
-                        var outputMappingIncludingPackage = intermediaryClassData[1].Trim();
+                        var yarnClassData = yarnLine.Split('\t');
+                        var originalInputMapping = yarnClassData[0].Trim();
+                        var inputMapping = yarnClassData[1].Trim();
+                        var outputMappingIncludingPackage = yarnClassData[2].Trim();
 
                         var outputMapping =
                             outputMappingIncludingPackage.Substring(outputMappingIncludingPackage.LastIndexOf('/'));
@@ -91,38 +90,40 @@ namespace Mcms.IO.Yarn
                         _logger.LogDebug(
                             $"Processing entry as class, with mapping: {inputMapping} ->{outputMapping} in package: {package}");
 
-                        analysisHelper.AddClass(inputMapping, outputMapping, package);
+                        analysisHelper.AddClass(originalInputMapping, inputMapping, outputMapping, package);
                     }
-                    else if (intermediaryLine.StartsWith('('))
+                    else if (yarnLine.StartsWith("METHOD"))
                     {
                         //New method
-                        var intermediaryMethodData = intermediaryLine.Trim().Split(' ');
-                        var inputMapping = intermediaryMethodData[0].Trim();
-                        var descriptor = intermediaryMethodData[1].Trim();
-                        var outputMapping = intermediaryMethodData[2].Trim();
-                        var isStatic = staticMethodsFileContents.GetValueOrDefault(outputMapping, false);
+                        var yarnMethodData = yarnLine.Trim().Split('\t');
+                        var originalClassMapping = yarnMethodData[1].Trim();
+                        var descriptor = yarnMethodData[2].Trim();
+                        var inputMapping = yarnMethodData[4].Trim();
+                        var outputMapping = yarnMethodData[5].Trim();
 
                         _logger.LogDebug(
                             $"Processing entry as method, with mapping: {inputMapping} -> {outputMapping} and descriptor: {descriptor}");
 
-                        analysisHelper.AddMethod(inputMapping, outputMapping, descriptor, isStatic);
+                        analysisHelper.AddMethod(originalClassMapping, inputMapping, outputMapping, descriptor, false);
                     }
-                    else
+                    else if (yarnLine.StartsWith("FIELD"))
                     {
-                        var intermediaryFieldData = intermediaryLine.Split(' ');
-                        var inputMapping = intermediaryFieldData[0].Trim();
-                        var outputMapping = intermediaryFieldData[1].Trim();
+                        var yarnFieldData = yarnLine.Split('\t');
+                        var originalClassMapping = yarnFieldData[0].Trim();
+                        var descriptor = yarnFieldData[1].Trim();
+                        var inputMapping = yarnFieldData[3].Trim();
+                        var outputMapping = yarnFieldData[4].Trim();
 
                         _logger.LogDebug(
                             $"Processing entry as field, with mapping: {inputMapping} -> {outputMapping}");
 
-                        analysisHelper.AddField(inputMapping, outputMapping, false, "");
+                        analysisHelper.AddField(originalClassMapping, inputMapping, outputMapping, false, descriptor);
                     }
                 },
                 (count, current, percentage) =>
                 {
                     _logger.LogInformation(
-                        $"  > {percentage}% ({current}/{count}): Processing the {artifact.Name} intermediary file ...");
+                        $"  > {percentage}% ({current}/{count}): Processing the {artifact.Name} yarn file ...");
                 }
             );
 
@@ -137,21 +138,21 @@ namespace Mcms.IO.Yarn
 
         /// <summary>
         /// This class is a wrapper and utility handler that handles the conversion of a line based approach
-        /// of the intermediary file format into the tree based structure that Mcms external data supports.
+        /// of the yarn file format into the tree based structure that Mcms external data supports.
         ///
-        /// It is specifically designed to handle intermediary data.
+        /// It is specifically designed to handle yarn data.
         /// </summary>
-        private class MCPConfigAnalysisHelper
+        private class YarnAnalysisHelper
         {
             private readonly Dictionary<string, ExternalPackage> _packages;
-            private ExternalClass _currentClass;
+            private readonly Dictionary<string, ExternalClass> _classes = new Dictionary<string, ExternalClass>();
 
-            public MCPConfigAnalysisHelper(ref Dictionary<string, ExternalPackage> packages)
+            public YarnAnalysisHelper(ref Dictionary<string, ExternalPackage> packages)
             {
                 _packages = packages;
             }
 
-            public void AddClass(string inputMapping, string outputMapping, string packageName)
+            public void AddClass(string originalMapping, string inputMapping, string outputMapping, string packageName)
             {
                 var package = _packages.GetOrAdd(packageName, () => new ExternalPackage
                 {
@@ -159,18 +160,25 @@ namespace Mcms.IO.Yarn
                     Output = packageName
                 });
 
-                _currentClass = new ExternalClass
+                var currentClass = new ExternalClass
                 {
                     Input = inputMapping,
                     Output = outputMapping
                 };
 
-                package.Classes.Add(_currentClass);
+                package.Classes.Add(currentClass);
+                _classes.Add(originalMapping, currentClass);
             }
 
-            public void AddMethod(string inputMapping, string outputMapping, string descriptor, bool isStatic)
+            public void AddMethod(string partOfClassWithOriginalMapping, string inputMapping, string outputMapping, string descriptor, bool isStatic)
             {
-                _currentClass.Methods.Add(new ExternalMethod
+                var currentClass = _classes.GetValueOrDefault(partOfClassWithOriginalMapping);
+                if (currentClass == null)
+                {
+                    throw new ArgumentOutOfRangeException(partOfClassWithOriginalMapping, "The given original mapping of a class is unknown.");
+                }
+
+                currentClass.Methods.Add(new ExternalMethod
                 {
                     Input = inputMapping,
                     Output = outputMapping,
@@ -179,9 +187,15 @@ namespace Mcms.IO.Yarn
                 });
             }
 
-            public void AddField(string inputMapping, string outputMapping, bool isStatic, string type)
+            public void AddField(string partOfClassWithOriginalMapping, string inputMapping, string outputMapping, bool isStatic, string type)
             {
-                _currentClass.Fields.Add(new ExternalField
+                var currentClass = _classes.GetValueOrDefault(partOfClassWithOriginalMapping);
+                if (currentClass == null)
+                {
+                    throw new ArgumentOutOfRangeException(partOfClassWithOriginalMapping, "The given original mapping of a class is unknown.");
+                }
+
+                currentClass.Fields.Add(new ExternalField
                 {
                     Input = inputMapping,
                     Output = outputMapping,

@@ -62,26 +62,26 @@ namespace Mcms.IO.TSRG
             }
             catch (Exception e)
             {
-                _logger.LogCritical(e, "Failed to download the Intermediary Config artifact data.");
+                _logger.LogCritical(e, "Failed to download the MCPConfig Config artifact data.");
                 return release;
             }
 
-            var intermediaryJoinedFileContents =
+            var mcpConfigJoinedFileContents =
                 zip.ReadAllLines(Constants.TSRG_JOINED_DATA, Encoding.UTF8).ToList();
             var staticMethodsFileContents =
                 zip.ReadAllLines(Constants.TSRG_STATIC_METHOD_DATA, Encoding.UTF8).ToDictionary(e => e, e => true);
 
             var analysisHelper = new MCPConfigAnalysisHelper(ref packages);
 
-            intermediaryJoinedFileContents.ForEachWithProgressCallback((intermediaryLine) =>
+            mcpConfigJoinedFileContents.ForEachWithProgressCallback((mcpConfigLine) =>
                 {
-                    _logger.LogDebug($"Processing intermediary line: {intermediaryLine}");
-                    if (!intermediaryLine.StartsWith('\t'))
+                    _logger.LogDebug($"Processing mCPConfig line: {mcpConfigLine}");
+                    if (!mcpConfigLine.StartsWith('\t'))
                     {
                         //New class
-                        var intermediaryClassData = intermediaryLine.Split(' ');
-                        var inputMapping = intermediaryClassData[0].Trim();
-                        var outputMappingIncludingPackage = intermediaryClassData[1].Trim();
+                        var mcpConfigClassData = mcpConfigLine.Split(' ');
+                        var inputMapping = mcpConfigClassData[0].Trim();
+                        var outputMappingIncludingPackage = mcpConfigClassData[1].Trim();
 
                         var outputMapping =
                             outputMappingIncludingPackage.Substring(outputMappingIncludingPackage.LastIndexOf('/'));
@@ -93,13 +93,13 @@ namespace Mcms.IO.TSRG
 
                         analysisHelper.AddClass(inputMapping, outputMapping, package);
                     }
-                    else if (intermediaryLine.StartsWith('('))
+                    else if (mcpConfigLine.StartsWith('('))
                     {
                         //New method
-                        var intermediaryMethodData = intermediaryLine.Trim().Split(' ');
-                        var inputMapping = intermediaryMethodData[0].Trim();
-                        var descriptor = intermediaryMethodData[1].Trim();
-                        var outputMapping = intermediaryMethodData[2].Trim();
+                        var mcpConfigMethodData = mcpConfigLine.Trim().Split(' ');
+                        var inputMapping = mcpConfigMethodData[0].Trim();
+                        var descriptor = mcpConfigMethodData[1].Trim();
+                        var outputMapping = mcpConfigMethodData[2].Trim();
                         var isStatic = staticMethodsFileContents.GetValueOrDefault(outputMapping, false);
 
                         _logger.LogDebug(
@@ -109,9 +109,9 @@ namespace Mcms.IO.TSRG
                     }
                     else
                     {
-                        var intermediaryFieldData = intermediaryLine.Split(' ');
-                        var inputMapping = intermediaryFieldData[0].Trim();
-                        var outputMapping = intermediaryFieldData[1].Trim();
+                        var mcpConfigFieldData = mcpConfigLine.Split(' ');
+                        var inputMapping = mcpConfigFieldData[0].Trim();
+                        var outputMapping = mcpConfigFieldData[1].Trim();
 
                         _logger.LogDebug(
                             $"Processing entry as field, with mapping: {inputMapping} -> {outputMapping}");
@@ -122,7 +122,7 @@ namespace Mcms.IO.TSRG
                 (count, current, percentage) =>
                 {
                     _logger.LogInformation(
-                        $"  > {percentage}% ({current}/{count}): Processing the {artifact.Name} intermediary file ...");
+                        $"  > {percentage}% ({current}/{count}): Processing the {artifact.Name} MCPConfig file ...");
                 }
             );
 
@@ -137,9 +137,9 @@ namespace Mcms.IO.TSRG
 
         /// <summary>
         /// This class is a wrapper and utility handler that handles the conversion of a line based approach
-        /// of the intermediary file format into the tree based structure that Mcms external data supports.
+        /// of the mCPConfig file format into the tree based structure that Mcms external data supports.
         ///
-        /// It is specifically designed to handle intermediary data.
+        /// It is specifically designed to handle mCPConfig data.
         /// </summary>
         private class MCPConfigAnalysisHelper
         {
