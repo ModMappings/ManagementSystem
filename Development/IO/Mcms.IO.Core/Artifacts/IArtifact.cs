@@ -12,5 +12,8 @@ namespace Mcms.IO.Core.Artifacts
 
         Task<Stream> GetStreamAsync(
             CancellationToken cancellationToken = default);
+
+        Task WriteStreamAsync(
+            byte[] data, CancellationToken cancellationToken = default);
     }
 }

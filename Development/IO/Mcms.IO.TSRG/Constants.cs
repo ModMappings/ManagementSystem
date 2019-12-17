@@ -9,7 +9,7 @@ namespace Mcms.IO.TSRG
 
         public const string MCP_CONFIG_PROJECT_NAME = "mcp_config";
 
-        public const string MCP_CONFIG_MAPPING_NAME = "Intermediary";
+        public const string MCP_CONFIG_MAPPING_NAME = "tsrg";
 
         public const string TSRG_JOINED_DATA = "config/joined.tsrg";
 

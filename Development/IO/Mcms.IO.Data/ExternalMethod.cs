@@ -13,7 +13,7 @@ namespace Mcms.IO.Data
         /// <summary>
         /// The parameters which are part of this method.
         /// </summary>
-        public IList<ExternalParameter> ExternalParameters { get; set; } = new List<ExternalParameter>();
+        public IList<ExternalParameter> Parameters { get; set; } = new List<ExternalParameter>();
 
         /// <summary>
         /// The descriptor of the method.

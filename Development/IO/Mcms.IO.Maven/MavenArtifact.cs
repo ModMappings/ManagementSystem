@@ -38,9 +38,14 @@ namespace Mcms.IO.Maven
         public abstract string GameVersion { get; set; }
 
         public async Task<Stream> GetStreamAsync(
-            CancellationToken cancellationToken = default (CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return await Path.GetStreamAsync(cancellationToken);
+        }
+
+        public Task WriteStreamAsync(byte[] data, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
         }
     }
 }
