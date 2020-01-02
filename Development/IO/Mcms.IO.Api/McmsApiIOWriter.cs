@@ -57,6 +57,8 @@ namespace Mcms.IO.Api
                 mappingType, gameVersion);
 
             var componentDataManager = ((McmsApiArtifact) artifact).ComponentDataManager;
+            if (componentDataManager == null)
+                throw new ArgumentException("No valid mcms artifact is given.", nameof(artifact));
 
             await externalRelease.Packages.ForEachWithProgressCallbackAsync(async package =>
                 {
@@ -361,6 +363,8 @@ namespace Mcms.IO.Api
                 await componentDataManager.UpdateComponent(packageComponent);
             }
 
+            await componentDataManager.SaveChanges();
+
             return packageVersionedComponent;
         }
 
@@ -540,6 +544,8 @@ namespace Mcms.IO.Api
                 await componentDataManager.UpdateComponent(classComponent);
             }
 
+            await componentDataManager.SaveChanges();
+
             return classVersionedComponent;
 
         }
@@ -665,6 +671,8 @@ namespace Mcms.IO.Api
                 await componentDataManager.UpdateComponent(methodComponent);
             }
 
+            await componentDataManager.SaveChanges();
+
             return methodVersionedComponent;
 
         }
@@ -788,6 +796,8 @@ namespace Mcms.IO.Api
             {
                 await componentDataManager.UpdateComponent(fieldComponent);
             }
+
+            await componentDataManager.SaveChanges();
 
             return fieldVersionedComponent;
 
@@ -914,6 +924,8 @@ namespace Mcms.IO.Api
             {
                 await componentDataManager.UpdateComponent(parameterComponent);
             }
+
+            await componentDataManager.SaveChanges();
 
             return parameterVersionedComponent;
         }
