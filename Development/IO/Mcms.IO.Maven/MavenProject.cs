@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using Flurl;
 using Flurl.Http;
 using Mcms.IO.Core.Artifacts;
+using Mcms.IO.Data;
 
 namespace Mcms.IO.Maven
 {
@@ -62,6 +63,11 @@ namespace Mcms.IO.Maven
         public Task PutArtifactsAsync(IReadOnlyDictionary<string, IArtifact> artifactsToPut)
         {
             throw new NotSupportedException("A MavenProject can not be used to write artifacts too.");
+        }
+
+        public async Task<IArtifact> CreateNewArtifactForRelease(ExternalRelease externalRelease)
+        {
+            return await this.CreateNewArtifactWithName(externalRelease.Name);
         }
 
         protected abstract MavenArtifact CreateNewArtifact(MavenProject project, string version,

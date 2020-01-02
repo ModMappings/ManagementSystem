@@ -139,7 +139,7 @@
     <value>Users</value>
   </data>
   <data name="PageSubTitle" xml:space="preserve">
-    <value>The administration center for the Account and Authorisation server for the Minecraft Mapping Service.</value>
+    <value>The administration center for the Account and Authorisation server for the Mod Code Mapping Service.</value>
   </data>
   <data name="PageTitle" xml:space="preserve">
     <value>MCMS.Auth</value>

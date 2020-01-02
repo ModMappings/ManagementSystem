@@ -109,10 +109,10 @@ namespace Mcms.IO.Yarn
                     else if (yarnLine.StartsWith("FIELD"))
                     {
                         var yarnFieldData = yarnLine.Split('\t');
-                        var originalClassMapping = yarnFieldData[0].Trim();
-                        var descriptor = yarnFieldData[1].Trim();
-                        var inputMapping = yarnFieldData[3].Trim();
-                        var outputMapping = yarnFieldData[4].Trim();
+                        var originalClassMapping = yarnFieldData[1].Trim();
+                        var descriptor = yarnFieldData[2].Trim();
+                        var inputMapping = yarnFieldData[4].Trim();
+                        var outputMapping = yarnFieldData[5].Trim();
 
                         _logger.LogDebug(
                             $"Processing entry as field, with mapping: {inputMapping} -> {outputMapping}");

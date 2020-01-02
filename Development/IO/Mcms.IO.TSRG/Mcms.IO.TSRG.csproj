@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mcms.IO.Core\Mcms.IO.Core.csproj" />
-    <ProjectReference Include="..\Mcms.IO.Data\Mcms.IO.Data.csproj" />
-    <ProjectReference Include="..\Mcms.IO.Maven\Mcms.IO.Maven.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+    <ProjectReference Include="..\Mcms.IO.Core\Mcms.IO.Core.csproj" />
+    <ProjectReference Include="..\Mcms.IO.Data\Mcms.IO.Data.csproj" />
+    <ProjectReference Include="..\Mcms.IO.Maven\Mcms.IO.Maven.csproj" />
   </ItemGroup>
 
 </Project>

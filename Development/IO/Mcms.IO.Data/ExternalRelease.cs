@@ -30,5 +30,10 @@ namespace Mcms.IO.Data
         /// The name of the mapping type this release is for.
         /// </summary>
         public string MappingType { get; set; }
+
+        /// <summary>
+        /// Indicates if this release is a snapshot.
+        /// </summary>
+        public bool IsSnapshot { get; set; } = false;
     }
 }

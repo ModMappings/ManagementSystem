@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.IO.Yarn", "Development
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.IO.MCP", "Development\IO\Mcms.IO.MCP\Mcms.IO.MCP.csproj", "{417AFD61-5494-4C12-8C46-B2BDC1F9C1E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mcms.IO.Api", "Development\IO\Mcms.IO.Api\Mcms.IO.Api.csproj", "{0BB5E3B7-A632-48F2-9E17-6DCC56C8505E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,5 +122,9 @@ Global
 		{417AFD61-5494-4C12-8C46-B2BDC1F9C1E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{417AFD61-5494-4C12-8C46-B2BDC1F9C1E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{417AFD61-5494-4C12-8C46-B2BDC1F9C1E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BB5E3B7-A632-48F2-9E17-6DCC56C8505E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BB5E3B7-A632-48F2-9E17-6DCC56C8505E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BB5E3B7-A632-48F2-9E17-6DCC56C8505E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BB5E3B7-A632-48F2-9E17-6DCC56C8505E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

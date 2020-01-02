@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using Mcms.Api.Data.Core.Raw;
 using Mcms.Api.Data.Poco.Models.Core;
 using Mcms.Api.Data.Poco.Models.Core.Release;
 using Mcms.Api.Data.Poco.Models.Mapping.Component;
@@ -8,8 +11,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Mcms.Api.Data.EfCore.Context
 {
     public class MCMSContext
-        : DbContext
+        : DbContext, IRawDataAccessor
     {
+
         public MCMSContext(DbContextOptions<MCMSContext> options) : base(options)
         {
         }
@@ -44,6 +48,26 @@ namespace Mcms.Api.Data.EfCore.Context
 
         public DbSet<PackageMetadata> PackageMetadata { get; set; }
 
+        public void MarkObjectChanged(object obj)
+        {
+            this.Entry(obj).State = EntityState.Modified;
+        }
+
+        public void MarkObjectAdded(object obj)
+        {
+            this.Entry(obj).State = EntityState.Added;
+        }
+
+        public void MarkObjectRemoved(object obj)
+        {
+            this.Entry(obj).State = EntityState.Deleted;
+        }
+
+        public void Detach(object obj)
+        {
+            this.Entry(obj).State = EntityState.Detached;
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -56,5 +80,35 @@ namespace Mcms.Api.Data.EfCore.Context
                 .HasIndex(release => release.Name)
                 .IsUnique();
         }
+
+        IQueryable<GameVersion> IRawDataAccessor.GameVersions => GameVersions;
+
+        IQueryable<Release> IRawDataAccessor.Releases => Releases;
+
+        IQueryable<MappingType> IRawDataAccessor.MappingTypes => MappingTypes;
+
+        IQueryable<Component> IRawDataAccessor.Components => Components;
+
+        IQueryable<VersionedComponent> IRawDataAccessor.VersionedComponents => VersionedComponents;
+
+        IQueryable<CommittedMapping> IRawDataAccessor.LiveMappingEntries => LiveMappingEntries;
+
+        IQueryable<ProposedMapping> IRawDataAccessor.ProposalMappingEntries => ProposalMappingEntries;
+
+        IQueryable<ReleaseComponent> IRawDataAccessor.ReleaseComponents => ReleaseComponents;
+
+        IQueryable<LockingEntry> IRawDataAccessor.LockingEntries => LockingEntries;
+
+        IQueryable<MetadataBase> IRawDataAccessor.VersionedComponentMetadata => VersionedComponentMetadata;
+
+        IQueryable<ClassMetadata> IRawDataAccessor.ClassMetadata => ClassMetadata;
+
+        IQueryable<MethodMetadata> IRawDataAccessor.MethodMetadata => MethodMetadata;
+
+        IQueryable<FieldMetadata> IRawDataAccessor.FieldMetadata => FieldMetadata;
+
+        IQueryable<ParameterMetadata> IRawDataAccessor.ParameterMetadata => ParameterMetadata;
+
+        IQueryable<PackageMetadata> IRawDataAccessor.PackageMetadata => PackageMetadata;
     }
 }

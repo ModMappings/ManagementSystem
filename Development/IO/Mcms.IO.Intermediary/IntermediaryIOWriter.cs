@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Mcms.IO.Core;
 using Mcms.IO.Core.Artifacts;
 using Mcms.IO.Core.Extensions;
+using Mcms.IO.Core.Writing;
 using Mcms.IO.Data;
 using Microsoft.Extensions.Logging;
 
@@ -19,22 +20,11 @@ namespace Mcms.IO.Intermediary
             _logger = logger;
         }
 
-        public async Task WriteAll(IEnumerable<ExternalRelease> externalReleases, IArtifactHandler artifactHandler)
-        {
-            var releaseList = externalReleases.ToList();
-            _logger.LogDebug($"Exporting {releaseList.Count()} releases to: {artifactHandler}.");
-
-            foreach (var release in releaseList)
-            {
-                await WriteTo(release, await artifactHandler.CreateNewArtifactWithName(release.Name));
-            }
-        }
-
-        public async Task WriteTo(ExternalRelease release, IArtifact artifact)
+        public async Task WriteTo(ExternalRelease externalRelease, IArtifact artifact, WriteContext context)
         {
             var mappingFileContents = new LinkedList<string>();
 
-            release.Packages.ForEachWithProgressCallback(package =>
+            externalRelease.Packages.ForEachWithProgressCallback(package =>
             {
                 package.Classes.ForEachWithProgressCallback(cls =>
                     {
@@ -75,7 +65,7 @@ namespace Mcms.IO.Intermediary
             (count, current, percentage) =>
             {
                 _logger.LogInformation(
-                    $"  > {percentage}% ({current}/{count}): Exporting packages from: {release.Name} ...");
+                    $"  > {percentage}% ({current}/{count}): Exporting packages from: {externalRelease.Name} ...");
             });
         }
     }

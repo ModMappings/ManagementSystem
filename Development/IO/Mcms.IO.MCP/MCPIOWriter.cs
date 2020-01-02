@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mcms.IO.Core;
 using Mcms.IO.Core.Artifacts;
+using Mcms.IO.Core.Writing;
 using Mcms.IO.Data;
 using Microsoft.Extensions.Logging;
 
@@ -21,24 +22,13 @@ namespace Mcms.IO.MCP
             _logger = logger;
         }
 
-        public async Task WriteAll(IEnumerable<ExternalRelease> externalReleases, IArtifactHandler artifactHandler)
-        {
-            var releaseList = externalReleases.ToList();
-            _logger.LogDebug($"Exporting {releaseList.Count()} releases to: {artifactHandler}.");
-
-            foreach (var release in releaseList)
-            {
-                await WriteTo(release, await artifactHandler.CreateNewArtifactWithName(release.Name));
-            }
-        }
-
-        public async Task WriteTo(ExternalRelease release, IArtifact artifact)
+        public async Task WriteTo(ExternalRelease externalRelease, IArtifact artifact, WriteContext context)
         {
             var methodLines = new LinkedList<string>();
             var fieldLines = new LinkedList<string>();
             var parameterLines = new LinkedList<string>();
-            
-            foreach (var externalPackage in release.Packages)
+
+            foreach (var externalPackage in externalRelease.Packages)
             {
                 foreach (var externalClass in externalPackage.Classes)
                 {
@@ -61,7 +51,7 @@ namespace Mcms.IO.MCP
                     }
                 }
             }
-            
+
             using (var memoryStream = new MemoryStream())
             {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
@@ -78,7 +68,7 @@ namespace Mcms.IO.MCP
                             await streamWriter.WriteLineAsync(methodLine);
                         }
                     }
-                    
+
                     using (var entryStream = fieldsFile.Open())
                     using (var streamWriter = new StreamWriter(entryStream))
                     {
@@ -87,7 +77,7 @@ namespace Mcms.IO.MCP
                             await streamWriter.WriteLineAsync(fieldLine);
                         }
                     }
-                    
+
                     using (var entryStream = parameterFile.Open())
                     using (var streamWriter = new StreamWriter(entryStream))
                     {

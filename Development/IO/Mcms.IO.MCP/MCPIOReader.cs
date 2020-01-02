@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Mcms.IO.Core;
@@ -84,7 +82,7 @@ namespace Mcms.IO.MCP
                 _logger.LogCritical("Failed to find a matching MCP Config artifact that matches the MCP Game Version");
                 return release;
             }
-            
+
             var analysisHelper = new MCPAnalysisHelper(await _configIOReader.ReadFrom(mcpConfigArtifact), ref packages);
 
             methodsFileContents.ForEachWithProgressCallback((mcpConfigLine) =>
@@ -99,7 +97,7 @@ namespace Mcms.IO.MCP
                         $"  > {percentage}% ({current}/{count}): Processing the {artifact.Name} methods file ...");
                 }
             );
-            
+
             fieldsFileContents.ForEachWithProgressCallback((mcpConfigLine) =>
                 {
                     _logger.LogDebug($"Processing MCP Field line: {mcpConfigLine}");
@@ -112,7 +110,7 @@ namespace Mcms.IO.MCP
                         $"  > {percentage}% ({current}/{count}): Processing the {artifact.Name} fields file ...");
                 }
             );
-            
+
             paramsFileContents.ForEachWithProgressCallback((mcpConfigLine) =>
                 {
                     _logger.LogDebug($"Processing MCP Param line: {mcpConfigLine}");
@@ -133,7 +131,7 @@ namespace Mcms.IO.MCP
 
             return release;
         }
-        
+
         private static ExternalDistribution GetDistFromString(string dist)
         {
             if (dist == null || dist.Trim().Any())
@@ -154,7 +152,7 @@ namespace Mcms.IO.MCP
                     return ExternalDistribution.UNKNOWN;
             }
         }
-        
+
         /// <summary>
         /// This class is a wrapper and utility handler that handles the conversion of a line based approach
         /// of the mcp file formats into the tree based structure that Mcms external data supports.
@@ -171,15 +169,15 @@ namespace Mcms.IO.MCP
             private readonly Dictionary<string, ExternalMethod> _srgMethodToMcpConfigMethodMapping = new Dictionary<string, ExternalMethod>();
             private readonly Dictionary<string, ExternalField> _srgFieldToMcpConfigFieldMapping = new Dictionary<string, ExternalField>();
             private readonly Dictionary<string, ExternalMethod> _srgMethodIdToMethodMapping = new Dictionary<string, ExternalMethod>();
-            
+
             public MCPAnalysisHelper(ExternalRelease mcpConfigRelease, ref Dictionary<string, ExternalPackage> packages)
             {
                 _mcpConfigRelease = mcpConfigRelease;
                 _packages = packages;
-                
+
                 this.BuildMappingStructureData();
             }
-            
+
             public void AddMethod(string inputMapping, string outputMapping, ExternalDistribution distribution, string documentation)
             {
                 var parentClass = _srgMethodToParentClassMapping[inputMapping];
@@ -201,7 +199,7 @@ namespace Mcms.IO.MCP
                     Documentation = documentation,
                     IsStatic = mcpConfigMethod.IsStatic
                 };
-                
+
                 parentClass.Methods.Add(externalMethod);
                 _srgMethodIdToMethodMapping.Add(GetFuncIdFromMethodName(inputMapping), externalMethod);
             }
@@ -227,7 +225,7 @@ namespace Mcms.IO.MCP
                     Documentation = documentation,
                     IsStatic = mcpConfigField.IsStatic
                 };
-                
+
                 parentClass.Fields.Add(externalField);
             }
 
@@ -238,7 +236,7 @@ namespace Mcms.IO.MCP
                 if (parentMethod == null)
                     throw new ArgumentOutOfRangeException(nameof(inputMapping),
                         $"Could not find a MCP Method mapping to which the parameter {inputMapping} belongs.");
-                
+
                 var externalParameter = new ExternalParameter()
                 {
                     Input = inputMapping,
@@ -246,7 +244,7 @@ namespace Mcms.IO.MCP
                     Distribution = distribution,
                     Documentation = documentation
                 };
-                
+
                 parentMethod.Parameters.Add(externalParameter);
             }
 
@@ -261,9 +259,9 @@ namespace Mcms.IO.MCP
                         Distribution = externalMcpConfigPackage.Distribution,
                         Documentation = externalMcpConfigPackage.Documentation
                     };
-                    
+
                     _packages.Add(externalPackage.Output, externalPackage);
-                    
+
                     foreach (var externalMcpConfigClass in externalMcpConfigPackage.Classes)
                     {
                         var externalClass = new ExternalClass()
@@ -273,9 +271,9 @@ namespace Mcms.IO.MCP
                             Distribution = externalMcpConfigClass.Distribution,
                             Documentation = externalMcpConfigClass.Documentation
                         };
-                        
+
                         externalPackage.Classes.Add(externalClass);
-                        
+
                         foreach (var externalMcpConfigMethod in externalMcpConfigClass.Methods)
                         {
                             _srgMethodToParentClassMapping.Add(externalMcpConfigMethod.Output, externalClass);
@@ -289,7 +287,7 @@ namespace Mcms.IO.MCP
                     }
                 }
             }
-            
+
             private string GetFuncIdFromMethodName(string srgMethodName)
             {
                 return srgMethodName.Replace("func_", "").Split("_")[0];
