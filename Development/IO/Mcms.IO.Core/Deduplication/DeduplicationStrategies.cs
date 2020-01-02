@@ -1,5 +1,9 @@
-namespace Mcms.IO.Core.Writing
+namespace Mcms.IO.Core.Deduplication
 {
+    /// <summary>
+    /// This class contains all the deduplication strategies to be used when duplication conflicts arises
+    /// during the writing of an ExternalRelease.
+    /// </summary>
     public class DeduplicationStrategies
     {
         public DeduplicationStrategies(DeduplicationStrategy package, DeduplicationStrategy @class, DeduplicationStrategy method, DeduplicationStrategy field, DeduplicationStrategy parameter)

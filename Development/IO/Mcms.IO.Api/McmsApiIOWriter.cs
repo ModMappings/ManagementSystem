@@ -17,6 +17,7 @@ using Mcms.Api.Data.Poco.Models.Mapping.Metadata;
 using Mcms.IO.Api.Artifact;
 using Mcms.IO.Core;
 using Mcms.IO.Core.Artifacts;
+using Mcms.IO.Core.Deduplication;
 using Mcms.IO.Core.Extensions;
 using Mcms.IO.Core.Writing;
 using Mcms.IO.Data;

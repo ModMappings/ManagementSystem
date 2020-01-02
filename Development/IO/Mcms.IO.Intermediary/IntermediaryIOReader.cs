@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Mcms.IO.Core;
 using Mcms.IO.Core.Artifacts;
+using Mcms.IO.Core.Deduplication;
 using Mcms.IO.Core.Extensions;
+using Mcms.IO.Core.Reading;
 using Mcms.IO.Data;
 using Microsoft.Extensions.Logging;
 
@@ -25,11 +27,11 @@ namespace Mcms.IO.Intermediary
             _logger = logger;
         }
 
-        public async Task<IEnumerable<ExternalRelease>> ReadAllFrom(IArtifactHandler handler)
+        public async Task<IEnumerable<ReadResult>> ReadAllFrom(IArtifactHandler handler)
         {
             _logger.LogDebug($"Importing all releases from: {handler}.");
 
-            var releases = new List<ExternalRelease>();
+            var releases = new List<ReadResult>();
             var toImport = await handler.GetArtifactsAsync();
 
             _logger.LogDebug($"There are {toImport.Count} artifacts to import.");
@@ -44,7 +46,7 @@ namespace Mcms.IO.Intermediary
             return releases;
         }
 
-        public async Task<ExternalRelease> ReadFrom(IArtifact artifact)
+        public async Task<ReadResult> ReadFrom(IArtifact artifact)
         {
             _logger.LogDebug($"Importing {artifact}...");
             var release = new ExternalRelease
@@ -63,7 +65,14 @@ namespace Mcms.IO.Intermediary
             catch (Exception e)
             {
                 _logger.LogCritical(e, "Failed to download the Intermediary Config artifact data.");
-                return release;
+                return new ReadResult(
+                    release,
+                    new DeduplicationStrategies(
+                        DeduplicationStrategy.OUTPUT_UNIQUE,
+                        DeduplicationStrategy.BOTH_UNIQUE,
+                        DeduplicationStrategy.OUTPUT_UNIQUE,
+                        DeduplicationStrategy.OUTPUT_UNIQUE,
+                        DeduplicationStrategy.OUTPUT_UNIQUE));
             }
 
             var intermediaryJoinedFileContents =
@@ -129,7 +138,15 @@ namespace Mcms.IO.Intermediary
                 release.Packages.Add(externalPackage);
             }
 
-            return release;
+            return new ReadResult(
+                release,
+                new DeduplicationStrategies(
+                    DeduplicationStrategy.OUTPUT_UNIQUE,
+                    DeduplicationStrategy.BOTH_UNIQUE,
+                    DeduplicationStrategy.OUTPUT_UNIQUE,
+                    DeduplicationStrategy.OUTPUT_UNIQUE,
+                    DeduplicationStrategy.OUTPUT_UNIQUE
+                    ));
         }
 
 

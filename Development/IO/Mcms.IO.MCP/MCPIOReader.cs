@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Mcms.IO.Core;
 using Mcms.IO.Core.Artifacts;
+using Mcms.IO.Core.Deduplication;
 using Mcms.IO.Core.Extensions;
+using Mcms.IO.Core.Reading;
 using Mcms.IO.Data;
 using Mcms.IO.Maven.Extensions;
 using Mcms.IO.TSRG;
@@ -27,11 +29,11 @@ namespace Mcms.IO.MCP
             _configIOReader = configIoReader;
         }
 
-        public async Task<IEnumerable<ExternalRelease>> ReadAllFrom(IArtifactHandler handler)
+        public async Task<IEnumerable<ReadResult>> ReadAllFrom(IArtifactHandler handler)
         {
             _logger.LogDebug($"Importing all releases from: {handler}.");
 
-            var releases = new List<ExternalRelease>();
+            var releases = new List<ReadResult>();
             var toImport = await handler.GetArtifactsAsync();
 
             _logger.LogDebug($"There are {toImport.Count} artifacts to import.");
@@ -46,7 +48,7 @@ namespace Mcms.IO.MCP
             return releases;
         }
 
-        public async Task<ExternalRelease> ReadFrom(IArtifact artifact)
+        public async Task<ReadResult> ReadFrom(IArtifact artifact)
         {
             _logger.LogDebug($"Importing {artifact}...");
             var release = new ExternalRelease
@@ -65,7 +67,14 @@ namespace Mcms.IO.MCP
             catch (Exception e)
             {
                 _logger.LogCritical(e, "Failed to download the MCP artifact data.");
-                return release;
+                return new ReadResult(
+                    release,
+                    new DeduplicationStrategies(
+                        DeduplicationStrategy.INPUT_UNIQUE,
+                        DeduplicationStrategy.INPUT_UNIQUE,
+                        DeduplicationStrategy.INPUT_UNIQUE,
+                        DeduplicationStrategy.INPUT_UNIQUE,
+                        DeduplicationStrategy.INPUT_UNIQUE));
             }
 
             var methodsFileContents =
@@ -80,10 +89,17 @@ namespace Mcms.IO.MCP
             if (mcpConfigArtifact == null)
             {
                 _logger.LogCritical("Failed to find a matching MCP Config artifact that matches the MCP Game Version");
-                return release;
+                return new ReadResult(
+                    release,
+                    new DeduplicationStrategies(
+                        DeduplicationStrategy.INPUT_UNIQUE,
+                        DeduplicationStrategy.INPUT_UNIQUE,
+                        DeduplicationStrategy.INPUT_UNIQUE,
+                        DeduplicationStrategy.INPUT_UNIQUE,
+                        DeduplicationStrategy.INPUT_UNIQUE));
             }
 
-            var analysisHelper = new MCPAnalysisHelper(await _configIOReader.ReadFrom(mcpConfigArtifact), ref packages);
+            var analysisHelper = new MCPAnalysisHelper((await _configIOReader.ReadFrom(mcpConfigArtifact)).Release, ref packages);
 
             methodsFileContents.ForEachWithProgressCallback((mcpConfigLine) =>
                 {
@@ -129,7 +145,14 @@ namespace Mcms.IO.MCP
                 release.Packages.Add(externalPackage);
             }
 
-            return release;
+            return new ReadResult(
+                release,
+                new DeduplicationStrategies(
+                    DeduplicationStrategy.INPUT_UNIQUE,
+                    DeduplicationStrategy.INPUT_UNIQUE,
+                    DeduplicationStrategy.INPUT_UNIQUE,
+                    DeduplicationStrategy.INPUT_UNIQUE,
+                    DeduplicationStrategy.INPUT_UNIQUE));
         }
 
         private static ExternalDistribution GetDistFromString(string dist)
