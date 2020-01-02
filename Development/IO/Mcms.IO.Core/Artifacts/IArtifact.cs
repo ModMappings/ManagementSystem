@@ -6,9 +6,9 @@ namespace Mcms.IO.Core.Artifacts
 {
     public interface IArtifact
     {
-        string Name { get; set; }
+        string Name { get; }
 
-        string GameVersion { get; set; }
+        string GameVersion { get; }
 
         Task<Stream> GetStreamAsync(
             CancellationToken cancellationToken = default);
