@@ -21,12 +21,12 @@ namespace Mcms.Api.Data.Poco.Models.Mapping.Metadata
         /// <summary>
         /// The classes from which this class inherits.
         /// </summary>
-        public virtual List<ClassMetadata> InheritsFrom { get; set; }
+        public virtual List<ClassInheritanceData> InheritsFrom { get; set; }
 
         /// <summary>
         /// The classes which inherit from this class.
         /// </summary>
-        public virtual List<ClassMetadata> IsInheritedBy { get; set; }
+        public virtual List<ClassInheritanceData> IsInheritedBy { get; set; }
 
         /// <summary>
         /// The package of which this class is part of.

@@ -3,15 +3,17 @@ using System;
 using Mcms.Api.Data.EfCore.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Mcms.Api.Data.EfCore.Migrations
+namespace Data.EFCore.Migrations
 {
     [DbContext(typeof(MCMSContext))]
-    partial class MCMSContextModelSnapshot : ModelSnapshot
+    [Migration("20200103202231_FinalDotNetCoreVersion")]
+    partial class FinalDotNetCoreVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

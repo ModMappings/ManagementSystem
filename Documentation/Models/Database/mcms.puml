@@ -1,0 +1,212 @@
+@startuml
+
+entity "ClassInheritanceData" {
+  + Id [PK]
+  --
+  SubclassId
+  SuperclassId
+}
+
+entity "Comment" {
+  + Id [PK]
+  --
+  CreatedBy
+  CreatedOn
+  Content
+  HasBeenEdited
+  IsDeleted
+  DeletedBy
+  DeletedOn
+  ProposedMappingId
+  ReleaseId
+  ParentId
+}
+
+entity "CommentReaction" {
+  + Id [PK]
+  --
+  CreatedBy
+  CreatedOn
+  Type
+  CommentId
+}
+
+entity "Components" {
+  + Id [PK]
+  --
+  Type
+  CreatedBy
+  CreatedOn
+}
+
+entity "GameVersions" {
+  + Id [PK]
+  --
+  Name
+  CreatedOn
+  CreatedBy
+  IsPreRelease
+  IsSnapshot
+}
+
+entity "LiveMappingEntries" {
+  + Id [PK]
+  --
+  VersionedComponentId
+  CreatedOn
+  InputMapping
+  OutputMapping
+  Documentation
+  Distribution
+  MappingTypeId
+  CreatedBy
+}
+
+entity "LockingEntries" {
+  + Id [PK]
+  --
+  VersionedComponentId
+  MappingTypeId
+}
+
+entity "MappingTypes" {
+  + Id [PK]
+  --
+  Name
+  CreatedBy
+  CreatedOn
+}
+
+entity "ProposalMappingEntries" {
+  + Id [PK]
+  --
+  VersionedComponentId
+  CreatedOn
+  InputMapping
+  OutputMapping
+  Documentation
+  Distribution
+  MappingTypeId
+  CreatedBy
+  IsOpen
+  IsPublicVote
+  ClosedBy
+  ClosedOn
+  Merged
+  CommittedWithId
+}
+
+entity "ReleaseComponents" {
+  + Id [PK]
+  --
+  ReleaseId
+  MappingId
+}
+
+entity "Releases" {
+  + Id [PK]
+  --
+  Name
+  CreatedOn
+  CreatedBy
+  GameVersionId
+  MappingTypeId
+  IsSnapshot
+}
+
+entity "VersionedComponentMetadata" {
+  + Id [PK]
+  --
+  Discriminator
+  ParentId
+  Type
+  MemberOfId
+  IsStatic
+  MethodMetadata_MemberOfId
+  MethodMetadata_IsStatic
+  Descriptor
+  ParameterOfId
+  Index
+  OuterId
+  PackageId
+}
+
+entity "VersionedComponents" {
+  + Id [PK]
+  --
+  GameVersionId
+  CreatedBy
+  CreatedOn
+  ComponentId
+}
+
+entity "VotingRecord" {
+  + Id [PK]
+  --
+  ProposalId
+  CreatedOn
+  VotedBy
+  IsForVote
+  HasBeenRescinded
+}
+
+entity "__EFMigrationsHistory" {
+  + MigrationId [PK]
+  --
+  ProductVersion
+}
+
+ ClassInheritanceData }-- VersionedComponentMetadata
+
+ ClassInheritanceData }-- VersionedComponentMetadata
+
+ Comment }-- Comment
+
+ Comment }-- ProposalMappingEntries
+
+ Comment }-- Releases
+
+ CommentReaction }-- Comment
+
+ LiveMappingEntries }-- MappingTypes
+
+ LiveMappingEntries }-- VersionedComponents
+
+ LockingEntries }-- MappingTypes
+
+ LockingEntries }-- VersionedComponents
+
+ ProposalMappingEntries }-- LiveMappingEntries
+
+ ProposalMappingEntries }-- MappingTypes
+
+ ProposalMappingEntries }-- VersionedComponents
+
+ ReleaseComponents }-- LiveMappingEntries
+
+ ReleaseComponents }-- Releases
+
+ Releases }-- GameVersions
+
+ Releases }-- MappingTypes
+
+ VersionedComponentMetadata }-- VersionedComponentMetadata
+
+ VersionedComponentMetadata }-- VersionedComponentMetadata
+
+ VersionedComponentMetadata }-- VersionedComponentMetadata
+
+ VersionedComponentMetadata }-- VersionedComponentMetadata
+
+ VersionedComponentMetadata }-- VersionedComponentMetadata
+
+ VersionedComponentMetadata }-- VersionedComponentMetadata
+
+ VersionedComponentMetadata ||-|| VersionedComponents
+
+ VersionedComponents }-- Components
+
+ VersionedComponents }-- GameVersions
+
+ VotingRecord }-- ProposalMappingEntries
+@enduml

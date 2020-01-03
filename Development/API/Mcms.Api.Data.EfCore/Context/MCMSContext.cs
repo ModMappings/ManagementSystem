@@ -48,6 +48,8 @@ namespace Mcms.Api.Data.EfCore.Context
 
         public DbSet<PackageMetadata> PackageMetadata { get; set; }
 
+        public DbSet<ClassInheritanceData> ClassInheritanceData { get; set; }
+
         public void MarkObjectChanged(object obj)
         {
             this.Entry(obj).State = EntityState.Modified;
@@ -79,6 +81,16 @@ namespace Mcms.Api.Data.EfCore.Context
             modelBuilder.Entity<Release>()
                 .HasIndex(release => release.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<ClassMetadata>(builder =>
+            {
+                builder
+                    .HasMany(metadata => metadata.InnerClasses).WithOne(metadata => metadata.Outer);
+                builder
+                    .HasMany(metadata => metadata.InheritsFrom).WithOne(data => data.Subclass);
+                builder
+                    .HasMany(metadata => metadata.IsInheritedBy).WithOne(data => data.Superclass);
+            });
         }
 
         IQueryable<GameVersion> IRawDataAccessor.GameVersions => GameVersions;
