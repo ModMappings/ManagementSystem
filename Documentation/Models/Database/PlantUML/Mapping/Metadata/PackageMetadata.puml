@@ -1,0 +1,10 @@
+@startuml
+class PackageMetadata {
+}
+class "List`1"<T> {
+}
+MetadataBase <|-- PackageMetadata
+PackageMetadata --> "Parent" PackageMetadata
+PackageMetadata --> "ChildPackages<PackageMetadata>" "List`1"
+PackageMetadata --> "Classes<ClassMetadata>" "List`1"
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class GameVersion {
+    + Name : string <<get>> <<set>>
+    + IsPreRelease : bool <<get>> <<set>>
+    + IsSnapshot : bool <<get>> <<set>>
+}
+GameVersion --> "Id" Guid
+GameVersion --> "CreatedOn" DateTime
+GameVersion --> "CreatedBy" Guid
+@enduml

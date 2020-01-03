@@ -1,0 +1,12 @@
+@startuml
+class MappingType {
+    + Name : string <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+MappingType --> "Id" Guid
+MappingType --> "CreatedBy" Guid
+MappingType --> "CreatedOn" DateTime
+MappingType --> "Releases<Release.Release>" "List`1"
+MappingType --> "LockedVersionedComponents<LockingEntry>" "List`1"
+@enduml

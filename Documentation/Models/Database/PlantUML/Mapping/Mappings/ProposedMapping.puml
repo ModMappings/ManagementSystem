@@ -1,0 +1,16 @@
+@startuml
+class ProposedMapping {
+    + IsOpen : bool <<get>> <<set>>
+    + IsPublicVote : bool <<get>> <<set>>
+    + <<virtual>> ClosedBy : Guid? <<get>> <<set>>
+    + ClosedOn : DateTime? <<get>> <<set>>
+    + Merged : bool? <<get>> <<set>>
+    + CommittedWithId : Guid? <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+MappingBase <|-- ProposedMapping
+ProposedMapping --> "Votes<VotingRecord>" "List`1"
+ProposedMapping --> "Comments<Comment>" "List`1"
+ProposedMapping --> "CommittedWith" CommittedMapping
+@enduml

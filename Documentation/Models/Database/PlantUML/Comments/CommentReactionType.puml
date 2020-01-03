@@ -1,0 +1,12 @@
+@startuml
+enum CommentReactionType {
+    PLUS_ONE,
+    MINUS_ONE,
+    SMILE,
+    CONFUSED,
+    HEART,
+    HOORAY,
+    ROCKET,
+    EYES,
+}
+@enduml

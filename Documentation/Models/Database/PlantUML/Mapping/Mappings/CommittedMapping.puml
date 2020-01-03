@@ -1,0 +1,9 @@
+@startuml
+class CommittedMapping {
+}
+class "List`1"<T> {
+}
+MappingBase <|-- CommittedMapping
+CommittedMapping --> "ProposedMapping" ProposedMapping
+CommittedMapping --> "Releases<ReleaseComponent>" "List`1"
+@enduml

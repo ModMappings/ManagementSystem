@@ -1,0 +1,6 @@
+@startuml
+class MetadataBase {
+}
+MetadataBase --> "VersionedComponent" VersionedComponent
+MetadataBase --> "Id" Guid
+@enduml

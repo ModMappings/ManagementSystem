@@ -1,0 +1,6 @@
+@startuml
+class FieldMetadata {
+    + Type : string <<get>> <<set>>
+}
+ClassMemberMetadataBase <|-- FieldMetadata
+@enduml

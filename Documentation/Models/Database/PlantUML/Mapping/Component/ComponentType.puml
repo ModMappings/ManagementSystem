@@ -1,0 +1,9 @@
+@startuml
+enum ComponentType {
+    PACKAGE,
+    CLASS,
+    METHOD,
+    FIELD,
+    PARAMETER,
+}
+@enduml
