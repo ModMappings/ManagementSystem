@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Mcms.IO.Core;
 using Mcms.IO.Core.Artifacts;
 using Mcms.IO.Core.Extensions;
-using Mcms.IO.Core.Writing;
+using Mcms.IO.Core.Protocol.Writing;
 using Mcms.IO.Data;
 using Microsoft.Extensions.Logging;
 

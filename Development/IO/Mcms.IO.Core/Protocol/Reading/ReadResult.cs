@@ -1,9 +1,8 @@
 using System;
 using Mcms.IO.Core.Deduplication;
-using Mcms.IO.Core.Writing;
 using Mcms.IO.Data;
 
-namespace Mcms.IO.Core.Reading
+namespace Mcms.IO.Core.Protocol.Reading
 {
     /// <summary>
     /// Represents a single result of a read operation of a given artifact.

@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using Flurl;
 using Flurl.Http;
 using Mcms.IO.Core.Artifacts;
-using Mcms.IO.Core.Reading;
+using Mcms.IO.Core.Protocol.Reading;
 using Mcms.IO.Data;
 
 namespace Mcms.IO.Maven

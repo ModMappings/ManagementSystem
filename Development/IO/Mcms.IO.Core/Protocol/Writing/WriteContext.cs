@@ -1,6 +1,6 @@
 using Mcms.IO.Core.Deduplication;
 
-namespace Mcms.IO.Core.Writing
+namespace Mcms.IO.Core.Protocol.Writing
 {
     /// <summary>
     /// Represents the context used during writing of an external release,

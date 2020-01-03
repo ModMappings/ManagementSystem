@@ -6,8 +6,8 @@ using Mcms.Api.Data.Core.Manager.Core;
 using Mcms.Api.Data.Core.Manager.Mapping.Component;
 using Mcms.IO.Core.Artifacts;
 using Mcms.IO.Core.Extensions;
-using Mcms.IO.Core.Reading;
-using Mcms.IO.Core.Writing;
+using Mcms.IO.Core.Protocol.Reading;
+using Mcms.IO.Core.Protocol.Writing;
 using Mcms.IO.Data;
 using Microsoft.Extensions.Logging;
 

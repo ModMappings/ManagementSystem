@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mcms.IO.Core.Artifacts;
-using Mcms.IO.Core.Writing;
 using Mcms.IO.Data;
 
-namespace Mcms.IO.Core
+namespace Mcms.IO.Core.Protocol.Writing
 {
     /// <summary>
     /// Represents a single writer that writes data from external releases, into artifacts.

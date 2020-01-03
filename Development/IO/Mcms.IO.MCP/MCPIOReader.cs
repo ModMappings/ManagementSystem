@@ -8,7 +8,7 @@ using Mcms.IO.Core;
 using Mcms.IO.Core.Artifacts;
 using Mcms.IO.Core.Deduplication;
 using Mcms.IO.Core.Extensions;
-using Mcms.IO.Core.Reading;
+using Mcms.IO.Core.Protocol.Reading;
 using Mcms.IO.Data;
 using Mcms.IO.Maven.Extensions;
 using Mcms.IO.TSRG;

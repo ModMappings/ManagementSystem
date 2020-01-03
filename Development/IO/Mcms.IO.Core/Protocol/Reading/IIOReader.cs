@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mcms.IO.Core.Artifacts;
-using Mcms.IO.Core.Reading;
-using Mcms.IO.Data;
 
-namespace Mcms.IO.Core
+namespace Mcms.IO.Core.Protocol.Reading
 {
     /// <summary>
     /// Represents a single reader that reads data from artifacts into the external data scheme.

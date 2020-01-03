@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mcms.IO.Core.Reading;
+using Mcms.IO.Core.Protocol.Reading;
 using Mcms.IO.Data;
 
 namespace Mcms.IO.Core.Artifacts
