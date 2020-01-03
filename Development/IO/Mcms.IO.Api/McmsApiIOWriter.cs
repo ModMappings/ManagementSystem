@@ -37,10 +37,6 @@ namespace Mcms.IO.Api
 
         public async Task WriteTo(ExternalRelease externalRelease, IArtifact artifact, WriteContext context)
         {
-            var dbContext = (artifact as McmsApiArtifact)?.RawDataAccessor;
-            if (dbContext == null)
-                throw new ArgumentException( "No valid mcms artifact is given.", nameof(artifact));
-
             var gameVersionDataManager = ((McmsApiArtifact) artifact).GameVersionDataManager;
             if (gameVersionDataManager == null)
                 throw new ArgumentException( "No valid mcms artifact is given.", nameof(artifact));

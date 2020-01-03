@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using Flurl;
 using Flurl.Http;
 using Mcms.IO.Core.Artifacts;
+using Mcms.IO.Core.Reading;
 using Mcms.IO.Data;
 
 namespace Mcms.IO.Maven
@@ -60,7 +61,7 @@ namespace Mcms.IO.Maven
             return await Task.FromResult(CreateNewArtifact(this, name));
         }
 
-        public Task PutArtifactsAsync(IReadOnlyDictionary<string, IArtifact> artifactsToPut)
+        public Task PutArtifactsAsync(IEnumerable<ReadResult> releasesToPut)
         {
             throw new NotSupportedException("A MavenProject can not be used to write artifacts too.");
         }

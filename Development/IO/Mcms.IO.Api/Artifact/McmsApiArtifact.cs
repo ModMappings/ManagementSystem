@@ -12,6 +12,16 @@ namespace Mcms.IO.Api.Artifact
 {
     public class McmsApiArtifact : IArtifact
     {
+        public McmsApiArtifact(string name, string gameVersion, IGameVersionDataManager gameVersionDataManager, IMappingTypeDataManager mappingTypeDataManager, IReleaseDataManager releaseDataManager, IComponentDataManager componentDataManager)
+        {
+            Name = name;
+            GameVersion = gameVersion;
+            GameVersionDataManager = gameVersionDataManager;
+            MappingTypeDataManager = mappingTypeDataManager;
+            ReleaseDataManager = releaseDataManager;
+            ComponentDataManager = componentDataManager;
+        }
+
         public string Name { get; }
         public string GameVersion { get; }
 
@@ -25,14 +35,12 @@ namespace Mcms.IO.Api.Artifact
             throw new NotSupportedException("Mcms api artifacts give access to the raw DB directly!");
         }
         
-        public IRawDataAccessor RawDataAccessor { get; private set; }
+        public IGameVersionDataManager GameVersionDataManager { get; }
 
-        public IGameVersionDataManager GameVersionDataManager { get; private set; }
+        public IMappingTypeDataManager MappingTypeDataManager { get; }
 
-        public IMappingTypeDataManager MappingTypeDataManager { get; private set; }
+        public IReleaseDataManager ReleaseDataManager { get; }
 
-        public IReleaseDataManager ReleaseDataManager { get; private set; }
-
-        public IComponentDataManager ComponentDataManager { get; private set; }
+        public IComponentDataManager ComponentDataManager { get; }
     }
 }

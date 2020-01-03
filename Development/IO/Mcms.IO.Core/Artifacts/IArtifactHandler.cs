@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mcms.IO.Core.Reading;
 using Mcms.IO.Data;
 
 namespace Mcms.IO.Core.Artifacts
@@ -23,11 +24,11 @@ namespace Mcms.IO.Core.Artifacts
         Task<IArtifact> CreateNewArtifactWithName(string name);
 
         /// <summary>
-        /// Puts all of the given artifacts and their names into the target.
+        /// Puts all of the given releases into the target.
         /// </summary>
-        /// <param name="artifactsToPut">The artifacts and their names used to write into the target.</param>
-        /// <returns>A task representing the writing of the artifacts.</returns>
-        Task PutArtifactsAsync(IReadOnlyDictionary<string, IArtifact> artifactsToPut);
+        /// <param name="releasesToPut">The releases used to write into the target.</param>
+        /// <returns>A task representing the writing of the releases.</returns>
+        Task PutArtifactsAsync(IEnumerable<ReadResult> releasesToPut);
 
         /// <summary>
         /// Creates a new artifact for a given external release.
