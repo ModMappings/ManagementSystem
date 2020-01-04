@@ -39,19 +39,45 @@ These validations should not be implemented in the Controllers of the _ViewLayer
 ##### ViewLayer:
 The ViewLayer will function as a hollow shell around the _BusinessLayer_ only cleaning up the incoming and outgoing data, plus performing basic authentication against the users identification.
 Its primary job will be to provide a transport mechanism with which the clients communicate and should provide tools that will allow simple and easy generation of clients. Examples here are:
- * OpenAPI / Swagger definitions.
- * OData queryables.
+ * OpenAPI / Swagger definitions -> Probably better, more spring tools available.
+ * OData queryables. -> OData, although a public standard and implemented by Apache in Java, is not really suited for use in Spring.
  
 Which ever is chosen should be used throughout.
 
-#### Autentication:
+#### Authentication:
 OpenID and OAuth2 with JWT Period. Full Stop.
 We need several Flows to support different systems, see the Whitepapers on Authentication that OrionDevelopment wrote for the .Net Core implementation.
-Here are several good options available, some are:
- * Keyguard -> Out of the box solution but not perfect, boxed up, not open source.
- * MITREiD -> Minor bootstrapping needed, reference implementation, opensource. (Would be equivalent to IdentityServer 4 for .Net Core)
-The link to the Certified list: [List](https://openid.net/developers/certified/)
+Here are several good options available, after discussion, KeyGuard was chosen for its out of the box functionality.
 
+At least three clients will need to be specified:
+ 1) The WebClient (Using PKCE Authorization Code flow.)
+ 2) The Discord bot (Using device flow so it can simply use chat mechanics, much simpler to implement on the bot end)
+ 3) The IRC bot (Using device flow again much simpler chat mechanics)
+ 4) Its own admin client -> _This is still optional i am guessing it would be nice to have one, but possibly KeyGuard provides one that is to our liking, it at least provides a rest api so that is a start)
+
+Additionally it will also need protect at least two ApiResources:
+ 1) The MCMS api.
+ 2) The KeyGuard admin api.
+ 
+On top of this several IdentityResources will need to be added, which represent the access rights each user has or does not have:
+ 1) Can Propose -> List of mapping types comma separated -> Indicates if a user is allowed to create a proposal for a given mapping type.
+ 2) Can Vote -> List of mapping types comma separated -> Indicates if a user is allowed to vote for or against a given proposal if said proposal is not public for a given mapping type.
+ 3) Can Merge Or Reject -> List of mapping types comma separated -> Indicates if a user is allowed to merge or reject a proposal if it has a positive amount of votes.
+ 4) Can Override Voting -> List of mapping types comma separated -> Indicates that this user can merge a given proposal even if the voting result is negative for a given mapping type.
+ 5) Can Create Immediately -> List of mapping types comma separated -> Indicates that this user can immediately create a mapping regardless of it being a proposal first, for each given mapping type.
+ 6) Can Remove Mapping -> List of mapping types comma separated -> Allows the removal of an already published mapping, for each mapping type.
+ 7) Can Create GameVersion -> Boolean -> Indicates if this user is allowed to create a GameVersion.
+ 8) Can Create Release -> List of mapping types comma separated -> Allows the creation of a new Release for each mapping type
+ 9) Can Create MappingType -> Boolean -> Indicates if this user is allowed to create a new MappingType
+ 10) Can Modify GameVersion -> Boolean -> Indicates if this user is allowed to modify an existing GameVersion.
+ 11) Can Delete GameVersion -> Boolean -> Indicates if this user is allowed to delete an existing GameVersion.
+ 12) Can Modify Release -> Boolean -> Indicates if this user is allowed to modify existing releases.
+ 13) Can Delete Release -> Boolean -> Indicates if this user is allowed to delete existing releases.
+ 15) Can Modify MappingType -> Boolean -> Indicates if this user is allowed to modify an existing MappingType.
+ 16) Can Delete MappingType -> Boolean -> Indicates if this user is allowed to delete an existing MappingType.
+ 17) Can Import -> List of mapping types comma separated -> Indicates if this user is allowed to import an already existing release for a given mapping type. Requires rights to create a GameVersion, MappingType and Release.
+
+Some of these can obviously be merged together (like the Create, Modify, Delete ones) but they are listed here for completeness.
 #### Build system:
 Jenkins from Forge
 
