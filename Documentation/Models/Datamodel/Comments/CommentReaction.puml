@@ -1,9 +1,0 @@
-@startuml
-class CommentReaction {
-}
-CommentReaction --> "Id" Guid
-CommentReaction --> "CreatedBy" Guid
-CommentReaction --> "CreatedOn" DateTime
-CommentReaction --> "Type" CommentReactionType
-CommentReaction --> "Comment" Comment
-@enduml

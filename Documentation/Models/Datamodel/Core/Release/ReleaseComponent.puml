@@ -1,7 +1,0 @@
-@startuml
-class ReleaseComponent {
-}
-ReleaseComponent --> "Id" Guid
-ReleaseComponent --> "Release" Release
-ReleaseComponent --> "Mapping" CommittedMapping
-@enduml

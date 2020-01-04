@@ -1,7 +1,0 @@
-@startuml
-class LockingEntry {
-}
-LockingEntry --> "Id" Guid
-LockingEntry --> "VersionedComponent" VersionedComponent
-LockingEntry --> "MappingType" MappingType
-@enduml

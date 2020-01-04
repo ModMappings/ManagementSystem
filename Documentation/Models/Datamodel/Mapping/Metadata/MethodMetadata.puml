@@ -1,9 +1,0 @@
-@startuml
-class MethodMetadata {
-    + Descriptor : string <<get>> <<set>>
-}
-class "List`1"<T> {
-}
-ClassMemberMetadataBase <|-- MethodMetadata
-MethodMetadata --> "Parameters<ParameterMetadata>" "List`1"
-@enduml

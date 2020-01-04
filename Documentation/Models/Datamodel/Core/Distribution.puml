@@ -1,8 +1,0 @@
-@startuml
-enum Distribution {
-    BOTH,
-    SERVER_ONLY,
-    CLIENT_ONLY,
-    UNKNOWN,
-}
-@enduml

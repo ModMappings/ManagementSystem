@@ -1,7 +1,0 @@
-@startuml
-class ParameterMetadata {
-    + Index : int <<get>> <<set>>
-}
-MetadataBase <|-- ParameterMetadata
-ParameterMetadata --> "ParameterOf" MethodMetadata
-@enduml
