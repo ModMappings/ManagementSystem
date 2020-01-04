@@ -10,12 +10,12 @@ import java.security.Principal;
 
 @RestController
 public class ProposalController {
-    @PostMapping(path = "/proposal")
+    @PostMapping(path = "/api/1/proposal")
     public Proposal createProposal(Principal principal, @RequestBody Proposal proposal) {
         return proposal;
     }
 
-    @GetMapping(path = "/proposal")
+    @GetMapping(path = "/api/1/proposal")
     public Proposal getProposal() {
         return new Proposal();
     }

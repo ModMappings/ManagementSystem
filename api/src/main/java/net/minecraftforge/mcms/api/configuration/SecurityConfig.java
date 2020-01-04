@@ -58,8 +58,8 @@ class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getLocalizedMessage()))
                 .and()
                 .authorizeRequests()
-                .antMatchers("/proposal")
-                .hasRole("user")
+                .antMatchers("/api")
+                .authenticated()
                 .anyRequest()
                 .permitAll();
     }
