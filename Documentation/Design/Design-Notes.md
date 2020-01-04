@@ -49,7 +49,7 @@ OpenID and OAuth2 with JWT Period. Full Stop.
 We need several Flows to support different systems, see the Whitepapers on Authentication that OrionDevelopment wrote for the .Net Core implementation.
 Here are several good options available, some are:
  * Keyguard -> Out of the box solution but not perfect, boxed up, not open source.
- * MITREiD -> Minor bootstrapping needed, reference implementation. (Would be equivalent to IdentityServer 4 for .Net Core)
+ * MITREiD -> Minor bootstrapping needed, reference implementation, opensource. (Would be equivalent to IdentityServer 4 for .Net Core)
 The link to the Certified list: [List](https://openid.net/developers/certified/)
 
 #### Build system:
