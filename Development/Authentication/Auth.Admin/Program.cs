@@ -37,10 +37,9 @@ namespace Auth.Admin
         public static IWebHost BuildWebHost(string[] args)
         {
             var applicationName = Assembly.GetEntryAssembly()?.GetName().Name;
-            
+
             return WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(c => c.AddServerHeader = false)
-                .UseStartup<Startup>()
                 .ConfigureAppConfiguration((builderContext, config) =>
                 {
                     var env = builderContext.HostingEnvironment;
@@ -72,6 +71,7 @@ namespace Auth.Admin
                 {
                     configuration.ReadFrom.Configuration(context.Configuration, "Logging");
                 })
+                .UseStartup<Startup>()
                 .Build();
         }
     }

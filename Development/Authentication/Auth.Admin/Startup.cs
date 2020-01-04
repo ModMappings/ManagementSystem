@@ -15,11 +15,11 @@ namespace Auth.Admin
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env, IConfigurationRoot configuration)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            Configuration = configuration;
+            Configuration = (IConfigurationRoot) configuration;
 
             HostingEnvironment = env;
         }
