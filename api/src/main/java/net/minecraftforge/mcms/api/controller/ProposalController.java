@@ -16,7 +16,7 @@ public class ProposalController {
     }
 
     @GetMapping(path = "/api/1/proposal")
-    public Proposal getProposal() {
+    public Proposal getProposal(Principal principal) {
         return new Proposal();
     }
 }
