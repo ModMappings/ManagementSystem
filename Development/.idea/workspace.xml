@@ -24,39 +24,23 @@
     <option name="showStatusBarWidget" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="feat(client): Adding initial webclient workspace.">
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/angular.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/browserslist" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/e2e/protractor.conf.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/e2e/src/app.e2e-spec.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/e2e/src/app.po.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/e2e/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/karma.conf.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app-routing.module.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.component.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.component.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.component.spec.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.module.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/assets/.gitkeep" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/environments/environment.prod.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/environments/environment.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/main.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/polyfills.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/styles.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/tsconfig.app.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/tsconfig.spec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/tslint.json" afterDir="false" />
+    <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/API/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/WebApi/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/WebapiApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/WebApi/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/WebApi/src/test/java/com/mcms/api/webapi/WebapiApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/4.9/taskHistory/taskHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/4.9/taskHistory/taskHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Authentication/STS/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +54,18 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -121,7 +117,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1578130363068</updated>
-      <workItem from="1578130367721" duration="5425000" />
+      <workItem from="1578130367721" duration="7555000" />
     </task>
     <task id="LOCAL-00001" summary="Adding initial project structures.">
       <created>1578130421952</created>
@@ -137,13 +133,21 @@
       <option name="project" value="LOCAL" />
       <updated>1578149413259</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat(client): Adding initial webclient workspace.">
+      <created>1578154673776</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1578154673776</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Adding initial project structures." />
     <MESSAGE value="Expanding authentication section." />
@@ -151,18 +155,18 @@
     <option name="LAST_COMMIT_MESSAGE" value="feat(client): Adding initial webclient workspace." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578154647059">
+    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578154673688">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578154647059" />
+    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578154673688" />
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl" timestamp="1578130481195">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578130481195" />
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578154667822">
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578170316754">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578154667822" />
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578170316754" />
     <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578147881511">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>

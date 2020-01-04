@@ -9,4 +9,4 @@
 
 rootProject.name = 'MCMS'
 
-include 'Authentication:STS'
+include 'API:WebApi'

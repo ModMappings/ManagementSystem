@@ -10,8 +10,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/Authentication" />
-            <option value="$PROJECT_DIR$/Authentication/STS" />
+            <option value="$PROJECT_DIR$/API" />
+            <option value="$PROJECT_DIR$/API/WebApi" />
           </set>
         </option>
         <option name="useQualifiedModuleNames" value="true" />
