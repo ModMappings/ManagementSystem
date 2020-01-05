@@ -9,4 +9,7 @@
 
 rootProject.name = 'MCMS'
 
-include 'Authentication:STS'
+include 'API:WebApi'
+include 'API:Data:Model'
+include 'API:Data:Core'
+include 'API:Data:Spring-R2DBC-Based'

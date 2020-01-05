@@ -24,52 +24,106 @@
     <option name="showStatusBarWidget" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="feat(client): Adding initial webclient workspace.">
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/angular.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/browserslist" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/e2e/protractor.conf.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/e2e/src/app.e2e-spec.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/e2e/src/app.po.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/e2e/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/karma.conf.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app-routing.module.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.component.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.component.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.component.spec.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/app/app.module.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/assets/.gitkeep" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/environments/environment.prod.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/environments/environment.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/main.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/polyfills.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/styles.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/src/test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/tsconfig.app.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/tsconfig.spec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Clients/Web/MCMS/tslint.json" afterDir="false" />
+    <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Repositories/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/WebApi/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/API/WebApi/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="DefaultGradleProjectSettings">
-    <option name="isMigrated" value="true" />
-  </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="org.springframework.boot.experimental:spring-boot-starter-data-r2dbc:0.1.0.M3" type="cfea851d:ExternalSystemViewDefaultContributor$LibraryDependencyDataExternalSystemNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="org.springframework.boot.experimental:spring-boot-starter-data-r2dbc:0.1.0.M3" type="cfea851d:ExternalSystemViewDefaultContributor$LibraryDependencyDataExternalSystemNode" />
+                <item name="org.springframework.data:spring-data-r2dbc:1.0.0.RELEASE" type="cfea851d:ExternalSystemViewDefaultContributor$LibraryDependencyDataExternalSystemNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -86,9 +140,10 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Documentation/Design/Design-Notes.md" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/API/Datamodel" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -97,7 +152,31 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/API/Data" />
+      <recent name="$PROJECT_DIR$/API/Datamodel/src/main/java/com/mcms/api/datamodel/core" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.mcms.api.datamodel.mapping.metadata" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/API/Datamodel" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="WebapiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="MCMS.API.WebApi.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mcms.api.webapi.WebapiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -121,7 +200,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1578130363068</updated>
-      <workItem from="1578130367721" duration="5425000" />
+      <workItem from="1578130367721" duration="10540000" />
+      <workItem from="1578210814608" duration="18106000" />
     </task>
     <task id="LOCAL-00001" summary="Adding initial project structures.">
       <created>1578130421952</created>
@@ -137,35 +217,219 @@
       <option name="project" value="LOCAL" />
       <updated>1578149413259</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat(client): Adding initial webclient workspace.">
+      <created>1578154673776</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1578154673776</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat(api):Adding initial project structure.">
+      <created>1578171662430</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1578171662430</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat(datalayer): Started work on porting the DMOs.">
+      <created>1578212346852</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1578212346852</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat(datalayer): Finishing the port of all DMOs">
+      <created>1578220272744</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1578220272744</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat(docu): Moving around the spring default documentation file.">
+      <created>1578220413009</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1578220413009</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat(docu): Adding a minor amount of javadoc to the DMO for mappables in a given game version.">
+      <created>1578220565676</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1578220565676</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat(data): Some minor reworking of the DMOs, also started work on the repositories.">
+      <created>1578234136219</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1578234136219</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feat(data): Added the ICommentReactionRepository.">
+      <created>1578236357959</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1578236357959</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat(data): Added the IGameVersionRepository.">
+      <created>1578236895673</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1578236895673</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix(data): Removed the methods used ot lookup via multiple ids at once.&#10;&#10;This can be implemented via a Reactive stream since this is what the Simple default implementation does anyway.&#10;If this is ever used more often and a solution with a better performance is required then, it  can always be added.">
+      <created>1578237057771</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1578237057771</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat(data): Adding a regular expression supporting lookup for game versions via their name.">
+      <created>1578237178220</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1578237178221</updated>
+    </task>
+    <task id="LOCAL-00014" summary="feat(data): Adding a IMappingTypeRepository.">
+      <created>1578237345034</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1578237345034</updated>
+    </task>
+    <task id="LOCAL-00015" summary="fix(data): Removing an unused import from the IMappingTypeRepository.">
+      <created>1578237381914</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1578237381914</updated>
+    </task>
+    <task id="LOCAL-00016" summary="feat(data): Added an IReleaseRepository.">
+      <created>1578237618928</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1578237618928</updated>
+    </task>
+    <task id="LOCAL-00017" summary="feat(data): Added the IReleaseComponentRepository.">
+      <created>1578237899821</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1578237899821</updated>
+    </task>
+    <task id="LOCAL-00018" summary="feat(data): Added a direct lookup to the IReleaseRepository that uses the mapping id.">
+      <created>1578238007656</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1578238007656</updated>
+    </task>
+    <task id="LOCAL-00019" summary="fix(docu): Adding a note that the order of release components can not be guaranteed when queried by the repository.&#10;&#10;This is, because release components do not store their creation time, nor do they store who created them. So ordering is not possible and should be noted in the docu.">
+      <created>1578238084394</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1578238084394</updated>
+    </task>
+    <task id="LOCAL-00020" summary="feat(data): Add the IMappableRepository.">
+      <created>1578238985072</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1578238985072</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Adding initial project structures." />
     <MESSAGE value="Expanding authentication section." />
     <MESSAGE value="feat(client): Adding initial webclient workspace." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(client): Adding initial webclient workspace." />
+    <MESSAGE value="feat(api):Adding initial project structure." />
+    <MESSAGE value="feat(datalayer): Started work on porting the DMOs." />
+    <MESSAGE value="feat(datalayer): Finishing the port of all DMOs" />
+    <MESSAGE value="feat(docu): Moving around the spring default documentation file." />
+    <MESSAGE value="feat(docu): Adding a minor amount of javadoc to the DMO for mappables in a given game version." />
+    <MESSAGE value="feat(data): Some minor reworking of the DMOs, also started work on the repositories." />
+    <MESSAGE value="feat(data): Added the ICommentReactionRepository." />
+    <MESSAGE value="feat(data): Added the IGameVersionRepository." />
+    <MESSAGE value="fix(data): Removed the methods used ot lookup via multiple ids at once.&#10;&#10;This can be implemented via a Reactive stream since this is what the Simple default implementation does anyway.&#10;If this is ever used more often and a solution with a better performance is required then, it  can always be added." />
+    <MESSAGE value="feat(data): Adding a regular expression supporting lookup for game versions via their name." />
+    <MESSAGE value="feat(data): Adding a IMappingTypeRepository." />
+    <MESSAGE value="fix(data): Removing an unused import from the IMappingTypeRepository." />
+    <MESSAGE value="feat(data): Added an IReleaseRepository." />
+    <MESSAGE value="feat(data): Added the IReleaseComponentRepository." />
+    <MESSAGE value="feat(data): Added a direct lookup to the IReleaseRepository that uses the mapping id." />
+    <MESSAGE value="fix(docu): Adding a note that the order of release components can not be guaranteed when queried by the repository.&#10;&#10;This is, because release components do not store their creation time, nor do they store who created them. So ordering is not possible and should be noted in the docu." />
+    <MESSAGE value="feat(data): Add the IMappableRepository." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Add the IMappableRepository." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578154647059">
+    <state x="1635" y="1270" width="800" height="684" key="#Project_Structure" timestamp="1578222736312">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578154647059" />
+    <state x="1635" y="1270" width="800" height="684" key="#Project_Structure/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578222736312" />
+    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser" timestamp="1578223019588">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578223019588" />
+    <state x="1881" y="1500" width="308" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1578171702009">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1881" y="1500" width="308" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578171702009" />
+    <state x="1416" y="1536" width="1247" height="152" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1578211131141">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1416" y="1536" width="1247" height="152" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578211131141" />
+    <state x="1482" y="1107" width="1105" height="1003" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1578217906669">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1482" y="1107" width="1105" height="1003" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578217906669" />
+    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578238985010">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578238985010" />
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl" timestamp="1578130481195">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578130481195" />
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578154667822">
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578238086201">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578154667822" />
-    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578147881511">
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578238086201" />
+    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog" timestamp="1578210828652">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578147881511" />
+    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578210828652" />
+    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578223801079">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578223801079" />
+    <state x="2008" y="71" width="783" height="959" maximized="true" key="dock-window-1" timestamp="1578218717235">
+      <screen x="1080" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2008" y="71" width="783" height="959" maximized="true" key="dock-window-1/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578218717235" />
+    <state x="3000" y="1154" width="1080" height="672" maximized="true" key="dock-window-2" timestamp="1578237310293">
+      <screen x="3000" y="160" width="1080" height="1920" />
+    </state>
+    <state x="3000" y="1154" width="1080" height="672" maximized="true" key="dock-window-2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578237310293" />
+    <state x="3000" y="1013" width="1080" height="672" maximized="true" key="dock-window-3" timestamp="1578239454189">
+      <screen x="3000" y="160" width="1080" height="1920" />
+    </state>
+    <state x="3000" y="1013" width="1080" height="672" maximized="true" key="dock-window-3/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578239454189" />
+    <state x="1703" y="1326" width="672" height="678" key="search.everywhere.popup" timestamp="1578236491529">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1703" y="1326" width="672" height="678" key="search.everywhere.popup/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578236491529" />
   </component>
 </project>
