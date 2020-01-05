@@ -21,6 +21,9 @@ repositories {
 }
 
 dependencies {
+    implementation project(':API:Data:Repositories')
+    implementation project(':API:Data:Model')
+
 	implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot.experimental:spring-boot-starter-data-r2dbc'

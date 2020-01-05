@@ -14,7 +14,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/API" />
-            <option value="$PROJECT_DIR$/API/Datamodel" />
+            <option value="$PROJECT_DIR$/API/Data" />
+            <option value="$PROJECT_DIR$/API/Data/Core" />
+            <option value="$PROJECT_DIR$/API/Data/Model" />
+            <option value="$PROJECT_DIR$/API/Data/Repositories" />
             <option value="$PROJECT_DIR$/API/WebApi" />
           </set>
         </option>

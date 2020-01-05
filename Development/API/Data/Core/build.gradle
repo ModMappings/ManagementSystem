@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.mcms.api'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':API:Data:Model')
+    implementation platform('io.projectreactor:reactor-bom:Dysprosium-SR1')
+
+    implementation 'io.projectreactor:reactor-core'
+}
+
+test {
+    useJUnitPlatform()
+}

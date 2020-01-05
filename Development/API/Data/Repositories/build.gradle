@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.mcms.api'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':API:Data:Core')
+}
+
+test {
+    useJUnitPlatform()
+}
