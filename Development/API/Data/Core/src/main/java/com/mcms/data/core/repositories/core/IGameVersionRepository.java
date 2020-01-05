@@ -49,26 +49,4 @@ public interface IGameVersionRepository extends IRepository<GameVersionDMO> {
      * @throws IllegalArgumentException in case the given {@literal userId} is {@literal null}.
      */
     Flux<GameVersionDMO> findAllForUser(final UUID userId);
-
-    /**
-     * Finds all game versions which where directly made by the users with the given ids.
-     *
-     * The game versions are sorted newest to oldest.
-     *
-     * @param userIds The ids of the users to look up game versions for.
-     * @return The game versions by the given users.
-     * @throws IllegalArgumentException in case the given {@literal userIds} is {@literal null}.
-     */
-    Flux<GameVersionDMO> findAllForUsers(final Iterable<UUID> userIds);
-
-    /**
-     * Finds all game versions which where directly made by the users with the given ids.
-     *
-     * The game versions are sorted newest to oldest.
-     *
-     * @param userIds The ids of the users to look up game versions for.
-     * @return The game versions by the given users.
-     * @throws IllegalArgumentException in case the given {@literal userIds} is {@literal null}.
-     */
-    Flux<GameVersionDMO> findAllForUsers(final Publisher<UUID> userIds);
 }
