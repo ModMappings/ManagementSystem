@@ -4,13 +4,22 @@ import java.util.UUID;
 
 import com.mcms.api.datamodel.core.GameVersionDMO;
 import com.mcms.data.core.repositories.IRepository;
-import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository which can provide and store {@link GameVersionDMO} objects.
  */
 public interface IGameVersionRepository extends IRepository<GameVersionDMO> {
+
+    /**
+     * Finds all game versions which match the given name regex.
+     *
+     * The game versions are returned in newest to oldest order.
+     *
+     * @param nameRegex The regular expression used to lookup game versions for.
+     * @return The game versions of which the name match the regex.
+     */
+    Flux<GameVersionDMO> findAllForNameRegex(String nameRegex);
 
     /**
      * Finds all game versions which are normal full releases.
