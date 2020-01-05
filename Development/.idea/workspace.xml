@@ -25,30 +25,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/API/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/API/WebApi/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/WebapiApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/API/WebApi/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/API/WebApi/src/test/java/com/mcms/api/webapi/WebapiApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Datamodel/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Datamodel/src/main/java/com/mcms/api/datamodel/comments/CommentDMO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Datamodel/src/main/java/com/mcms/api/datamodel/comments/CommentReactionDMO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Datamodel/src/main/java/com/mcms/api/datamodel/comments/CommentReactionTypeDMO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/data/models/comments/Comment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/data/models/comments/CommentReaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/data/models/comments/CommentReactionType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/4.9/taskHistory/taskHistory.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/4.9/taskHistory/taskHistory.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/STS/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Authentication/STS/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/WebApi/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/API/WebApi/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="DefaultGradleProjectSettings">
-    <option name="isMigrated" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -60,12 +54,111 @@
       <state>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Datamodel" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Datamodel" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Datamodel" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Datamodel" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="org.springframework.boot.experimental:spring-boot-starter-data-r2dbc:0.1.0.M3" type="cfea851d:ExternalSystemViewDefaultContributor$LibraryDependencyDataExternalSystemNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="WebApi" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="org.springframework.boot.experimental:spring-boot-starter-data-r2dbc:0.1.0.M3" type="cfea851d:ExternalSystemViewDefaultContributor$LibraryDependencyDataExternalSystemNode" />
+                <item name="org.springframework.data:spring-data-r2dbc:1.0.0.RELEASE" type="cfea851d:ExternalSystemViewDefaultContributor$LibraryDependencyDataExternalSystemNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
       </state>
     </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Enum" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -82,9 +175,10 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Documentation/Design/Design-Notes.md" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/API/Datamodel" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -94,6 +188,20 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/API/Datamodel" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="WebapiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="MCMS.API.WebApi.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mcms.api.webapi.WebapiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -117,7 +225,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1578130363068</updated>
-      <workItem from="1578130367721" duration="7555000" />
+      <workItem from="1578130367721" duration="10540000" />
+      <workItem from="1578210814608" duration="1491000" />
     </task>
     <task id="LOCAL-00001" summary="Adding initial project structures.">
       <created>1578130421952</created>
@@ -140,7 +249,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578154673776</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat(api):Adding initial project structure.">
+      <created>1578171662430</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1578171662430</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -152,21 +268,42 @@
     <MESSAGE value="Adding initial project structures." />
     <MESSAGE value="Expanding authentication section." />
     <MESSAGE value="feat(client): Adding initial webclient workspace." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(client): Adding initial webclient workspace." />
+    <MESSAGE value="feat(api):Adding initial project structure." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(api):Adding initial project structure." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578154673688">
+    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser" timestamp="1578211754038">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578154673688" />
+    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578211754038" />
+    <state x="1881" y="1500" width="308" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1578171702009">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1881" y="1500" width="308" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578171702009" />
+    <state x="1416" y="1536" width="1247" height="152" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1578211131141">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1416" y="1536" width="1247" height="152" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578211131141" />
+    <state x="1482" y="1107" width="1105" height="1003" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1578173161800">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1482" y="1107" width="1105" height="1003" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578173161800" />
+    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578212345366">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578212345366" />
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl" timestamp="1578130481195">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578130481195" />
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578170316754">
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578171673556">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578170316754" />
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578171673556" />
+    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog" timestamp="1578210828652">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578210828652" />
     <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578147881511">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>

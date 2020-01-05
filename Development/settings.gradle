@@ -10,3 +10,4 @@
 rootProject.name = 'MCMS'
 
 include 'API:WebApi'
+include 'API:Datamodel'
