@@ -30,7 +30,7 @@ public class CommentDMO {
      *
      * @return The comment data.
      */
-    public static CommentDMO createNewReleaseComment(UUID createdBy, String content, UUID releaseId)
+    public static CommentDMO createNewForRelease(UUID createdBy, String content, UUID releaseId)
     {
         return new CommentDMO(
                         UUID.randomUUID(),
@@ -47,7 +47,16 @@ public class CommentDMO {
         );
     }
 
-    public static CommentDMO createNewProposedMappingComment(UUID createdBy, String content, UUID proposedMappingId)
+    /**
+     * Creates a new default comment for a given proposed mapping.
+     *
+     * @param createdBy The uuid of the user who created the comment.
+     * @param content The content of the comment.
+     * @param proposedMappingId The id of the proposed mapping on which the comment was made.
+     *
+     * @return The comment data.
+     */
+    public static CommentDMO createNewForProposedMapping(UUID createdBy, String content, UUID proposedMappingId)
     {
         return new CommentDMO(
                         UUID.randomUUID(),
@@ -64,7 +73,16 @@ public class CommentDMO {
         );
     }
 
-    public static CommentDMO createNewCommentComment(UUID createdBy, String content, UUID parentCommentId)
+    /**
+     * Creates a new default comment for a given comment.
+     *
+     * @param createdBy The uuid of the user who created the comment.
+     * @param content The content of the comment.
+     * @param parentCommentId The id of the parent comment on which the comment was made.
+     *
+     * @return The comment data.
+     */
+    public static CommentDMO createNewForComment(UUID createdBy, String content, UUID parentCommentId)
     {
         return new CommentDMO(
                         UUID.randomUUID(),
@@ -172,6 +190,14 @@ public class CommentDMO {
         return parentCommentId;
     }
 
+    /**
+     * Creates a new comment with the edited contents, as well as the edited flags set.
+     *
+     * @param editedBy The user id of the person who edited this comment.
+     * @param newContents The new contents.
+     *
+     * @return The new comment with the edited data.
+     */
     public CommentDMO edit(UUID editedBy, String newContents)
     {
         return new CommentDMO(
@@ -189,6 +215,13 @@ public class CommentDMO {
         );
     }
 
+    /**
+     * Creates a new comment with the delete flags set.
+     *
+     * @param deletedBy The user who deleted this comment.
+     *
+     * @return The comment with the delete flags.
+     */
     public CommentDMO delete(UUID deletedBy)
     {
         return new CommentDMO(
