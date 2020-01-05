@@ -2,7 +2,6 @@ package com.mcms.data.core.repositories.core;
 
 import java.util.UUID;
 
-import com.mcms.api.datamodel.core.GameVersionDMO;
 import com.mcms.api.datamodel.core.MappingTypeDMO;
 import com.mcms.data.core.repositories.IRepository;
 import reactor.core.publisher.Flux;
