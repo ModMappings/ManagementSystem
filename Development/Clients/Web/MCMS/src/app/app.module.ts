@@ -5,20 +5,28 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {NavbarComponent} from './navbar/navbar.component';
-import { PageSearchComponent } from './page-search/page-search.component';
+import {HomeModule} from './pages/home/home.module';
+import {SearchModule} from './pages/search/search.module';
+import {GameVersionsService} from './services/game-versions.service';
+import {ComponentsModule} from './components/components.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    PageSearchComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    ComponentsModule,
+    HomeModule,
+    SearchModule
   ],
-  providers: [],
+  providers: [
+    GameVersionsService
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
