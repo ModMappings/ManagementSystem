@@ -17,7 +17,7 @@
             <option value="$PROJECT_DIR$/API/Data" />
             <option value="$PROJECT_DIR$/API/Data/Core" />
             <option value="$PROJECT_DIR$/API/Data/Model" />
-            <option value="$PROJECT_DIR$/API/Data/Repositories" />
+            <option value="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based" />
             <option value="$PROJECT_DIR$/API/WebApi" />
           </set>
         </option>
