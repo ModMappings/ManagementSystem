@@ -14,6 +14,8 @@ public interface IReleaseComponentRepository extends IRepository<ReleaseComponen
     /**
      * Finds all release component which are part of a given release that has the given id.
      *
+     * The order of the release components is not guaranteed.
+     *
      * @param releaseId The id of the release that the components are being looked up for.
      * @return The release components which are part of the release with the given id.
      */
@@ -21,6 +23,8 @@ public interface IReleaseComponentRepository extends IRepository<ReleaseComponen
 
     /**
      * Finds all release component which target a mapping with the given id.
+     *
+     * The order of the release components is not guaranteed.
      *
      * @param mappingId The id of the mapping that the components are being looked up for.
      * @return The release components which target the mapping with the given id.
