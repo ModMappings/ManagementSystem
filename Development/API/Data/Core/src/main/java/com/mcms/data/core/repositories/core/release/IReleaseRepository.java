@@ -45,9 +45,21 @@ public interface IReleaseRepository extends IRepository<ReleaseDMO> {
     /**
      * Finds all releases which are a snapshot.
      *
+     * The releases are sorted newest to oldest.
+     *
      * @return The releases which are marked as being a snapshot.
      */
     Flux<ReleaseDMO> findAllSnapshots();
+
+    /**
+     * Finds all release which the mapping with the given id is part of.
+     *
+     * The releases are sorted newest to oldest.
+     *
+     * @param mappingId The id of the mapping for which releases are being looked up for.
+     * @return The releases which have the mapping with the given id as component.
+     */
+    Flux<ReleaseDMO> findAllForMapping(UUID mappingId);
 
     /**
      * Finds all releases which where directly made by the user with the given id.
