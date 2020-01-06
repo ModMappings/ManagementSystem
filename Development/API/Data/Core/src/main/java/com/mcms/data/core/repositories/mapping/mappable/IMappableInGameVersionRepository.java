@@ -21,7 +21,7 @@ public interface IMappableInGameVersionRepository extends IRepository<MappableIn
      * @param gameVersionId The id of the game version to look up all mappables in a game version for.
      * @return The mappables in a game version which are part of the given game version.
      */
-    Flux<MappableDMO> findAllForGameVersion(UUID gameVersionId);
+    Flux<MappableInGameVersionDMO> findAllForGameVersion(UUID gameVersionId);
 
     /**
      * Finds all mappables in a game version, which represent classes or other packages that are part of the package with the given id.
@@ -29,7 +29,7 @@ public interface IMappableInGameVersionRepository extends IRepository<MappableIn
      * @param packageMappableInGameVersionId The id of the package of which the contents are being looked up.
      * @return The mappables in a game version which are part of the package of which the mappable in a game version has the given id.
      */
-    Flux<MappableDMO> findAllWhichArePartOfPackage(UUID packageMappableInGameVersionId);
+    Flux<MappableInGameVersionDMO> findAllWhichArePartOfPackage(UUID packageMappableInGameVersionId);
 
     /**
      * Finds all mappables in a game version, which represent methods, fields and inner classes that are part of the class with the given id.
@@ -37,7 +37,7 @@ public interface IMappableInGameVersionRepository extends IRepository<MappableIn
      * @param classMappableInGameVersionId The id of the class of which the contents are being looked up.
      * @return The mappables in a game version which are part of the class of which the mappable in a game version has the given id.
      */
-    Flux<MappableDMO> findAllWhichArePartOfClass(UUID classMappableInGameVersionId);
+    Flux<MappableInGameVersionDMO> findAllWhichArePartOfClass(UUID classMappableInGameVersionId);
 
     /**
      * Finds all mappables in a game version, which represent parameters that are part of the method with the given id.
@@ -45,7 +45,7 @@ public interface IMappableInGameVersionRepository extends IRepository<MappableIn
      * @param methodMappableInGameVersionId The id of the method of which the contents are being looked up.
      * @return The mappables in a game version which are part of the method of which the mappable in a game version has the given id.
      */
-    Flux<MappableDMO> findAllWhichArePartOfMethod(UUID methodMappableInGameVersionId);
+    Flux<MappableInGameVersionDMO> findAllWhichArePartOfMethod(UUID methodMappableInGameVersionId);
 
     /**
      * Finds the mappable in a game version who has the given mapping.
@@ -53,7 +53,7 @@ public interface IMappableInGameVersionRepository extends IRepository<MappableIn
      * @param mappingId The id of the mapping to look up.
      * @return The mappable in a game version who has the given mapping.
      */
-    Mono<MappableDMO> findAllForMapping(UUID mappingId);
+    Mono<MappableInGameVersionDMO> findAllForMapping(UUID mappingId);
 
     /**
      * Finds all super types (in the form of classes) of the class with the given id and returns their mappables in a game version.
@@ -61,7 +61,7 @@ public interface IMappableInGameVersionRepository extends IRepository<MappableIn
      * @param classMappableInGameVersionId The id of the class of which the super types are being looked up.
      * @return The mappables in a game version which represent the super types of the class of which the id of its mappable in a game version was provided.
      */
-    Flux<MappableDMO> findAllSuperTypesOf(UUID classMappableInGameVersionId);
+    Flux<MappableInGameVersionDMO> findAllSuperTypesOf(UUID classMappableInGameVersionId);
 
     /**
      * Finds all sub types (in the form of classes) of the class with the given id and returns their mappables in a game version.
@@ -69,5 +69,5 @@ public interface IMappableInGameVersionRepository extends IRepository<MappableIn
      * @param classMappableInGameVersionId The id of the class of which the super types are being looked up.
      * @return The mappables in a game version which represent the super types of the class of which the id of its mappable in a game version was provided.
      */
-    Flux<MappableDMO> findAllSubTypesOf(UUID classMappableInGameVersionId);
+    Flux<MappableInGameVersionDMO> findAllSubTypesOf(UUID classMappableInGameVersionId);
 }
