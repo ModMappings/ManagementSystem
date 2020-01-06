@@ -25,7 +25,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mapping/IMappingRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -115,8 +115,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -368,7 +368,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578339162458</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="feat(data): Adds IProtectedMappableInformationRepository.">
+      <created>1578340027218</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1578340027218</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -401,7 +408,8 @@
     <MESSAGE value="fix(data): Fix the return type on the custom methods of the IMappableInGameVersionRepository." />
     <MESSAGE value="feat(data): Add an options to control mapping types.&#10;&#10;Added visible as a flag to indicate if this mapping type is externally visible to other systems, or just for internal api use only.&#10;Added editable as a flag to indicate if this mapping type is editable or not, even though it is possible to set editable to true while visible to false, this will have no effect, since no external system could ever change a mapping type that is not visible." />
     <MESSAGE value="feat(docu): Add documentation to the IMappableInGameVersionInheritanceDataRepository." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(docu): Add documentation to the IMappableInGameVersionInheritanceDataRepository." />
+    <MESSAGE value="feat(data): Adds IProtectedMappableInformationRepository." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Adds IProtectedMappableInformationRepository." />
   </component>
   <component name="WindowStateProjectService">
     <state x="1635" y="1270" width="800" height="684" key="#Project_Structure" timestamp="1578222736312">
@@ -425,19 +433,19 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1482" y="1107" width="1105" height="1003" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578217906669" />
-    <state x="412" y="145" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578339162290">
+    <state x="412" y="143" width="969" height="810" key="CommitChangelistDialog2" timestamp="1578340027104">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state x="412" y="145" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578339162290" />
+    <state x="412" y="143" width="969" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578340027104" />
     <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335563163" />
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl" timestamp="1578130481195">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578130481195" />
-    <state x="555" y="285" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578339167474">
+    <state x="555" y="283" width="800" height="533" key="Vcs.Push.Dialog.v2" timestamp="1578340060994">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state x="555" y="285" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578339167474" />
+    <state x="555" y="283" width="800" height="533" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578340060994" />
     <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335566260" />
     <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog" timestamp="1578210828652">
       <screen x="1080" y="1080" width="1920" height="1080" />
