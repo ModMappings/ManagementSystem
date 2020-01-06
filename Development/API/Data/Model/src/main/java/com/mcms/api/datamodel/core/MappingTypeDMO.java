@@ -20,16 +20,22 @@ public class MappingTypeDMO {
     private final UUID      createdBy;
     private final Timestamp createdOn;
     private final String    name;
+    private final boolean visible;
+    private final boolean editable;
 
     @PersistenceConstructor
-    MappingTypeDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name) {
+    MappingTypeDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean visible, final boolean editable) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
         this.name = name;
+        this.visible = visible;
+        this.editable = editable;
     }
 
-    public MappingTypeDMO(final UUID createdBy, final String name) {
+    public MappingTypeDMO(final UUID createdBy, final String name, final boolean visible, final boolean editable) {
+        this.visible = visible;
+        this.editable = editable;
         this.id = UUID.randomUUID();
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
@@ -50,5 +56,13 @@ public class MappingTypeDMO {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public boolean isEditable() {
+        return editable;
     }
 }

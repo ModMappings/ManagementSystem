@@ -26,7 +26,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/core/MappingTypeDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/core/MappingTypeDMO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +198,7 @@
       <updated>1578130363068</updated>
       <workItem from="1578130367721" duration="10540000" />
       <workItem from="1578210814608" duration="18726000" />
-      <workItem from="1578332632960" duration="740000" />
+      <workItem from="1578332632960" duration="1027000" />
     </task>
     <task id="LOCAL-00001" summary="Adding initial project structures.">
       <created>1578130421952</created>
@@ -347,7 +347,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578239950109</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="fix(data): Fix the return type on the custom methods of the IMappableInGameVersionRepository.">
+      <created>1578335393980</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1578335393980</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -377,17 +384,18 @@
     <MESSAGE value="fix(docu): Adding a note that the order of release components can not be guaranteed when queried by the repository.&#10;&#10;This is, because release components do not store their creation time, nor do they store who created them. So ordering is not possible and should be noted in the docu." />
     <MESSAGE value="feat(data): Add the IMappableRepository." />
     <MESSAGE value="feat(data): Add the IMappableInGameVersionRepository." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Add the IMappableInGameVersionRepository." />
+    <MESSAGE value="fix(data): Fix the return type on the custom methods of the IMappableInGameVersionRepository." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(data): Fix the return type on the custom methods of the IMappableInGameVersionRepository." />
   </component>
   <component name="WindowStateProjectService">
     <state x="1635" y="1270" width="800" height="684" key="#Project_Structure" timestamp="1578222736312">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1270" width="800" height="684" key="#Project_Structure/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578222736312" />
-    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser" timestamp="1578223019588">
+    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser" timestamp="1578335471566">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578223019588" />
+    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335471566" />
     <state x="1881" y="1500" width="308" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1578171702009">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
@@ -400,18 +408,18 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1482" y="1107" width="1105" height="1003" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578217906669" />
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578239950042">
+    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2" timestamp="1578335393850">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578239950042" />
+    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335393850" />
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl" timestamp="1578130481195">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578130481195" />
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578239952549">
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578335399398">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578239952549" />
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335399398" />
     <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog" timestamp="1578210828652">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
