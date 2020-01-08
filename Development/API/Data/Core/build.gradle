@@ -8,6 +8,7 @@ sourceCompatibility = '1.11'
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
@@ -15,6 +16,7 @@ dependencies {
     implementation platform('io.projectreactor:reactor-bom:Dysprosium-SR1')
 
     implementation 'io.projectreactor:reactor-core'
+    implementation 'org.springframework.data:spring-data-commons:2.2.3.RELEASE'
 }
 
 test {
