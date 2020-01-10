@@ -25,10 +25,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/ISpringR2DBCCommentReactionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/handlers/ComponentRepositories.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/handlers/ComponentRepositories.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mapping/IMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mapping/IMappingRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,46 +53,6 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="MCMS" type="f1a62948:ProjectNode" />
                 <item name="API" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MCMS" type="f1a62948:ProjectNode" />
-                <item name="API" type="2d1252cf:ModuleNode" />
-                <item name="Data" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MCMS" type="f1a62948:ProjectNode" />
-                <item name="API" type="2d1252cf:ModuleNode" />
-                <item name="Data" type="2d1252cf:ModuleNode" />
-                <item name="Spring-R2DBC-Based" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MCMS" type="f1a62948:ProjectNode" />
-                <item name="API" type="2d1252cf:ModuleNode" />
-                <item name="Data" type="2d1252cf:ModuleNode" />
-                <item name="Spring-R2DBC-Based" type="2d1252cf:ModuleNode" />
-                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MCMS" type="f1a62948:ProjectNode" />
-                <item name="API" type="2d1252cf:ModuleNode" />
-                <item name="Data" type="2d1252cf:ModuleNode" />
-                <item name="Spring-R2DBC-Based" type="2d1252cf:ModuleNode" />
-                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
-                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="MCMS" type="f1a62948:ProjectNode" />
-                <item name="API" type="2d1252cf:ModuleNode" />
-                <item name="Data" type="2d1252cf:ModuleNode" />
-                <item name="Spring-R2DBC-Based" type="2d1252cf:ModuleNode" />
-                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
-                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
-                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -157,8 +116,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -190,9 +149,9 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RecentsManager">
@@ -241,8 +200,9 @@
       <workItem from="1578130367721" duration="10540000" />
       <workItem from="1578210814608" duration="18726000" />
       <workItem from="1578332632960" duration="1255000" />
-      <workItem from="1578510154446" duration="5126000" />
-      <workItem from="1578598230067" duration="724000" />
+      <workItem from="1578383862760" duration="1289000" />
+      <workItem from="1578588922041" duration="708000" />
+      <workItem from="1578674472420" duration="245000" />
     </task>
     <task id="LOCAL-00001" summary="Adding initial project structures.">
       <created>1578130421952</created>
@@ -405,28 +365,7 @@
       <option name="project" value="LOCAL" />
       <updated>1578335563235</updated>
     </task>
-    <task id="LOCAL-00024" summary="feat(docu): Add documentation to the IMappableInGameVersionInheritanceDataRepository.">
-      <created>1578339162458</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1578339162458</updated>
-    </task>
-    <task id="LOCAL-00025" summary="feat(data): Adds IProtectedMappableInformationRepository.">
-      <created>1578340027218</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1578340027218</updated>
-    </task>
-    <task id="LOCAL-00026" summary="feat(data): Switch IRepository usage to the CrudRepository from spring, also added Pageable support.">
-      <created>1578514023368</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1578514023368</updated>
-    </task>
-    <option name="localTasksCounter" value="27" />
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -435,6 +374,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Adding initial project structures." />
     <MESSAGE value="Expanding authentication section." />
     <MESSAGE value="feat(client): Adding initial webclient workspace." />
     <MESSAGE value="feat(api):Adding initial project structure." />
@@ -457,82 +397,20 @@
     <MESSAGE value="feat(data): Add the IMappableInGameVersionRepository." />
     <MESSAGE value="fix(data): Fix the return type on the custom methods of the IMappableInGameVersionRepository." />
     <MESSAGE value="feat(data): Add an options to control mapping types.&#10;&#10;Added visible as a flag to indicate if this mapping type is externally visible to other systems, or just for internal api use only.&#10;Added editable as a flag to indicate if this mapping type is editable or not, even though it is possible to set editable to true while visible to false, this will have no effect, since no external system could ever change a mapping type that is not visible." />
-    <MESSAGE value="feat(docu): Add documentation to the IMappableInGameVersionInheritanceDataRepository." />
-    <MESSAGE value="feat(data): Adds IProtectedMappableInformationRepository." />
-    <MESSAGE value="feat(data): Switch IRepository usage to the CrudRepository from spring, also added Pageable support." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Switch IRepository usage to the CrudRepository from spring, also added Pageable support." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Add an options to control mapping types.&#10;&#10;Added visible as a flag to indicate if this mapping type is externally visible to other systems, or just for internal api use only.&#10;Added editable as a flag to indicate if this mapping type is editable or not, even though it is possible to set editable to true while visible to false, this will have no effect, since no external system could ever change a mapping type that is not visible." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1635" y="1270" width="800" height="684" key="#Project_Structure" timestamp="1578222736312">
+    <state x="1745" y="1326" width="580" height="571" key="MultipleFileMergeDialog" timestamp="1578674482879">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1635" y="1270" width="800" height="684" key="#Project_Structure/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578222736312" />
-    <state x="767" y="326" width="374" height="580" key="#com.intellij.ide.util.MemberChooser" timestamp="1578514228739">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="767" y="326" width="374" height="580" key="#com.intellij.ide.util.MemberChooser/0.30.1920.1050@0.30.1920.1050" timestamp="1578514228739" />
-    <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335471566" />
-    <state x="801" y="436" width="308" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1578338659549">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="801" y="436" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578338659549" />
-    <state x="1881" y="1500" width="308" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578171702009" />
-    <state x="1416" y="1536" width="1247" height="152" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1578211131141">
+    <state x="1745" y="1326" width="580" height="571" key="MultipleFileMergeDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578674482879" />
+    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog" timestamp="1578674474515">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1416" y="1536" width="1247" height="152" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578211131141" />
-    <state x="1482" y="1107" width="1105" height="1003" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1578217906669">
+    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578674474515" />
+    <state x="1808" y="1528" width="454" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578674476181">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1482" y="1107" width="1105" height="1003" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578217906669" />
-    <state x="696" y="309" width="524" height="506" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1578512930115">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="696" y="309" width="524" height="506" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578512930115" />
-    <state x="412" y="139" width="969" height="810" key="CommitChangelistDialog2" timestamp="1578514023173">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="412" y="139" width="969" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578514023173" />
-    <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335563163" />
-    <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl" timestamp="1578130481195">
-      <screen x="1080" y="1080" width="1920" height="1080" />
-    </state>
-    <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578130481195" />
-    <state x="555" y="279" width="800" height="533" key="Vcs.Push.Dialog.v2" timestamp="1578514026787">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="555" y="279" width="800" height="533" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578514026787" />
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335566260" />
-    <state x="616" y="370" key="com.intellij.ide.util.TipDialog" timestamp="1578673964703">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="616" y="370" key="com.intellij.ide.util.TipDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578673964703" />
-    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578210828652" />
-    <state x="728" y="464" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578510176611">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="728" y="464" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578510176611" />
-    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335034525" />
-    <state x="2008" y="71" width="783" height="959" maximized="true" key="dock-window-1" timestamp="1578218717235">
-      <screen x="1080" y="0" width="1920" height="1080" />
-    </state>
-    <state x="2008" y="71" width="783" height="959" maximized="true" key="dock-window-1/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578218717235" />
-    <state x="3000" y="1154" width="1080" height="672" maximized="true" key="dock-window-2" timestamp="1578237310293">
-      <screen x="3000" y="160" width="1080" height="1920" />
-    </state>
-    <state x="3000" y="1154" width="1080" height="672" maximized="true" key="dock-window-2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578237310293" />
-    <state x="3000" y="1013" width="1080" height="672" maximized="true" key="dock-window-3" timestamp="1578335036155">
-      <screen x="3000" y="160" width="1080" height="1920" />
-    </state>
-    <state x="3000" y="1013" width="1080" height="672" maximized="true" key="dock-window-3/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335036155" />
-    <state x="585" y="110" width="825" height="888" key="find.popup" timestamp="1578513027836">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="585" y="110" width="825" height="888" key="find.popup/0.30.1920.1050@0.30.1920.1050" timestamp="1578513027836" />
-    <state x="623" y="269" width="672" height="660" key="search.everywhere.popup" timestamp="1578510213146">
-      <screen x="0" y="30" width="1920" height="1050" />
-    </state>
-    <state x="623" y="269" width="672" height="660" key="search.everywhere.popup/0.30.1920.1050@0.30.1920.1050" timestamp="1578510213146" />
-    <state x="1703" y="1326" width="672" height="678" key="search.everywhere.popup/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578236491529" />
+    <state x="1808" y="1528" width="454" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578674476181" />
   </component>
 </project>
