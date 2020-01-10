@@ -27,19 +27,6 @@
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/ISpringR2DBCCommentReactionRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/IRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/comments/ICommentReactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/comments/ICommentReactionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/comments/ICommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/comments/ICommentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/core/IGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/core/IGameVersionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/core/IMappingTypeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/core/IMappingTypeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/core/release/IReleaseComponentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/core/release/IReleaseComponentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/core/release/IReleaseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/core/release/IReleaseRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionInheritanceDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionInheritanceDataRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mapping/IMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mapping/IMappingRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/handlers/ComponentRepositories.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/handlers/ComponentRepositories.java" afterDir="false" />
     </list>
@@ -254,7 +241,8 @@
       <workItem from="1578130367721" duration="10540000" />
       <workItem from="1578210814608" duration="18726000" />
       <workItem from="1578332632960" duration="1255000" />
-      <workItem from="1578510154446" duration="3745000" />
+      <workItem from="1578510154446" duration="5126000" />
+      <workItem from="1578598230067" duration="724000" />
     </task>
     <task id="LOCAL-00001" summary="Adding initial project structures.">
       <created>1578130421952</created>
@@ -431,7 +419,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578340027218</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="feat(data): Switch IRepository usage to the CrudRepository from spring, also added Pageable support.">
+      <created>1578514023368</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1578514023368</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -440,7 +435,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Adding initial project structures." />
     <MESSAGE value="Expanding authentication section." />
     <MESSAGE value="feat(client): Adding initial webclient workspace." />
     <MESSAGE value="feat(api):Adding initial project structure." />
@@ -465,17 +459,18 @@
     <MESSAGE value="feat(data): Add an options to control mapping types.&#10;&#10;Added visible as a flag to indicate if this mapping type is externally visible to other systems, or just for internal api use only.&#10;Added editable as a flag to indicate if this mapping type is editable or not, even though it is possible to set editable to true while visible to false, this will have no effect, since no external system could ever change a mapping type that is not visible." />
     <MESSAGE value="feat(docu): Add documentation to the IMappableInGameVersionInheritanceDataRepository." />
     <MESSAGE value="feat(data): Adds IProtectedMappableInformationRepository." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Adds IProtectedMappableInformationRepository." />
+    <MESSAGE value="feat(data): Switch IRepository usage to the CrudRepository from spring, also added Pageable support." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Switch IRepository usage to the CrudRepository from spring, also added Pageable support." />
   </component>
   <component name="WindowStateProjectService">
     <state x="1635" y="1270" width="800" height="684" key="#Project_Structure" timestamp="1578222736312">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1270" width="800" height="684" key="#Project_Structure/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578222736312" />
-    <state x="767" y="328" width="374" height="580" key="#com.intellij.ide.util.MemberChooser" timestamp="1578510742186">
+    <state x="767" y="326" width="374" height="580" key="#com.intellij.ide.util.MemberChooser" timestamp="1578514228739">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state x="767" y="328" width="374" height="580" key="#com.intellij.ide.util.MemberChooser/0.30.1920.1050@0.30.1920.1050" timestamp="1578510742186" />
+    <state x="767" y="326" width="374" height="580" key="#com.intellij.ide.util.MemberChooser/0.30.1920.1050@0.30.1920.1050" timestamp="1578514228739" />
     <state x="1847" y="1391" width="374" height="569" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335471566" />
     <state x="801" y="436" width="308" height="223" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1578338659549">
       <screen x="0" y="30" width="1920" height="1050" />
@@ -494,24 +489,24 @@
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="696" y="309" width="524" height="506" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578512930115" />
-    <state x="412" y="141" width="969" height="810" key="CommitChangelistDialog2" timestamp="1578343889692">
+    <state x="412" y="139" width="969" height="810" key="CommitChangelistDialog2" timestamp="1578514023173">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state x="412" y="141" width="969" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578343889692" />
+    <state x="412" y="139" width="969" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578514023173" />
     <state x="1492" y="1200" width="1086" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335563163" />
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl" timestamp="1578130481195">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1823" y="1366" width="424" height="491" key="FileChooserDialogImpl/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578130481195" />
-    <state x="555" y="281" width="800" height="533" key="Vcs.Push.Dialog.v2" timestamp="1578343890881">
+    <state x="555" y="279" width="800" height="533" key="Vcs.Push.Dialog.v2" timestamp="1578514026787">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state x="555" y="281" width="800" height="533" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578343890881" />
+    <state x="555" y="279" width="800" height="533" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578514026787" />
     <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578335566260" />
-    <state x="616" y="374" key="com.intellij.ide.util.TipDialog" timestamp="1578510157581">
+    <state x="616" y="370" key="com.intellij.ide.util.TipDialog" timestamp="1578673964703">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
-    <state x="616" y="374" key="com.intellij.ide.util.TipDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578510157580" />
+    <state x="616" y="370" key="com.intellij.ide.util.TipDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578673964703" />
     <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578210828652" />
     <state x="728" y="464" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578510176611">
       <screen x="0" y="30" width="1920" height="1050" />
