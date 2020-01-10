@@ -1,4 +1,4 @@
-package com.mcms.data.core.repositories.mapping.mapping;
+package com.mcms.data.core.repositories.mapping.mappings;
 
 import java.util.UUID;
 
