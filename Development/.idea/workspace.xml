@@ -25,9 +25,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IProposedMappingRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/voting/IVotingRecordRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mapping/IMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IMappingRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +201,7 @@
       <workItem from="1578332632960" duration="1255000" />
       <workItem from="1578383862760" duration="1289000" />
       <workItem from="1578588922041" duration="708000" />
-      <workItem from="1578674472420" duration="638000" />
+      <workItem from="1578674472420" duration="1165000" />
     </task>
     <task id="LOCAL-00001" summary="Adding initial project structures.">
       <created>1578130421952</created>
@@ -379,7 +378,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578674824023</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="feat(data): Adding the IProposedMappingRepository.&#10;&#10;Moved the mapping repositories into the correct namespace.">
+      <created>1578675156184</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1578675156184</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -388,7 +394,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Adding initial project structures." />
     <MESSAGE value="Expanding authentication section." />
     <MESSAGE value="feat(client): Adding initial webclient workspace." />
     <MESSAGE value="feat(api):Adding initial project structure." />
@@ -413,16 +418,17 @@
     <MESSAGE value="feat(data): Add an options to control mapping types.&#10;&#10;Added visible as a flag to indicate if this mapping type is externally visible to other systems, or just for internal api use only.&#10;Added editable as a flag to indicate if this mapping type is editable or not, even though it is possible to set editable to true while visible to false, this will have no effect, since no external system could ever change a mapping type that is not visible." />
     <MESSAGE value="feat(data): Finished the initial mapping repository." />
     <MESSAGE value="feat(docu): Added the javadoc line for the IMappingRepository" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(docu): Added the javadoc line for the IMappingRepository" />
+    <MESSAGE value="feat(data): Adding the IProposedMappingRepository.&#10;&#10;Moved the mapping repositories into the correct namespace." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Adding the IProposedMappingRepository.&#10;&#10;Moved the mapping repositories into the correct namespace." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2" timestamp="1578674823956">
+    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2" timestamp="1578675156106">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578674823956" />
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578674825188">
+    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578675156106" />
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578675157410">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578674825188" />
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578675157410" />
   </component>
 </project>
