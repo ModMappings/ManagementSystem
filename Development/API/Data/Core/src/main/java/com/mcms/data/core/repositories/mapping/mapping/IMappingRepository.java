@@ -8,6 +8,9 @@ import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * Represents a repository which can provide and store {@link MappingDMO} objects.
+ */
 public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
 
     /**
