@@ -25,8 +25,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/ISpringR2DBCCommentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/ISpringR2DBCMappableInGameVersionInheritanceDataRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/ISpringR2DBCMappableInGameVersionRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,8 +117,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -201,7 +203,7 @@
       <workItem from="1578332632960" duration="1255000" />
       <workItem from="1578383862760" duration="1289000" />
       <workItem from="1578588922041" duration="708000" />
-      <workItem from="1578674472420" duration="1771000" />
+      <workItem from="1578674472420" duration="2774000" />
     </task>
     <task id="LOCAL-00001" summary="Adding initial project structures.">
       <created>1578130421952</created>
@@ -399,7 +401,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578676121585</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="feat(data): Adding the Spring R2DBC implementation of the ICommentRepository.">
+      <created>1578676265129</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1578676265129</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -408,7 +417,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="feat(api):Adding initial project structure." />
     <MESSAGE value="feat(datalayer): Started work on porting the DMOs." />
     <MESSAGE value="feat(datalayer): Finishing the port of all DMOs" />
     <MESSAGE value="feat(docu): Moving around the spring default documentation file." />
@@ -433,20 +441,21 @@
     <MESSAGE value="feat(data): Adding the IProposedMappingRepository.&#10;&#10;Moved the mapping repositories into the correct namespace." />
     <MESSAGE value="feat(data): Added the voting record repository." />
     <MESSAGE value="feat(data): Fixing the Spring R2DBC impl for CommentReactions." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Fixing the Spring R2DBC impl for CommentReactions." />
+    <MESSAGE value="feat(data): Adding the Spring R2DBC implementation of the ICommentRepository." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Adding the Spring R2DBC implementation of the ICommentRepository." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1848" y="1321" width="374" height="582" key="#com.intellij.ide.util.MemberChooser" timestamp="1578676177396">
+    <state x="1848" y="1321" width="374" height="582" key="#com.intellij.ide.util.MemberChooser" timestamp="1578676582573">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1848" y="1321" width="374" height="582" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676177396" />
-    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2" timestamp="1578676121502">
+    <state x="1848" y="1321" width="374" height="582" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676582573" />
+    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2" timestamp="1578676265067">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676121502" />
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578676123411">
+    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676265067" />
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578676266705">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676123411" />
+    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676266705" />
   </component>
 </project>

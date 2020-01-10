@@ -54,10 +54,9 @@ public interface IMappableInGameVersionRepository extends CrudRepository<Mappabl
      * Finds the mappable in a game version who has the given mapping.
      *
      * @param mappingId The id of the mapping to look up.
-     * @param pageable The pagination information for the query.
      * @return The mappable in a game version who has the given mapping.
      */
-    Mono<MappableInGameVersionDMO> findAllForMapping(UUID mappingId, final Pageable pageable);
+    Mono<MappableInGameVersionDMO> findAllForMapping(UUID mappingId);
 
     /**
      * Finds all super types (in the form of classes) of the class with the given id and returns their mappables in a game version.
