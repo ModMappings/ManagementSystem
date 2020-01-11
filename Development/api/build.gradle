@@ -4,7 +4,6 @@ plugins {
 	id 'java'
 }
 
-group = 'com.mcms.api'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.11'
 
