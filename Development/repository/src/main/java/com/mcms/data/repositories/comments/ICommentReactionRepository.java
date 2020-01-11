@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.mcms.data.model.comments.CommentReactionDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 
@@ -22,6 +23,7 @@ public interface ICommentReactionRepository extends CrudRepository<CommentReacti
      * @return The comment reactions on the given comment reaction.
      * @throws IllegalArgumentException in case the given {@literal commentReactionId} is {@literal null}.
      */
+    @Query("Select * from comment_reaction cr where cr.commentReactionId = $1")
     Flux<CommentReactionDMO> findAllForComment(final UUID commentReactionId, final Pageable pageable);
 
     /**
@@ -34,5 +36,6 @@ public interface ICommentReactionRepository extends CrudRepository<CommentReacti
      * @return The comment reactions by the given user.
      * @throws IllegalArgumentException in case the given {@literal userId} is {@literal null}.
      */
+    @Query("Select * from comment_reaction cr where cr.createdBy = $1")
     Flux<CommentReactionDMO> findAllForUser(final UUID userId, final Pageable pageable);
 }

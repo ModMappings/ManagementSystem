@@ -21,8 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':API:Data:Spring-R2DBC-Based')
-    implementation project(':API:Data:Model')
+    implementation project(':development:repository')
 
 	implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -32,6 +31,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'io.r2dbc:r2dbc-postgresql'
 	runtimeOnly 'org.postgresql:postgresql'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}

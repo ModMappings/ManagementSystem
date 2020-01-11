@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.mcms.data.model.comments.CommentDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 
@@ -21,6 +22,7 @@ public interface ICommentRepository extends CrudRepository<CommentDMO, UUID> {
      * @return The comments on the given release.
      * @throws IllegalArgumentException in case the given {@literal releaseId} is {@literal null}.
      */
+    @Query("Select * from comments c where c.releaseId = $1")
     Flux<CommentDMO> findAllForRelease(final UUID releaseId, final Pageable pageable);
 
     /**
@@ -33,6 +35,7 @@ public interface ICommentRepository extends CrudRepository<CommentDMO, UUID> {
      * @return The comments on the given proposed mapping.
      * @throws IllegalArgumentException in case the given {@literal proposedMappingId} is {@literal null}.
      */
+    @Query("Select * from comments c where c.proposedMappingId = $1")
     Flux<CommentDMO> findAllForProposedMapping(final UUID proposedMappingId, final Pageable pageable);
 
     /**
@@ -45,6 +48,7 @@ public interface ICommentRepository extends CrudRepository<CommentDMO, UUID> {
      * @return The comments on the given comment.
      * @throws IllegalArgumentException in case the given {@literal commentId} is {@literal null}.
      */
+    @Query("Select * from comments c where c.parentCommentId = $1")
     Flux<CommentDMO> findAllForComment(final UUID commentId, final Pageable pageable);
 
     /**
@@ -57,5 +61,6 @@ public interface ICommentRepository extends CrudRepository<CommentDMO, UUID> {
      * @return The comments by the given user.
      * @throws IllegalArgumentException in case the given {@literal userId} is {@literal null}.
      */
+    @Query("Select * from comments c where c.createdBy = $1")
     Flux<CommentDMO> findAllForUser(final UUID userId, final Pageable pageable);
 }
