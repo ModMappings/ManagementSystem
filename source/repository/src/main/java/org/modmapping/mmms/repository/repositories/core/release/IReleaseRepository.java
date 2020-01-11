@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.modmapping.mmms.repository.model.core.release.ReleaseDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 
@@ -20,6 +21,7 @@ public interface IReleaseRepository extends CrudRepository<ReleaseDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The releases of which the name match the regex.
      */
+    @Query("SELECT * FROM release r WHERE r.name regexp $1")
     Flux<ReleaseDMO> findAllForNameRegex(String nameRegex, final Pageable pageable);
 
     /**
@@ -32,6 +34,7 @@ public interface IReleaseRepository extends CrudRepository<ReleaseDMO, UUID> {
      * @return The releases by the given game version.
      * @throws IllegalArgumentException in case the given {@literal gameVersionId} is {@literal null}.
      */
+    @Query("SELECT * FROM release r WHERE r.gameVersionId = $1")
     Flux<ReleaseDMO> findAllForGameVersion(final UUID gameVersionId, final Pageable pageable);
 
     /**
@@ -44,6 +47,7 @@ public interface IReleaseRepository extends CrudRepository<ReleaseDMO, UUID> {
      * @return The releases by the given mapping type.
      * @throws IllegalArgumentException in case the given {@literal mappingTypeId} is {@literal null}.
      */
+    @Query("SELECT * FROM release r WHERE r.mappingTypeId = $1")
     Flux<ReleaseDMO> findAllForMappingType(final UUID mappingTypeId, final Pageable pageable);
 
     /**
@@ -54,6 +58,7 @@ public interface IReleaseRepository extends CrudRepository<ReleaseDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The releases which are marked as being a snapshot.
      */
+    @Query("SELECT * FROM release r where r.isSnapshot is true")
     Flux<ReleaseDMO> findAllSnapshots(final Pageable pageable);
 
     /**
@@ -65,6 +70,7 @@ public interface IReleaseRepository extends CrudRepository<ReleaseDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The releases which have the mapping with the given id as component.
      */
+    @Query("SELECT * FROM release r JOIN release_component rc ON r.id = rc.releaseId WHERE rc.mappingId = $1")
     Flux<ReleaseDMO> findAllForMapping(UUID mappingId, final Pageable pageable);
 
     /**
@@ -77,5 +83,6 @@ public interface IReleaseRepository extends CrudRepository<ReleaseDMO, UUID> {
      * @return The releases by the given user.
      * @throws IllegalArgumentException in case the given {@literal userId} is {@literal null}.
      */
+    @Query("SELECT * FROM release r WHERE r.createdBy = userId")
     Flux<ReleaseDMO> findAllForUser(final UUID userId, final Pageable pageable);
 }

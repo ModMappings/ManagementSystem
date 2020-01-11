@@ -26,7 +26,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d8cd4699-805f-4e24-9d8d-9db1d9e735b9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseComponentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseComponentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/IGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/IGameVersionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/IMappingTypeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/IMappingTypeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +185,7 @@
       <workItem from="1578775260880" duration="616000" />
       <workItem from="1578778843806" duration="3562000" />
       <workItem from="1578782433701" duration="365000" />
-      <workItem from="1578782822309" duration="1631000" />
+      <workItem from="1578782822309" duration="2242000" />
     </task>
     <task id="LOCAL-00001" summary="feat(data): Moving Development to development.">
       <created>1578775378943</created>
@@ -206,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578783669170</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat(data): Implement the release component repo.">
+      <created>1578784475624</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1578784475624</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -217,7 +226,8 @@
     <MESSAGE value="feat(data): Moving Development to development." />
     <MESSAGE value="feat(operations): Adding all sql generation scripts." />
     <MESSAGE value="feat(data): Updated the location of the sql stuff, also updating the mmms.puml file with the right data." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Updated the location of the sql stuff, also updating the mmms.puml file with the right data." />
+    <MESSAGE value="feat(data): Implement the release component repo." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Implement the release component repo." />
   </component>
   <component name="WindowStateProjectService">
     <state x="558" y="221" width="800" height="682" key="#Project_Structure" timestamp="1578775826886">
@@ -228,11 +238,11 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1270" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578779262663" />
-    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578783668989">
+    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578784474969">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="163" y="149" width="1589" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775982251" />
-    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578783668989" />
+    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578784474969" />
     <state x="1789" y="1290" width="492" height="643" key="ExecutionTargetDialog" timestamp="1578782951173">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
