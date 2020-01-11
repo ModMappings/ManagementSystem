@@ -24,23 +24,9 @@
     <option name="showStatusBarWidget" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8cd4699-805f-4e24-9d8d-9db1d9e735b9" name="Default Changelist" comment="feat(operations): Adding all sql generation scripts.">
-      <change afterPath="$PROJECT_DIR$/docu/models/database/mmms.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+    <list default="true" id="d8cd4699-805f-4e24-9d8d-9db1d9e735b9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/000-Create-Mappable.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/000-Create-Mappable.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/001-Create-GameVersion.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/001-Create-GameVersion.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/002-Create-MappingTypes.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/002-Create-MappingTypes.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/003-Create-VersionedMappable.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/003-Create-VersionedMappable.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/004-Create-Release.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/004-Create-Release.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/005-Create-ProtectedMappable.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/005-Create-ProtectedMappable.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/006-Create-Mapping.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/006-Create-Mapping.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/007-Create-ReleaseComponent.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/007-Create-ReleaseComponent.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/008-Create-ProposedMapping.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/008-Create-ProposedMapping.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/009-Create-InheritanceData.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/009-Create-InheritanceData.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/010-Create-VotingRecord.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/010-Create-VotingRecord.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/011-Create-Comment.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/011-Create-Comment.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/operations/sql/api/012-Create-CommentReaction.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/012-Create-CommentReaction.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseComponentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseComponentRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,7 +183,7 @@
       <workItem from="1578775260880" duration="616000" />
       <workItem from="1578778843806" duration="3562000" />
       <workItem from="1578782433701" duration="365000" />
-      <workItem from="1578782822309" duration="808000" />
+      <workItem from="1578782822309" duration="1631000" />
     </task>
     <task id="LOCAL-00001" summary="feat(data): Moving Development to development.">
       <created>1578775378943</created>
@@ -213,7 +199,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578781771333</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat(data): Updated the location of the sql stuff, also updating the mmms.puml file with the right data.">
+      <created>1578783669170</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1578783669170</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,7 +216,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="feat(data): Moving Development to development." />
     <MESSAGE value="feat(operations): Adding all sql generation scripts." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(operations): Adding all sql generation scripts." />
+    <MESSAGE value="feat(data): Updated the location of the sql stuff, also updating the mmms.puml file with the right data." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Updated the location of the sql stuff, also updating the mmms.puml file with the right data." />
   </component>
   <component name="WindowStateProjectService">
     <state x="558" y="221" width="800" height="682" key="#Project_Structure" timestamp="1578775826886">
@@ -234,11 +228,11 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1270" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578779262663" />
-    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578782477570">
+    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578783668989">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="163" y="149" width="1589" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775982251" />
-    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578782477570" />
+    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578783668989" />
     <state x="1789" y="1290" width="492" height="643" key="ExecutionTargetDialog" timestamp="1578782951173">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
@@ -267,11 +261,11 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1270" width="800" height="684" key="PlantUMLSettings/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578782794675" />
-    <state x="1638" y="1352" width="800" height="533" key="Vcs.Push.Dialog.v2" timestamp="1578781776831">
+    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578783726858">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="558" y="294" width="800" height="533" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775984384" />
-    <state x="1638" y="1352" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578781776831" />
+    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578783726858" />
     <state x="1919" y="1505" width="367" height="251" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1578782906089">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>

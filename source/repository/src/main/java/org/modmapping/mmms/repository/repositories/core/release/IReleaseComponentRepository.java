@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.modmapping.mmms.repository.model.core.release.ReleaseComponentDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 
@@ -21,6 +22,7 @@ public interface IReleaseComponentRepository extends CrudRepository<ReleaseCompo
      * @param pageable The pagination information for the query.
      * @return The release components which are part of the release with the given id.
      */
+    @Query("SELECT * FROM release_component rc where rc.releaseId = $1")
     Flux<ReleaseComponentDMO> findAllForRelease(UUID releaseId, final Pageable pageable);
 
     /**
@@ -32,5 +34,6 @@ public interface IReleaseComponentRepository extends CrudRepository<ReleaseCompo
      * @param pageable The pagination information for the query.
      * @return The release components which target the mapping with the given id.
      */
+    @Query("SELECT * FROM release_component rc where rc.mappingId = $1")
     Flux<ReleaseComponentDMO> findAllForMapping(UUID mappingId, final Pageable pageable);
 }
