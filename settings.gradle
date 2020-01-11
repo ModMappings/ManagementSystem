@@ -1,0 +1,4 @@
+rootProject.name = 'MCMS'
+
+include ':development:api'
+include ':development:repository'
