@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.modmapping.mmms.repository.model.mapping.mappable.ProtectedMappableInformationDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 
@@ -22,6 +23,7 @@ public interface IProtectedMappableInformationRepository extends CrudRepository<
      * @param pageable The pagination information for the query.
      * @return Protected mappable information that indicates that the versioned mappable is locked for a given mapping type.
      */
+    @Query("SELECT * FROM protected_mappable pm WHERE pm.versionedMappableId = $1")
     Flux<ProtectedMappableInformationDMO> findAllForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
 
     /**
@@ -34,5 +36,6 @@ public interface IProtectedMappableInformationRepository extends CrudRepository<
      * @param pageable The pagination information for the query.
      * @return Protected mappable information that indicates that the mapping type is locked for a given versioned mappable.
      */
+    @Query("SELECT * FROM protected_mappable pm WHERE pm.mappingTypeId = $1")
     Flux<ProtectedMappableInformationDMO> findAllForMappingType(UUID mappingTypeId, final Pageable pageable);
 }
