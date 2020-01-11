@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.modmapping.mmms.repository.model.mapping.mappings.voting.VotingRecordDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 
@@ -24,5 +25,6 @@ public interface IVotingRecordRepository extends CrudRepository<VotingRecordDMO,
      * @param pageable The paging information for the request.
      * @return All the voting records that match the filter criteria.
      */
+    @Query("SELECT * FROM voting_record vr WHERE vr.proposedMappingId = $1 AND ($2 IS NULL OR vr.isForVote = $2) AND ($3 IS NULL OR vr.hasBeenRescinded = $3)")
     Flux<VotingRecordDMO> findAllForProposedMappingAndIndicationAndRescinded(UUID proposedMappingId, Optional<Boolean> indication, Optional<Boolean> isRescinded, Pageable pageable);
 }
