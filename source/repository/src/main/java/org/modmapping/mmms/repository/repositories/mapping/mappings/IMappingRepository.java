@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.modmapping.mmms.repository.model.mapping.mappings.MappingDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,6 +23,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The mappings for the given versioned mappable.
      */
+    @Query("SELECT * FROM mapping m WHERE m.versionedMappableId = $1")
     Flux<MappingDMO> findAllForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
 
     /**
@@ -31,6 +33,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The latest mapping for the given versioned mappable.
      */
+    @Query("SELECT * FROM mapping m WHERE m.versionedMappableId = $1 ORDER BY m.createdOn DESC TAKE 1")
     Mono<MappingDMO> findLatestForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
 
     /**
@@ -42,6 +45,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The mappings for the given mapping type.
      */
+    @Query("SELECT * FROM mapping m WHERE m.mappingTypeId = $1")
     Flux<MappingDMO> findAllForMappingType(UUID mappingTypeId, final Pageable pageable);
 
     /**
@@ -54,6 +58,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The mappings for the given mapping type and game version.
      */
+    @Query("SELECT * FROM mapping m JOIN versioned_mappable vm ON vm.id = m.versionedMappableId WHERE m.mappingTypeId = $1 AND vm.gameVersionId = $2")
     Flux<MappingDMO> findAllForMappingTypeAndGameVersion(UUID mappingTypeId, UUID gameVersionId, final Pageable pageable);
 
     /**
