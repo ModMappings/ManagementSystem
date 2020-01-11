@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':development:repository')
+    implementation project(':source:repository')
 
 	implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'

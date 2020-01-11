@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d8cd4699-805f-4e24-9d8d-9db1d9e735b9" name="Default Changelist" comment="feat(all): Renamed all project">
+      <change afterPath="$PROJECT_DIR$/.gradle/5.0/fileChanges/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.0/fileHashes/fileHashes.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.0/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/search/search-page/search-page.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/clients/web/src/assets/.gitkeep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/DGS.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/DGS.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/Dirt.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/Dirt.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/Grass.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/Grass.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/Logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/Logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/Logo.xcf" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/Logo.xcf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/RedSand.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/RedSand.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/SWR.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/SWR.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/Sand.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/Sand.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/Stone.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/Stone.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Images/Icon/Water.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/Images/Icon/Water.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Authentication (Whitepaper)/General.md" beforeDir="false" afterPath="$PROJECT_DIR$/docu/authentication (whitepaper)/General.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Authentication (Whitepaper)/IdentityServer4.md" beforeDir="false" afterPath="$PROJECT_DIR$/docu/authentication (whitepaper)/IdentityServer4.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Design/Design-Notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/docu/design/Design-Notes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Design/UI Design mockups.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/docu/design/UI Design mockups.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Database/mcms.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/database/mcms.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Comments/Comment.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Comments/Comment.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Comments/CommentReaction.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Comments/CommentReaction.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Comments/CommentReactionType.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Comments/CommentReactionType.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Core/Distribution.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Core/Distribution.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Core/GameVersion.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Core/GameVersion.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Core/MappingType.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Core/MappingType.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Core/Release/Release.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Core/Release/Release.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Core/Release/ReleaseComponent.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Core/Release/ReleaseComponent.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Component/Component.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Component/Component.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Component/ComponentType.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Component/ComponentType.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Component/LockingEntry.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Component/LockingEntry.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Component/VersionedComponent.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Component/VersionedComponent.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Mappings/CommittedMapping.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Mappings/CommittedMapping.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Mappings/MappingBase.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Mappings/MappingBase.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Mappings/ProposedMapping.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Mappings/ProposedMapping.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Mappings/Voting/VotingRecord.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Mappings/Voting/VotingRecord.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Metadata/ClassMemberMetadataBase.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Metadata/ClassMemberMetadataBase.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Metadata/ClassMetadata.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Metadata/ClassMetadata.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Metadata/FieldMetadata.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Metadata/FieldMetadata.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Metadata/MetadataBase.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Metadata/MetadataBase.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Metadata/MethodMetadata.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Metadata/MethodMetadata.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Metadata/PackageMetadata.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Metadata/PackageMetadata.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/Mapping/Metadata/ParameterMetadata.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/Mapping/Metadata/ParameterMetadata.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Models/Datamodel/include.puml" beforeDir="false" afterPath="$PROJECT_DIR$/docu/models/datamodel/include.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documentation/Spring/Default WebApi Help.md" beforeDir="false" afterPath="$PROJECT_DIR$/docu/spring/Default WebApi Help.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/000-Create-Mappable.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/000-Create-Mappable.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/001-Create-GameVersions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/001-Create-GameVersions.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/002-Create-MappingTypes.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/002-Create-MappingTypes.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/003-Create-VersionedMappable.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/003-Create-VersionedMappable.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/004-Create-Release.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/004-Create-Release.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/005-LockingEntries.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/005-LockingEntries.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/006-LiveMappingEntries.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/006-LiveMappingEntries.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/007-VersionedComponentMetadata.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/007-VersionedComponentMetadata.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/008-ReleaseComponents.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/008-ReleaseComponents.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/009-ProposalMappingEntries.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/009-ProposalMappingEntries.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/010-ClassInheritanceData.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/010-ClassInheritanceData.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/011-VotingRecord.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/011-VotingRecord.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/012-Comment.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/012-Comment.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/API/013-CommentReaction.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/API/013-CommentReaction.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Audit-Log/000-Log.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Audit-Log/000-Log.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/000-ApiResources.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/000-ApiResources.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/001-Clients.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/001-Clients.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/002-IdentityResources.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/002-IdentityResources.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/003-ApiScopes.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/003-ApiScopes.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/004-ApiSecrets.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/004-ApiSecrets.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/005-ApiClaims.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/005-ApiClaims.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/006-ApiProperties.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/006-ApiProperties.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/007-ClientSecrets.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/007-ClientSecrets.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/008-ClientClaims.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/008-ClientClaims.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/009-ClientPostLogoutRedirectUris.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/009-ClientPostLogoutRedirectUris.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/010-ClientCorsOrigins.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/010-ClientCorsOrigins.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/011-ClientProperties.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/011-ClientProperties.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/012-ClientGrantTypes.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/012-ClientGrantTypes.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/013-ClientScopes.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/013-ClientScopes.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/014-ClientIdPRestrictions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/014-ClientIdPRestrictions.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/015-ClientRedirectUris.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/015-ClientRedirectUris.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/016-IdentityProperties.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/016-IdentityProperties.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/017-IdentityClaims.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/017-IdentityClaims.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Configuration/018-ApiScopeClaims.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Configuration/018-ApiScopeClaims.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Identity/000-Roles.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Identity/000-Roles.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Identity/001-Users.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Identity/001-Users.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Identity/002-RoleClaims.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Identity/002-RoleClaims.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Identity/003-UserRoles.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Identity/003-UserRoles.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Identity/004-UserTokens.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Identity/004-UserTokens.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Identity/005-UserClaims.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Identity/005-UserClaims.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Identity/006-UserLogins.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Identity/006-UserLogins.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Persistence/000-DeviceCodes.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Persistence/000-DeviceCodes.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Operations/SQL/Auth/Persistence/001-PersistedGrants.sql" beforeDir="false" afterPath="$PROJECT_DIR$/operations/SQL/Auth/Persistence/001-PersistedGrants.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/browserslist" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/browserslist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/e2e/protractor.conf.js" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/e2e/protractor.conf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/e2e/src/app.e2e-spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/e2e/src/app.e2e-spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/e2e/src/app.po.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/e2e/src/app.po.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/e2e/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/e2e/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/karma.conf.js" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/karma.conf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/app-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/app-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/app.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/app.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.0/gc.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/app.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/app.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/components/components.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/components/components.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/components/game-versions-selector/game-versions-selector.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/components/game-versions-selector/game-versions-selector.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/components/game-versions-selector/game-versions-selector.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/components/game-versions-selector/game-versions-selector.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/components/game-versions-selector/game-versions-selector.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/components/game-versions-selector/game-versions-selector.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/components/game-versions-selector/game-versions-selector.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/components/game-versions-selector/game-versions-selector.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/navbar/navbar.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/navbar/navbar.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/navbar/navbar.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/navbar/navbar.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/navbar/navbar.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/navbar/navbar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/navbar/navbar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/global-search-box/global-search-box.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/global-search-box/global-search-box.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/global-search-box/global-search-box.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/app.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/global-search-box/global-search-box.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/global-search-box/global-search-box.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/global-search-box/global-search-box.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/global-search-box/global-search-box.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/home-page/home-page.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/home-page/home-page.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/home-page/home-page.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/home-page/home-page.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/home-page/home-page.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/home-page/home-page.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/home-page/home-page.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/home-page/home-page.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/home/home.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/home.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/search/search-page/search-page.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/search/search-page/search-page.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/search/search-page/search-page.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/navbar/navbar.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/search/search-page/search-page.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/search/search-page/search-page.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/search/search-page/search-page.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/search/search-page/search-page.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/pages/search/search.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/search/search.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/services/game-version.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/services/game-version.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/app/services/game-versions.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/services/game-versions.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/assets/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/app/pages/home/global-search-box/global-search-box.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/environments/environment.prod.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/environments/environment.prod.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/environments/environment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/polyfills.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/polyfills.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/styles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/src/test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/src/test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/tsconfig.spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/tsconfig.spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/Clients/Web/MCMS/tslint.json" beforeDir="false" afterPath="$PROJECT_DIR$/source/clients/web/tslint.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/api/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/source/api/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/api/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/source/api/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/api/src/main/java/org/modmappings/mmms/api/MMMSApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/api/src/main/java/org/modmappings/mmms/api/MMMSApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/api/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/source/api/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/comments/CommentDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/comments/CommentDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/comments/CommentReactionDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/comments/CommentReactionDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/comments/CommentReactionTypeDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/comments/CommentReactionTypeDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/core/DistributionDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/core/DistributionDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/core/GameVersionDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/core/GameVersionDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/core/MappingTypeDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/core/MappingTypeDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/core/release/ReleaseComponentDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/core/release/ReleaseComponentDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/core/release/ReleaseDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/core/release/ReleaseDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/InheritanceDataDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/InheritanceDataDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/MappableDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/MappableDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/MappableTypeDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/MappableTypeDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/ProtectedMappableInformationDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/ProtectedMappableInformationDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/VersionedMappableDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/VersionedMappableDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/VisibilityDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappable/VisibilityDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappings/MappingDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappings/MappingDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappings/ProposedMappingDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappings/ProposedMappingDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappings/voting/VotingRecordDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/model/mapping/mappings/voting/VotingRecordDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/comments/ICommentReactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/comments/ICommentReactionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/comments/ICommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/comments/ICommentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/IGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/IGameVersionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/IMappingTypeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/IMappingTypeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseComponentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseComponentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IInheritanceDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IInheritanceDataRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IMappableRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IMappableRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IVersionedMappableRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IVersionedMappableRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/IMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/IMappingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/IProposedMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/IProposedMappingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/development/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/voting/IVotingRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/voting/IVotingRecordRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ModMappingManagementSystem" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SET_USER_NAME_GLOBALLY" value="false" />
+  </component>
+  <component name="ProjectId" id="1WGTp1cIspCMzvhqXlGL9QkdGA6" />
+  <component name="ProjectViewState">
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/source/clients/web" />
+      <recent name="$PROJECT_DIR$/../docu" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="MMMSApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="MCMS.source.api.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.modmappings.mmms.api.MMMSApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d8cd4699-805f-4e24-9d8d-9db1d9e735b9" name="Default Changelist" comment="" />
+      <created>1578775110429</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1578775110429</updated>
+      <workItem from="1578775112057" duration="143000" />
+      <workItem from="1578775260880" duration="616000" />
+    </task>
+    <task id="LOCAL-00001" summary="feat(data): Moving Development to development.">
+      <created>1578775378943</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1578775378943</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat(data): Moving Development to development." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Moving Development to development." />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="558" y="221" width="800" height="682" key="#Project_Structure" timestamp="1578775826886">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="558" y="221" width="800" height="682" key="#Project_Structure/0.30.1920.1050@0.30.1920.1050" timestamp="1578775826886" />
+    <state x="163" y="151" width="1589" height="810" key="CommitChangelistDialog2" timestamp="1578775859766">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="163" y="151" width="1589" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775859766" />
+    <state x="558" y="296" width="800" height="533" key="Vcs.Push.Dialog.v2" timestamp="1578775386435">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="558" y="296" width="800" height="533" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775386435" />
+  </component>
+</project>
