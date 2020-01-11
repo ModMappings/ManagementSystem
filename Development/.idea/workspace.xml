@@ -25,22 +25,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.0/fileChanges/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.0/fileHashes/fileHashes.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.0/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/5.0/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Operations/SQL/API/000-Create-Mappable.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Operations/SQL/API/001-Create-GameVersions.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Operations/SQL/API/002-Create-MappingTypes.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Operations/SQL/API/003-Create-VersionedMappable.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Operations/SQL/API/004-Create-Release.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionInheritanceDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IInheritanceDataRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IVersionedMappableRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IMappingRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IProposedMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IProposedMappingRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/MappableInGameVersionDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/VersionedMappableDMO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/MappableInGameVersionInheritanceDataDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/InheritanceDataDMO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/ProtectedMappableInformationDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/ProtectedMappableInformationDMO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappings/MappingDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappings/MappingDMO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappings/ProposedMappingDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappings/ProposedMappingDMO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/ISpringR2DBCCommentReactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/CommentReactionRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/ISpringR2DBCCommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/CommentRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/ISpringR2DBCMappableInGameVersionInheritanceDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/InheritanceDataRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/ISpringR2DBCMappableInGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/VersionedMappableRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/handlers/ComponentRepositories.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/handlers/ComponentRepositories.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Operations/SQL/API/000-Components.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Operations/SQL/API/001-GameVersions.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Operations/SQL/API/002-MappingTypes.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Operations/SQL/API/003-VersionedComponents.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Operations/SQL/API/004-Releases.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -460,7 +464,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578676265129</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="fix(data): Renaming a lot of objects to be a bit better setup for the future.&#10;&#10;This improves the readability of the code by a lot.&#10;Not sure why i selected those names in the first place.">
+      <created>1578729630410</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1578729630410</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -469,7 +480,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="feat(datalayer): Started work on porting the DMOs." />
     <MESSAGE value="feat(datalayer): Finishing the port of all DMOs" />
     <MESSAGE value="feat(docu): Moving around the spring default documentation file." />
     <MESSAGE value="feat(docu): Adding a minor amount of javadoc to the DMO for mappables in a given game version." />
@@ -494,7 +504,8 @@
     <MESSAGE value="feat(data): Added the voting record repository." />
     <MESSAGE value="feat(data): Fixing the Spring R2DBC impl for CommentReactions." />
     <MESSAGE value="feat(data): Adding the Spring R2DBC implementation of the ICommentRepository." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Adding the Spring R2DBC implementation of the ICommentRepository." />
+    <MESSAGE value="fix(data): Renaming a lot of objects to be a bit better setup for the future.&#10;&#10;This improves the readability of the code by a lot.&#10;Not sure why i selected those names in the first place." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(data): Renaming a lot of objects to be a bit better setup for the future.&#10;&#10;This improves the readability of the code by a lot.&#10;Not sure why i selected those names in the first place." />
   </component>
   <component name="WindowStateProjectService">
     <state x="1848" y="1321" width="374" height="582" key="#com.intellij.ide.util.MemberChooser" timestamp="1578676582573">
@@ -505,21 +516,27 @@
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="458" y="28" width="999" height="1052" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578729532165" />
-    <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2" timestamp="1578676265067">
-      <screen x="1080" y="1080" width="1920" height="1080" />
+    <state x="0" y="123" width="1910" height="868" key="CommitChangelistDialog2" timestamp="1578729630260">
+      <screen x="0" y="30" width="1920" height="1050" />
     </state>
+    <state x="0" y="123" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578729630260" />
     <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676265067" />
     <state width="509" height="446" key="SwitcherDM" timestamp="1578728513718">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state width="509" height="446" key="SwitcherDM/0.30.1920.1050@0.30.1920.1050" timestamp="1578728513718" />
-    <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578676266705">
-      <screen x="1080" y="1080" width="1920" height="1080" />
+    <state x="555" y="285" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578729632521">
+      <screen x="0" y="30" width="1920" height="1050" />
     </state>
+    <state x="555" y="285" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578729632521" />
     <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676266705" />
     <state x="585" y="258" width="795" height="592" key="find.popup" timestamp="1578729262518">
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="585" y="258" width="795" height="592" key="find.popup/0.30.1920.1050@0.30.1920.1050" timestamp="1578729262518" />
+    <state x="624" y="253" key="run.anything.popup" timestamp="1578730992813">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="624" y="253" key="run.anything.popup/0.30.1920.1050@0.30.1920.1050" timestamp="1578730992813" />
   </component>
 </project>
