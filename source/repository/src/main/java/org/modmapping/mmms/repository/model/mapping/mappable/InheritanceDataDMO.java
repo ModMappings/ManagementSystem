@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("mappable_inheritance_data")
+@Table("inheritance_data")
 public class InheritanceDataDMO {
     @Id
     private final UUID id;

@@ -14,10 +14,10 @@ create table "release"
 		constraint "FK_release_mapping_type_mappingTypeId"
 			references "mapping_type"
 				on delete cascade,
-	"isSnapshot" boolean not null
-);
+	"isSnapshot" boolean not null,
 
-alter table "release" owner to "dbo";
+	unique ("name", "mappingTypeId")
+);
 
 create index "IX_release_gameVersionId"
 	on "release" ("gameVersionId");
@@ -25,6 +25,6 @@ create index "IX_release_gameVersionId"
 create index "IX_release_mappingTypeId"
 	on "release" ("mappingTypeId");
 
-create unique index "IX_release_name"
+create index "IX_release_name"
 	on "release" ("name");
 

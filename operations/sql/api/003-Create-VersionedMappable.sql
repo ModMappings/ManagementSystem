@@ -30,10 +30,8 @@ create table "versioned_mappable"
 	"visibility" integer,
 	"isStatic" boolean,
 	"type" text,
-	"descriptor" text,
+	"descriptor" text
 );
-
-alter table "versioned_mappable" owner to "dbo";
 
 create index "IX_versioned_mappable_mappableId"
 	on "versioned_mappable" ("mappableId");
