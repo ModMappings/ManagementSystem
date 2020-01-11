@@ -13,7 +13,7 @@ import reactor.core.publisher.Flux;
  * This interface, although not directly implementing the methods from the {@link ICommentRepository},
  * provides all the functionality via the {@link Query}-Annotation that is put on its methods with the relevant SQL Query implemented.
  */
-public interface ISpringR2DBCCommentRepository extends ICommentRepository {
+public interface CommentRepositoryImpl extends ICommentRepository {
 
     @Query("Select * from comments c where c.releaseId = $1")
     @Override

@@ -14,24 +14,24 @@ import reactor.core.publisher.Mono;
 public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
 
     /**
-     * Finds all mappings for a given mappable in game version id.
+     * Finds all mappings for a given versioned mappable id.
      *
      * The mappings will be returned from newest to oldest.
      *
-     * @param mappableInGameVersionId The id of the mappable in game version to get the mappings for.
+     * @param versionedMappableId The id of the versioned mappable to get the mappings for.
      * @param pageable The pagination information for the query.
-     * @return The mappings for the given mappable in game version.
+     * @return The mappings for the given versioned mappable.
      */
-    Flux<MappingDMO> findAllForMappableInGameVersion(UUID mappableInGameVersionId, final Pageable pageable);
+    Flux<MappingDMO> findAllForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
 
     /**
-     * Finds the latest mappings for a given mappable in game version id.
+     * Finds the latest mappings for a given versioned mappable id.
      *
-     * @param mappableInGameVersionId The id of the mappable in game version to get the latest mapping for.
+     * @param versionedMappableId The id of the versioned mappable to get the latest mapping for.
      * @param pageable The pagination information for the query.
-     * @return The latest mapping for the given mappable in game version.
+     * @return The latest mapping for the given versioned mappable.
      */
-    Mono<MappingDMO> findLatestForMappableInGameVersion(UUID mappableInGameVersionId, final Pageable pageable);
+    Mono<MappingDMO> findLatestForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
 
     /**
      * Finds all mappings for a given mapping type id.
@@ -98,7 +98,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
 
     /**
      * Finds all mappings of which the input matches the given regex.
-     * Will only return the latest mapping for any given mappable in game version.
+     * Will only return the latest mapping for any given versioned mappable.
      *
      * The mappings will be returned in newest to oldest order.
      *
@@ -110,7 +110,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
 
     /**
      * Finds all mappings of which the input matches the given regex.
-     * The mapping also has to be for a mappable in game version who targets the game version with
+     * The mapping also has to be for a versioned mappable who targets the game version with
      * the given id.
      *
      * The mappings will be returned in newest to oldest order.
@@ -124,8 +124,8 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
 
     /**
      * Finds all mappings of which the input matches the given regex.
-     * Will only return the latest mapping for any given mappable in game version.
-     * The mapping also has to be for a mappable in game version who targets the game version with
+     * Will only return the latest mapping for any given versioned mappable.
+     * The mapping also has to be for a versioned mappable who targets the game version with
      * the given id.
      *
      * The mappings will be returned in newest to oldest order.
@@ -151,7 +151,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
 
     /**
      * Finds all mappings of which the input matches the given regex.
-     * Will only return the latest mapping for any given mappable in game version.
+     * Will only return the latest mapping for any given versioned mappable.
      * The mapping also has to be for a mapping type with the given id.
      *
      * The mappings will be returned in newest to oldest order.
@@ -165,7 +165,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
     /**
      * Finds all mappings of which the input matches the given regex.
      * The mapping also has to be for a mapping type with the given id.
-     * The mapping also has to be for a mappable in game version who targets the game version with
+     * The mapping also has to be for a versioned mappable who targets the game version with
      * the given id.
      *
      * The mappings will be returned in newest to oldest order.
@@ -178,9 +178,9 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
 
     /**
      * Finds all mappings of which the input matches the given regex.
-     * Will only return the latest mapping for any given mappable in game version.
+     * Will only return the latest mapping for any given versioned mappable.
      * The mapping also has to be for a mapping type with the given id.
-     * The mapping also has to be for a mappable in game version who targets the game version with
+     * The mapping also has to be for a versioned mappable who targets the game version with
      * the given id.
      *
      * The mappings will be returned in newest to oldest order.

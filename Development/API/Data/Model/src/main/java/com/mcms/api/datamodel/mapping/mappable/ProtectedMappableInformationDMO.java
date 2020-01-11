@@ -7,7 +7,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * An record that indicates a many to many relationship between a component in a given game version, as well
+ * A record which indicates a many-to-many relationship between a component in a given game version, as well
  * as a given mapping type.
  * If such a record exists, no proposals can be made for the given component in the given game version with the given mapping type.
  */
@@ -16,19 +16,19 @@ public class ProtectedMappableInformationDMO {
 
     @Id
     private final UUID id;
-    private final UUID mappableInGameVersionId;
+    private final UUID versionedMappableId;
     private final UUID mappingType;
 
     @PersistenceConstructor
-    ProtectedMappableInformationDMO(final UUID id, final UUID mappableInGameVersionId, final UUID mappingType) {
+    ProtectedMappableInformationDMO(final UUID id, final UUID versionedMappableId, final UUID mappingType) {
         this.id = id;
-        this.mappableInGameVersionId = mappableInGameVersionId;
+        this.versionedMappableId = versionedMappableId;
         this.mappingType = mappingType;
     }
 
-    public ProtectedMappableInformationDMO(final UUID mappableInGameVersionId, final UUID mappingType) {
+    public ProtectedMappableInformationDMO(final UUID versionedMappableId, final UUID mappingType) {
         this.id = UUID.randomUUID();
-        this.mappableInGameVersionId = mappableInGameVersionId;
+        this.versionedMappableId = versionedMappableId;
         this.mappingType = mappingType;
     }
 
@@ -36,8 +36,8 @@ public class ProtectedMappableInformationDMO {
         return id;
     }
 
-    public UUID getMappableInGameVersionId() {
-        return mappableInGameVersionId;
+    public UUID getVersionedMappableId() {
+        return versionedMappableId;
     }
 
     public UUID getMappingType() {

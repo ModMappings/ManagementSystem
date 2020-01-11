@@ -25,10 +25,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8309cd2-8ad2-4470-b984-a3ed7009e8c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/ISpringR2DBCMappableInGameVersionInheritanceDataRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/ISpringR2DBCMappableInGameVersionRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionInheritanceDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IInheritanceDataRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IMappableInGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IVersionedMappableRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappable/IProtectedMappableInformationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IMappingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IProposedMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Core/src/main/java/com/mcms/data/core/repositories/mapping/mappings/IProposedMappingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/MappableInGameVersionDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/VersionedMappableDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/MappableInGameVersionInheritanceDataDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/InheritanceDataDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/ProtectedMappableInformationDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappable/ProtectedMappableInformationDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappings/MappingDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappings/MappingDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappings/ProposedMappingDMO.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Model/src/main/java/com/mcms/api/datamodel/mapping/mappings/ProposedMappingDMO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/ISpringR2DBCCommentReactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/CommentReactionRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/ISpringR2DBCCommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/comments/CommentRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/ISpringR2DBCMappableInGameVersionInheritanceDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/InheritanceDataRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/ISpringR2DBCMappableInGameVersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/Data/Spring-R2DBC-Based/src/main/java/com/mcms/data/core/repositories/mapping/mappable/VersionedMappableRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/handlers/ComponentRepositories.java" beforeDir="false" afterPath="$PROJECT_DIR$/API/WebApi/src/main/java/com/mcms/api/webapi/handlers/ComponentRepositories.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +66,46 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="MCMS" type="f1a62948:ProjectNode" />
                 <item name="API" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Data" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Data" type="2d1252cf:ModuleNode" />
+                <item name="Spring-R2DBC-Based" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Data" type="2d1252cf:ModuleNode" />
+                <item name="Spring-R2DBC-Based" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Data" type="2d1252cf:ModuleNode" />
+                <item name="Spring-R2DBC-Based" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MCMS" type="f1a62948:ProjectNode" />
+                <item name="API" type="2d1252cf:ModuleNode" />
+                <item name="Data" type="2d1252cf:ModuleNode" />
+                <item name="Spring-R2DBC-Based" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -449,13 +501,25 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1848" y="1321" width="374" height="582" key="#com.intellij.ide.util.MemberChooser/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676582573" />
+    <state x="458" y="28" width="999" height="1052" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1578729532165">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="458" y="28" width="999" height="1052" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578729532165" />
     <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2" timestamp="1578676265067">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1080" y="1178" width="1910" height="868" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676265067" />
+    <state width="509" height="446" key="SwitcherDM" timestamp="1578728513718">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state width="509" height="446" key="SwitcherDM/0.30.1920.1050@0.30.1920.1050" timestamp="1578728513718" />
     <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578676266705">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1344" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578676266705" />
+    <state x="585" y="258" width="795" height="592" key="find.popup" timestamp="1578729262518">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="585" y="258" width="795" height="592" key="find.popup/0.30.1920.1050@0.30.1920.1050" timestamp="1578729262518" />
   </component>
 </project>

@@ -14,15 +14,15 @@ import reactor.core.publisher.Mono;
 public interface IProposedMappingRepository extends CrudRepository<ProposedMappingDMO, UUID> {
 
     /**
-     * Finds all proposed mappings for a given mappable in game version id.
+     * Finds all proposed mappings for a given versioned mappable id.
      *
      * The proposed mappings will be returned from newest to oldest.
      *
-     * @param mappableInGameVersionId The id of the mappable in game version to get the proposed mappings for.
+     * @param versionedMappableId The id of the versioned mappable to get the proposed mappings for.
      * @param pageable The pagination information for the query.
-     * @return The proposed mappings for the given mappable in game version.
+     * @return The proposed mappings for the given versioned mappable.
      */
-    Flux<ProposedMappingDMO> findAllForMappableInGameVersion(UUID mappableInGameVersionId, final Pageable pageable);
+    Flux<ProposedMappingDMO> findAllForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
 
     /**
      * Finds all proposed mappings for a given mapping type id.
@@ -60,7 +60,7 @@ public interface IProposedMappingRepository extends CrudRepository<ProposedMappi
 
     /**
      * Finds all proposed mappings of which the input matches the given regex.
-     * The proposed mapping also has to be for a mappable in game version who targets the game version with
+     * The proposed mapping also has to be for a versioned mappable who targets the game version with
      * the given id.
      *
      * The proposed mappings will be returned in newest to oldest order.
@@ -87,7 +87,7 @@ public interface IProposedMappingRepository extends CrudRepository<ProposedMappi
     /**
      * Finds all proposed mappings of which the input matches the given regex.
      * The proposed mapping also has to be for a mapping type with the given id.
-     * The proposed mapping also has to be for a mappable in game version who targets the game version with
+     * The proposed mapping also has to be for a versioned mappable who targets the game version with
      * the given id.
      *
      * The proposed mappings will be returned in newest to oldest order.

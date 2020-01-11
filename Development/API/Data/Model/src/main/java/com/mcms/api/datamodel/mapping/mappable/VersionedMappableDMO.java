@@ -18,15 +18,15 @@ import org.springframework.data.relational.core.mapping.Table;
  * See the static factory methods in this class for the fields that are populated depending on what type of mappable this represents.
  */
 @Table("versioned_mappable")
-public class MappableInGameVersionDMO {
+public class VersionedMappableDMO {
 
-    public static MappableInGameVersionDMO newRootPackage(
+    public static VersionedMappableDMO newRootPackage(
                     final UUID createdBy,
                     final UUID gameVersionId,
                     final UUID mappableId
     )
     {
-        return new MappableInGameVersionDMO(
+        return new VersionedMappableDMO(
                         createdBy,
                         gameVersionId,
                         mappableId,
@@ -40,14 +40,14 @@ public class MappableInGameVersionDMO {
         );
     }
 
-    public static MappableInGameVersionDMO newPackage(
+    public static VersionedMappableDMO newPackage(
                     final UUID createdBy,
                     final UUID gameVersionId,
                     final UUID mappableId,
                     final UUID parentPackageId
     )
     {
-        return new MappableInGameVersionDMO(
+        return new VersionedMappableDMO(
                         createdBy,
                         gameVersionId,
                         mappableId,
@@ -61,7 +61,7 @@ public class MappableInGameVersionDMO {
         );
     }
 
-    public static MappableInGameVersionDMO newClass(
+    public static VersionedMappableDMO newClass(
                     final UUID createdBy,
                     final UUID gameVersionId,
                     final UUID mappableId,
@@ -70,7 +70,7 @@ public class MappableInGameVersionDMO {
                     final UUID parentPackageId
     )
     {
-        return new MappableInGameVersionDMO(
+        return new VersionedMappableDMO(
                         createdBy,
                         gameVersionId,
                         mappableId,
@@ -84,17 +84,17 @@ public class MappableInGameVersionDMO {
         );
     }
 
-    public static MappableInGameVersionDMO newInnerClass(
+    public static VersionedMappableDMO newInnerClass(
                     final UUID createdBy,
                     final UUID gameVersionId,
                     final UUID mappableId,
                     final VisibilityDMO visibility,
                     final boolean isStatic,
                     final UUID parentPackageId,
-                    final UUID partOfClassId
+                    final UUID parentClassId
     )
     {
-        return new MappableInGameVersionDMO(
+        return new VersionedMappableDMO(
                         createdBy,
                         gameVersionId,
                         mappableId,
@@ -102,23 +102,23 @@ public class MappableInGameVersionDMO {
                         isStatic,
                         null,
                         parentPackageId,
-                        partOfClassId,
+                        parentClassId,
                         null,
                         null
         );
     }
 
-    public static MappableInGameVersionDMO newMethod(
+    public static VersionedMappableDMO newMethod(
                     final UUID createdBy,
                     final UUID gameVersionId,
                     final UUID mappableId,
                     final VisibilityDMO visibility,
                     final boolean isStatic,
-                    final UUID partOfClassId,
+                    final UUID parentClassId,
                     final String descriptor
     )
     {
-        return new MappableInGameVersionDMO(
+        return new VersionedMappableDMO(
                         createdBy,
                         gameVersionId,
                         mappableId,
@@ -126,23 +126,23 @@ public class MappableInGameVersionDMO {
                         isStatic,
                         null,
                         null,
-                        partOfClassId,
+                        parentClassId,
                         descriptor,
                         null
         );
     }
 
-    public static MappableInGameVersionDMO newField(
+    public static VersionedMappableDMO newField(
                     final UUID createdBy,
                     final UUID gameVersionId,
                     final UUID mappableId,
                     final VisibilityDMO visibility,
                     final boolean isStatic,
                     final String type,
-                    final UUID partOfClassId
+                    final UUID parentClassId
     )
     {
-        return new MappableInGameVersionDMO(
+        return new VersionedMappableDMO(
                         createdBy,
                         gameVersionId,
                         mappableId,
@@ -150,23 +150,23 @@ public class MappableInGameVersionDMO {
                         isStatic,
                         type,
                         null,
-                        partOfClassId,
+                        parentClassId,
                         null,
                         null
         );
     }
 
-    public static MappableInGameVersionDMO newParameter(
+    public static VersionedMappableDMO newParameter(
                     final UUID createdBy,
                     final UUID gameVersionId,
                     final UUID mappableId,
                     final VisibilityDMO visibility,
                     final boolean isStatic,
                     final String type,
-                    final UUID partOfMethodId
+                    final UUID parentMethodId
     )
     {
-        return new MappableInGameVersionDMO(
+        return new VersionedMappableDMO(
                         createdBy,
                         gameVersionId,
                         mappableId,
@@ -176,7 +176,7 @@ public class MappableInGameVersionDMO {
                         null,
                         null,
                         null,
-                        partOfMethodId
+                        parentMethodId
         );
     }
 
@@ -187,20 +187,19 @@ public class MappableInGameVersionDMO {
     private final UUID gameVersionId;
     private final UUID mappableId;
 
+    private final UUID parentPackageId;
+    private final UUID parentClassId;
+    private final UUID parentMethodId;
+
     private final VisibilityDMO visibility;
     private final boolean isStatic;
     private final String type;
-
-    private final UUID parentPackageId;
-
-    private final UUID partOfClassId;
-
     private final String descriptor;
 
-    private final UUID partOfMethodId;
+
 
     @PersistenceConstructor
-    MappableInGameVersionDMO(
+    VersionedMappableDMO(
                     final UUID id,
                     final UUID createdBy,
                     final Timestamp createdOn,
@@ -210,8 +209,8 @@ public class MappableInGameVersionDMO {
                     final boolean isStatic,
                     final String type,
                     final UUID parentPackageId,
-                    final UUID partOfClassId,
-                    final String descriptor, final UUID partOfMethodId) {
+                    final UUID parentClassId,
+                    final String descriptor, final UUID parentMethodId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -221,12 +220,12 @@ public class MappableInGameVersionDMO {
         this.isStatic = isStatic;
         this.type = type;
         this.parentPackageId = parentPackageId;
-        this.partOfClassId = partOfClassId;
+        this.parentClassId = parentClassId;
         this.descriptor = descriptor;
-        this.partOfMethodId = partOfMethodId;
+        this.parentMethodId = parentMethodId;
     }
 
-    MappableInGameVersionDMO(
+    VersionedMappableDMO(
                     final UUID createdBy,
                     final UUID gameVersionId,
                     final UUID mappableId,
@@ -234,9 +233,9 @@ public class MappableInGameVersionDMO {
                     final boolean isStatic,
                     final String type,
                     final UUID parentPackageId,
-                    final UUID partOfClassId,
+                    final UUID parentClassId,
                     final String descriptor,
-                    final UUID partOfMethodId) {
+                    final UUID parentMethodId) {
         this.id = UUID.randomUUID();
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
@@ -246,9 +245,9 @@ public class MappableInGameVersionDMO {
         this.isStatic = isStatic;
         this.type = type;
         this.parentPackageId = parentPackageId;
-        this.partOfClassId = partOfClassId;
+        this.parentClassId = parentClassId;
         this.descriptor = descriptor;
-        this.partOfMethodId = partOfMethodId;
+        this.parentMethodId = parentMethodId;
     }
 
     public UUID getId() {
@@ -287,15 +286,15 @@ public class MappableInGameVersionDMO {
         return parentPackageId;
     }
 
-    public UUID getPartOfClassId() {
-        return partOfClassId;
+    public UUID getParentClassId() {
+        return parentClassId;
     }
 
     public String getDescriptor() {
         return descriptor;
     }
 
-    public UUID getPartOfMethodId() {
-        return partOfMethodId;
+    public UUID getParentMethodId() {
+        return parentMethodId;
     }
 }

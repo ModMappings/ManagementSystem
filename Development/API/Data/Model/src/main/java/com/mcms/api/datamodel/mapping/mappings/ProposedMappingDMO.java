@@ -16,7 +16,7 @@ public class ProposedMappingDMO {
     private final UUID            id;
     private final UUID            createdBy;
     private final Timestamp       createdOn;
-    private final UUID            mappableInGameVersionId;
+    private final UUID            versionedMappableId;
     private final UUID mappingTypeId;
     private final String input;
     private final String output;
@@ -32,7 +32,7 @@ public class ProposedMappingDMO {
                     final UUID id,
                     final UUID createdBy,
                     final Timestamp createdOn,
-                    final UUID mappableInGameVersionId,
+                    final UUID versionedMappableId,
                     final UUID mappingTypeId,
                     final String input,
                     final String output,
@@ -45,7 +45,7 @@ public class ProposedMappingDMO {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
-        this.mappableInGameVersionId = mappableInGameVersionId;
+        this.versionedMappableId = versionedMappableId;
         this.mappingTypeId = mappingTypeId;
         this.input = input;
         this.output = output;
@@ -59,7 +59,7 @@ public class ProposedMappingDMO {
 
     public ProposedMappingDMO(
                     final UUID createdBy,
-                    final UUID mappableInGameVersionId,
+                    final UUID versionedMappableId,
                     final UUID mappingTypeId,
                     final String input,
                     final String output,
@@ -68,7 +68,7 @@ public class ProposedMappingDMO {
         this.id = UUID.randomUUID();
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
-        this.mappableInGameVersionId = mappableInGameVersionId;
+        this.versionedMappableId = versionedMappableId;
         this.mappingTypeId = mappingTypeId;
         this.input = input;
         this.output = output;
@@ -92,8 +92,8 @@ public class ProposedMappingDMO {
         return createdOn;
     }
 
-    public UUID getMappableInGameVersionId() {
-        return mappableInGameVersionId;
+    public UUID getVersionedMappableId() {
+        return versionedMappableId;
     }
 
     public UUID getMappingTypeId() {
@@ -153,7 +153,7 @@ public class ProposedMappingDMO {
                         id,
                         createdBy,
                         createdOn,
-                        mappableInGameVersionId,
+                        versionedMappableId,
                         mappingTypeId,
                         input,
                         output,
@@ -180,7 +180,7 @@ public class ProposedMappingDMO {
                         id,
                         createdBy,
                         createdOn,
-                        mappableInGameVersionId,
+                        versionedMappableId,
                         mappingTypeId,
                         input,
                         output,
