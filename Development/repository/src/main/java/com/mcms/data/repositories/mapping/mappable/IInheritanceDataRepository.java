@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.mcms.data.model.mapping.mappable.InheritanceDataDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 
@@ -20,6 +21,7 @@ public interface IInheritanceDataRepository extends CrudRepository<InheritanceDa
      * @param pageable The pagination information for the query.
      * @return All inheritance data which indicates that the given mappable in a game version is a super type.
      */
+    @Query("Select * from mappable_inheritance_data mid where mid.superTypeVersionedMappableId = $1")
     Flux<InheritanceDataDMO> findAllForSuperType(UUID superTypeVersionedMappableId, final Pageable pageable);
 
     /**
@@ -30,5 +32,6 @@ public interface IInheritanceDataRepository extends CrudRepository<InheritanceDa
      * @param pageable The pagination information for the query.
      * @return All inheritance data which indicates that the given mappable in a game version is a sub type.
      */
+    @Query("Select * from mappable_inheritance_data mid where mid.subTypeVersionedMappableId = $1")
     Flux<InheritanceDataDMO> findAllForSubType(UUID subTypeVersionedMappableId, final Pageable pageable);
 }
