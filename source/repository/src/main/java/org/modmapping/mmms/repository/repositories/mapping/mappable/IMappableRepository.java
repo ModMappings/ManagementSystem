@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.modmapping.mmms.repository.model.mapping.mappable.MappableDMO;
 import org.modmapping.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import reactor.core.publisher.Flux;
 
@@ -21,5 +22,6 @@ public interface IMappableRepository extends CrudRepository<MappableDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The mappables of the given type.
      */
+    @Query("SELECT * FROM mappable m WHERE m.type = $1")
     Flux<MappableDMO> findAllForType(MappableTypeDMO type, final Pageable pageable);
 }
