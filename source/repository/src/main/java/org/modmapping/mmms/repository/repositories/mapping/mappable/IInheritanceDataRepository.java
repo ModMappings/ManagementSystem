@@ -21,7 +21,7 @@ public interface IInheritanceDataRepository extends CrudRepository<InheritanceDa
      * @param pageable The pagination information for the query.
      * @return All inheritance data which indicates that the given mappable in a game version is a super type.
      */
-    @Query("Select * from mappable_inheritance_data mid where mid.superTypeVersionedMappableId = $1")
+    @Query("Select * from inheritance_data mid where mid.superTypeVersionedMappableId = $1")
     Flux<InheritanceDataDMO> findAllForSuperType(UUID superTypeVersionedMappableId, final Pageable pageable);
 
     /**
@@ -32,6 +32,6 @@ public interface IInheritanceDataRepository extends CrudRepository<InheritanceDa
      * @param pageable The pagination information for the query.
      * @return All inheritance data which indicates that the given mappable in a game version is a sub type.
      */
-    @Query("Select * from mappable_inheritance_data mid where mid.subTypeVersionedMappableId = $1")
+    @Query("Select * from inheritance_data mid where mid.subTypeVersionedMappableId = $1")
     Flux<InheritanceDataDMO> findAllForSubType(UUID subTypeVersionedMappableId, final Pageable pageable);
 }
