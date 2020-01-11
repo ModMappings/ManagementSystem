@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/operations/sql/api/000-Create-Mappable.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/001-Create-GameVersion.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/002-Create-MappingTypes.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/003-Create-VersionedMappable.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/004-Create-Release.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/005-Create-ProtectedMappable.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/006-Create-Mapping.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/007-Create-ReleaseComponent.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/008-Create-ProposedMapping.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/009-Create-InheritanceData.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/010-Create-VotingRecord.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/011-Create-Comment.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/operations/sql/api/012-Create-CommentReaction.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/000-Create-Mappable.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/001-Create-GameVersion.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/002-Create-MappingTypes.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/003-Create-VersionedMappable.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/004-Create-Release.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/005-Create-ProtectedMappable.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/006-Create-Mapping.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/007-Create-ReleaseComponent.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/008-Create-ProposedMapping.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/009-Create-InheritanceData.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/010-Create-VotingRecord.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/011-Create-Comment.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/source/repository/src/main/resources/db/migration/012-Create-CommentReaction.sql" dialect="PostgreSQL" />
   </component>
 </project>

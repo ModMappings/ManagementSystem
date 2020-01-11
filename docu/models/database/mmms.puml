@@ -1,0 +1,198 @@
+@startuml
+
+entity "comment" {
+  + id [PK]
+  --
+  createdBy
+  createdOn
+  content
+  deletedBy
+  deletedOn
+  lastEditBy
+  lastEditOn
+  proposedMappingId
+  releaseId
+  parentCommentId
+}
+
+entity "comment_reaction" {
+  + id [PK]
+  --
+  createdBy
+  createdOn
+  type
+  commentId
+}
+
+entity "game_version" {
+  + id [PK]
+  --
+  name
+  createdOn
+  createdBy
+  isPreRelease
+  isSnapshot
+}
+
+entity "inheritance_data" {
+  + id [PK]
+  --
+  subTypeVersionedMappableId
+  superTypeVersionedMappableId
+}
+
+entity "mappable" {
+  + td [PK]
+  --
+  type
+  createdBy
+  createdOn
+}
+
+entity "mapping" {
+  + id [PK]
+  --
+  versionedMappableId
+  createdOn
+  input
+  output
+  documentation
+  distribution
+  mappingTypeId
+  createdBy
+}
+
+entity "mapping_type" {
+  + id [PK]
+  --
+  name
+  createdBy
+  createdOn
+  visible
+  editable
+}
+
+entity "proposed_mapping" {
+  + id [PK]
+  --
+  versionedMappableId
+  createdOn
+  input
+  output
+  documentation
+  distribution
+  mappingTypeId
+  createdBy
+  isPublic
+  closedBy
+  closedOn
+  mappingId
+}
+
+entity "protected_mappable" {
+  + id [PK]
+  --
+  versionedMappableId
+  mappingTypeId
+}
+
+entity "release" {
+  + id [PK]
+  --
+  name
+  createdOn
+  createdBy
+  gameVersionId
+  mappingTypeId
+  isSnapshot
+}
+
+entity "release_component" {
+  + id [PK]
+  --
+  releaseId
+  mappingId
+}
+
+entity "versioned_mappable" {
+  + id [PK]
+  --
+  gameVersionId
+  createdBy
+  createdOn
+  mappableId
+  parentPackageId
+  parentClassId
+  parentMethodId
+  visibility
+  isStatic
+  type
+  descriptor
+}
+
+entity "voting_record" {
+  + id [PK]
+  --
+  proposalId
+  createdOn
+  votedBy
+  isForVote
+  hasBeenRescinded
+}
+
+ comment }-- comment
+
+ comment }-- proposed_mapping
+
+ comment }-- release
+
+ comment_reaction }-- comment
+
+ inheritance_data }-- versioned_mappable
+
+ inheritance_data }-- versioned_mappable
+
+ mapping }-- mapping_type
+
+ mapping }-- versioned_mappable
+
+ proposed_mapping }-- mapping
+
+ proposed_mapping }-- mapping_type
+
+ proposed_mapping }-- versioned_mappable
+
+ protected_mappable }-- mapping_type
+
+ protected_mappable }-- mapping_type
+
+ protected_mappable }-- versioned_mappable
+
+ protected_mappable }-- versioned_mappable
+
+ release }-- game_version
+
+ release }-- mapping_type
+
+ release }-- mapping_type
+
+ release_component }-- mapping
+
+ release_component }-- mapping
+
+ release_component }-- release
+
+ release_component }-- release
+
+ versioned_mappable }-- game_version
+
+ versioned_mappable }-- mappable
+
+ versioned_mappable }-- versioned_mappable
+
+ versioned_mappable }-- versioned_mappable
+
+ versioned_mappable }-- versioned_mappable
+
+ voting_record }-- proposed_mapping
+@enduml
