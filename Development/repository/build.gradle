@@ -1,5 +1,4 @@
 plugins {
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
 }
 
@@ -13,7 +12,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.data:spring-data-relational:1.1.3.RELEASE'
+    implementation project(':API:Data:Model')
+    implementation platform('io.projectreactor:reactor-bom:Dysprosium-SR1')
+
+    implementation 'io.projectreactor:reactor-core'
+    implementation 'org.springframework.data:spring-data-commons:2.2.3.RELEASE'
 }
 
 test {
