@@ -27,6 +27,7 @@
     <list default="true" id="d8cd4699-805f-4e24-9d8d-9db1d9e735b9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/IMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/IMappingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/000-Create-Mappable.sql" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/resources/db/migration/000-Create-Mappable.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +75,20 @@
         <item name="mmms: database" type="162271b6:PgImplModel$Database" />
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
         <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="PostgreSQL - mmms@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="mmms: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="PostgreSQL - mmms@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="roles" type="d4e8921:DatabaseStructure$FamilyGroup" />
       </path>
     </expand>
     <select />
@@ -140,6 +155,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -162,7 +178,22 @@
       <list>
         <serviceView>
           <treeState>
-            <expand />
+            <expand>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:PostgreSQL - mmms@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:PostgreSQL - mmms@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="com.intellij.database.console.session.MessageBusSession@76532550" type="9fbbdea:ServiceModel$ServiceNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:PostgreSQL - mmms@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="com.intellij.database.console.session.MessageBusSession@58bb8fec" type="9fbbdea:ServiceModel$ServiceNode" />
+              </path>
+            </expand>
             <select />
           </treeState>
         </serviceView>
@@ -183,7 +214,10 @@
       <workItem from="1578775260880" duration="616000" />
       <workItem from="1578778843806" duration="3562000" />
       <workItem from="1578782433701" duration="365000" />
-      <workItem from="1578782822309" duration="4279000" />
+      <workItem from="1578782822309" duration="4901000" />
+      <workItem from="1578826831906" duration="645000" />
+      <workItem from="1578828139757" duration="66000" />
+      <workItem from="1578840169346" duration="4470000" />
     </task>
     <task id="LOCAL-00001" summary="feat(data): Moving Development to development.">
       <created>1578775378943</created>
@@ -248,7 +282,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578785618652</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat(data): Starting working on the mapping repository.">
+      <created>1578787175723</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1578787175723</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -265,7 +306,8 @@
     <MESSAGE value="feat(data): Implement the Mappable repository." />
     <MESSAGE value="feat(data): Implement the Protected mappable information repository." />
     <MESSAGE value="feat(data): Implement the VotingRecord repository." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Implement the VotingRecord repository." />
+    <MESSAGE value="feat(data): Starting working on the mapping repository." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Starting working on the mapping repository." />
   </component>
   <component name="WindowStateProjectService">
     <state x="558" y="221" width="800" height="682" key="#Project_Structure" timestamp="1578775826886">
@@ -276,56 +318,60 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1270" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578779262663" />
-    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578785618580">
+    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578787175644">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="163" y="149" width="1589" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775982251" />
-    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578785618580" />
-    <state x="1789" y="1290" width="492" height="643" key="ExecutionTargetDialog" timestamp="1578782951173">
+    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578787175644" />
+    <state x="1789" y="1290" width="492" height="643" key="ExecutionTargetDialog" timestamp="1578841777846">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1789" y="1290" width="492" height="643" key="ExecutionTargetDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578782951173" />
+    <state x="1789" y="1290" width="492" height="643" key="ExecutionTargetDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578841777846" />
     <state x="1809" y="1337" width="452" height="550" key="FileChooserDialogImpl" timestamp="1578783028825">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1809" y="1337" width="452" height="550" key="FileChooserDialogImpl/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578783028825" />
-    <state width="1291" height="259" key="GridCell.Tab.0.bottom" timestamp="1578780793041">
+    <state width="1291" height="259" key="GridCell.Tab.0.bottom" timestamp="1578844248902">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state width="1291" height="259" key="GridCell.Tab.0.bottom/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578780793041" />
-    <state width="1291" height="259" key="GridCell.Tab.0.center" timestamp="1578780793041">
+    <state width="1291" height="259" key="GridCell.Tab.0.bottom/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578844248902" />
+    <state width="1291" height="259" key="GridCell.Tab.0.center" timestamp="1578844248902">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state width="1291" height="259" key="GridCell.Tab.0.center/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578780793041" />
-    <state width="1291" height="259" key="GridCell.Tab.0.left" timestamp="1578780793041">
+    <state width="1291" height="259" key="GridCell.Tab.0.center/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578844248902" />
+    <state width="1291" height="259" key="GridCell.Tab.0.left" timestamp="1578844248902">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state width="1291" height="259" key="GridCell.Tab.0.left/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578780793041" />
-    <state width="1291" height="259" key="GridCell.Tab.0.right" timestamp="1578780793041">
+    <state width="1291" height="259" key="GridCell.Tab.0.left/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578844248902" />
+    <state width="1291" height="259" key="GridCell.Tab.0.right" timestamp="1578844248902">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state width="1291" height="259" key="GridCell.Tab.0.right/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578780793041" />
+    <state width="1291" height="259" key="GridCell.Tab.0.right/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578844248902" />
     <state x="1635" y="1270" width="800" height="684" key="PlantUMLSettings" timestamp="1578782794675">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1270" width="800" height="684" key="PlantUMLSettings/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578782794675" />
-    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578785624574">
+    <state x="1529" y="1243" key="SettingsEditor" timestamp="1578828198889">
+      <screen x="1080" y="1080" width="1920" height="1080" />
+    </state>
+    <state x="1529" y="1243" key="SettingsEditor/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578828198889" />
+    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578787178485">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="558" y="294" width="800" height="533" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775984384" />
-    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578785624574" />
+    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578787178485" />
     <state x="1919" y="1505" width="367" height="251" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1578782906089">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1919" y="1505" width="367" height="251" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578782906089" />
-    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog" timestamp="1578782821955">
+    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog" timestamp="1578827776435">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578782821955" />
-    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578779493915">
+    <state x="1696" y="1436" key="com.intellij.ide.util.TipDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578827776435" />
+    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578841315602">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
-    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578779493915" />
+    <state x="1808" y="1528" width="464" height="167" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578841315602" />
     <state x="1605" y="1305" width="1000" height="606" key="find.popup" timestamp="1578785256599">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>

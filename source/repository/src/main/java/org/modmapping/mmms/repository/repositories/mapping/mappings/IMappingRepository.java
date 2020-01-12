@@ -1,7 +1,9 @@
 package org.modmapping.mmms.repository.repositories.mapping.mappings;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import org.modmapping.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmapping.mmms.repository.model.mapping.mappings.MappingDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
@@ -23,7 +25,7 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The mappings for the given versioned mappable.
      */
-    @Query("SELECT * FROM mapping m WHERE m.versionedMappableId = $1")
+    @Query("SELECT * FROM mapping m WHERE m.versionedMappableId = $1 order by m.createdOn")
     Flux<MappingDMO> findAllForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
 
     /**
@@ -37,137 +39,6 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
     Mono<MappingDMO> findLatestForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
 
     /**
-     * Finds all mappings for a given mapping type id.
-     *
-     * The mappings will be returned from newest to oldest.
-     *
-     * @param mappingTypeId The id of the mapping type to get the mappings for.
-     * @param pageable The pagination information for the query.
-     * @return The mappings for the given mapping type.
-     */
-    @Query("SELECT * FROM mapping m WHERE m.mappingTypeId = $1")
-    Flux<MappingDMO> findAllForMappingType(UUID mappingTypeId, final Pageable pageable);
-
-    /**
-     * Finds all mappings for a given mapping type id and game version.
-     *
-     * The mappings will be returned from newest to oldest.
-     *
-     * @param mappingTypeId The id of the mapping type to get the mappings for.
-     * @param gameVersionId The id of the game version that the mappings need to be for.
-     * @param pageable The pagination information for the query.
-     * @return The mappings for the given mapping type and game version.
-     */
-    @Query("SELECT * FROM mapping m JOIN versioned_mappable vm ON vm.id = m.versionedMappableId WHERE m.mappingTypeId = $1 AND vm.gameVersionId = $2")
-    Flux<MappingDMO> findAllForMappingTypeAndGameVersion(UUID mappingTypeId, UUID gameVersionId, final Pageable pageable);
-
-    /**
-     * Finds the latest mappings for a given mapping type id.
-     * This will, in particular, find all the mappings for every mappable that exist, and grab their latest.
-     * Which is in contrast too {@link #findAllForMappingType(UUID, Pageable)} which just finds all regardless of the fact
-     * that there then might be multiple mappings for a given mappable.
-     *
-     * The mappings will be returned from newest to oldest.
-     *
-     * @param mappingTypeId The id of the mapping type to get the latest mapping for.
-     * @return The latest mappings for the given mapping type.
-     */
-    Flux<MappingDMO> findAllLatestForMappingType(UUID mappingTypeId, final Pageable pageable);
-
-    /**
-     * Finds the latest mappings for a given mapping type id which are part of a given game version.
-     *
-     * This will, in particular, find all the mappings for every mappable that exist, inside of the given game version, and grab their latest.
-     * Which is in contrast too {@link #findAllLatestForMappingType(UUID, Pageable)} which just finds all regardless of the fact
-     * that there then might be multiple mappings for a given mappable.
-     *
-     * The mappings will be returned from newest to oldest.
-     *
-     * @param mappingTypeId The id of the mapping type to get the latest mapping for.
-     * @param gameVersionId The id of the game version to get the latest mappings for.
-     * @param pageable The pagination information for the query.
-     * @return The latest mappings for the given mapping type.
-     */
-    Flux<MappingDMO> findAllLatestForMappingTypeAndGameVersion(UUID mappingTypeId, UUID gameVersionId, final Pageable pageable);
-
-    /**
-     * Finds all mappings of which the input matches the given regex.
-     *
-     * The mappings will be returned in newest to oldest order.
-     *
-     * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
-     * @param pageable The pagination information for the query.
-     * @return All mappings who's input matches the given regex.
-     */
-    Flux<MappingDMO> findAllForInputRegexAndOutputRegex(String inputRegex, String outputRegex, final Pageable pageable);
-
-    /**
-     * Finds all mappings of which the input matches the given regex.
-     * Will only return the latest mapping for any given versioned mappable.
-     *
-     * The mappings will be returned in newest to oldest order.
-     *
-     * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
-     * @param pageable The pagination information for the query.
-     * @return All mappings who's input matches the given regex.
-     */
-    Flux<MappingDMO> findLatestForInputRegexAndOutputRegex(String inputRegex, String outputRegex, final Pageable pageable);
-
-    /**
-     * Finds all mappings of which the input matches the given regex.
-     * The mapping also has to be for a versioned mappable who targets the game version with
-     * the given id.
-     *
-     * The mappings will be returned in newest to oldest order.
-     *
-     * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
-     * @param gameVersionId The id of the game version that the mappings mappable in a game version has to target.
-     * @param pageable The pagination information for the query.
-     * @return All mappings who's input matches the given regex.
-     */
-    Flux<MappingDMO> findAllForInputRegexAndOutputRegexAndGameVersion(String inputRegex, String outputRegex, UUID gameVersionId, final Pageable pageable);
-
-    /**
-     * Finds all mappings of which the input matches the given regex.
-     * Will only return the latest mapping for any given versioned mappable.
-     * The mapping also has to be for a versioned mappable who targets the game version with
-     * the given id.
-     *
-     * The mappings will be returned in newest to oldest order.
-     *
-     * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
-     * @param gameVersionId The id of the game version that the mappings mappable in a game version has to target.
-     * @param pageable The pagination information for the query.
-     * @return All mappings who's input matches the given regex.
-     */
-    Flux<MappingDMO> findLatestForInputRegexAndOutputRegexAndGameVersion(String inputRegex, String outputRegex, UUID gameVersionId, final Pageable pageable);
-
-    /**
-     * Finds all mappings of which the input matches the given regex.
-     * The mapping also has to be for a mapping type with the given id.
-     *
-     * The mappings will be returned in newest to oldest order.
-     *
-     * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
-     * @param pageable The pagination information for the query.
-     * @return All mappings who's input matches the given regex.
-     */
-    Flux<MappingDMO> findAllForInputRegexAndOutputRegexAndMappingType(String inputRegex, String outputRegex, UUID mappingTypeId, final Pageable pageable);
-
-    /**
-     * Finds all mappings of which the input matches the given regex.
-     * Will only return the latest mapping for any given versioned mappable.
-     * The mapping also has to be for a mapping type with the given id.
-     *
-     * The mappings will be returned in newest to oldest order.
-     *
-     * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
-     * @param pageable The pagination information for the query.
-     * @return All mappings who's input matches the given regex.
-     */
-    Flux<MappingDMO> findLatestForInputRegexAndOutputRegexAndMappingType(String inputRegex, String outputRegex, UUID mappingTypeId, final Pageable pageable);
-
-    /**
      * Finds all mappings of which the input matches the given regex.
      * The mapping also has to be for a mapping type with the given id.
      * The mapping also has to be for a versioned mappable who targets the game version with
@@ -176,10 +47,14 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
      * The mappings will be returned in newest to oldest order.
      *
      * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
+     * @param outputRegex The regex against which the output of the mappings is matched to be included in the result.
+     * @param mappingTypeId The id of the mapping type that a mapping needs to be for. Use an empty optional for any mapping type.
+     * @param gameVersionId The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
      * @param pageable The pagination information for the query.
-     * @return All mappings who's input matches the given regex.
+     * @return All mappings who' matche the given regexes and are part of the mapping type and game version if those are specified.
      */
-    Flux<MappingDMO> findAllForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId, final Pageable pageable);
+    @Query("select m.* from mapping m join versioned_mappable vm on vm.id = m.versionedMappableId Where ($1 is null or m.input regexp $1) AND ($2 is null or m.output regexp $2) AND ($3 is null OR m.mappingTypeId = $3) AND ($4 is null OR vm.gameVersionId = $4) order by m.createdOn")
+    Flux<MappingDMO> findAllForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(Optional<String> inputRegex, Optional<String> outputRegex, Optional<UUID> mappingTypeId, Optional<UUID> gameVersionId, final Pageable pageable);
 
     /**
      * Finds all mappings of which the input matches the given regex.
@@ -191,8 +66,24 @@ public interface IMappingRepository extends CrudRepository<MappingDMO, UUID> {
      * The mappings will be returned in newest to oldest order.
      *
      * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
+     * @param outputRegex The regex against which the output of the mappings is matched to be included in the result.
+     * @param mappingTypeId The id of the mapping type that a mapping needs to be for. Use an empty optional for any mapping type.
+     * @param gameVersionId The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
      * @param pageable The pagination information for the query.
-     * @return All mappings who's input matches the given regex.
+     * @return All latest mappings who' matche the given regexes and are part of the mapping type and game version if those are specified.
      */
-    Flux<MappingDMO> findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId, final Pageable pageable);
+    @Query("select m.* from mapping m left join mapping m2 on (m.versionedMappableId = m2.versionedMappableId And m.mappingTypeId = m2.mappingTypeId And m.createdOn < m2.createdOn) join versioned_mappable vm on m.versionedMappableId = vm.id Where m2.id is null AND ($1 is null or m.input regexp $1) AND ($2 is null or m.output regexp $2) AND ($3 is null OR m.mappingTypeId = $3) AND ($4 is null OR vm.gameVersionId = $4) order by m.createdOn")
+    Flux<MappingDMO> findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(Optional<String> inputRegex, Optional<String> outputRegex, Optional<UUID> mappingTypeId, Optional<UUID> gameVersionId, final Pageable pageable);
+
+    /**
+     * Finds all mappings which are part of a given release and who are for a given type.
+     *
+     * The mappings will be returned in newest to oldest order.
+     *
+     * @param releaseId The id of the release where mappings are being looked up for.
+     * @param type The type of the mappable where ids are being looked up for. Use a empty optional to get all.
+     * @return All mappings which are part of a given release and are for a given mappable type.
+     */
+    @Query("select m.* from mapping m join release_component rc on rc.mappableId = m.id join versioned_mappable vm on m.versionedMappableId = vm.id join mappable mp on vm.mappableId = mp.id where rc.releaseId = $1 and ($2 is null or mp.type = $2)")
+    Flux<MappingDMO> findAllInReleaseAndMappableType(UUID releaseId, Optional<MappableTypeDMO> type);
 }

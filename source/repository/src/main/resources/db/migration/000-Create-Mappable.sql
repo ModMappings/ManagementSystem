@@ -1,6 +1,6 @@
 create table "mappable"
 (
-	"td" uuid not null
+	"id" uuid not null
 		constraint "PK_mappable"
 			primary key,
 	"type" integer not null,
