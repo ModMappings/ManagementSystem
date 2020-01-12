@@ -25,7 +25,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8cd4699-805f-4e24-9d8d-9db1d9e735b9" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/5.0/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.0/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.0/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.0/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/api/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/source/api/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,6 +121,36 @@
                 <item name="ModMappingManagementSystem" type="f1a62948:ProjectNode" />
                 <item name="source" type="2d1252cf:ModuleNode" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ModMappingManagementSystem" type="f1a62948:ProjectNode" />
+                <item name="source" type="2d1252cf:ModuleNode" />
+                <item name="api" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ModMappingManagementSystem" type="f1a62948:ProjectNode" />
+                <item name="source" type="2d1252cf:ModuleNode" />
+                <item name="api" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ModMappingManagementSystem" type="f1a62948:ProjectNode" />
+                <item name="source" type="2d1252cf:ModuleNode" />
+                <item name="api" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ModMappingManagementSystem" type="f1a62948:ProjectNode" />
+                <item name="source" type="2d1252cf:ModuleNode" />
+                <item name="api" type="2d1252cf:ModuleNode" />
+                <item name="Source Sets" type="e897c970:GradleViewContributor$SourceSetsNode" />
+                <item name="main" type="396b929e:GradleViewContributor$SourceSetNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -163,9 +198,12 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="MMMSApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <module name="MCMS.source.api.main" />
+    <configuration name="MMMS" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ModMappingManagementSystem.source.api.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="org.modmappings.mmms.api.MMMSApplication" />
+      <option name="HIDE_BANNER" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -176,17 +214,7 @@
       <list>
         <serviceView>
           <treeState>
-            <expand>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:PostgreSQL - mmms@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              </path>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:PostgreSQL - mmms@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@58bb8fec" type="9fbbdea:ServiceModel$ServiceNode" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </treeState>
         </serviceView>
@@ -331,10 +359,15 @@
       <screen x="0" y="30" width="1920" height="1050" />
     </state>
     <state x="558" y="221" width="800" height="682" key="#Project_Structure/0.30.1920.1050@0.30.1920.1050" timestamp="1578775826886" />
-    <state x="1635" y="1270" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578779262663">
-      <screen x="1080" y="1080" width="1920" height="1080" />
+    <state x="555" y="213" width="910" height="666" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578856706493">
+      <screen x="0" y="30" width="1920" height="1050" />
     </state>
+    <state x="555" y="213" width="910" height="666" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578856706493" />
     <state x="1635" y="1270" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578779262663" />
+    <state x="745" y="338" width="525" height="432" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1578856683997">
+      <screen x="0" y="30" width="1920" height="1050" />
+    </state>
+    <state x="745" y="338" width="525" height="432" key="#com.intellij.ide.util.TreeClassChooserDialog/0.30.1920.1050@0.30.1920.1050" timestamp="1578856683997" />
     <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578845811773">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
