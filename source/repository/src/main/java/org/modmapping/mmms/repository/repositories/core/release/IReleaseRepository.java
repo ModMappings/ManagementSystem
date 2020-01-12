@@ -6,12 +6,13 @@ import org.modmapping.mmms.repository.model.core.release.ReleaseDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository which can provide and store {@link ReleaseDMO} objects.
  */
-public interface IReleaseRepository extends CrudRepository<ReleaseDMO, UUID> {
+public interface IReleaseRepository extends ReactiveCrudRepository<ReleaseDMO, UUID> {
     /**
      * Finds all releases which match the given name regex.
      *

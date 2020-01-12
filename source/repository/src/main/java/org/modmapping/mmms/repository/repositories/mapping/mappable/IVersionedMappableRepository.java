@@ -6,13 +6,14 @@ import org.modmapping.mmms.repository.model.mapping.mappable.VersionedMappableDM
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * Represents a repository which can provide and store {@link VersionedMappableDMO} objects.
  */
-public interface IVersionedMappableRepository extends CrudRepository<VersionedMappableDMO, UUID> {
+public interface IVersionedMappableRepository extends ReactiveCrudRepository<VersionedMappableDMO, UUID> {
 
     /**
      * Finds all versioned mappables for a given game version.

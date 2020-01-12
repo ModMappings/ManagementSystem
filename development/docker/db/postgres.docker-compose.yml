@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=mmms
+      - POSTGRES_USER=mmms
+      - POSTGRES_PASSWORD=mmms

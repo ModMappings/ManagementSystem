@@ -7,12 +7,13 @@ import org.modmapping.mmms.repository.model.mapping.mappings.voting.VotingRecord
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository that can store and provide {@link VotingRecordDMO} objects.
  */
-public interface IVotingRecordRepository extends CrudRepository<VotingRecordDMO, UUID> {
+public interface IVotingRecordRepository extends ReactiveCrudRepository<VotingRecordDMO, UUID> {
 
     /**
      * Finds all voting records for a given proposed mapping.
