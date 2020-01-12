@@ -26,7 +26,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d8cd4699-805f-4e24-9d8d-9db1d9e735b9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/IProposedMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappings/IProposedMappingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/core/release/IReleaseRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IVersionedMappableRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/repository/src/main/java/org/modmapping/mmms/repository/repositories/mapping/mappable/IVersionedMappableRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,7 +212,7 @@
       <workItem from="1578782822309" duration="4901000" />
       <workItem from="1578826831906" duration="645000" />
       <workItem from="1578828139757" duration="66000" />
-      <workItem from="1578840169346" duration="5312000" />
+      <workItem from="1578840169346" duration="5603000" />
     </task>
     <task id="LOCAL-00001" summary="feat(data): Moving Development to development.">
       <created>1578775378943</created>
@@ -290,7 +291,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578844702104</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="feat(data): Implemented the last data repository.">
+      <created>1578845513846</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1578845513846</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -309,7 +317,8 @@
     <MESSAGE value="feat(data): Implement the VotingRecord repository." />
     <MESSAGE value="feat(data): Starting working on the mapping repository." />
     <MESSAGE value="feat(data): Implemented IMappingRepository&#10;fix(data): Fixed the SQL schema generation containing a type in the id column for mappables." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Implemented IMappingRepository&#10;fix(data): Fixed the SQL schema generation containing a type in the id column for mappables." />
+    <MESSAGE value="feat(data): Implemented the last data repository." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(data): Implemented the last data repository." />
   </component>
   <component name="WindowStateProjectService">
     <state x="558" y="221" width="800" height="682" key="#Project_Structure" timestamp="1578775826886">
@@ -320,11 +329,11 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1635" y="1270" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578779262663" />
-    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578844701395">
+    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2" timestamp="1578845513777">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="163" y="149" width="1589" height="810" key="CommitChangelistDialog2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775982251" />
-    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578844701395" />
+    <state x="1243" y="1202" width="983" height="823" key="CommitChangelistDialog2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578845513777" />
     <state x="1789" y="1290" width="492" height="643" key="ExecutionTargetDialog" timestamp="1578841777846">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
@@ -357,11 +366,11 @@
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="1529" y="1243" key="SettingsEditor/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578828198889" />
-    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578844703495">
+    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578845521545">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>
     <state x="558" y="294" width="800" height="533" key="Vcs.Push.Dialog.v2/0.30.1920.1050@0.30.1920.1050" timestamp="1578775984384" />
-    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578844703495" />
+    <state x="1638" y="1352" width="800" height="535" key="Vcs.Push.Dialog.v2/1080.1080.1920.1080/1080.0.1920.1080/3000.160.1080.1920/0.160.1080.1920@1080.1080.1920.1080" timestamp="1578845521545" />
     <state x="1919" y="1505" width="367" height="251" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1578782906089">
       <screen x="1080" y="1080" width="1920" height="1080" />
     </state>

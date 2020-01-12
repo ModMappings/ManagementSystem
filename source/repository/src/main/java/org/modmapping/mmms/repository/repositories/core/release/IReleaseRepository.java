@@ -70,7 +70,7 @@ public interface IReleaseRepository extends CrudRepository<ReleaseDMO, UUID> {
      * @param pageable The pagination information for the query.
      * @return The releases which have the mapping with the given id as component.
      */
-    @Query("SELECT * FROM release r JOIN release_component rc ON r.id = rc.releaseId WHERE rc.mappingId = $1")
+    @Query("SELECT r.* FROM release r JOIN release_component rc ON r.id = rc.releaseId WHERE rc.mappingId = $1")
     Flux<ReleaseDMO> findAllForMapping(UUID mappingId, final Pageable pageable);
 
     /**

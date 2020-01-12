@@ -61,7 +61,7 @@ public interface IVersionedMappableRepository extends CrudRepository<VersionedMa
      * @param mappingId The id of the mapping to look up.
      * @return The versioned mappable who has the given mapping.
      */
-    @Query("SELECT * FROM versioned_mappable vm JOIN mapping m ON vm.id = m.versionedMappableId WHERE m.id = $1 TAKE 1")
+    @Query("SELECT vm.* FROM versioned_mappable vm JOIN mapping m ON vm.id = m.versionedMappableId WHERE m.id = $1 TAKE 1")
     Mono<VersionedMappableDMO> findAllForMapping(UUID mappingId);
 
     /**
@@ -71,7 +71,7 @@ public interface IVersionedMappableRepository extends CrudRepository<VersionedMa
      * @param pageable The pagination information for the query.
      * @return The versioned mappables which represent the super types of the class of which the id of its versioned mappable was provided.
      */
-    @Query("SELECT * FROM versioned_mappable vm JOIN inheritance_data mid ON vm.id = m.superTypeVersionedMappableId WHERE mid.subTypeVersionedMappableId = $1")
+    @Query("SELECT vm.* FROM versioned_mappable vm JOIN inheritance_data mid ON vm.id = m.superTypeVersionedMappableId WHERE mid.subTypeVersionedMappableId = $1")
     Flux<VersionedMappableDMO> findAllSuperTypesOf(UUID classVersionedMappableId, final Pageable pageable);
 
     /**
@@ -81,6 +81,6 @@ public interface IVersionedMappableRepository extends CrudRepository<VersionedMa
      * @param pageable The pagination information for the query.
      * @return The versioned mappables which represent the super types of the class of which the id of its versioned mappable was provided.
      */
-    @Query("SELECT * FROM versioned_mappable vm JOIN inheritance_data mid ON vm.id = m.subTypeVersionedMappableId WHERE mid.superTypeVersionedMappableId = $1")
+    @Query("SELECT *vm. FROM versioned_mappable vm JOIN inheritance_data mid ON vm.id = m.subTypeVersionedMappableId WHERE mid.superTypeVersionedMappableId = $1")
     Flux<VersionedMappableDMO> findAllSubTypesOf(UUID classVersionedMappableId, final Pageable pageable);
 }
