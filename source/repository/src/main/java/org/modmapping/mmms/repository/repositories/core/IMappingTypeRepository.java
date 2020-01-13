@@ -6,13 +6,13 @@ import org.modmapping.mmms.repository.model.core.MappingTypeDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository which provides and stores {@link MappingTypeDMO} objects.
  */
-public interface IMappingTypeRepository extends ReactiveCrudRepository<MappingTypeDMO, UUID> {
+public interface IMappingTypeRepository extends R2dbcRepository<MappingTypeDMO, UUID> {
 
     /**
      * Finds all mapping types which match the given name regex.

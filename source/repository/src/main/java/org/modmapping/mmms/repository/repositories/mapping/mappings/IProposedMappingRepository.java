@@ -7,13 +7,13 @@ import org.modmapping.mmms.repository.model.mapping.mappings.ProposedMappingDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository that can store and provide {@link ProposedMappingDMO} objects.
  */
-public interface IProposedMappingRepository extends ReactiveCrudRepository<ProposedMappingDMO, UUID> {
+public interface IProposedMappingRepository extends R2dbcRepository<ProposedMappingDMO, UUID> {
 
     /**
      * Finds all proposed mappings for a given versioned mappable id.

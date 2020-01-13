@@ -6,13 +6,13 @@ import org.modmapping.mmms.repository.model.mapping.mappable.InheritanceDataDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository which can provide and store {@link InheritanceDataDMO} objects.
  */
-public interface IInheritanceDataRepository extends ReactiveCrudRepository<InheritanceDataDMO, UUID> {
+public interface IInheritanceDataRepository extends R2dbcRepository<InheritanceDataDMO, UUID> {
 
     /**
      * Finds all the inheritance data in which the given versioned mappable class is

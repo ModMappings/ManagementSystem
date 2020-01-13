@@ -6,13 +6,13 @@ import org.modmapping.mmms.repository.model.mapping.mappable.ProtectedMappableIn
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository that can provide and store {@link ProtectedMappableInformationDMO} objects.
  */
-public interface IProtectedMappableInformationRepository extends ReactiveCrudRepository<ProtectedMappableInformationDMO, UUID> {
+public interface IProtectedMappableInformationRepository extends R2dbcRepository<ProtectedMappableInformationDMO, UUID> {
 
     /**
      * Finds all the protected versioned mappable information which indicate that a given versioned mappable is locked

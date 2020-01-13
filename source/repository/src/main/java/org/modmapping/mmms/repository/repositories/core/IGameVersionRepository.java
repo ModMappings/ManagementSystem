@@ -6,13 +6,15 @@ import org.modmapping.mmms.repository.model.core.GameVersionDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository which can provide and store {@link GameVersionDMO} objects.
  */
-public interface IGameVersionRepository extends ReactiveCrudRepository<GameVersionDMO, UUID> {
+@Repository
+public interface IGameVersionRepository extends R2dbcRepository<GameVersionDMO, UUID> {
 
     /**
      * Finds all game versions which match the given name regex.

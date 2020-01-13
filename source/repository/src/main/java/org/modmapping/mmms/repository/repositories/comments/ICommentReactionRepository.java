@@ -5,14 +5,15 @@ import java.util.UUID;
 import org.modmapping.mmms.repository.model.comments.CommentReactionDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository that can provide and store {@link CommentReactionDMO} objects.
  */
-public interface ICommentReactionRepository extends ReactiveCrudRepository<CommentReactionDMO, UUID> {
+@Repository
+public interface ICommentReactionRepository extends R2dbcRepository<CommentReactionDMO, UUID> {
 
     /**
      * Finds all comment reactions which where directly made on the comment reaction with the given id.

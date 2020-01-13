@@ -5,14 +5,15 @@ import java.util.UUID;
 import org.modmapping.mmms.repository.model.comments.CommentDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository which can provide and store {@link CommentDMO} objects.
  */
-public interface ICommentRepository extends ReactiveCrudRepository<CommentDMO, UUID> {
+@Repository
+public interface ICommentRepository extends R2dbcRepository<CommentDMO, UUID> {
     /**
      * Finds all comments which where directly made on the release with the given id.
      *

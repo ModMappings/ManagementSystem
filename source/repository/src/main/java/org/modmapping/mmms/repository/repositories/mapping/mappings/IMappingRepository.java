@@ -8,14 +8,14 @@ import org.modmapping.mmms.repository.model.mapping.mappings.MappingDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * Represents a repository which can provide and store {@link MappingDMO} objects.
  */
-public interface IMappingRepository extends ReactiveCrudRepository<MappingDMO, UUID> {
+public interface IMappingRepository extends R2dbcRepository<MappingDMO, UUID> {
 
     /**
      * Finds all mappings for a given versioned mappable id.
@@ -33,11 +33,10 @@ public interface IMappingRepository extends ReactiveCrudRepository<MappingDMO, U
      * Finds the latest mappings for a given versioned mappable id.
      *
      * @param versionedMappableId The id of the versioned mappable to get the latest mapping for.
-     * @param pageable The pagination information for the query.
      * @return The latest mapping for the given versioned mappable.
      */
     @Query("SELECT * FROM mapping m WHERE m.versionedMappableId = $1 ORDER BY m.createdOn DESC TAKE 1")
-    Mono<MappingDMO> findLatestForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
+    Mono<MappingDMO> findLatestForVersionedMappable(UUID versionedMappableId);
 
     /**
      * Finds all mappings of which the input matches the given regex.

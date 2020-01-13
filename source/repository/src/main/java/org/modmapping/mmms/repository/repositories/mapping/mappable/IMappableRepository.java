@@ -7,13 +7,13 @@ import org.modmapping.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository which can provide and store {@link MappableDMO} objects.
  */
-public interface IMappableRepository extends ReactiveCrudRepository<MappableDMO, UUID> {
+public interface IMappableRepository extends R2dbcRepository<MappableDMO, UUID> {
 
     /**
      * Finds all mappables which are of a given type.

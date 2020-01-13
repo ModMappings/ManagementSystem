@@ -6,13 +6,15 @@ import org.modmapping.mmms.repository.model.core.release.ReleaseComponentDMO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository which can provide and store {@link ReleaseComponentDMO} objects.
  */
-public interface IReleaseComponentRepository extends ReactiveCrudRepository<ReleaseComponentDMO, UUID> {
+@Repository
+public interface IReleaseComponentRepository extends R2dbcRepository<ReleaseComponentDMO, UUID> {
 
     /**
      * Finds all release component which are part of a given release that has the given id.
