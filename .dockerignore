@@ -7,3 +7,4 @@ assets
 development
 docu
 .gitignore
+/source/**/build/
