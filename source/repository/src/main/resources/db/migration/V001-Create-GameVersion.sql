@@ -10,8 +10,6 @@ create table "game_version"
 	"isSnapshot" boolean not null
 );
 
-alter table "game_version" owner to "dbo";
-
 create unique index "IX_game_version_name"
 	on "game_version" ("name");
 
