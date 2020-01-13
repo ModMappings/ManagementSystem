@@ -4,7 +4,7 @@ import javax.sql.DataSource;
 
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
-import org.modmapping.mmms.repository.repositories.Repositories;
+import org.modmappings.mmms.repository.repositories.Repositories;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
