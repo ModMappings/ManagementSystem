@@ -1,8 +1,7 @@
 FROM gradle:jdk11 as builder
-
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
-RUN ./gradlew build
+COPY --chown=gradle:gradle . /home/gradle/src/
+WORKDIR /home/gradle/src/
+RUN ./gradlew -i build
 
 FROM alpine as extractor
 COPY --from=builder /home/gradle/src/source/api/build/distributions/api-boot.tar /app/

@@ -1,0 +1,9 @@
+Dockerfile
+LICENSE
+gradlew.bat
+.idea
+.gradle
+assets
+development
+docu
+.gitignore
