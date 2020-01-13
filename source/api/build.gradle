@@ -2,10 +2,13 @@ plugins {
 	id 'org.springframework.boot' version '2.2.2.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
+	id 'application'
 }
 
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.11'
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
 
 configurations {
 	developmentOnly
@@ -54,4 +57,12 @@ dependencyManagement {
 
 test {
 	useJUnitPlatform()
+}
+
+application {
+	mainClassName = 'org.modmappings.mmms.api.MMMSApplication'
+}
+
+bootDistTar {
+	archiveVersion = ''
 }

@@ -1,1 +1,15 @@
+plugins {
+    id("io.wusa.semver-git-plugin").version("1.2.1")
+}
+
 group = "org.modmappings.mmms"
+
+semver {
+    nextVersion = "patch" // "major", "minor" (default), "patch" or "none"
+    snapshotSuffix = "<count>.g<sha><dirty>"
+    dirtyMarker = "-dirty"
+}
+
+allprojects {
+    version = semver.info.version
+}
