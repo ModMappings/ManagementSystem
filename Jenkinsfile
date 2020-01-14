@@ -28,12 +28,12 @@ pipeline {
             }
             steps {
                 unstash 'app'
-                sh 'pwd && ls -lR'
-                sh 'docker build -t modmappingapi:${BUILD_ID} -t modmappingapi:latest .'
-//                 script {
-//                     site=docker.build("modmappingapi:${env.BUILD_ID}", ".")
-//                     site.tag("latest")
-//                 }
+//                 sh 'pwd && ls -lR'
+//                 sh 'docker build -t modmappingapi:${BUILD_ID} -t modmappingapi:latest .'
+                script {
+                    site=docker.build("modmappingapi:${env.BUILD_ID}", ".")
+                    site.tag("latest")
+                }
             }
         }
 //         post {
