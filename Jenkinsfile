@@ -8,8 +8,8 @@ pipeline {
                 }
             }
             steps {
-                checkout scm
                 sh './gradlew build'
+                stash includes: 'source/api/build/distributions/api-boot.tar', name: 'app'
             }
             post {
                 success {
@@ -26,6 +26,7 @@ pipeline {
                 }
             }
             steps {
+                unstash 'app'
                 script {
                     site=docker.build("modmappingapi:${env.BUILD_ID}")
                     site.tag("latest")
