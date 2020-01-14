@@ -21,13 +21,12 @@ public interface IProposedMappingRepository extends IPageableR2DBCRepository<Pro
      * The proposed mappings will be returned from newest to oldest.
      *
      * @param versionedMappableId The id of the versioned mappable to get the proposed mappings for.
-     * @param pageable The pagination information for the query.
      * @return The proposed mappings for the given versioned mappable.
      */
     @Query("SELECT * FROM proposed_mapping pm WHERE pm.versionedMappableId = $1 And ($2 Is null OR (($2 is false AND pm.closedBy is null AND pm.closedOn is null) OR ($2 is true AND pm.closedBy is not null and pm.closedOn is not null))) And (($3 is null) or (($3 is false and pm.mappingId is null) or ($3 is true and pm.mappingId is not null))) order by m.createdOn")
-    Flux<ProposedMappingDMO> findAllForVersionedMappableAndStateAndMerged(UUID versionedMappableId, Optional<Boolean> state, Optional<Boolean> merged, final Pageable pageable);
+    Flux<ProposedMappingDMO> findAllForVersionedMappableAndStateAndMerged(UUID versionedMappableId, Boolean state, Boolean merged);
 
     @Override
     @Query("Select * from proposed_mapping pm")
-    Flux<ProposedMappingDMO> findAll(Pageable pageable);
+    Flux<ProposedMappingDMO> findAll();
 }

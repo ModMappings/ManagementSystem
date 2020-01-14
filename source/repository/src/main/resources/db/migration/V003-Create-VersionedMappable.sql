@@ -3,47 +3,47 @@ create table "versioned_mappable"
 	"id" uuid not null
 		constraint "PK_versioned_mappable"
 			primary key,
-	"gameVersionId" uuid not null
+	"game_version_id" uuid not null
 		constraint "FK_versioned_mappable_game_version_gameVersionId"
 			references "game_version"
 				on delete cascade,
-	"createdBy" uuid not null,
-	"createdOn" timestamp not null,
-	"mappableId" uuid not null
+	"created_by" uuid not null,
+	"created_on" timestamp not null,
+	"mappable_id" uuid not null
 		constraint "FK_versioned_mappable_mappable_mappableId"
 			references "mappable"
 				on delete cascade,
 	
-	"parentPackageId" uuid
+	"parent_package_id" uuid
 	    constraint "FK_versioned_mappable_versioned_mappable_parentPackageId"
 	        references "versioned_mappable"
 	            on delete restrict,
-	"parentClassId" uuid
+	"parent_class_id" uuid
 	    constraint "FK_versioned_mappable_versioned_mappable_parentClassId"
 	        references "versioned_mappable"
 	            on delete restrict,
-	"parentMethodId" uuid
+	"parent_method_id" uuid
 	    constraint "FK_versioned_mappable_versioned_mappable_parentMethodId"
 	        references "versioned_mappable"
 	            on delete restrict,
 
 	"visibility" integer,
-	"isStatic" boolean,
+	"is_static" boolean,
 	"type" text,
 	"descriptor" text
 );
 
 create index "IX_versioned_mappable_mappableId"
-	on "versioned_mappable" ("mappableId");
+	on "versioned_mappable" ("mappable_id");
 
 create index "IX_versioned_mappable_gameVersionId"
-	on "versioned_mappable" ("gameVersionId");
+	on "versioned_mappable" ("game_version_id");
 
 create index "IX_versioned_mappable_parentPackageId"
-    on "versioned_mappable" ("parentPackageId");
+    on "versioned_mappable" ("parent_package_id");
 
 create index "IX_versioned_mappable_parentClassId"
-    on "versioned_mappable" ("parentClassId");
+    on "versioned_mappable" ("parent_class_id");
 
 create index "IX_versioned_mappable_parentMethodId"
-    on "versioned_mappable" ("parentMethodId");
+    on "versioned_mappable" ("parent_method_id");

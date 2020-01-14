@@ -22,11 +22,10 @@ public interface IReleaseComponentRepository extends IPageableR2DBCRepository<Re
      * The order of the release components is not guaranteed.
      *
      * @param releaseId The id of the release that the components are being looked up for.
-     * @param pageable The pagination information for the query.
      * @return The release components which are part of the release with the given id.
      */
     @Query("SELECT * FROM release_component rc where rc.releaseId = $1")
-    Flux<ReleaseComponentDMO> findAllForRelease(UUID releaseId, final Pageable pageable);
+    Flux<ReleaseComponentDMO> findAllForRelease(UUID releaseId);
 
     /**
      * Finds all release component which target a mapping with the given id.
@@ -34,13 +33,12 @@ public interface IReleaseComponentRepository extends IPageableR2DBCRepository<Re
      * The order of the release components is not guaranteed.
      *
      * @param mappingId The id of the mapping that the components are being looked up for.
-     * @param pageable The pagination information for the query.
      * @return The release components which target the mapping with the given id.
      */
     @Query("SELECT * FROM release_component rc where rc.mappingId = $1")
-    Flux<ReleaseComponentDMO> findAllForMapping(UUID mappingId, final Pageable pageable);
+    Flux<ReleaseComponentDMO> findAllForMapping(UUID mappingId);
 
     @Override
     @Query("Select * from release_component rc")
-    Flux<ReleaseComponentDMO> findAll(Pageable pageable);
+    Flux<ReleaseComponentDMO> findAll();
 }

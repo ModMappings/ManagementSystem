@@ -3,33 +3,33 @@ create table "comment"
 	"id" uuid not null
 		constraint "PK_comment"
 			primary key,
-	"createdBy" uuid not null,
-	"createdOn" timestamp not null,
+	"created_by" uuid not null,
+	"created_on" timestamp not null,
 	"content" text not null,
-    "deletedBy" uuid,
-    "deletedOn" timestamp,
-    "lastEditBy" uuid,
-    "lastEditOn" timestamp,
-	"proposedMappingId" uuid
+    "deleted_by" uuid,
+    "deleted_on" timestamp,
+    "last_edit_by" uuid,
+    "last_edit_on" timestamp,
+	"proposed_mapping_id" uuid
 		constraint "FK_comment_proposed_mapping_proposedMappingId"
 			references "proposed_mapping"
 				on delete restrict,
-	"releaseId" uuid
+	"release_id" uuid
 		constraint "FK_comment_releases_releaseId"
 			references "release"
 				on delete restrict,
-	"parentCommentId" uuid
+	"parent_comment_id" uuid
 		constraint "FK_comment_comment_parentCommentId"
 			references "comment"
 				on delete restrict
 );
 
 create index "IX_comment_parentCommentId"
-	on "comment" ("parentCommentId");
+	on "comment" ("parent_comment_id");
 
 create index "IX_comment_proposedMappingId"
-	on "comment" ("proposedMappingId");
+	on "comment" ("proposed_mapping_id");
 
 create index "IX_comment_releaseId"
-	on "comment" ("releaseId");
+	on "comment" ("release_id");
 

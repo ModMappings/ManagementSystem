@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
-import org.dozer.loader.api.BeanMappingBuilder;
+import com.github.dozermapper.core.DozerBeanMapper;
+import com.github.dozermapper.core.DozerBeanMapperBuilder;
+import com.github.dozermapper.core.Mapper;
+import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
 import org.modmappings.mmms.repository.model.core.GameVersionDMO;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,12 +25,12 @@ public class DozerConfiguration {
             mappingFileUrlList.add(String.valueOf(resource.getURL()));
         }
 
-        DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
-        dozerBeanMapper.setMappingFiles(mappingFileUrlList);
+        DozerBeanMapperBuilder dozerBeanMapperBuilder = DozerBeanMapperBuilder.create();
+        dozerBeanMapperBuilder.withMappingFiles(mappingFileUrlList);
 
-        dozerBeanMapper.addMapping(getGameVersionMapping());
+        dozerBeanMapperBuilder.withMappingBuilder(getGameVersionMapping());
 
-        return dozerBeanMapper;
+        return dozerBeanMapperBuilder.build();
     }
 
     private BeanMappingBuilder getGameVersionMapping() {

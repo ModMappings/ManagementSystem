@@ -21,8 +21,7 @@ public interface IPageableR2DBCRepository<T> extends R2dbcRepository<T, UUID> {
     /**
      * Returns all instances of the type.
      *
-     * @param pageable The paging information used to get all the instances.
      * @return {@link Flux} emitting all entities in paged form.
      */
-    Flux<T> findAll(Pageable pageable);
+    Flux<T> findAll();
 }

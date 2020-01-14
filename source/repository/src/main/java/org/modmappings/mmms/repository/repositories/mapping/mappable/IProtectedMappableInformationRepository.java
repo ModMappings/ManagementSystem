@@ -21,11 +21,10 @@ public interface IProtectedMappableInformationRepository extends IPageableR2DBCR
      * The returned order cannot be guaranteed.
      *
      * @param versionedMappableId The id of the versioned mappable for which protected mappable information is being looked up.
-     * @param pageable The pagination information for the query.
      * @return Protected mappable information that indicates that the versioned mappable is locked for a given mapping type.
      */
     @Query("SELECT * FROM protected_mappable pm WHERE pm.versionedMappableId = $1")
-    Flux<ProtectedMappableInformationDMO> findAllForVersionedMappable(UUID versionedMappableId, final Pageable pageable);
+    Flux<ProtectedMappableInformationDMO> findAllForVersionedMappable(UUID versionedMappableId);
 
     /**
      * Finds all the protected versioned mappable information which indicate that a given mapping type is locked
@@ -34,13 +33,12 @@ public interface IProtectedMappableInformationRepository extends IPageableR2DBCR
      * The returned order cannot be guaranteed.
      *
      * @param mappingTypeId The id of the mapping type for which protected mappable information is being looked up.
-     * @param pageable The pagination information for the query.
      * @return Protected mappable information that indicates that the mapping type is locked for a given versioned mappable.
      */
     @Query("SELECT * FROM protected_mappable pm WHERE pm.mappingTypeId = $1")
-    Flux<ProtectedMappableInformationDMO> findAllForMappingType(UUID mappingTypeId, final Pageable pageable);
+    Flux<ProtectedMappableInformationDMO> findAllForMappingType(UUID mappingTypeId);
 
     @Override
     @Query("Select * from protected_mappable pm")
-    Flux<ProtectedMappableInformationDMO> findAll(Pageable pageable);
+    Flux<ProtectedMappableInformationDMO> findAll();
 }

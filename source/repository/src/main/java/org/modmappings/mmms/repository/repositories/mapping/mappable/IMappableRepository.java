@@ -20,13 +20,12 @@ public interface IMappableRepository extends IPageableR2DBCRepository<MappableDM
      *
      * The order returned can not be guaranteed.
      * @param type The type of mappable to look up.
-     * @param pageable The pagination information for the query.
      * @return The mappables of the given type.
      */
     @Query("SELECT * FROM mappable m WHERE m.type = $1")
-    Flux<MappableDMO> findAllForType(MappableTypeDMO type, final Pageable pageable);
+    Flux<MappableDMO> findAllForType(MappableTypeDMO type);
 
     @Override
     @Query("Select * from mappable m")
-    Flux<MappableDMO> findAll(Pageable pageable);
+    Flux<MappableDMO> findAll();
 }

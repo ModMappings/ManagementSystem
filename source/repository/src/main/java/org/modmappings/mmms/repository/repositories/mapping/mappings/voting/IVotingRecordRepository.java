@@ -23,13 +23,12 @@ public interface IVotingRecordRepository extends IPageableR2DBCRepository<Voting
      *                   if the optional contains false then all against-votes are returned and if the optional is empty then all votes are returned.
      * @param isRescinded An optional possibly containing the rescinded state that voting records are being looked up for. If the optional contains true then all the rescinded votes are returned
      *                    if the optional contains false then all the active none rescinded votes are returned and if the optional is empty then all votes are returned.
-     * @param pageable The paging information for the request.
      * @return All the voting records that match the filter criteria.
      */
     @Query("SELECT * FROM voting_record vr WHERE vr.proposedMappingId = $1 AND ($2 IS NULL OR vr.isForVote = $2) AND ($3 IS NULL OR vr.hasBeenRescinded = $3)")
-    Flux<VotingRecordDMO> findAllForProposedMappingAndIndicationAndRescinded(UUID proposedMappingId, Optional<Boolean> indication, Optional<Boolean> isRescinded, Pageable pageable);
+    Flux<VotingRecordDMO> findAllForProposedMappingAndIndicationAndRescinded(UUID proposedMappingId, Boolean indication, Boolean isRescinded);
 
     @Override
     @Query("Select * from voting_record vr")
-    Flux<VotingRecordDMO> findAll(Pageable pageable);
+    Flux<VotingRecordDMO> findAll();
 }

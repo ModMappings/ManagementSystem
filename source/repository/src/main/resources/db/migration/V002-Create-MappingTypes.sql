@@ -4,8 +4,8 @@ create table "mapping_type"
 		constraint "PK_mapping_type"
 			primary key,
 	"name" text not null,
-	"createdBy" uuid not null,
-	"createdOn" timestamp not null,
+	"created_by" uuid not null,
+	"created_on" timestamp not null,
 	"visible" boolean not null ,
 	"editable" boolean not null
 );

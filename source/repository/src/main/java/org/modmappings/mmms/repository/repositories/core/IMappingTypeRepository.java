@@ -20,13 +20,12 @@ public interface IMappingTypeRepository extends IPageableR2DBCRepository<Mapping
      * The mapping types are returned in newest to oldest order.
      *
      * @param nameRegex The regular expression used to lookup mapping types for.
-     * @param pageable The pagination information for the query.
      * @return The mapping types of which the name match the regex.
      */
     @Query("SELECT * from mapping_type mt WHERE mt.name regexp $1")
-    Flux<MappingTypeDMO> findAllForNameRegex(String nameRegex, final Pageable pageable);
+    Flux<MappingTypeDMO> findAllForNameRegex(String nameRegex);
 
     @Override
     @Query("Select * from mapping_type mt")
-    Flux<MappingTypeDMO> findAll(Pageable pageable);
+    Flux<MappingTypeDMO> findAll();
 }

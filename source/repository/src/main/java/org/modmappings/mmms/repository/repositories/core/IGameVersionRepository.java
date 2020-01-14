@@ -24,51 +24,42 @@ public interface IGameVersionRepository extends IPageableR2DBCRepository<GameVer
      * The game versions are returned in newest to oldest order.
      *
      * @param nameRegex The regular expression used to lookup game versions for.
-     * @param pageable The pagination information for the query.
      * @return The game versions of which the name match the regex.
      */
     @Query("SELECT * FROM game_version gv WHERE gv.name regexp $1")
-    Flux<GameVersionDMO> findAllForNameRegex(String nameRegex, final Pageable pageable);
+    Flux<GameVersionDMO> findAllForNameRegex(String nameRegex);
 
     /**
      * Finds all game versions which are normal full releases.
      *
      * The game versions are returned in newest to oldest order.
      *
-     * @param pageable The pagination information for the query.
      * @return The game versions which are neither marked as snapshot nor pre-release.
      */
     @Query("SELECT * FROM game_version gv WHERE gv.isPreRelease = false AND gv.isSnapshot = false")
-    Flux<GameVersionDMO> findAllReleases(final Pageable pageable);
+    Flux<GameVersionDMO> findAllReleases();
 
     /**
      * Finds all game versions which are pre-releases.
      *
      * The game versions are returned in newest to oldest order.
      *
-     * @param pageable The pagination information for the query.
      * @return The game versions which are marked as being a pre-release.
      */
     @Query("SELECT * FROM game_version gv WHERE gv.isPreRelease = true")
-    Flux<GameVersionDMO> findAllPreReleases(final Pageable pageable);
+    Flux<GameVersionDMO> findAllPreReleases();
 
     /**
      * Finds all game versions which are snapshots.
      *
      * The game versions are returned in newest to oldest order.
      *
-     * @param pageable The pagination information for the query.
      * @return The game versions which are marked as being a snapshot.
      */
     @Query("SELECT * FROM game_version gv WHERE gv.isSnapshot = true")
-    Flux<GameVersionDMO> findAllSnapshots(final Pageable pageable);
+    Flux<GameVersionDMO> findAllSnapshots();
 
     @Override
     @Query("Select g.* from game_version g")
-    Flux<GameVersionDMO> findAll(Pageable pageable);
-
-    @Query("Select g.* from game_version g")
-    Flux<GameVersionDMO> findAllSimple();
-
-
+    Flux<GameVersionDMO> findAll();
 }

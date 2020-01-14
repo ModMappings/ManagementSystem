@@ -5,59 +5,74 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
+@Schema(name="GameVersion")
 public class GameVersionDTO {
-    private final UUID      id;
-    private final UUID      createdBy;
-    private final Timestamp createdOn;
-    private String    name;
-    private Optional<Boolean>   isPreRelease;
-    private Optional<Boolean>   isSnapshot;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private UUID      id;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private UUID      createdBy;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private Timestamp createdOn;
 
-    public GameVersionDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final Optional<Boolean> isPreRelease, final Optional<Boolean> isSnapshot) {
-        this.id = id;
-        this.createdBy = createdBy;
-        this.createdOn = createdOn;
-        this.name = name;
-        this.isPreRelease = isPreRelease;
-        this.isSnapshot = isSnapshot;
+    private String    name;
+
+    @Schema(nullable = true)
+    private Boolean   isPreRelease;
+    @Schema(nullable = true)
+    private Boolean   isSnapshot;
+
+    public GameVersionDTO() {
     }
 
     public UUID getId() {
         return id;
     }
 
+    public void setId(final UUID id) {
+        this.id = id;
+    }
+
     public UUID getCreatedBy() {
         return createdBy;
+    }
+
+    public void setCreatedBy(final UUID createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Timestamp getCreatedOn() {
         return createdOn;
     }
 
+    public void setCreatedOn(final Timestamp createdOn) {
+        this.createdOn = createdOn;
+    }
+
     public String getName() {
         return name;
-    }
-
-    public Optional<Boolean> isPreRelease() {
-        return isPreRelease;
-    }
-
-    public Optional<Boolean> isSnapshot() {
-        return isSnapshot;
     }
 
     public void setName(final String name) {
         this.name = name;
     }
 
-    public void setPreRelease(final Optional<Boolean> preRelease) {
+    public Boolean getPreRelease() {
+        return isPreRelease;
+    }
+
+    public void setPreRelease(final Boolean preRelease) {
         isPreRelease = preRelease;
     }
 
-    public void setSnapshot(final Optional<Boolean> snapshot) {
+    public Boolean getSnapshot() {
+        return isSnapshot;
+    }
+
+    public void setSnapshot(final Boolean snapshot) {
         isSnapshot = snapshot;
     }
 }

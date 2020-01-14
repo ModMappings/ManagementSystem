@@ -20,41 +20,37 @@ public interface IVersionedMappableRepository extends IPageableR2DBCRepository<V
      *
      * The order of the returned versioned mappables is not guaranteed.
      * @param gameVersionId The id of the game version to look up all versioned mappables for.
-     * @param pageable The pagination information for the query.
      * @return The versioned mappables which are part of the given game version.
      */
     @Query("Select * from versioned_mappable vm where vm.gameVersionId = $1")
-    Flux<VersionedMappableDMO> findAllForGameVersion(UUID gameVersionId, final Pageable pageable);
+    Flux<VersionedMappableDMO> findAllForGameVersion(UUID gameVersionId);
 
     /**
      * Finds all versioned mappables, which represent classes or other packages that are part of the package with the given id.
      *
      * @param packageVersionedMappableId The id of the package of which the contents are being looked up.
-     * @param pageable The pagination information for the query.
      * @return The versioned mappables which are part of the package of which the versioned mappable has the given id.
      */
     @Query("Select * from versioned_mappable vm where vm.parentPackageId = $1")
-    Flux<VersionedMappableDMO> findAllWhichArePartOfPackage(UUID packageVersionedMappableId, final Pageable pageable);
+    Flux<VersionedMappableDMO> findAllWhichArePartOfPackage(UUID packageVersionedMappableId);
 
     /**
      * Finds all versioned mappables, which represent methods, fields and inner classes that are part of the class with the given id.
      *
      * @param classVersionedMappableId The id of the class of which the contents are being looked up.
-     * @param pageable The pagination information for the query.
      * @return The versioned mappables which are part of the class of which the versioned mappable has the given id.
      */
     @Query("Select * from versioned_mappable vm where vm.partOfClassId = $1")
-    Flux<VersionedMappableDMO> findAllWhichArePartOfClass(UUID classVersionedMappableId, final Pageable pageable);
+    Flux<VersionedMappableDMO> findAllWhichArePartOfClass(UUID classVersionedMappableId);
 
     /**
      * Finds all versioned mappables, which represent parameters that are part of the method with the given id.
      *
      * @param methodVersionedMappableId The id of the method of which the contents are being looked up.
-     * @param pageable The pagination information for the query.
      * @return The versioned mappables which are part of the method of which the versioned mappable has the given id.
      */
     @Query("Select * from versioned_mappable vm where vm.partOfMethodId = $1")
-    Flux<VersionedMappableDMO> findAllWhichArePartOfMethod(UUID methodVersionedMappableId, final Pageable pageable);
+    Flux<VersionedMappableDMO> findAllWhichArePartOfMethod(UUID methodVersionedMappableId);
 
     /**
      * Finds the versioned mappable who has the given mapping.
@@ -69,23 +65,21 @@ public interface IVersionedMappableRepository extends IPageableR2DBCRepository<V
      * Finds all super types (in the form of classes) of the class with the given id and returns their versioned mappables.
      *
      * @param classVersionedMappableId The id of the class of which the super types are being looked up.
-     * @param pageable The pagination information for the query.
      * @return The versioned mappables which represent the super types of the class of which the id of its versioned mappable was provided.
      */
     @Query("SELECT vm.* FROM versioned_mappable vm JOIN inheritance_data mid ON vm.id = m.superTypeVersionedMappableId WHERE mid.subTypeVersionedMappableId = $1")
-    Flux<VersionedMappableDMO> findAllSuperTypesOf(UUID classVersionedMappableId, final Pageable pageable);
+    Flux<VersionedMappableDMO> findAllSuperTypesOf(UUID classVersionedMappableId);
 
     /**
      * Finds all sub types (in the form of classes) of the class with the given id and returns their versioned mappables.
      *
      * @param classVersionedMappableId The id of the class of which the super types are being looked up.
-     * @param pageable The pagination information for the query.
      * @return The versioned mappables which represent the super types of the class of which the id of its versioned mappable was provided.
      */
     @Query("SELECT vm.* FROM versioned_mappable vm JOIN inheritance_data mid ON vm.id = m.subTypeVersionedMappableId WHERE mid.superTypeVersionedMappableId = $1")
-    Flux<VersionedMappableDMO> findAllSubTypesOf(UUID classVersionedMappableId, final Pageable pageable);
+    Flux<VersionedMappableDMO> findAllSubTypesOf(UUID classVersionedMappableId);
 
     @Override
     @Query("Select * from versioned_mappable vm")
-    Flux<VersionedMappableDMO> findAll(Pageable pageable);
+    Flux<VersionedMappableDMO> findAll();
 }
