@@ -5,7 +5,7 @@ pipeline {
             agent {
                 docker {
                     image 'gradle:jdk11'
-                    args '-v /home/gradle/.gradle/:modmappingapigradlecache'
+                    args '-v modmappingapigradlecache:/home/gradle/.gradle/'
                 }
             }
             steps {
