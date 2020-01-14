@@ -1,5 +1,8 @@
 pipeline {
     agent none
+    environment {
+        GRADLE_ARGS = '--no-daemon'
+    }
     stages {
         stage('gradle') {
             agent {
@@ -9,7 +12,11 @@ pipeline {
                 }
             }
             steps {
-                sh './gradlew build'
+                sh './gradlew ${GRADLE_ARGS}--stop'
+                sh './gradlew ${GRADLE_ARGS} build'
+                script {
+                    env.MYVERSION = sh(returnStdout: true, script: './gradlew ${GRADLE_ARGS} properties -q | grep "version:" | cut -d\' \' -f 2').trim()
+                }
                 stash includes: 'source/api/build/distributions/api-boot.tar', name: 'app'
             }
             post {
@@ -28,10 +35,9 @@ pipeline {
             }
             steps {
                 unstash 'app'
-//                 sh 'pwd && ls -lR'
-//                 sh 'docker build -t modmappingapi:${BUILD_ID} -t modmappingapi:latest .'
                 script {
                     site=docker.build("modmappingapi:${env.BUILD_ID}", ".")
+                    site.tag("v${env.MYVERSION}")
                     site.tag("latest")
                 }
             }
