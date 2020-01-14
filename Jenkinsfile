@@ -12,7 +12,7 @@ pipeline {
                 }
             }
             steps {
-                sh './gradlew ${GRADLE_ARGS}--stop'
+                sh './gradlew ${GRADLE_ARGS} --stop'
                 sh './gradlew ${GRADLE_ARGS} build'
                 script {
                     env.MYVERSION = sh(returnStdout: true, script: './gradlew ${GRADLE_ARGS} properties -q | grep "version:" | cut -d\' \' -f 2').trim()
