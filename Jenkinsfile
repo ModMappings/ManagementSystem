@@ -26,7 +26,6 @@ pipeline {
                 }
             }
             steps {
-                copyArtifacts filter: 'api-boot.tar', fingerprintArtifacts: true, projectName: '${JOB_NAME}', selector: specific('${BUILD_NUMBER}')
                 script {
                     site=docker.build("modmappingapi:${env.BUILD_ID}")
                     site.tag("latest")
