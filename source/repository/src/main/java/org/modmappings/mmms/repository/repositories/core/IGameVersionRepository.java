@@ -4,11 +4,13 @@ import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.core.GameVersionDMO;
 import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Represents a repository which can provide and store {@link GameVersionDMO} objects.
@@ -62,6 +64,11 @@ public interface IGameVersionRepository extends IPageableR2DBCRepository<GameVer
     Flux<GameVersionDMO> findAllSnapshots(final Pageable pageable);
 
     @Override
-    @Query("Select * from game_version g")
+    @Query("Select g.* from game_version g")
     Flux<GameVersionDMO> findAll(Pageable pageable);
+
+    @Query("Select g.* from game_version g")
+    Flux<GameVersionDMO> findAllSimple();
+
+
 }

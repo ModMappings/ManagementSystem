@@ -64,4 +64,31 @@ public class GameVersionDMO {
     public boolean isSnapshot() {
         return isSnapshot;
     }
+
+    @Override
+    public String toString() {
+        return "GameVersionDMO{" +
+                               "id=" + id +
+                               ", createdBy=" + createdBy +
+                               ", createdOn=" + createdOn +
+                               ", name='" + name + '\'' +
+                               ", isPreRelease=" + isPreRelease +
+                               ", isSnapshot=" + isSnapshot +
+                               '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final GameVersionDMO that = (GameVersionDMO) o;
+
+        return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
+    }
 }

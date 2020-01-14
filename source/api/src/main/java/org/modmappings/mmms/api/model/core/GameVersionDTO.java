@@ -2,6 +2,7 @@ package org.modmappings.mmms.api.model.core;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -12,10 +13,10 @@ public class GameVersionDTO {
     private final UUID      createdBy;
     private final Timestamp createdOn;
     private String    name;
-    private boolean   isPreRelease;
-    private boolean   isSnapshot;
+    private Optional<Boolean>   isPreRelease;
+    private Optional<Boolean>   isSnapshot;
 
-    public GameVersionDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean isPreRelease, final boolean isSnapshot) {
+    public GameVersionDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final Optional<Boolean> isPreRelease, final Optional<Boolean> isSnapshot) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -40,11 +41,11 @@ public class GameVersionDTO {
         return name;
     }
 
-    public boolean isPreRelease() {
+    public Optional<Boolean> isPreRelease() {
         return isPreRelease;
     }
 
-    public boolean isSnapshot() {
+    public Optional<Boolean> isSnapshot() {
         return isSnapshot;
     }
 
@@ -52,11 +53,11 @@ public class GameVersionDTO {
         this.name = name;
     }
 
-    public void setPreRelease(final boolean preRelease) {
+    public void setPreRelease(final Optional<Boolean> preRelease) {
         isPreRelease = preRelease;
     }
 
-    public void setSnapshot(final boolean snapshot) {
+    public void setSnapshot(final Optional<Boolean> snapshot) {
         isSnapshot = snapshot;
     }
 }

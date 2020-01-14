@@ -3,9 +3,9 @@ create table "game_version"
 	"id" uuid not null
 		constraint "PK_game_version"
 			primary key,
-	"name" text not null,
 	"createdOn" timestamp not null,
 	"createdBy" uuid not null,
+	"name" text not null,
 	"isPreRelease" boolean not null,
 	"isSnapshot" boolean not null
 );

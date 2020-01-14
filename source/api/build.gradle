@@ -18,6 +18,7 @@ configurations {
 }
 
 repositories {
+    mavenLocal()
 	mavenCentral()
 	maven { url 'https://repo.spring.io/milestone' }
 }
@@ -38,6 +39,7 @@ dependencies {
     implementation 'io.r2dbc:r2dbc-postgresql'
     implementation 'org.postgresql:postgresql'
     implementation 'net.sf.dozer:dozer:5.5.1'
+    implementation 'org.springframework.data:spring-data-r2dbc:1.1.0.BUILD-SNAPSHOT'
 
     //developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
