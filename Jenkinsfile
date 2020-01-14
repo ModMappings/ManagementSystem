@@ -9,7 +9,7 @@ pipeline {
             }
             steps {
                 checkout scm
-                sh '/home/gradle/src/gradlew build'
+                sh './gradlew build'
             }
         }
         stage('docker') {
