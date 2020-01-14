@@ -29,7 +29,7 @@ pipeline {
                 unstash 'app'
                 sh 'ls -lR'
                 script {
-                    site=docker.build("modmappingapi:${env.BUILD_ID}")
+                    site=docker.build("modmappingapi:${env.BUILD_ID}", ".")
                     site.tag("latest")
                 }
             }
