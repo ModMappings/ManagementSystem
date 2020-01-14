@@ -5,6 +5,7 @@ pipeline {
             agent {
                 docker {
                     image 'gradle:jdk11'
+                    args '-v /home/gradle/.gradle/:modmappingapigradlecache'
                 }
             }
             steps {
@@ -27,7 +28,7 @@ pipeline {
             }
             steps {
                 unstash 'app'
-                sh 'docker build . -t modmappingapi:${BUILD_ID} -t modmappingapi:latest'
+                sh 'docker build -t modmappingapi:${BUILD_ID} -t modmappingapi:latest .'
 //                 script {
 //                     site=docker.build("modmappingapi:${env.BUILD_ID}", ".")
 //                     site.tag("latest")

@@ -1,4 +1,4 @@
 FROM openjdk:11-jdk-slim
-WORKDIR /app/api-boot/
 ADD source/api/build/distributions/api-boot.tar /app/
+WORKDIR /app/api-boot/
 CMD bin/api
