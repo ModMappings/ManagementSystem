@@ -7,5 +7,3 @@ assets
 development
 docu
 .gitignore
-/source/**/build/
-!/source/**/build/distributions/api-boot.tar
