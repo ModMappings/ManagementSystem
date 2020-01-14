@@ -27,11 +27,11 @@ pipeline {
             }
             steps {
                 unstash 'app'
-                sh 'ls -lR'
-                script {
-                    site=docker.build("modmappingapi:${env.BUILD_ID}", ".")
-                    site.tag("latest")
-                }
+                sh 'docker build . -t modmappingapi:${env.BUILD_ID} -t modmappingapi:latest'
+//                 script {
+//                     site=docker.build("modmappingapi:${env.BUILD_ID}", ".")
+//                     site.tag("latest")
+//                 }
             }
         }
 //         post {
