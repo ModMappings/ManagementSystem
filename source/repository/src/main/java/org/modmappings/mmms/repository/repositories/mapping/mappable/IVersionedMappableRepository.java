@@ -3,6 +3,7 @@ package org.modmappings.mmms.repository.repositories.mapping.mappable;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.mapping.mappable.VersionedMappableDMO;
+import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -12,7 +13,7 @@ import reactor.core.publisher.Mono;
 /**
  * Represents a repository which can provide and store {@link VersionedMappableDMO} objects.
  */
-public interface IVersionedMappableRepository extends R2dbcRepository<VersionedMappableDMO, UUID> {
+public interface IVersionedMappableRepository extends IPageableR2DBCRepository<VersionedMappableDMO> {
 
     /**
      * Finds all versioned mappables for a given game version.
@@ -81,6 +82,10 @@ public interface IVersionedMappableRepository extends R2dbcRepository<VersionedM
      * @param pageable The pagination information for the query.
      * @return The versioned mappables which represent the super types of the class of which the id of its versioned mappable was provided.
      */
-    @Query("SELECT *vm. FROM versioned_mappable vm JOIN inheritance_data mid ON vm.id = m.subTypeVersionedMappableId WHERE mid.superTypeVersionedMappableId = $1")
+    @Query("SELECT vm.* FROM versioned_mappable vm JOIN inheritance_data mid ON vm.id = m.subTypeVersionedMappableId WHERE mid.superTypeVersionedMappableId = $1")
     Flux<VersionedMappableDMO> findAllSubTypesOf(UUID classVersionedMappableId, final Pageable pageable);
+
+    @Override
+    @Query("Select * from versioned_mappable vm")
+    Flux<VersionedMappableDMO> findAll(Pageable pageable);
 }

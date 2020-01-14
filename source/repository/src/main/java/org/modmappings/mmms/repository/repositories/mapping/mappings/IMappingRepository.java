@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
+import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -14,7 +15,7 @@ import reactor.core.publisher.Mono;
 /**
  * Represents a repository which can provide and store {@link MappingDMO} objects.
  */
-public interface IMappingRepository extends R2dbcRepository<MappingDMO, UUID> {
+public interface IMappingRepository extends IPageableR2DBCRepository<MappingDMO> {
 
     /**
      * Finds all mappings for a given versioned mappable id.
@@ -85,4 +86,8 @@ public interface IMappingRepository extends R2dbcRepository<MappingDMO, UUID> {
      */
     @Query("select m.* from mapping m join release_component rc on rc.mappableId = m.id join versioned_mappable vm on m.versionedMappableId = vm.id join mappable mp on vm.mappableId = mp.id where rc.releaseId = $1 and ($2 is null or mp.type = $2)")
     Flux<MappingDMO> findAllInReleaseAndMappableType(UUID releaseId, Optional<MappableTypeDMO> type);
+
+    @Override()
+    @Query("select * from mapping m")
+    Flux<MappingDMO> findAll(Pageable pageable);
 }

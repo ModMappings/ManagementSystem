@@ -3,6 +3,7 @@ package org.modmappings.mmms.repository.repositories.mapping.mappable;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.mapping.mappable.InheritanceDataDMO;
+import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -11,7 +12,7 @@ import reactor.core.publisher.Flux;
 /**
  * Represents a repository which can provide and store {@link InheritanceDataDMO} objects.
  */
-public interface IInheritanceDataRepository extends R2dbcRepository<InheritanceDataDMO, UUID> {
+public interface IInheritanceDataRepository extends IPageableR2DBCRepository<InheritanceDataDMO> {
 
     /**
      * Finds all the inheritance data in which the given versioned mappable class is
@@ -34,4 +35,8 @@ public interface IInheritanceDataRepository extends R2dbcRepository<InheritanceD
      */
     @Query("Select * from inheritance_data mid where mid.subTypeVersionedMappableId = $1")
     Flux<InheritanceDataDMO> findAllForSubType(UUID subTypeVersionedMappableId, final Pageable pageable);
+
+    @Override
+    @Query("Select * from inheritance_data mid")
+    Flux<InheritanceDataDMO> findAll(Pageable pageable);
 }

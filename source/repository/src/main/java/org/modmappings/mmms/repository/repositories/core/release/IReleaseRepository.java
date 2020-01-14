@@ -3,6 +3,7 @@ package org.modmappings.mmms.repository.repositories.core.release;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;
+import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -13,7 +14,7 @@ import reactor.core.publisher.Flux;
  * Represents a repository which can provide and store {@link ReleaseDMO} objects.
  */
 @Repository
-public interface IReleaseRepository extends R2dbcRepository<ReleaseDMO, UUID> {
+public interface IReleaseRepository extends IPageableR2DBCRepository<ReleaseDMO> {
     /**
      * Finds all releases which match the given name regex.
      *
@@ -87,4 +88,8 @@ public interface IReleaseRepository extends R2dbcRepository<ReleaseDMO, UUID> {
      */
     @Query("SELECT * FROM release r WHERE r.createdBy = userId")
     Flux<ReleaseDMO> findAllForUser(final UUID userId, final Pageable pageable);
+
+    @Override
+    @Query("Select * from release r")
+    Flux<ReleaseDMO> findAll(Pageable pageable);
 }

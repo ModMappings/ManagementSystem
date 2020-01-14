@@ -3,6 +3,7 @@ package org.modmappings.mmms.repository.repositories.comments;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.comments.CommentDMO;
+import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -13,7 +14,7 @@ import reactor.core.publisher.Flux;
  * Represents a repository which can provide and store {@link CommentDMO} objects.
  */
 @Repository
-public interface ICommentRepository extends R2dbcRepository<CommentDMO, UUID> {
+public interface ICommentRepository extends IPageableR2DBCRepository<CommentDMO> {
     /**
      * Finds all comments which where directly made on the release with the given id.
      *
@@ -65,4 +66,8 @@ public interface ICommentRepository extends R2dbcRepository<CommentDMO, UUID> {
      */
     @Query("Select * from comments c where c.createdBy = $1")
     Flux<CommentDMO> findAllForUser(final UUID userId, final Pageable pageable);
+
+    @Override
+    @Query("Select * from comments c")
+    Flux<CommentDMO> findAll(Pageable pageable);
 }

@@ -3,6 +3,7 @@ package org.modmappings.mmms.repository.repositories.core;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.core.GameVersionDMO;
+import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -13,7 +14,7 @@ import reactor.core.publisher.Flux;
  * Represents a repository which can provide and store {@link GameVersionDMO} objects.
  */
 @Repository
-public interface IGameVersionRepository extends R2dbcRepository<GameVersionDMO, UUID> {
+public interface IGameVersionRepository extends IPageableR2DBCRepository<GameVersionDMO> {
 
     /**
      * Finds all game versions which match the given name regex.
@@ -59,4 +60,8 @@ public interface IGameVersionRepository extends R2dbcRepository<GameVersionDMO, 
      */
     @Query("SELECT * FROM game_version gv WHERE gv.isSnapshot = true")
     Flux<GameVersionDMO> findAllSnapshots(final Pageable pageable);
+
+    @Override
+    @Query("Select * from game_version g")
+    Flux<GameVersionDMO> findAll(Pageable pageable);
 }

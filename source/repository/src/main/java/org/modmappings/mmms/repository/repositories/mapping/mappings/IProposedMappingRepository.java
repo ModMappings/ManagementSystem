@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.mapping.mappings.ProposedMappingDMO;
+import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -12,7 +13,7 @@ import reactor.core.publisher.Flux;
 /**
  * Represents a repository that can store and provide {@link ProposedMappingDMO} objects.
  */
-public interface IProposedMappingRepository extends R2dbcRepository<ProposedMappingDMO, UUID> {
+public interface IProposedMappingRepository extends IPageableR2DBCRepository<ProposedMappingDMO> {
 
     /**
      * Finds all proposed mappings for a given versioned mappable id.
@@ -25,4 +26,8 @@ public interface IProposedMappingRepository extends R2dbcRepository<ProposedMapp
      */
     @Query("SELECT * FROM proposed_mapping pm WHERE pm.versionedMappableId = $1 And ($2 Is null OR (($2 is false AND pm.closedBy is null AND pm.closedOn is null) OR ($2 is true AND pm.closedBy is not null and pm.closedOn is not null))) And (($3 is null) or (($3 is false and pm.mappingId is null) or ($3 is true and pm.mappingId is not null))) order by m.createdOn")
     Flux<ProposedMappingDMO> findAllForVersionedMappableAndStateAndMerged(UUID versionedMappableId, Optional<Boolean> state, Optional<Boolean> merged, final Pageable pageable);
+
+    @Override
+    @Query("Select * from proposed_mapping pm")
+    Flux<ProposedMappingDMO> findAll(Pageable pageable);
 }
