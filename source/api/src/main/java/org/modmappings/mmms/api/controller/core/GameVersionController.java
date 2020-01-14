@@ -9,6 +9,7 @@ import org.modmappings.mmms.repository.repositories.core.IGameVersionRepository;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,15 +33,22 @@ public class GameVersionController {
 
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Returns the game version with the given id.")})
     @GetMapping("{id}")
-    public Mono<GameVersionDTO> getFor(@PathVariable UUID id) {
+    public Mono<GameVersionDTO> getBy(@PathVariable UUID id) {
         return repository.findById(id).map(dmo -> mapper.map(dmo, GameVersionDTO.class));
     }
 
 
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Returns all game versions in the database.")})
     @GetMapping("")
-    public Flux<GameVersionDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+    public Flux<GameVersionDTO> findAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                        final @RequestParam(name = "size", required = false, defaultValue = "10") int size) {
         return repository.findAll().skip((page == 0 ? 0 : page * size)).limitRequest(size).map(dmo -> mapper.map(dmo, GameVersionDTO.class));
+    }
+
+    @ApiResponses(value = {@ApiResponse()})
+    @DeleteMapping("{id}")
+    public Mono<Void> deleteBy(@PathVariable UUID id) {
+        logger.warn("Deleting game version: {}", id);
+        return repository.deleteById(id).then(Mono.fromRunnable(() -> logger.warn("Deleted game version: {}", id)));
     }
 }
