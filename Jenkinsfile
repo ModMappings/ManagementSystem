@@ -11,6 +11,12 @@ pipeline {
                 checkout scm
                 sh './gradlew build'
             }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'source/api/build/distributions/api-boot.tar', fingerprintArtifacts: true
+                }
+            }
+
         }
         stage('docker') {
             agent {
@@ -20,6 +26,7 @@ pipeline {
                 }
             }
             steps {
+                copyArtifacts filter: 'api-boot.tar', fingerprintArtifacts: true, projectName: '${JOB_NAME}', selector: specific('${BUILD_NUMBER}')
                 script {
                     site=docker.build("modmappingapi:${env.BUILD_ID}")
                     site.tag("latest")
