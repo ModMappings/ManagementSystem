@@ -13,7 +13,7 @@ pipeline {
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'source/api/build/distributions/api-boot.tar', fingerprintArtifacts: true
+                    archiveArtifacts artifacts: 'source/api/build/distributions/api-boot.tar', fingerprint: true
                 }
             }
 
