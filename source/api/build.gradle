@@ -29,7 +29,7 @@ dependencies {
 	implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot.experimental:spring-boot-starter-data-r2dbc'
-	//implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.2.26'

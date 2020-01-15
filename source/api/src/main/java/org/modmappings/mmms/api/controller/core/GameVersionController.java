@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.github.dozermapper.core.Mapper;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.modmappings.mmms.repository.model.core.GameVersionDMO;
 import org.modmappings.mmms.repository.repositories.core.IGameVersionRepository;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,10 +48,18 @@ public class GameVersionController {
         return repository.findAll().skip((page == 0 ? 0 : page * size)).limitRequest(size).map(dmo -> mapper.map(dmo, GameVersionDTO.class));
     }
 
-    @ApiResponses(value = {@ApiResponse()})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Deletes the game version with the given id.")})
     @DeleteMapping("{id}")
     public Mono<Void> deleteBy(@PathVariable UUID id) {
         logger.warn("Deleting game version: {}", id);
         return repository.deleteById(id).then(Mono.fromRunnable(() -> logger.warn("Deleted game version: {}", id)));
+    }
+
+    @PostMapping("")
+    public Mono<GameVersionDTO> create(@RequestBody GameVersionDTO newGameVersion) {
+        logger.warn("Creating new game version: {}", newGameVersion.getName());
+        final GameVersionDMO newDto = mapper.map(newGameVersion, GameVersionDMO.class);
+
+        return repository.save(newDto).map(dmo -> mapper.map(dmo, GameVersionDTO.class));
     }
 }

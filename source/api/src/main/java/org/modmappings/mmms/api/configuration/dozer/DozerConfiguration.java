@@ -1,4 +1,4 @@
-package org.modmappings.mmms.api.configuration;
+package org.modmappings.mmms.api.configuration.dozer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ public class DozerConfiguration {
         dozerBeanMapperBuilder.withMappingFiles(mappingFileUrlList);
 
         dozerBeanMapperBuilder.withMappingBuilder(getGameVersionMapping());
+        dozerBeanMapperBuilder.with
 
         return dozerBeanMapperBuilder.build();
     }
@@ -37,7 +38,7 @@ public class DozerConfiguration {
         return new BeanMappingBuilder() {
             @Override
             protected void configure() {
-                mapping(GameVersionDTO.class, GameVersionDMO.class);
+                mapping(type(GameVersionDTO.class).beanFactory(), GameVersionDMO.class);
             }
         };
     }
