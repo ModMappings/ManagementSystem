@@ -2,7 +2,6 @@ package org.modmappings.mmms.api.services.core;
 
 import java.util.UUID;
 
-import com.github.dozermapper.core.Mapper;
 import org.modmappings.mmms.api.controller.core.GameVersionController;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
@@ -17,7 +16,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * Business layer service that handles the interactions of the API with the DataLayer.
+ * Business layer service which handles the interactions of the API with the DataLayer.
  * <p>
  * This services validates data as well as converts between the API models as well as the data models.
  *
@@ -32,12 +31,10 @@ public class GameVersionService {
 
     private final Logger                 logger = LoggerFactory.getLogger(GameVersionController.class);
     private final IGameVersionRepository repository;
-    private final Mapper                 mapper;
     private final UserService            userService;
 
-    public GameVersionService(final IGameVersionRepository repository, final Mapper mapper, final UserService userService) {
+    public GameVersionService(final IGameVersionRepository repository, final UserService userService) {
         this.repository = repository;
-        this.mapper = mapper;
         this.userService = userService;
     }
 
@@ -50,7 +47,7 @@ public class GameVersionService {
     public Mono<GameVersionDTO> getBy(UUID id) {
         return repository.findById(id)
                                .doFirst(() -> logger.debug("Looking up a game version by id: {}", id))
-                               .map(dmo -> mapper.map(dmo, GameVersionDTO.class))
+                               .map(this::toDTO)
                                .doOnNext(dto -> logger.debug("Found game version: {} with id: {}", dto.getName(), dto.getId()))
                                .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "GameVersion")));
     }
@@ -64,7 +61,7 @@ public class GameVersionService {
     public Flux<GameVersionDTO> getAll() {
         return repository.findAll()
                                .doFirst(() -> logger.debug("Looking up game versions."))
-                               .map(dmo -> mapper.map(dmo, GameVersionDTO.class))
+                               .map(this::toDTO)
                                .doOnNext(dto -> logger.debug("Found game version: {} with id: {}", dto.getName(), dto.getId()))
                                .switchIfEmpty(Flux.error(new NoEntriesFoundException("GameVersion")));
     }
@@ -90,9 +87,9 @@ public class GameVersionService {
     public Mono<GameVersionDTO> create(GameVersionDTO newGameVersion) {
         return Mono.just(newGameVersion)
                         .doFirst(() -> userService.warn(logger, String.format("Creating new game version: %s", newGameVersion.getName())))
-                        .map(dto -> mapper.map(dto, GameVersionDMO.class))
+                        .map(this::toNewDMO)
                         .flatMap(repository::save)
-                        .map(dmo -> mapper.map(dmo, GameVersionDTO.class))
+                        .map(this::toDTO)
                         .doOnNext(dmo -> {
                             userService.warn(logger, String.format("Created new game version: %s with id: %s", dmo.getName(), dmo.getId()));
                         });
@@ -109,10 +106,36 @@ public class GameVersionService {
                         .doFirst(() -> userService.warn(logger, String.format("Updating game version: %s", idToUpdate)))
                         .switchIfEmpty(Mono.error(new EntryNotFoundException(newGameVersion.getId(), "GameVersion")))
                         .doOnNext(dmo -> userService.warn(logger, String.format("Updating db game version: %s with id: %s, and data: %s",dmo.getName(), dmo.getId(), newGameVersion)))
-                        .doOnNext(dmo -> mapper.map(newGameVersion, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
+                        .doOnNext(dmo -> this.updateDMO(newGameVersion, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
                         .doOnNext(dmo -> userService.warn(logger, String.format("Updated db game version to: %s", dmo)))
                         .flatMap(repository::save)
-                        .map(dmo -> mapper.map(dmo, GameVersionDTO.class))
+                        .map(this::toDTO)
                         .doOnNext(dto -> userService.warn(logger, String.format("Updated game version: %s with id: %s, to data: %s", dto.getName(), dto.getId(), dto)));
+    }
+
+    private GameVersionDTO toDTO(GameVersionDMO dmo) {
+        return new GameVersionDTO(
+                dmo.getId(),
+                dmo.getCreatedBy(),
+                dmo.getCreatedOn(),
+                dmo.getName(),
+                dmo.isPreRelease(),
+                dmo.isSnapshot()
+        );
+    }
+
+    private GameVersionDMO toNewDMO(GameVersionDTO dto) {
+        return new GameVersionDMO(
+                dto.getCreatedBy(),
+                dto.getName(),
+                dto.getPreRelease(),
+                dto.getSnapshot()
+        );
+    }
+
+    private void updateDMO(GameVersionDTO dto, GameVersionDMO dmo) {
+        dmo.setName(dto.getName());
+        dmo.setPreRelease(dto.getPreRelease());
+        dmo.setSnapshot(dto.getSnapshot());
     }
 }

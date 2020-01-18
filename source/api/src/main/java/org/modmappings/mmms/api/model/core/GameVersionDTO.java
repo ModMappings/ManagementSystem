@@ -25,7 +25,13 @@ public class GameVersionDTO {
     @Schema(nullable = true)
     private Boolean   isSnapshot;
 
-    public GameVersionDTO() {
+    public GameVersionDTO(UUID id, UUID createdBy, Timestamp createdOn, String name, Boolean isPreRelease, Boolean isSnapshot) {
+        this.id = id;
+        this.createdBy = createdBy;
+        this.createdOn = createdOn;
+        this.name = name;
+        this.isPreRelease = isPreRelease;
+        this.isSnapshot = isSnapshot;
     }
 
     public UUID getId() {

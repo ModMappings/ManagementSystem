@@ -18,9 +18,9 @@ public class GameVersionDMO {
     private final UUID id;
     private final UUID createdBy;
     private final Timestamp createdOn;
-    private final String name;
-    private final boolean isPreRelease;
-    private final boolean isSnapshot;
+    private String name;
+    private boolean isPreRelease;
+    private boolean isSnapshot;
 
     @PersistenceConstructor
     GameVersionDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean isPreRelease, final boolean isSnapshot) {
@@ -57,12 +57,24 @@ public class GameVersionDMO {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public boolean isPreRelease() {
         return isPreRelease;
     }
 
+    public void setPreRelease(boolean preRelease) {
+        isPreRelease = preRelease;
+    }
+
     public boolean isSnapshot() {
         return isSnapshot;
+    }
+
+    public void setSnapshot(boolean snapshot) {
+        isSnapshot = snapshot;
     }
 
     @Override
