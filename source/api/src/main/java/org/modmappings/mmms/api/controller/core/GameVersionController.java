@@ -1,12 +1,13 @@
 package org.modmappings.mmms.api.controller.core;
 
-import java.util.UUID;
-
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.modmappings.mmms.api.services.core.GameVersionService;
@@ -16,67 +17,151 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @Tag(name = "GameVersions", description = "Gives access to available game versions, allows existing game versions to be modified and new ones to be created.")
 @RequestMapping("/versions")
 @RestController
 public class GameVersionController {
 
-    private final Logger             logger = LoggerFactory.getLogger(GameVersionController.class);
+    private final Logger logger = LoggerFactory.getLogger(GameVersionController.class);
     private final GameVersionService gameVersionService;
 
-    public GameVersionController(final GameVersionService gameVersionService) {this.gameVersionService = gameVersionService;}
+    public GameVersionController(final GameVersionService gameVersionService) {
+        this.gameVersionService = gameVersionService;
+    }
 
     @Operation(
-                    summary = "Looks up a game version using a given id."
+            summary = "Looks up a game version using a given id.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            in = ParameterIn.PATH,
+                            required = true,
+                            description = "The id of the game version to look up.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    )
+            }
     )
     @ApiResponses(value = {
-                    @ApiResponse(responseCode = "200", description = "Returns the game version with the given id."),
-                    @ApiResponse(responseCode = "404", description = "Indicates that no game version with the given id could be found")
+            @ApiResponse(responseCode = "200", description = "Returns the game version with the given id."),
+            @ApiResponse(responseCode = "404", description = "Indicates that no game version with the given id could be found",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema()))
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<GameVersionDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
         return gameVersionService.getBy(id)
-                               .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                                   response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                                   return Mono.empty();
-                               });
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
     }
 
+    @Operation(
+            summary = "Looks up all game versions."
+    )
     @ApiResponses(value = {
-                    @ApiResponse(responseCode = "200",
-                                    description = "Returns all game versions in the database."),
-                    @ApiResponse(responseCode = "404",
-                                    description = "Indicates that no game version exists in the database.",
-                                    content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                                                        schema = @Schema()))
+            @ApiResponse(responseCode = "200",
+                    description = "Returns all game versions in the database."),
+            @ApiResponse(responseCode = "404",
+                    description = "Indicates that no game version exists in the database.",
+                    content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                            schema = @Schema()))
     })
     @GetMapping(value = "", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<GameVersionDTO> getAll(ServerHttpResponse response) {
         return gameVersionService.getAll()
-                               .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                                   response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                                   return Flux.empty();
-                               });
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Flux.empty();
+                });
     }
 
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Deletes the game version with the given id.")})
+    @Operation(
+            summary = "Deletes the game version with the given id.",
+            description = "This looks up the game version with the given id from the database and deletes it. A user needs to be authorized to perform this request. A user needs to have the role 'GAMEVERSION_DELETE' to execute this action successfully.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            in = ParameterIn.PATH,
+                            required = true,
+                            description = "The id of the game version to delete.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    )
+            },
+            security = @SecurityRequirement(
+                    name = "GameVersions-Delete",
+                    scopes = {"GAMEVERSIONS_DELETE"}
+            )
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deletes the game version with the given id."),
+            @ApiResponse(responseCode = "401", description = "The user is not authorized to perform this action.")
+    })
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('GAMEVERSIONS_DELETE')")
     public Mono<Void> deleteBy(@PathVariable UUID id) {
         return gameVersionService.deleteBy(id);
     }
 
-    @PostMapping("")
+    @Operation(
+            summary = "Creates the game version from the data in the request body.",
+            description = "This converts the data in the request body into a full game version, and stores it in the database. The name of the game version can not already be in use. A user needs to be authorized to perform this request. A user needs to have the role 'GAMEVERSION_CREATE' to execute this action successfully.",
+            security = @SecurityRequirement(
+                    name = "GameVersions-Create",
+                    scopes = {"GAMEVERSIONS_CREATE"}
+            )
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Creates the game version with the given id."),
+            @ApiResponse(responseCode = "401", description = "The user is not authorized to perform this action.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema())),
+            @ApiResponse(responseCode = "400", description = "The name for the given game version is already in use.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema()))
+    })
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('GAMEVERSIONS_CREATE')")
     public Mono<GameVersionDTO> create(@RequestBody GameVersionDTO newGameVersion) {
         return gameVersionService.create(newGameVersion);
+    }
+
+    @Operation(
+            summary = "Updates, but does not create, the game version from the data in the request body.",
+            description = "This converts the data in the request body into a full game version, then updates the game version with the given id, and stores the updated game version in the database. The new name of the game version can not already be in use by a different game version. A user needs to be authorized to perform this request. A user needs to have the role 'GAMEVERSION_UPDATE' to execute this action successfully.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            in = ParameterIn.PATH,
+                            required = true,
+                            description = "The id of the game version to update.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    )
+            },
+            security = @SecurityRequirement(
+                    name = "GameVersions-Update",
+                    scopes = {"GAMEVERSIONS_UPDATE"}
+            )
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updates the game version with the given id."),
+            @ApiResponse(responseCode = "401", description = "The user is not authorized to perform this action.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema())),
+            @ApiResponse(responseCode = "400", description = "The name for the given game version is already in use.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema()))
+    })
+    @PatchMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('GAMEVERSIONS_CREATE')")
+    public Mono<GameVersionDTO> update(@PathVariable UUID id, @RequestBody GameVersionDTO gameVersionToUpdate) {
+        return gameVersionService.update(id, gameVersionToUpdate);
     }
 }

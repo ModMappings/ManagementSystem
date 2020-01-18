@@ -104,9 +104,9 @@ public class GameVersionService {
      * @param newGameVersion The dto to create a new game version from.
      * @return A {@link Mono} that indicates succes or failure.
      */
-    public Mono<GameVersionDTO> update(GameVersionDTO newGameVersion) {
-        return repository.findById(newGameVersion.getId())
-                        .doFirst(() -> userService.warn(logger, String.format("Updating game version: %s with id: %s", newGameVersion.getName(), newGameVersion.getId())))
+    public Mono<GameVersionDTO> update(UUID idToUpdate, GameVersionDTO newGameVersion) {
+        return repository.findById(idToUpdate)
+                        .doFirst(() -> userService.warn(logger, String.format("Updating game version: %s", idToUpdate)))
                         .switchIfEmpty(Mono.error(new EntryNotFoundException(newGameVersion.getId(), "GameVersion")))
                         .doOnNext(dmo -> userService.warn(logger, String.format("Updating db game version: %s with id: %s, and data: %s",dmo.getName(), dmo.getId(), newGameVersion)))
                         .doOnNext(dmo -> mapper.map(newGameVersion, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
