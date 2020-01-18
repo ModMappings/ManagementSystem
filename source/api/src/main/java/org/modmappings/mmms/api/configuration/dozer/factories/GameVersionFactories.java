@@ -1,15 +1,14 @@
 package org.modmappings.mmms.api.configuration.dozer.factories;
 
+import java.util.UUID;
+
 import com.github.dozermapper.core.BeanFactory;
 import com.github.dozermapper.core.config.BeanContainer;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
-import org.modmappings.mmms.repository.model.core.GameVersionDMO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 public class GameVersionFactories {
-
-    @Component
+/*
     public static class DTOtoDMOFactory implements BeanFactory {
 
         @Override
@@ -21,9 +20,10 @@ public class GameVersionFactories {
             if (dto.getId() == null)
             {
                 //We are creating a new instance.
-                return new GameVersionDMO()
+                //return new GameVersionDMO()
             }
 
+            return null;
         }
-    }
+    }*/
 }

@@ -29,7 +29,6 @@ public class DozerConfiguration {
         dozerBeanMapperBuilder.withMappingFiles(mappingFileUrlList);
 
         dozerBeanMapperBuilder.withMappingBuilder(getGameVersionMapping());
-        dozerBeanMapperBuilder.with
 
         return dozerBeanMapperBuilder.build();
     }
@@ -38,7 +37,7 @@ public class DozerConfiguration {
         return new BeanMappingBuilder() {
             @Override
             protected void configure() {
-                mapping(type(GameVersionDTO.class).beanFactory(), GameVersionDMO.class);
+                mapping(GameVersionDTO.class, GameVersionDMO.class);
             }
         };
     }
