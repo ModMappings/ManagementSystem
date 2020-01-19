@@ -17,23 +17,23 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ReleaseDMO {
 
     @Id
-    private final UUID id;
-    private final UUID createdBy;
-    private final Timestamp createdOn;
-    private final String name;
-    private final UUID gameVersionId;
-    private final UUID mappingType;
-    private final boolean isSnapshot;
+    private UUID id;
+    private UUID createdBy;
+    private Timestamp createdOn;
+    private String name;
+    private UUID gameVersionId;
+    private UUID mappingType;
+    private boolean isSnapshot;
 
     @PersistenceConstructor
     ReleaseDMO(
-                    final UUID id,
-                    final UUID createdBy,
-                    final Timestamp createdOn,
-                    final String name,
-                    final UUID gameVersionId,
-                    final UUID mappingType,
-                    final boolean isSnapshot) {
+                    UUID id,
+                    UUID createdBy,
+                    Timestamp createdOn,
+                    String name,
+                    UUID gameVersionId,
+                    UUID mappingType,
+                    boolean isSnapshot) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -43,8 +43,8 @@ public class ReleaseDMO {
         this.isSnapshot = isSnapshot;
     }
 
-    public ReleaseDMO(final UUID createdBy, final String name, final UUID gameVersionId, final UUID mappingType, final boolean isSnapshot) {
-        this.id = UUID.randomUUID();
+    public ReleaseDMO(UUID createdBy, String name, UUID gameVersionId, UUID mappingType, boolean isSnapshot) {
+        this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
         this.name = name;

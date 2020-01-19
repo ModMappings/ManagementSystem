@@ -2,7 +2,8 @@ create table "inheritance_data"
 (
 	"id" uuid not null
 		constraint "PK_inheritance_data"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"sub_type_versioned_mappable_id" uuid
 		constraint "FK_inheritance_data_versioned_mappable_subTypeId"
 			references "versioned_mappable"

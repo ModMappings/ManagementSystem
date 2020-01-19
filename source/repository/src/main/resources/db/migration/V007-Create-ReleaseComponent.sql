@@ -2,7 +2,8 @@ create table release_component
 (
 	"id" uuid not null
 		constraint "PK_release_component"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"release_id" uuid not null
 		constraint "FK_release_component_release_releaseId"
 			references "release"

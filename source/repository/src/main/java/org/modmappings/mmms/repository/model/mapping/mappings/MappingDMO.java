@@ -16,27 +16,27 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("mapping")
 public class MappingDMO {
     @Id
-    private final UUID id;
-    private final UUID      createdBy;
-    private final Timestamp createdOn;
-    private final UUID      versionedMappableId;
-    private final UUID mappingTypeId;
-    private final String input;
-    private final String output;
-    private final String documentation;
-    private final DistributionDMO distribution;
+    private UUID id;
+    private UUID      createdBy;
+    private Timestamp createdOn;
+    private UUID      versionedMappableId;
+    private UUID mappingTypeId;
+    private String input;
+    private String output;
+    private String documentation;
+    private DistributionDMO distribution;
 
     @PersistenceConstructor
     MappingDMO(
-                    final UUID id,
-                    final UUID createdBy,
-                    final Timestamp createdOn,
-                    final UUID versionedMappableId,
-                    final UUID mappingTypeId,
-                    final String input,
-                    final String output,
-                    final String documentation,
-                    final DistributionDMO distribution) {
+                    UUID id,
+                    UUID createdBy,
+                    Timestamp createdOn,
+                    UUID versionedMappableId,
+                    UUID mappingTypeId,
+                    String input,
+                    String output,
+                    String documentation,
+                    DistributionDMO distribution) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -49,14 +49,14 @@ public class MappingDMO {
     }
 
     public MappingDMO(
-                    final UUID createdBy,
-                    final UUID versionedMappableId,
-                    final UUID mappingTypeId,
-                    final String input,
-                    final String output,
-                    final String documentation,
-                    final DistributionDMO distribution) {
-        this.id = UUID.randomUUID();
+                    UUID createdBy,
+                    UUID versionedMappableId,
+                    UUID mappingTypeId,
+                    String input,
+                    String output,
+                    String documentation,
+                    DistributionDMO distribution) {
+        this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
         this.versionedMappableId = versionedMappableId;

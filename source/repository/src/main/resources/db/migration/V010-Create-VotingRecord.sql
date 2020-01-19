@@ -2,7 +2,8 @@ create table "voting_record"
 (
 	"id" uuid not null
 		constraint "PK_voting_record"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"proposal_id" uuid not null
 		constraint "FK_voting_record_proposed_mapping_proposalId"
 			references "proposed_mapping"

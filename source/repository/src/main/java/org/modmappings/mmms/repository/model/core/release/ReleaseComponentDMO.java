@@ -14,19 +14,19 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ReleaseComponentDMO {
 
     @Id
-    private final UUID id;
-    private final UUID releaseId;
-    private final UUID mappingId;
+    private UUID id;
+    private UUID releaseId;
+    private UUID mappingId;
 
     @PersistenceConstructor
-    ReleaseComponentDMO(final UUID id, final UUID releaseId, final UUID mappingId) {
+    ReleaseComponentDMO(UUID id, UUID releaseId, UUID mappingId) {
         this.id = id;
         this.releaseId = releaseId;
         this.mappingId = mappingId;
     }
 
-    public ReleaseComponentDMO(final UUID releaseId, final UUID mappingId) {
-        this.id = UUID.randomUUID();
+    public ReleaseComponentDMO(UUID releaseId, UUID mappingId) {
+        this.id = null;
         this.releaseId = releaseId;
         this.mappingId = mappingId;
     }

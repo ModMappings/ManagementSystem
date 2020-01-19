@@ -12,13 +12,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.modmappings.mmms.api.services.core.GameVersionService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.modmappings.mmms.api.util.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -29,7 +29,6 @@ import java.util.UUID;
 @RestController
 public class GameVersionController {
 
-    private final Logger logger = LoggerFactory.getLogger(GameVersionController.class);
     private final GameVersionService gameVersionService;
 
     public GameVersionController(final GameVersionService gameVersionService) {
@@ -64,7 +63,21 @@ public class GameVersionController {
     }
 
     @Operation(
-            summary = "Looks up all game versions."
+            summary = "Looks up all game versions.",
+            parameters = {
+                    @Parameter(
+                            name = "page",
+                            in = ParameterIn.QUERY,
+                            description = "The 0-based page index to perform pagination lookup.",
+                            example = "0"
+                    ),
+                    @Parameter(
+                            name = "size",
+                            in = ParameterIn.QUERY,
+                            description = "The size of a given page.",
+                            example = "10"
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
@@ -75,13 +88,32 @@ public class GameVersionController {
                             schema = @Schema()))
     })
     @GetMapping(value = "", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<GameVersionDTO> getAll(ServerHttpResponse response) {
-        return gameVersionService.getAll()
+    public Flux<GameVersionDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                       final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+                                       ServerHttpResponse response) {
+        return gameVersionService.getAll(page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Flux.empty();
                 });
     }
+
+    @Operation(
+            summary = "Determines the amount of all available game versions."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Returns the count of available game versions.")
+    })
+    @GetMapping(value = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<Long> count(ServerHttpResponse response) {
+        return gameVersionService.count()
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
+    }
+
 
     @Operation(
             summary = "Deletes the game version with the given id.",
@@ -95,28 +127,47 @@ public class GameVersionController {
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     )
             },
-            security = @SecurityRequirement(
-                    name = "GameVersions-Delete",
-                    scopes = {"GAMEVERSIONS_DELETE"}
-            )
+            security = {
+                    @SecurityRequirement(
+                            name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
+                            scopes = {Constants.SCOPE_ROLES_NAME}
+                    ),
+                    @SecurityRequirement(
+                            name = Constants.MOD_MAPPINGS_DEV_AUTH,
+                            scopes = {Constants.SCOPE_ROLES_NAME}
+                    ),
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Deletes the game version with the given id."),
-            @ApiResponse(responseCode = "401", description = "The user is not authorized to perform this action.")
+            @ApiResponse(responseCode = "401", description = "The user is not authorized to perform this action.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema()))
     })
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('GAMEVERSIONS_DELETE')")
-    public Mono<Void> deleteBy(@PathVariable UUID id) {
-        return gameVersionService.deleteBy(id);
+    public Mono<Void> deleteBy(@PathVariable UUID id, ServerWebExchange exchange) {
+        return exchange.getPrincipal()
+                .flatMap(principal -> gameVersionService.deleteBy(id, principal))
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
     }
 
     @Operation(
             summary = "Creates the game version from the data in the request body.",
             description = "This converts the data in the request body into a full game version, and stores it in the database. The name of the game version can not already be in use. A user needs to be authorized to perform this request. A user needs to have the role 'GAMEVERSION_CREATE' to execute this action successfully.",
-            security = @SecurityRequirement(
-                    name = "GameVersions-Create",
-                    scopes = {"GAMEVERSIONS_CREATE"}
-            )
+            security = {
+                @SecurityRequirement(
+                    name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
+                    scopes = {Constants.SCOPE_ROLES_NAME}
+                ),
+                @SecurityRequirement(
+                        name = Constants.MOD_MAPPINGS_DEV_AUTH,
+                        scopes = {Constants.SCOPE_ROLES_NAME}
+                ),
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Creates the game version with the given id."),
@@ -129,8 +180,13 @@ public class GameVersionController {
     })
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('GAMEVERSIONS_CREATE')")
-    public Mono<GameVersionDTO> create(@RequestBody GameVersionDTO newGameVersion) {
-        return gameVersionService.create(newGameVersion);
+    public Mono<GameVersionDTO> create(@RequestBody GameVersionDTO newGameVersion, ServerWebExchange exchange) {
+        return exchange.getPrincipal()
+                .flatMap(principal -> gameVersionService.create(newGameVersion, principal))
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
     }
 
     @Operation(
@@ -145,10 +201,16 @@ public class GameVersionController {
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     )
             },
-            security = @SecurityRequirement(
-                    name = "GameVersions-Update",
-                    scopes = {"GAMEVERSIONS_UPDATE"}
-            )
+            security = {
+                    @SecurityRequirement(
+                            name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
+                            scopes = {Constants.SCOPE_ROLES_NAME}
+                    ),
+                    @SecurityRequirement(
+                            name = Constants.MOD_MAPPINGS_DEV_AUTH,
+                            scopes = {Constants.SCOPE_ROLES_NAME}
+                    ),
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Updates the game version with the given id."),
@@ -157,11 +219,19 @@ public class GameVersionController {
                             schema = @Schema())),
             @ApiResponse(responseCode = "400", description = "The name for the given game version is already in use.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "No game version with the given id could be found.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema()))
     })
     @PatchMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('GAMEVERSIONS_CREATE')")
-    public Mono<GameVersionDTO> update(@PathVariable UUID id, @RequestBody GameVersionDTO gameVersionToUpdate) {
-        return gameVersionService.update(id, gameVersionToUpdate);
+    @PreAuthorize("hasRole('GAMEVERSIONS_UPDATE')")
+    public Mono<GameVersionDTO> update(@PathVariable UUID id, @RequestBody GameVersionDTO gameVersionToUpdate, ServerWebExchange exchange) {
+        return exchange.getPrincipal()
+                .flatMap(principal -> gameVersionService.update(id, gameVersionToUpdate, principal))
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
     }
 }

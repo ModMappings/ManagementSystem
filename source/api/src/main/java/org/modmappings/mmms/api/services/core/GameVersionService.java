@@ -1,10 +1,9 @@
 package org.modmappings.mmms.api.services.core;
 
-import java.util.UUID;
-
 import org.modmappings.mmms.api.controller.core.GameVersionController;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
+import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.repository.model.core.GameVersionDMO;
@@ -15,23 +14,26 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.security.Principal;
+import java.util.UUID;
+
 /**
  * Business layer service which handles the interactions of the API with the DataLayer.
  * <p>
  * This services validates data as well as converts between the API models as well as the data models.
- *
+ * <p>
  * This services however does not validate if a given user is authorized to execute a given action.
  * It only validates the interaction from a data perspective.
- *
+ * <p>
  * The caller is to make sure that any interaction with this service is authorized, for example by checking
  * against a role that a user needs to have.
  */
 @Component
 public class GameVersionService {
 
-    private final Logger                 logger = LoggerFactory.getLogger(GameVersionController.class);
+    private final Logger logger = LoggerFactory.getLogger(GameVersionController.class);
     private final IGameVersionRepository repository;
-    private final UserService            userService;
+    private final UserService userService;
 
     public GameVersionService(final IGameVersionRepository repository, final UserService userService) {
         this.repository = repository;
@@ -46,24 +48,40 @@ public class GameVersionService {
      */
     public Mono<GameVersionDTO> getBy(UUID id) {
         return repository.findById(id)
-                               .doFirst(() -> logger.debug("Looking up a game version by id: {}", id))
-                               .map(this::toDTO)
-                               .doOnNext(dto -> logger.debug("Found game version: {} with id: {}", dto.getName(), dto.getId()))
-                               .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "GameVersion")));
+                .doFirst(() -> logger.debug("Looking up a game version by id: {}", id))
+                .map(this::toDTO)
+                .doOnNext(dto -> logger.debug("Found game version: {} with id: {}", dto.getName(), dto.getId()))
+                .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "GameVersion")));
     }
 
     /**
      * Looks up multiple game versions.
      * The returned order is newest to oldest.
      *
+     * @param page The 0-based page index used during pagination logic.
+     * @param size The maximum amount of items on a given page.
      * @return A {@link Flux} with the game versions, or an errored {@link Flux} that indicates a failure.
      */
-    public Flux<GameVersionDTO> getAll() {
+    public Flux<GameVersionDTO> getAll(int page, int size) {
         return repository.findAll()
-                               .doFirst(() -> logger.debug("Looking up game versions."))
-                               .map(this::toDTO)
-                               .doOnNext(dto -> logger.debug("Found game version: {} with id: {}", dto.getName(), dto.getId()))
-                               .switchIfEmpty(Flux.error(new NoEntriesFoundException("GameVersion")));
+                .doFirst(() -> logger.debug("Looking up game versions."))
+                .skip(page * size)
+                .limitRequest(size)
+                .map(this::toDTO)
+                .doOnNext(dto -> logger.debug("Found game version: {} with id: {}", dto.getName(), dto.getId()))
+                .switchIfEmpty(Flux.error(new NoEntriesFoundException("GameVersion")));
+    }
+
+    /**
+     * Determines the amount of game versions that exist in the database.
+     *
+     * @return A {@link Mono} that indicates the amount of game versions in the database.
+     */
+    public Mono<Long> count() {
+        return repository
+                .count()
+                .doFirst(() -> logger.debug("Determining the available amount of game versions"))
+                .doOnNext((cnt) -> logger.debug("There are {} game versions available.", cnt));
     }
 
     /**
@@ -72,10 +90,10 @@ public class GameVersionService {
      * @param id The id of the game version that should be deleted.
      * @return A {@link Mono} indicating success or failure.
      */
-    public Mono<Void> deleteBy(UUID id) {
+    public Mono<Void> deleteBy(UUID id, Principal principal) {
         return repository.deleteById(id)
-                        .doFirst(() -> userService.warn(logger, String.format("Deleting game version with id: %s", id)))
-                        .doOnNext(aVoid -> userService.warn(logger, String.format("Deleted game version with id: %s", id)));
+                .doFirst(() -> userService.warn(logger, principal, String.format("Deleting game version with id: %s", id)))
+                .doOnNext(aVoid -> userService.warn(logger, principal, String.format("Deleted game version with id: %s", id)));
     }
 
     /**
@@ -84,33 +102,35 @@ public class GameVersionService {
      * @param newGameVersion The dto to create a new game version from.
      * @return A {@link Mono} that indicates succes or failure.
      */
-    public Mono<GameVersionDTO> create(GameVersionDTO newGameVersion) {
+    public Mono<GameVersionDTO> create(GameVersionDTO newGameVersion, Principal principal) {
         return Mono.just(newGameVersion)
-                        .doFirst(() -> userService.warn(logger, String.format("Creating new game version: %s", newGameVersion.getName())))
-                        .map(this::toNewDMO)
-                        .flatMap(repository::save)
-                        .map(this::toDTO)
-                        .doOnNext(dmo -> {
-                            userService.warn(logger, String.format("Created new game version: %s with id: %s", dmo.getName(), dmo.getId()));
-                        });
+                .doFirst(() -> userService.warn(logger, principal, String.format("Creating new game version: %s", newGameVersion.getName())))
+                .map(dto -> this.toNewDMO(dto, principal))
+                .flatMap(repository::save)
+                .map(this::toDTO)
+                .doOnNext(dmo -> {
+                    userService.warn(logger, principal, String.format("Created new game version: %s with id: %s", dmo.getName(), dmo.getId()));
+                })
+                .onErrorResume(thro -> thro.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("GameVersion", "Name")));
     }
 
     /**
-     * Creates a new game version from a DTO and saves it in the repository.
+     * Updates an existing game version with the data in the dto and saves it in the repo.
      *
-     * @param newGameVersion The dto to create a new game version from.
+     * @param newGameVersion The dto to update the data in the dmo with.
      * @return A {@link Mono} that indicates succes or failure.
      */
-    public Mono<GameVersionDTO> update(UUID idToUpdate, GameVersionDTO newGameVersion) {
+    public Mono<GameVersionDTO> update(UUID idToUpdate, GameVersionDTO newGameVersion, Principal principal) {
         return repository.findById(idToUpdate)
-                        .doFirst(() -> userService.warn(logger, String.format("Updating game version: %s", idToUpdate)))
-                        .switchIfEmpty(Mono.error(new EntryNotFoundException(newGameVersion.getId(), "GameVersion")))
-                        .doOnNext(dmo -> userService.warn(logger, String.format("Updating db game version: %s with id: %s, and data: %s",dmo.getName(), dmo.getId(), newGameVersion)))
-                        .doOnNext(dmo -> this.updateDMO(newGameVersion, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
-                        .doOnNext(dmo -> userService.warn(logger, String.format("Updated db game version to: %s", dmo)))
-                        .flatMap(repository::save)
-                        .map(this::toDTO)
-                        .doOnNext(dto -> userService.warn(logger, String.format("Updated game version: %s with id: %s, to data: %s", dto.getName(), dto.getId(), dto)));
+                .doFirst(() -> userService.warn(logger, principal, String.format("Updating game version: %s", idToUpdate)))
+                .switchIfEmpty(Mono.error(new EntryNotFoundException(newGameVersion.getId(), "GameVersion")))
+                .doOnNext(dmo -> userService.warn(logger, principal, String.format("Updating db game version: %s with id: %s, and data: %s", dmo.getName(), dmo.getId(), newGameVersion)))
+                .doOnNext(dmo -> this.updateDMO(newGameVersion, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
+                .doOnNext(dmo -> userService.warn(logger, principal, String.format("Updated db game version to: %s", dmo)))
+                .flatMap(dmo -> repository.save(dmo)
+                        .onErrorResume(thro -> thro.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("GameVersion", "Name"))))
+                .map(this::toDTO)
+                .doOnNext(dto -> userService.warn(logger, principal, String.format("Updated game version: %s with id: %s, to data: %s", dto.getName(), dto.getId(), dto)));
     }
 
     private GameVersionDTO toDTO(GameVersionDMO dmo) {
@@ -124,9 +144,9 @@ public class GameVersionService {
         );
     }
 
-    private GameVersionDMO toNewDMO(GameVersionDTO dto) {
+    private GameVersionDMO toNewDMO(GameVersionDTO dto, Principal principal) {
         return new GameVersionDMO(
-                dto.getCreatedBy(),
+                userService.getCurrentUserId(principal),
                 dto.getName(),
                 dto.getPreRelease(),
                 dto.getSnapshot()

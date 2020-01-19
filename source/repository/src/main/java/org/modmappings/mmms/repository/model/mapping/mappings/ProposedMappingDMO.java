@@ -13,35 +13,35 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ProposedMappingDMO {
 
     @Id
-    private final UUID            id;
-    private final UUID            createdBy;
-    private final Timestamp       createdOn;
-    private final UUID            versionedMappableId;
-    private final UUID mappingTypeId;
-    private final String input;
-    private final String output;
-    private final String          documentation;
-    private final DistributionDMO distribution;
-    private final boolean isPublic;
-    private final UUID closedBy;
-    private final Timestamp closedOn;
-    private final UUID mappingId;
+    private UUID            id;
+    private UUID            createdBy;
+    private Timestamp       createdOn;
+    private UUID            versionedMappableId;
+    private UUID mappingTypeId;
+    private String input;
+    private String output;
+    private String          documentation;
+    private DistributionDMO distribution;
+    private boolean isPublic;
+    private UUID closedBy;
+    private Timestamp closedOn;
+    private UUID mappingId;
 
     @PersistenceConstructor
     ProposedMappingDMO(
-                    final UUID id,
-                    final UUID createdBy,
-                    final Timestamp createdOn,
-                    final UUID versionedMappableId,
-                    final UUID mappingTypeId,
-                    final String input,
-                    final String output,
-                    final String documentation,
-                    final DistributionDMO distribution,
-                    final boolean isPublic,
-                    final UUID closedBy,
-                    final Timestamp closedOn,
-                    final UUID mappingId) {
+                    UUID id,
+                    UUID createdBy,
+                    Timestamp createdOn,
+                    UUID versionedMappableId,
+                    UUID mappingTypeId,
+                    String input,
+                    String output,
+                    String documentation,
+                    DistributionDMO distribution,
+                    boolean isPublic,
+                    UUID closedBy,
+                    Timestamp closedOn,
+                    UUID mappingId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -58,14 +58,14 @@ public class ProposedMappingDMO {
     }
 
     public ProposedMappingDMO(
-                    final UUID createdBy,
-                    final UUID versionedMappableId,
-                    final UUID mappingTypeId,
-                    final String input,
-                    final String output,
-                    final String documentation,
-                    final DistributionDMO distribution, final boolean isPublic) {
-        this.id = UUID.randomUUID();
+                    UUID createdBy,
+                    UUID versionedMappableId,
+                    UUID mappingTypeId,
+                    String input,
+                    String output,
+                    String documentation,
+                    DistributionDMO distribution, boolean isPublic) {
+        this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
         this.versionedMappableId = versionedMappableId;

@@ -9,53 +9,57 @@ import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.Scopes;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.modmappings.mmms.api.util.Constants;
+import org.springdoc.core.*;
+import org.springdoc.core.customizers.OperationCustomizer;
+import org.springdoc.core.customizers.ParameterCustomizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+
+import java.util.List;
+import java.util.Optional;
 
 @Configuration
 public class OpenApiConfiguration {
 
     @Bean
-    public OpenAPI customOpenAPI(@Value("${springdoc.version:0.0.0-Dev}") String appVersion) {
+    public OpenAPI buildModMappingsOpenAPISpecification(@Value("${springdoc.version:0.0.0-Dev}") String appVersion) {
         return new OpenAPI()
                 .components(new Components()
-                        .addSecuritySchemes("ModMappings Official auth", new SecurityScheme()
-                                .type(SecurityScheme.Type.OPENIDCONNECT)
-                                .scheme("bearer")
+                        .addSecuritySchemes(Constants.MOD_MAPPINGS_OFFICIAL_AUTH, new SecurityScheme()
+                                .type(SecurityScheme.Type.OAUTH2)
+                                .scheme(Constants.BEARER_AUTH_SCHEME)
                                 .in(SecurityScheme.In.HEADER)
-                                .bearerFormat("JWT")
-                                .description("The official OpenID connect authentication server for ModMappings.")
-                                .openIdConnectUrl("https://testauth.minecraftforge.net/realms/ModMappings/.well-known/openid-configuration")
+                                .bearerFormat(Constants.JWT_BEARER_FORMAT)
+                                .description(Constants.OFFICIAL_AUTH_DESC)
+                                .openIdConnectUrl(Constants.OFFICIAL_AUTH_OPENID_CONFIG_URL)
                                 .flows(new OAuthFlows()
                                         .implicit(
                                                 new OAuthFlow()
-                                                        .authorizationUrl("https://testauth.minecraftforge.net/realms/ModMappings/protocol/openid-connect/auth")
-                                                        .tokenUrl("https://testauth.minecraftforge.net/realms/ModMappings/protocol/openid-connect/token")
+                                                        .authorizationUrl(Constants.OFFICIAL_AUTH_AUTHORIZATION_URL)
+                                                        .tokenUrl(Constants.OFFICIAL_AUTH_TOKEN_URL)
                                                         .scopes(new Scopes()
-                                                                .addString("GAMEVERSIONS_DELETE", "Allows for game version deletion")
-                                                                .addString("GAMEVERSIONS_UPDATE", "Allows for game version updating")
-                                                                .addString("GAMEVERSIONS_CREATE", "Allows for game version creation")
+                                                                .addString(Constants.SCOPE_ROLES_NAME, Constants.SCOPE_ROLE_DESC)
                                                         )
                                         )
                                 )
                         )
-                        .addSecuritySchemes("ModMappings Local development auth", new SecurityScheme()
-                                .type(SecurityScheme.Type.OPENIDCONNECT)
-                                .scheme("bearer")
+                        .addSecuritySchemes(Constants.MOD_MAPPINGS_DEV_AUTH, new SecurityScheme()
+                                .type(SecurityScheme.Type.OAUTH2)
+                                .scheme(Constants.BEARER_AUTH_SCHEME)
                                 .in(SecurityScheme.In.HEADER)
-                                .bearerFormat("JWT")
-                                .description("The local development OpenID connect authentication server for ModMappings.")
-                                .openIdConnectUrl("http://localhost:8081/realms/ModMappings/.well-known/openid-configuration")
+                                .bearerFormat(Constants.JWT_BEARER_FORMAT)
+                                .description(Constants.DEV_AUTH_DESC)
+                                .openIdConnectUrl(Constants.DEV_AUTH_OPENID_CONFIG_URL)
                                 .flows(new OAuthFlows()
                                     .implicit(
                                             new OAuthFlow()
-                                                .authorizationUrl("http://localhost:8081/realms/ModMappings/protocol/openid-connect/auth")
-                                                .tokenUrl("http://localhost:8081/realms/ModMappings/protocol/openid-connect/token")
+                                                .authorizationUrl(Constants.DEV_AUTH_AUTHORIZATION_URL)
+                                                .tokenUrl(Constants.DEV_AUTH_TOKEN_URL)
                                                 .scopes(new Scopes()
-                                                        .addString("GAMEVERSIONS_DELETE", "Allows for game version deletion")
-                                                        .addString("GAMEVERSIONS_UPDATE", "Allows for game version updating")
-                                                        .addString("GAMEVERSIONS_CREATE", "Allows for game version creation")
+                                                        .addString(Constants.SCOPE_ROLES_NAME, Constants.SCOPE_ROLE_DESC)
                                                 )
                                     )
                                 )

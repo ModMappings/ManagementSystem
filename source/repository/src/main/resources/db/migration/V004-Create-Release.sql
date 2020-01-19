@@ -2,7 +2,8 @@ create table "release"
 (
 	"id" uuid not null
 		constraint "PK_release"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"name" text not null,
 	"created_on" timestamp not null,
 	"created_by" uuid not null,

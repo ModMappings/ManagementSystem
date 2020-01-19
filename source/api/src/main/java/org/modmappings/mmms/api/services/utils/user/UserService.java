@@ -1,13 +1,14 @@
 package org.modmappings.mmms.api.services.utils.user;
 
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
+
+import java.security.Principal;
+import java.util.UUID;
 
 /**
  * This utility class allows for easy access to and logging in the name of the current user.
@@ -28,8 +29,8 @@ public class UserService {
      * @param logger The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
-    public void info(Logger logger, String message) {
-        logger.info(String.format("[%s]: %s", getCurrentUserId(), message));
+    public void info(Logger logger, Principal principal, String message) {
+        logger.info(String.format("[%s]: %s", getCurrentUserId(principal), message));
     }
 
     /**
@@ -41,8 +42,8 @@ public class UserService {
      * @param logger The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
-    public void warn(Logger logger, String message) {
-        logger.warn(String.format("[%s]: %s", getCurrentUserId(), message));
+    public void warn(Logger logger, Principal principal, String message) {
+        logger.warn(String.format("[%s]: %s", getCurrentUserId(principal), message));
     }
 
     /**
@@ -54,8 +55,8 @@ public class UserService {
      * @param logger The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
-    public void error(Logger logger, String message) {
-        logger.error(String.format("[%s]: %s", getCurrentUserId(), message));
+    public void error(Logger logger, Principal principal, String message) {
+        logger.error(String.format("[%s]: %s", getCurrentUserId(principal), message));
     }
 
     /**
@@ -63,25 +64,28 @@ public class UserService {
      * Validates the current principle and then attempts to parse the UUID of the current user from the
      * subject id contained in the JWT.
      *
+     * @param principal The principal information to pull the id from.
      * @return The uuid that represents the id of the JWT.
      * @throws IllegalStateException When their is currently no authenticated user or when the subject id is not in valid uuid form.
      */
-    public UUID getCurrentUserId() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof OAuth2AuthenticatedPrincipal))
-        {
-            logger.error(String.format("Attempted to request user id, when no user is present! Current principle: %s", authentication), new IllegalStateException());
-            throw new IllegalStateException(String.format("There is currently no user logged in. The current principle is: %s", authentication));
-        }
+    public UUID getCurrentUserId(Principal principal) {
+        if (principal == null)
+            throw new IllegalStateException("No principal provided.");
 
-        final OAuth2AuthenticatedPrincipal principal = (OAuth2AuthenticatedPrincipal) authentication;
-        final String idString = principal.getAttribute("sub");
+        if (!(principal instanceof JwtAuthenticationToken))
+            throw new IllegalStateException("Principal not performed via JWT.");
+
+        final JwtAuthenticationToken twtPrincipal = (JwtAuthenticationToken) principal;
+        final String idString = twtPrincipal.getName();
+        if (idString == null)
+            throw new IllegalStateException("OAuth2 JWT does not contain subject.");
 
         try {
             return UUID.fromString(idString);
-        } catch (IllegalArgumentException ex) {
-            logger.error(String.format("Failed to parse ID from OAuth2 Subject. Token subject: %s", idString), ex);
-            throw new IllegalStateException(String.format("The id of the subject contained in the OAuth2 JWT is not a UUID: %s", idString), ex);
+        }
+        catch (IllegalArgumentException ex)
+        {
+            throw new IllegalStateException("Subject id does not contain UUID", ex);
         }
     }
 }

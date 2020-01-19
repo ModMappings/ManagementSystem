@@ -15,21 +15,21 @@ import org.springframework.data.relational.core.mapping.Table;
 public class MappableDMO {
 
     @Id
-    private final UUID id;
-    private final UUID createdBy;
-    private final Timestamp createdOn;
-    private final MappableTypeDMO type;
+    private UUID id;
+    private UUID createdBy;
+    private Timestamp createdOn;
+    private MappableTypeDMO type;
 
     @PersistenceConstructor
-    MappableDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final MappableTypeDMO type) {
+    MappableDMO(UUID id, UUID createdBy, Timestamp createdOn, MappableTypeDMO type) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
         this.type = type;
     }
 
-    public MappableDMO(final UUID createdBy, final MappableTypeDMO type) {
-        this.id = UUID.randomUUID();
+    public MappableDMO(UUID createdBy, MappableTypeDMO type) {
+        this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
         this.type = type;

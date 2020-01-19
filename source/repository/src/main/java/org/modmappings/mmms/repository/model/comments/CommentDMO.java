@@ -33,7 +33,7 @@ public class CommentDMO {
     public static CommentDMO createNewForRelease(UUID createdBy, String content, UUID releaseId)
     {
         return new CommentDMO(
-                        UUID.randomUUID(),
+                        null,
                         createdBy,
                         Timestamp.from(Instant.now()),
                         content,
@@ -59,7 +59,7 @@ public class CommentDMO {
     public static CommentDMO createNewForProposedMapping(UUID createdBy, String content, UUID proposedMappingId)
     {
         return new CommentDMO(
-                        UUID.randomUUID(),
+                        null,
                         createdBy,
                         Timestamp.from(Instant.now()),
                         content,
@@ -85,7 +85,7 @@ public class CommentDMO {
     public static CommentDMO createNewForComment(UUID createdBy, String content, UUID parentCommentId)
     {
         return new CommentDMO(
-                        UUID.randomUUID(),
+                        null,
                         createdBy,
                         Timestamp.from(Instant.now()),
                         content,
@@ -100,31 +100,31 @@ public class CommentDMO {
     }
 
     @Id
-    private final UUID id;
-    private final UUID createdBy;
-    private final Timestamp createdOn;
-    private final String content;
-    private final UUID lastEditBy;
-    private final Timestamp lastEditOn;
-    private final UUID deletedBy;
-    private final Timestamp deletedOn;
-    private final UUID proposedMappingId;
-    private final UUID releaseId;
-    private final UUID parentCommentId;
+    private UUID id;
+    private UUID createdBy;
+    private Timestamp createdOn;
+    private String content;
+    private UUID lastEditBy;
+    private Timestamp lastEditOn;
+    private UUID deletedBy;
+    private Timestamp deletedOn;
+    private UUID proposedMappingId;
+    private UUID releaseId;
+    private UUID parentCommentId;
 
     @PersistenceConstructor
     CommentDMO(
-                    final UUID id,
-                    final UUID createdBy,
-                    final Timestamp createdOn,
-                    final String content,
-                    final UUID lastEditBy,
-                    final Timestamp lastEditOn,
-                    final UUID deletedBy,
-                    final Timestamp deletedOn,
-                    final UUID proposedMappingId,
-                    final UUID releaseId,
-                    final UUID parentCommentId) {
+                    UUID id,
+                    UUID createdBy,
+                    Timestamp createdOn,
+                    String content,
+                    UUID lastEditBy,
+                    Timestamp lastEditOn,
+                    UUID deletedBy,
+                    Timestamp deletedOn,
+                    UUID proposedMappingId,
+                    UUID releaseId,
+                    UUID parentCommentId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;

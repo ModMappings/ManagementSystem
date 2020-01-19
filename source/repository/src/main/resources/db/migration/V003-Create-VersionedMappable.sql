@@ -2,7 +2,8 @@ create table "versioned_mappable"
 (
 	"id" uuid not null
 		constraint "PK_versioned_mappable"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"game_version_id" uuid not null
 		constraint "FK_versioned_mappable_game_version_gameVersionId"
 			references "game_version"

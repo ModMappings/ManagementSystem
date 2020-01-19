@@ -9,19 +9,19 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("inheritance_data")
 public class InheritanceDataDMO {
     @Id
-    private final UUID id;
-    private final UUID superTypeVersionedMappableId;
-    private final UUID subTypeVersionedMappableId;
+    private UUID id;
+    private UUID superTypeVersionedMappableId;
+    private UUID subTypeVersionedMappableId;
 
     @PersistenceConstructor
-    InheritanceDataDMO(final UUID id, final UUID superTypeVersionedMappableId, final UUID subTypeVersionedMappableId) {
+    InheritanceDataDMO(UUID id, UUID superTypeVersionedMappableId, UUID subTypeVersionedMappableId) {
         this.id = id;
         this.superTypeVersionedMappableId = superTypeVersionedMappableId;
         this.subTypeVersionedMappableId = subTypeVersionedMappableId;
     }
 
-    public InheritanceDataDMO(final UUID superTypeVersionedMappableId, final UUID subTypeVersionedMappableId) {
-        this.id = UUID.randomUUID();
+    public InheritanceDataDMO(UUID superTypeVersionedMappableId, UUID subTypeVersionedMappableId) {
+        this.id = null;
         this.superTypeVersionedMappableId = superTypeVersionedMappableId;
         this.subTypeVersionedMappableId = subTypeVersionedMappableId;
     }

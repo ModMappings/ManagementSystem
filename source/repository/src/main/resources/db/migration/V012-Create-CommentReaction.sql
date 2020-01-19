@@ -2,7 +2,8 @@ create table "comment_reaction"
 (
 	"id" uuid not null
 		constraint "PK_comment_reaction"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"created_by" uuid not null,
 	"created_on" timestamp not null,
 	"type" integer not null,

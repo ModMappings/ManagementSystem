@@ -15,15 +15,15 @@ import org.springframework.data.relational.core.mapping.Table;
 public class GameVersionDMO {
 
     @Id
-    private final UUID id;
-    private final UUID createdBy;
-    private final Timestamp createdOn;
+    private UUID id;
+    private UUID createdBy;
+    private Timestamp createdOn;
     private String name;
     private boolean isPreRelease;
     private boolean isSnapshot;
 
     @PersistenceConstructor
-    GameVersionDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean isPreRelease, final boolean isSnapshot) {
+    GameVersionDMO(UUID id, UUID createdBy, Timestamp createdOn, String name, boolean isPreRelease, boolean isSnapshot) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -32,8 +32,8 @@ public class GameVersionDMO {
         this.isSnapshot = isSnapshot;
     }
 
-    public GameVersionDMO(final UUID createdBy, final String name, final boolean isPreRelease, final boolean isSnapshot) {
-        this.id = UUID.randomUUID();
+    public GameVersionDMO(UUID createdBy, String name, boolean isPreRelease, boolean isSnapshot) {
+        this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
         this.name = name;
@@ -90,11 +90,11 @@ public class GameVersionDMO {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final GameVersionDMO that = (GameVersionDMO) o;
+        GameVersionDMO that = (GameVersionDMO) o;
 
         return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
     }

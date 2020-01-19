@@ -22,14 +22,14 @@ import org.springframework.data.relational.core.mapping.Table;
 public class CommentReactionDMO {
 
     @Id
-    private final UUID      id;
-    private final UUID      createdBy;
-    private final Timestamp              createdOn;
-    private final CommentReactionTypeDMO type;
-    private final UUID                   commentId;
+    private UUID      id;
+    private UUID      createdBy;
+    private Timestamp              createdOn;
+    private CommentReactionTypeDMO type;
+    private UUID                   commentId;
 
     @PersistenceConstructor
-    CommentReactionDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final CommentReactionTypeDMO type, final UUID commentId) {
+    CommentReactionDMO(UUID id, UUID createdBy, Timestamp createdOn, CommentReactionTypeDMO type, UUID commentId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -37,8 +37,8 @@ public class CommentReactionDMO {
         this.commentId = commentId;
     }
 
-    public CommentReactionDMO(final UUID createdBy, final CommentReactionTypeDMO type, final UUID commentId) {
-        this.id = UUID.randomUUID();
+    public CommentReactionDMO(UUID createdBy, CommentReactionTypeDMO type, UUID commentId) {
+        this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
         this.type = type;

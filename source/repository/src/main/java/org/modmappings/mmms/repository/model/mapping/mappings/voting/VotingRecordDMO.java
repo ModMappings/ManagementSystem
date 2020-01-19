@@ -16,15 +16,15 @@ import org.springframework.data.relational.core.mapping.Table;
 public class VotingRecordDMO {
 
     @Id
-    private final UUID id;
-    private final UUID createdBy;
-    private final Timestamp createdOn;
-    private final UUID proposedMappingId;
-    private final boolean isForVote;
-    private final boolean hasBeenRescinded;
+    private UUID id;
+    private UUID createdBy;
+    private Timestamp createdOn;
+    private UUID proposedMappingId;
+    private boolean isForVote;
+    private boolean hasBeenRescinded;
 
     @PersistenceConstructor
-    VotingRecordDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID proposedMappingId, final boolean isForVote, final boolean hasBeenRescinded) {
+    VotingRecordDMO(UUID id, UUID createdBy, Timestamp createdOn, UUID proposedMappingId, boolean isForVote, boolean hasBeenRescinded) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -33,8 +33,8 @@ public class VotingRecordDMO {
         this.hasBeenRescinded = hasBeenRescinded;
     }
 
-    public VotingRecordDMO(final UUID createdBy, final UUID proposedMappingId, final boolean isForVote) {
-        this.id = UUID.randomUUID();
+    public VotingRecordDMO(UUID createdBy, UUID proposedMappingId, boolean isForVote) {
+        this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
         this.proposedMappingId = proposedMappingId;

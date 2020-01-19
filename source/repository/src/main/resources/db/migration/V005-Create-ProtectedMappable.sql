@@ -2,7 +2,8 @@ create table "protected_mappable"
 (
 	"id" uuid not null
 		constraint "PK_protected_mappable"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"versioned_mappable_id" uuid not null
 		constraint "FK_protected_mappable_versioned_mappable_versionedMappableId"
 			references "versioned_mappable"

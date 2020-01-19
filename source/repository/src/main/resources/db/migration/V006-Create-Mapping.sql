@@ -2,7 +2,8 @@ create table "mapping"
 (
 	"id" uuid not null
 		constraint "PK_mapping"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"versioned_mappable_id" uuid not null
 		constraint "FK_mapping_versioned_mappable_versionedMappableId"
 			references "versioned_mappable"
@@ -16,7 +17,7 @@ create table "mapping"
 		constraint "FK_mapping_mapping_type_mappingTypeId"
 			references "mapping_type"
 				on delete cascade,
-	"created_by" uuid default '00000000-0000-0000-0000-000000000000'::uuid not null
+	"created_by" uuid not null
 );
 
 create index "IX_mapping_mappingTypeId"

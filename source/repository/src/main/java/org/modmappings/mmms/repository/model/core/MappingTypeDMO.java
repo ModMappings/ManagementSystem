@@ -16,15 +16,15 @@ import org.springframework.data.relational.core.mapping.Table;
 public class MappingTypeDMO {
 
     @Id
-    private final UUID id;
-    private final UUID      createdBy;
-    private final Timestamp createdOn;
-    private final String    name;
-    private final boolean visible;
-    private final boolean editable;
+    private UUID id;
+    private UUID      createdBy;
+    private Timestamp createdOn;
+    private String    name;
+    private boolean visible;
+    private boolean editable;
 
     @PersistenceConstructor
-    MappingTypeDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean visible, final boolean editable) {
+    MappingTypeDMO(UUID id, UUID createdBy, Timestamp createdOn, String name, boolean visible, boolean editable) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -33,10 +33,10 @@ public class MappingTypeDMO {
         this.editable = editable;
     }
 
-    public MappingTypeDMO(final UUID createdBy, final String name, final boolean visible, final boolean editable) {
+    public MappingTypeDMO(UUID createdBy, String name, boolean visible, boolean editable) {
         this.visible = visible;
         this.editable = editable;
-        this.id = UUID.randomUUID();
+        this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
         this.name = name;

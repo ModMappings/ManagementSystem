@@ -15,19 +15,19 @@ import org.springframework.data.relational.core.mapping.Table;
 public class ProtectedMappableInformationDMO {
 
     @Id
-    private final UUID id;
-    private final UUID versionedMappableId;
-    private final UUID mappingType;
+    private UUID id;
+    private UUID versionedMappableId;
+    private UUID mappingType;
 
     @PersistenceConstructor
-    ProtectedMappableInformationDMO(final UUID id, final UUID versionedMappableId, final UUID mappingType) {
+    ProtectedMappableInformationDMO(UUID id, UUID versionedMappableId, UUID mappingType) {
         this.id = id;
         this.versionedMappableId = versionedMappableId;
         this.mappingType = mappingType;
     }
 
-    public ProtectedMappableInformationDMO(final UUID versionedMappableId, final UUID mappingType) {
-        this.id = UUID.randomUUID();
+    public ProtectedMappableInformationDMO(UUID versionedMappableId, UUID mappingType) {
+        this.id = null;
         this.versionedMappableId = versionedMappableId;
         this.mappingType = mappingType;
     }

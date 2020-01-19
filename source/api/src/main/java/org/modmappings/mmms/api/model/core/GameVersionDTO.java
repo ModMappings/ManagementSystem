@@ -34,6 +34,9 @@ public class GameVersionDTO {
         this.isSnapshot = isSnapshot;
     }
 
+    public GameVersionDTO() {
+    }
+
     public UUID getId() {
         return id;
     }

@@ -2,7 +2,8 @@ create table "proposed_mapping"
 (
 	"id" uuid not null
 		constraint "PK_proposed_mapping"
-			primary key,
+            primary key
+                default uuid_generate_v4(),
 	"versioned_mappable_id" uuid not null
 		constraint "FK_proposed_mapping_versioned_mappable_versionedMappableId"
 			references "versioned_mappable"
