@@ -23,7 +23,7 @@ public interface IReleaseRepository extends IPageableR2DBCRepository<ReleaseDMO>
      * @param nameRegex The regular expression used to lookup releases for.
      * @return The releases of which the name match the regex.
      */
-    @Query("SELECT * FROM release r WHERE r.name regexp $1")
+    @Query("SELECT * FROM release r WHERE r.name ~ $1")
     Flux<ReleaseDMO> findAllForNameRegex(String nameRegex);
 
     /**

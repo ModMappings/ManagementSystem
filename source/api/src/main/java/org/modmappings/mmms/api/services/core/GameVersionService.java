@@ -15,6 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -82,6 +83,42 @@ public class GameVersionService {
                 .count()
                 .doFirst(() -> logger.debug("Determining the available amount of game versions"))
                 .doOnNext((cnt) -> logger.debug("There are {} game versions available.", cnt));
+    }
+
+    /**
+     * Looks up multiple game versions, that match the search criteria.
+     * The returned order is newest to oldest.
+     *
+     * @param nameRegex The regular expression against which the name of the game version is matched.
+     * @param preRelease Indicates if preReleases need to be included, null indicates do not care.
+     * @param snapshot Indicates if snapshots need to be included, null indicates do not care.
+     * @param page The 0-based page index used during pagination logic.
+     * @param size The maximum amount of items on a given page.
+     * @return A {@link Flux} with the game versions, or an errored {@link Flux} that indicates a failure.
+     */
+    public Flux<GameVersionDTO> search(String nameRegex, Boolean preRelease, Boolean snapshot, int page, int size) {
+        return repository.findAllFor(nameRegex, preRelease, snapshot)
+                .doFirst(() -> logger.debug("Looking up game versions in search mode. Using parameters: {}, {}, {}", nameRegex, preRelease, snapshot))
+                .skip(page * size)
+                .limitRequest(size)
+                .map(this::toDTO)
+                .doOnNext(dto -> logger.debug("Found game version: {} with id: {}", dto.getName(), dto.getId()))
+                .switchIfEmpty(Flux.error(new NoEntriesFoundException("GameVersion")));
+    }
+
+    /**
+     * Counts the game versions, that match the search criteria.
+     *
+     * @param nameRegex The regular expression against which the name of the game version is matched.
+     * @param preRelease Indicates if preReleases need to be included, null indicates do not care.
+     * @param snapshot Indicates if snapshots need to be included, null indicates do not care.
+     * @return A {@link Flux} with the game versions, or an errored {@link Flux} that indicates a failure.
+     */
+    public Mono<Long> countForSearch(String nameRegex, Boolean preRelease, Boolean snapshot) {
+        return repository.findAllFor(nameRegex, preRelease, snapshot)
+                .doFirst(() -> logger.debug("Counting game versions in search mode: {}, {}, {}", nameRegex, preRelease, snapshot))
+                .count()
+                .doOnNext(cnt -> logger.debug("Found game versions: {}", cnt));
     }
 
     /**

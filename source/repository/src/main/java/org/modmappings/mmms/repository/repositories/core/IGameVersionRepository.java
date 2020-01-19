@@ -1,5 +1,6 @@
 package org.modmappings.mmms.repository.repositories.core;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.core.GameVersionDMO;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,47 +21,20 @@ import reactor.core.publisher.Mono;
 public interface IGameVersionRepository extends IPageableR2DBCRepository<GameVersionDMO> {
 
     /**
-     * Finds all game versions which match the given name regex.
+     * Finds all game versions which match the given name regex,
+     * and which are a prerelease or snapshot if those parameters are supplied.
      *
      * The game versions are returned in newest to oldest order.
      *
      * @param nameRegex The regular expression used to lookup game versions for.
+     * @param preRelease Indicates if prerelease are supposed to be filtered out or included, null indicates do not care.
+     * @param snapshot Indicates if snapshots are supposed to be filtered out or included, null indicates do not care.
      * @return The game versions of which the name match the regex.
      */
-    @Query("SELECT * FROM game_version gv WHERE gv.name regexp $1")
-    Flux<GameVersionDMO> findAllForNameRegex(String nameRegex);
-
-    /**
-     * Finds all game versions which are normal full releases.
-     *
-     * The game versions are returned in newest to oldest order.
-     *
-     * @return The game versions which are neither marked as snapshot nor pre-release.
-     */
-    @Query("SELECT * FROM game_version gv WHERE gv.isPreRelease = false AND gv.isSnapshot = false")
-    Flux<GameVersionDMO> findAllReleases();
-
-    /**
-     * Finds all game versions which are pre-releases.
-     *
-     * The game versions are returned in newest to oldest order.
-     *
-     * @return The game versions which are marked as being a pre-release.
-     */
-    @Query("SELECT * FROM game_version gv WHERE gv.isPreRelease = true")
-    Flux<GameVersionDMO> findAllPreReleases();
-
-    /**
-     * Finds all game versions which are snapshots.
-     *
-     * The game versions are returned in newest to oldest order.
-     *
-     * @return The game versions which are marked as being a snapshot.
-     */
-    @Query("SELECT * FROM game_version gv WHERE gv.isSnapshot = true")
-    Flux<GameVersionDMO> findAllSnapshots();
+    @Query("SELECT gv.* FROM game_version gv WHERE gv.name ~ :nameRegex AND (:preRelease is null OR gv.is_pre_release = :preRelease) AND (:snapshot is null OR gv.is_snapshot = :snapshot) Order by gv.created_on")
+    Flux<GameVersionDMO> findAllFor(@Param("nameRegex") String nameRegex, @Param("preRelease") Boolean preRelease, @Param("snapshot") Boolean snapshot);
 
     @Override
-    @Query("Select g.* from game_version g")
+    @Query("Select gv.* from game_version gv Order by gv.created_on")
     Flux<GameVersionDMO> findAll();
 }

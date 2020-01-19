@@ -22,7 +22,7 @@ public interface IMappingTypeRepository extends IPageableR2DBCRepository<Mapping
      * @param nameRegex The regular expression used to lookup mapping types for.
      * @return The mapping types of which the name match the regex.
      */
-    @Query("SELECT * from mapping_type mt WHERE mt.name regexp $1")
+    @Query("SELECT * from mapping_type mt WHERE mt.name ~ $1")
     Flux<MappingTypeDMO> findAllForNameRegex(String nameRegex);
 
     @Override

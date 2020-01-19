@@ -22,6 +22,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Tag(name = "GameVersions", description = "Gives access to available game versions, allows existing game versions to be modified and new ones to be created.")
@@ -105,8 +106,8 @@ public class GameVersionController {
             @ApiResponse(responseCode = "200",
                     description = "Returns the count of available game versions.")
     })
-    @GetMapping(value = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Long> count(ServerHttpResponse response) {
+    @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<Long> countAll(ServerHttpResponse response) {
         return gameVersionService.count()
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
@@ -114,6 +115,103 @@ public class GameVersionController {
                 });
     }
 
+    @Operation(
+            summary = "Searches through the known game versions and finds the ones that match the given parameters.",
+            parameters = {
+                    @Parameter(
+                            name = "name",
+                            in = ParameterIn.QUERY,
+                            description = "The regular expression to match the name of the version against.",
+                            example = "*"
+                    ),
+                    @Parameter(
+                            name = "isPreRelease",
+                            in = ParameterIn.QUERY,
+                            description = "Indicator if filtering on pre-releases is needed or not. Leave the parameter out if you do not care for filtering on pre-releases or not.",
+                            example = "false"
+                    ),
+                    @Parameter(
+                            name = "isSnapshot",
+                            in = ParameterIn.QUERY,
+                            description = "Indicator if filtering on snapshots is needed or not. Leave the parameter out if you do not care for filtering on snapshots or not.",
+                            example = "false"
+                    ),
+                    @Parameter(
+                            name = "page",
+                            in = ParameterIn.QUERY,
+                            description = "The 0-based page index to perform pagination lookup.",
+                            example = "0"
+                    ),
+                    @Parameter(
+                            name = "size",
+                            in = ParameterIn.QUERY,
+                            description = "The size of a given page.",
+                            example = "10"
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Returns all game versions in the database, that match the search criteria."),
+            @ApiResponse(responseCode = "404",
+                    description = "Indicates that no game version exists in the database.",
+                    content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                            schema = @Schema()))
+    })
+    @GetMapping(value = "search", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<GameVersionDTO> search(
+            final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
+            final @RequestParam(name = "isPreRelease", required = false) Boolean isPreRelease,
+            final @RequestParam(name = "isSnapshot", required = false) Boolean isSnapshot,
+            final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+            ServerHttpResponse response) {
+        return gameVersionService.search(nameRegex, isPreRelease, isSnapshot, page, size)
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Flux.empty();
+                });
+    }
+
+    @Operation(
+            summary = "Determines the amount of game versions which match the given parameters.",
+            parameters = {
+                    @Parameter(
+                            name = "name",
+                            in = ParameterIn.QUERY,
+                            description = "The regular expression to match the name of the version against.",
+                            example = "*"
+                    ),
+                    @Parameter(
+                            name = "isPreRelease",
+                            in = ParameterIn.QUERY,
+                            description = "Indicator if filtering on pre-releases is needed or not. Leave the parameter out if you do not care for filtering on pre-releases or not.",
+                            example = "false"
+                    ),
+                    @Parameter(
+                            name = "isSnapshot",
+                            in = ParameterIn.QUERY,
+                            description = "Indicator if filtering on snapshots is needed or not. Leave the parameter out if you do not care for filtering on snapshots or not.",
+                            example = "false"
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Returns the count of available game versions, which match the given search parameter.")
+    })
+    @GetMapping(value = "search/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<Long> countForSearch(
+            final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
+            final @RequestParam(name = "isPreRelease", required = false) Boolean isPreRelease,
+            final @RequestParam(name = "isSnapshot", required = false) Boolean isSnapshot,
+            ServerHttpResponse response) {
+        return gameVersionService.countForSearch(nameRegex, isPreRelease, isSnapshot)
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
+    }
 
     @Operation(
             summary = "Deletes the game version with the given id.",
@@ -159,14 +257,14 @@ public class GameVersionController {
             summary = "Creates the game version from the data in the request body.",
             description = "This converts the data in the request body into a full game version, and stores it in the database. The name of the game version can not already be in use. A user needs to be authorized to perform this request. A user needs to have the role 'GAMEVERSION_CREATE' to execute this action successfully.",
             security = {
-                @SecurityRequirement(
-                    name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
-                    scopes = {Constants.SCOPE_ROLES_NAME}
-                ),
-                @SecurityRequirement(
-                        name = Constants.MOD_MAPPINGS_DEV_AUTH,
-                        scopes = {Constants.SCOPE_ROLES_NAME}
-                ),
+                    @SecurityRequirement(
+                            name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
+                            scopes = {Constants.SCOPE_ROLES_NAME}
+                    ),
+                    @SecurityRequirement(
+                            name = Constants.MOD_MAPPINGS_DEV_AUTH,
+                            scopes = {Constants.SCOPE_ROLES_NAME}
+                    ),
             }
     )
     @ApiResponses(value = {
