@@ -1,6 +1,5 @@
 package org.modmappings.mmms.api.services.core;
 
-import org.modmappings.mmms.api.controller.core.GameVersionController;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
@@ -15,7 +14,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -32,7 +30,7 @@ import java.util.UUID;
 @Component
 public class GameVersionService {
 
-    private final Logger logger = LoggerFactory.getLogger(GameVersionController.class);
+    private final Logger logger = LoggerFactory.getLogger(GameVersionService.class);
     private final IGameVersionRepository repository;
     private final UserService userService;
 
@@ -137,7 +135,7 @@ public class GameVersionService {
      * Creates a new game version from a DTO and saves it in the repository.
      *
      * @param newGameVersion The dto to create a new game version from.
-     * @return A {@link Mono} that indicates succes or failure.
+     * @return A {@link Mono} that indicates success or failure.
      */
     public Mono<GameVersionDTO> create(GameVersionDTO newGameVersion, Principal principal) {
         return Mono.just(newGameVersion)
@@ -145,17 +143,15 @@ public class GameVersionService {
                 .map(dto -> this.toNewDMO(dto, principal))
                 .flatMap(repository::save)
                 .map(this::toDTO)
-                .doOnNext(dmo -> {
-                    userService.warn(logger, principal, String.format("Created new game version: %s with id: %s", dmo.getName(), dmo.getId()));
-                })
-                .onErrorResume(thro -> thro.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("GameVersion", "Name")));
+                .doOnNext(dmo -> userService.warn(logger, principal, String.format("Created new game version: %s with id: %s", dmo.getName(), dmo.getId())))
+                .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("GameVersion", "Name")));
     }
 
     /**
      * Updates an existing game version with the data in the dto and saves it in the repo.
      *
      * @param newGameVersion The dto to update the data in the dmo with.
-     * @return A {@link Mono} that indicates succes or failure.
+     * @return A {@link Mono} that indicates success or failure.
      */
     public Mono<GameVersionDTO> update(UUID idToUpdate, GameVersionDTO newGameVersion, Principal principal) {
         return repository.findById(idToUpdate)
@@ -165,7 +161,7 @@ public class GameVersionService {
                 .doOnNext(dmo -> this.updateDMO(newGameVersion, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
                 .doOnNext(dmo -> userService.warn(logger, principal, String.format("Updated db game version to: %s", dmo)))
                 .flatMap(dmo -> repository.save(dmo)
-                        .onErrorResume(thro -> thro.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("GameVersion", "Name"))))
+                        .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("GameVersion", "Name"))))
                 .map(this::toDTO)
                 .doOnNext(dto -> userService.warn(logger, principal, String.format("Updated game version: %s with id: %s, to data: %s", dto.getName(), dto.getId(), dto)));
     }

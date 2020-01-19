@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Schema(name="GameVersion")
 public class GameVersionDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -18,11 +20,9 @@ public class GameVersionDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Timestamp createdOn;
 
+    @NotBlank
     private String    name;
-
-    @Schema(nullable = true)
     private Boolean   isPreRelease;
-    @Schema(nullable = true)
     private Boolean   isSnapshot;
 
     public GameVersionDTO(UUID id, UUID createdBy, Timestamp createdOn, String name, Boolean isPreRelease, Boolean isSnapshot) {
