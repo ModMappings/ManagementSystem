@@ -48,6 +48,7 @@ public class MappingTypeService {
     public Mono<MappingTypeDTO> getBy(UUID id) {
         return repository.findById(id)
                 .doFirst(() -> logger.debug("Looking up a mapping type by id: {}", id))
+                .filter(MappingTypeDMO::isVisible)
                 .map(this::toDTO)
                 .doOnNext(dto -> logger.debug("Found mapping type: {} with id: {}", dto.getName(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "MappingType")));
@@ -66,6 +67,7 @@ public class MappingTypeService {
                 .doFirst(() -> logger.debug("Looking up mapping types."))
                 .skip(page * size)
                 .limitRequest(size)
+                .filter(MappingTypeDMO::isVisible)
                 .map(this::toDTO)
                 .doOnNext(dto -> logger.debug("Found mapping type: {} with id: {}", dto.getName(), dto.getId()))
                 .switchIfEmpty(Flux.error(new NoEntriesFoundException("MappingType")));
@@ -77,6 +79,7 @@ public class MappingTypeService {
      * @return A {@link Mono} that indicates the amount of mapping types in the database.
      */
     public Mono<Long> count() {
+        //TODO: Implement custom count that takes visibility into account.
         return repository
                 .count()
                 .doFirst(() -> logger.debug("Determining the available amount of mapping types"))
@@ -98,6 +101,7 @@ public class MappingTypeService {
                 .doFirst(() -> logger.debug("Looking up mapping types in search mode. Using parameters: {}, {}", nameRegex, editable))
                 .skip(page * size)
                 .limitRequest(size)
+                .filter(MappingTypeDMO::isVisible)
                 .map(this::toDTO)
                 .doOnNext(dto -> logger.debug("Found mapping type: {} with id: {}", dto.getName(), dto.getId()))
                 .switchIfEmpty(Flux.error(new NoEntriesFoundException("MappingType")));
@@ -113,6 +117,7 @@ public class MappingTypeService {
     public Mono<Long> countForSearch(String nameRegex, Boolean editable) {
         return repository.findAllFor(nameRegex, editable)
                 .doFirst(() -> logger.debug("Counting mapping types in search mode: {}, {}", nameRegex, editable))
+                .filter(MappingTypeDMO::isVisible)
                 .count()
                 .doOnNext(cnt -> logger.debug("Found mapping types: {}", cnt));
     }
@@ -124,6 +129,7 @@ public class MappingTypeService {
      * @return A {@link Mono} indicating success or failure.
      */
     public Mono<Void> deleteBy(UUID id, Principal principal) {
+        //TODO: Handle a delete attempt on an invisible mapping type.
         return repository.deleteById(id)
                 .doFirst(() -> userService.warn(logger, principal, String.format("Deleting mapping type with id: %s", id)))
                 .doOnNext(aVoid -> userService.warn(logger, principal, String.format("Deleted mapping type with id: %s", id)));
@@ -152,10 +158,12 @@ public class MappingTypeService {
      * @return A {@link Mono} that indicates success or failure.
      */
     public Mono<MappingTypeDTO> update(UUID idToUpdate, MappingTypeDTO newMappingType, Principal principal) {
+        //TODO: Handle an update attempt to an invisible mapping type.
         return repository.findById(idToUpdate)
                 .doFirst(() -> userService.warn(logger, principal, String.format("Updating mapping type: %s", idToUpdate)))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(newMappingType.getId(), "MappingType")))
                 .doOnNext(dmo -> userService.warn(logger, principal, String.format("Updating db mapping type: %s with id: %s, and data: %s", dmo.getName(), dmo.getId(), newMappingType)))
+                .filter(MappingTypeDMO::isVisible)
                 .doOnNext(dmo -> this.updateDMO(newMappingType, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
                 .doOnNext(dmo -> userService.warn(logger, principal, String.format("Updated db mapping type to: %s", dmo)))
                 .flatMap(dmo -> repository.save(dmo)

@@ -29,10 +29,10 @@ import java.util.UUID;
 @RestController
 public class MappingTypeController {
 
-    private final MappingTypeService gameVersionService;
+    private final MappingTypeService mappingTypeService;
 
-    public MappingTypeController(final MappingTypeService gameVersionService) {
-        this.gameVersionService = gameVersionService;
+    public MappingTypeController(final MappingTypeService mappingTypeService) {
+        this.mappingTypeService = mappingTypeService;
     }
 
     @Operation(
@@ -55,7 +55,7 @@ public class MappingTypeController {
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<MappingTypeDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
-        return gameVersionService.getBy(id)
+        return mappingTypeService.getBy(id)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -91,7 +91,7 @@ public class MappingTypeController {
     public Flux<MappingTypeDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                        final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                                        ServerHttpResponse response) {
-        return gameVersionService.getAll(page, size)
+        return mappingTypeService.getAll(page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Flux.empty();
@@ -107,7 +107,7 @@ public class MappingTypeController {
     })
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Long> countAll(ServerHttpResponse response) {
-        return gameVersionService.count()
+        return mappingTypeService.count()
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -158,7 +158,7 @@ public class MappingTypeController {
             final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
             ServerHttpResponse response) {
-        return gameVersionService.search(nameRegex, editable, page, size)
+        return mappingTypeService.search(nameRegex, editable, page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Flux.empty();
@@ -191,7 +191,7 @@ public class MappingTypeController {
             final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
             final @RequestParam(name = "editable", required = false, defaultValue = "true") Boolean editable,
             ServerHttpResponse response) {
-        return gameVersionService.countForSearch(nameRegex, editable)
+        return mappingTypeService.countForSearch(nameRegex, editable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -231,7 +231,7 @@ public class MappingTypeController {
     @PreAuthorize("hasRole('MAPPINGTYPES_DELETE')")
     public Mono<Void> deleteBy(@PathVariable UUID id, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> gameVersionService.deleteBy(id, principal))
+                .flatMap(principal -> mappingTypeService.deleteBy(id, principal))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -265,7 +265,7 @@ public class MappingTypeController {
     @PreAuthorize("hasRole('MAPPINGTYPES_CREATE')")
     public Mono<MappingTypeDTO> create(@RequestBody MappingTypeDTO newMappingType, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> gameVersionService.create(newMappingType, principal))
+                .flatMap(principal -> mappingTypeService.create(newMappingType, principal))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -311,7 +311,7 @@ public class MappingTypeController {
     @PreAuthorize("hasRole('MAPPINGTYPES_UPDATE')")
     public Mono<MappingTypeDTO> update(@PathVariable UUID id, @RequestBody MappingTypeDTO gameVersionToUpdate, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> gameVersionService.update(id, gameVersionToUpdate, principal))
+                .flatMap(principal -> mappingTypeService.update(id, gameVersionToUpdate, principal))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
