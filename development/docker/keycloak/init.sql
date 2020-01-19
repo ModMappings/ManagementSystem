@@ -2386,6 +2386,9 @@ COPY public.group_role_mapping (role_id, group_id) FROM stdin;
 2c64b65e-2569-4677-ad04-19096d1509ef	67274e53-7db3-4398-abe2-4ceb180e5fa0
 995d2c3b-658a-4457-8e46-63d98459a01f	67274e53-7db3-4398-abe2-4ceb180e5fa0
 714e4709-a114-43f6-8b09-9f44fd244d4b	67274e53-7db3-4398-abe2-4ceb180e5fa0
+fcd72160-791e-4937-a44f-53eb84dd2e5d	e1e9e9be-ad84-4ad7-93e0-856915556d2d
+7f10c5b6-7a48-4bb1-bc81-66a276733991	e1e9e9be-ad84-4ad7-93e0-856915556d2d
+88b0f131-3aba-41bf-acfc-4b654f15f0d6	e1e9e9be-ad84-4ad7-93e0-856915556d2d
 \.
 
 
@@ -2427,6 +2430,7 @@ COPY public.idp_mapper_config (idp_mapper_id, value, name) FROM stdin;
 
 COPY public.keycloak_group (id, name, parent_group, realm_id) FROM stdin;
 67274e53-7db3-4398-abe2-4ceb180e5fa0	Gameversion managers	\N	ModMappings
+e1e9e9be-ad84-4ad7-93e0-856915556d2d	Mappingtype managers	\N	ModMappings
 \.
 
 
@@ -2509,6 +2513,9 @@ c82225bf-240c-444a-b715-57bb9229718f	ModMappings	f	${role_uma_authorization}	uma
 2c64b65e-2569-4677-ad04-19096d1509ef	ModMappings	f	Allows for the creation of game versions.	GAMEVERSIONS_CREATE	ModMappings	\N	ModMappings
 995d2c3b-658a-4457-8e46-63d98459a01f	ModMappings	f	Allows for the deletion of game versions.	GAMEVERSIONS_DELETE	ModMappings	\N	ModMappings
 714e4709-a114-43f6-8b09-9f44fd244d4b	ModMappings	f	Allows for the updating of properties on game versions.	GAMEVERSIONS_UPDATE	ModMappings	\N	ModMappings
+fcd72160-791e-4937-a44f-53eb84dd2e5d	ModMappings	f	Allows for the creation of mapping types.	MAPPINGTYPES_CREATE	ModMappings	\N	ModMappings
+7f10c5b6-7a48-4bb1-bc81-66a276733991	ModMappings	f	Allows for the deletion of mapping types.	MAPPINGTYPES_DELETE	ModMappings	\N	ModMappings
+88b0f131-3aba-41bf-acfc-4b654f15f0d6	ModMappings	f	Allows for the updating of properties on mapping types.	MAPPINGTYPES_UPDATE	ModMappings	\N	ModMappings
 \.
 
 
@@ -3276,6 +3283,7 @@ COPY public.user_federation_provider (id, changed_sync_period, display_name, ful
 
 COPY public.user_group_membership (group_id, user_id) FROM stdin;
 67274e53-7db3-4398-abe2-4ceb180e5fa0	5c150731-d9e2-41c0-8091-836e67699cf1
+e1e9e9be-ad84-4ad7-93e0-856915556d2d	5c150731-d9e2-41c0-8091-836e67699cf1
 \.
 
 
