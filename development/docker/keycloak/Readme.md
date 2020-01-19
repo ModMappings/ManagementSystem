@@ -20,9 +20,12 @@ with your keycloak instance running:
 ##### Linux/MacOs (Shell)
 1. `rm init.sql`
 2. `docker exec -t keycloak_postgres_1 pg_dumpall -c -U keycloak > init.sql`
+3. Remove all initial lines up to and including: `ALTER DATABASE keycloak OWNER TO keycloak;` (The DB is created by the container)
 ##### Windows (CMD)
 1. `del init.sql`
 2. `docker exec -t keycloak_postgres_1 pg_dumpall -c -U keycloak > init.sql`
+3. Remove all initial lines up to and including: `ALTER DATABASE keycloak OWNER TO keycloak;` (The DB is created by the container)
 ##### Windows/Linux/MacOS (PowerShell)
 1. `Remove-Item init.sql`
 2. `docker exec -t keycloak_postgres_1 pg_dumpall -c -U keycloak > init.sql`
+3. Remove all initial lines up to and including: `ALTER DATABASE keycloak OWNER TO keycloak;` (The DB is created by the container)
