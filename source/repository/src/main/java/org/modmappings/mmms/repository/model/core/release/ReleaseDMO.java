@@ -80,4 +80,12 @@ public class ReleaseDMO {
     public boolean isSnapshot() {
         return isSnapshot;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSnapshot(boolean snapshot) {
+        isSnapshot = snapshot;
+    }
 }
