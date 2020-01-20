@@ -79,8 +79,9 @@ public class MappingTypeService {
      * @return A {@link Mono} that indicates the amount of mapping types in the database.
      */
     public Mono<Long> count() {
-        //TODO: Implement custom count that takes visibility into account.
         return repository
+                .findAll()
+                .filter(MappingTypeDMO::isVisible)
                 .count()
                 .doFirst(() -> logger.debug("Determining the available amount of mapping types"))
                 .doOnNext((cnt) -> logger.debug("There are {} mapping types available.", cnt));
@@ -129,10 +130,13 @@ public class MappingTypeService {
      * @return A {@link Mono} indicating success or failure.
      */
     public Mono<Void> deleteBy(UUID id, Principal principal) {
-        //TODO: Handle a delete attempt on an invisible mapping type.
-        return repository.deleteById(id)
-                .doFirst(() -> userService.warn(logger, principal, String.format("Deleting mapping type with id: %s", id)))
-                .doOnNext(aVoid -> userService.warn(logger, principal, String.format("Deleted mapping type with id: %s", id)));
+        return repository
+                .findById(id)
+                .filter(MappingTypeDMO::isVisible)
+                .flatMap(dmo -> repository.deleteById(id)
+                        .doFirst(() -> userService.warn(logger, principal, String.format("Deleting mapping type with id: %s", id)))
+                        .doOnNext(aVoid -> userService.warn(logger, principal, String.format("Deleted mapping type with id: %s", id))));
+
     }
 
     /**
@@ -158,8 +162,8 @@ public class MappingTypeService {
      * @return A {@link Mono} that indicates success or failure.
      */
     public Mono<MappingTypeDTO> update(UUID idToUpdate, MappingTypeDTO newMappingType, Principal principal) {
-        //TODO: Handle an update attempt to an invisible mapping type.
         return repository.findById(idToUpdate)
+                .filter(MappingTypeDMO::isVisible)
                 .doFirst(() -> userService.warn(logger, principal, String.format("Updating mapping type: %s", idToUpdate)))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(newMappingType.getId(), "MappingType")))
                 .doOnNext(dmo -> userService.warn(logger, principal, String.format("Updating db mapping type: %s with id: %s, and data: %s", dmo.getName(), dmo.getId(), newMappingType)))
