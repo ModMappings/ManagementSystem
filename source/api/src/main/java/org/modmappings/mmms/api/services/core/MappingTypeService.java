@@ -152,7 +152,7 @@ public class MappingTypeService {
                 .flatMap(repository::save)
                 .map(this::toDTO)
                 .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Created new mapping type: %s with id: %s", dmo.getName(), dmo.getId())))
-                .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("MappingType", "Name")));
+                .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_mapping_type_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("MappingType", "Name")));
     }
 
     /**
@@ -171,7 +171,7 @@ public class MappingTypeService {
                 .doOnNext(dmo -> this.updateDMO(newMappingType, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
                 .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updated db mapping type to: %s", dmo)))
                 .flatMap(dmo -> repository.save(dmo)
-                        .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("MappingType", "Name"))))
+                        .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_mapping_type_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("MappingType", "Name"))))
                 .map(this::toDTO)
                 .doOnNext(dto -> userLoggingService.warn(logger, userIdSupplier, String.format("Updated mapping type: %s with id: %s, to data: %s", dto.getName(), dto.getId(), dto)));
     }

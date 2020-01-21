@@ -2,6 +2,7 @@ package org.modmappings.mmms.api.services.utils.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -9,6 +10,7 @@ import java.util.function.Supplier;
 /**
  * Handles logging on a user based level.
  */
+@Component
 public class UserLoggingService {
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class);

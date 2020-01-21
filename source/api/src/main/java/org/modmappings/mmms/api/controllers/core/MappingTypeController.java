@@ -123,7 +123,7 @@ public class MappingTypeController {
                     @Parameter(
                             name = "name",
                             in = ParameterIn.QUERY,
-                            description = "The regular expression to match the name of the version against.",
+                            description = "The regular expression to match the name of the mapping type against.",
                             example = "*"
                     ),
                     @Parameter(
@@ -174,7 +174,7 @@ public class MappingTypeController {
                     @Parameter(
                             name = "name",
                             in = ParameterIn.QUERY,
-                            description = "The regular expression to match the name of the version against.",
+                            description = "The regular expression to match the name of the mapping type against.",
                             example = "*"
                     ),
                     @Parameter(
