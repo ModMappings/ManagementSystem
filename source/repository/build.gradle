@@ -27,6 +27,7 @@ dependencies {
     implementation platform('org.springframework.boot.experimental:spring-boot-bom-r2dbc:0.1.0.M3')
 
     implementation 'io.projectreactor:reactor-core'
+    implementation 'io.projectreactor:reactor-tools'
     implementation 'org.springframework.data:spring-data-commons:2.2.3.RELEASE'
     implementation 'org.springframework.data:spring-data-relational:1.1.3.RELEASE'
     implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
