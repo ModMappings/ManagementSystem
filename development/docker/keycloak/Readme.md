@@ -7,7 +7,7 @@ To use this version you will need:
 * Docker-compose
 * Port 8081 free
 #### Starting keycloak.
-1. Simply run `docker-compose up -d` in the shell of your choice.
+1. Simply run `docker-compose -f keycloak.docker-compose.yml up -d` in the shell of your choice.
 
 Now you have an instance of keycloak running under `http://localhost:8081/`
 #### Updating the data contained in the init script:
