@@ -22,7 +22,7 @@ public class ReleaseDMO {
     private Timestamp createdOn;
     private String name;
     private UUID gameVersionId;
-    private UUID mappingType;
+    private UUID mappingTypeId;
     private boolean isSnapshot;
 
     @PersistenceConstructor
@@ -39,7 +39,7 @@ public class ReleaseDMO {
         this.createdOn = createdOn;
         this.name = name;
         this.gameVersionId = gameVersionId;
-        this.mappingType = mappingType;
+        this.mappingTypeId = mappingType;
         this.isSnapshot = isSnapshot;
     }
 
@@ -49,7 +49,7 @@ public class ReleaseDMO {
         this.createdOn = Timestamp.from(Instant.now());
         this.name = name;
         this.gameVersionId = gameVersionId;
-        this.mappingType = mappingType;
+        this.mappingTypeId = mappingType;
         this.isSnapshot = isSnapshot;
     }
 
@@ -73,8 +73,8 @@ public class ReleaseDMO {
         return gameVersionId;
     }
 
-    public UUID getMappingType() {
-        return mappingType;
+    public UUID getMappingTypeId() {
+        return mappingTypeId;
     }
 
     public boolean isSnapshot() {

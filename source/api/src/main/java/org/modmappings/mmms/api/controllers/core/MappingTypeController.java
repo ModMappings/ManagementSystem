@@ -1,4 +1,4 @@
-package org.modmappings.mmms.api.controller.core;
+package org.modmappings.mmms.api.controllers.core;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,9 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.modmappings.mmms.api.model.core.GameVersionDTO;
-import org.modmappings.mmms.api.services.core.GameVersionService;
+import org.modmappings.mmms.api.model.core.MappingTypeDTO;
+import org.modmappings.mmms.api.services.core.MappingTypeService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
+import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.api.util.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,41 +23,42 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
-@Tag(name = "GameVersions", description = "Gives access to available game versions, allows existing game versions to be modified and new ones to be created.")
-@RequestMapping("/versions")
+@Tag(name = "MappingTypes", description = "Gives access to available mapping types, allows existing mapping types to be modified and new ones to be created.")
+@RequestMapping("/types")
 @RestController
-public class GameVersionController {
+public class MappingTypeController {
 
-    private final GameVersionService gameVersionService;
+    private final MappingTypeService mappingTypeService;
+    private final UserService userService;
 
-    public GameVersionController(final GameVersionService gameVersionService) {
-        this.gameVersionService = gameVersionService;
+    public MappingTypeController(final MappingTypeService mappingTypeService, UserService userService) {
+        this.mappingTypeService = mappingTypeService;
+        this.userService = userService;
     }
 
     @Operation(
-            summary = "Looks up a game version using a given id.",
+            summary = "Looks up a mapping type using a given id.",
             parameters = {
                     @Parameter(
                             name = "id",
                             in = ParameterIn.PATH,
                             required = true,
-                            description = "The id of the game version to look up.",
+                            description = "The id of the mapping type to look up.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     )
             }
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns the game version with the given id."),
-            @ApiResponse(responseCode = "404", description = "Indicates that no game version with the given id could be found",
+            @ApiResponse(responseCode = "200", description = "Returns the mapping type with the given id."),
+            @ApiResponse(responseCode = "404", description = "Indicates that no mapping type with the given id could be found",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema()))
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<GameVersionDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
-        return gameVersionService.getBy(id)
+    public Mono<MappingTypeDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
+        return mappingTypeService.getBy(id)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -64,7 +66,7 @@ public class GameVersionController {
     }
 
     @Operation(
-            summary = "Looks up all game versions.",
+            summary = "Looks up all mapping types.",
             parameters = {
                     @Parameter(
                             name = "page",
@@ -82,17 +84,17 @@ public class GameVersionController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Returns all game versions in the database."),
+                    description = "Returns all mapping types in the database."),
             @ApiResponse(responseCode = "404",
-                    description = "Indicates that no game version exists in the database.",
+                    description = "Indicates that no mapping type exists in the database.",
                     content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
                             schema = @Schema()))
     })
     @GetMapping(value = "", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<GameVersionDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+    public Flux<MappingTypeDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                        final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                                        ServerHttpResponse response) {
-        return gameVersionService.getAll(page, size)
+        return mappingTypeService.getAll(page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Flux.empty();
@@ -100,15 +102,15 @@ public class GameVersionController {
     }
 
     @Operation(
-            summary = "Determines the amount of all available game versions."
+            summary = "Determines the amount of all available mapping types."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Returns the count of available game versions.")
+                    description = "Returns the count of available mapping types.")
     })
     @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Long> countAll(ServerHttpResponse response) {
-        return gameVersionService.count()
+        return mappingTypeService.count()
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -116,7 +118,7 @@ public class GameVersionController {
     }
 
     @Operation(
-            summary = "Searches through the known game versions and finds the ones that match the given parameters.",
+            summary = "Searches through the known mapping types and finds the ones that match the given parameters.",
             parameters = {
                     @Parameter(
                             name = "name",
@@ -125,15 +127,9 @@ public class GameVersionController {
                             example = "*"
                     ),
                     @Parameter(
-                            name = "isPreRelease",
+                            name = "editable",
                             in = ParameterIn.QUERY,
-                            description = "Indicator if filtering on pre-releases is needed or not. Leave the parameter out if you do not care for filtering on pre-releases or not.",
-                            example = "false"
-                    ),
-                    @Parameter(
-                            name = "isSnapshot",
-                            in = ParameterIn.QUERY,
-                            description = "Indicator if filtering on snapshots is needed or not. Leave the parameter out if you do not care for filtering on snapshots or not.",
+                            description = "Indicator if filtering on editable is needed or not. Leave the parameter out if you do not care for filtering on editable.",
                             example = "false"
                     ),
                     @Parameter(
@@ -152,21 +148,20 @@ public class GameVersionController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Returns all game versions in the database, that match the search criteria."),
+                    description = "Returns all mapping types in the database, that match the search criteria."),
             @ApiResponse(responseCode = "404",
-                    description = "Indicates that no game version exists in the database.",
+                    description = "Indicates that no mapping type exists in the database.",
                     content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
                             schema = @Schema()))
     })
     @GetMapping(value = "search", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<GameVersionDTO> search(
+    public Flux<MappingTypeDTO> search(
             final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
-            final @RequestParam(name = "isPreRelease", required = false) Boolean isPreRelease,
-            final @RequestParam(name = "isSnapshot", required = false) Boolean isSnapshot,
+            final @RequestParam(name = "editable", required = false) Boolean editable,
             final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
             ServerHttpResponse response) {
-        return gameVersionService.search(nameRegex, isPreRelease, isSnapshot, page, size)
+        return mappingTypeService.search(nameRegex, editable, page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Flux.empty();
@@ -174,7 +169,7 @@ public class GameVersionController {
     }
 
     @Operation(
-            summary = "Determines the amount of game versions which match the given parameters.",
+            summary = "Determines the amount of mapping types which match the given parameters.",
             parameters = {
                     @Parameter(
                             name = "name",
@@ -183,30 +178,23 @@ public class GameVersionController {
                             example = "*"
                     ),
                     @Parameter(
-                            name = "isPreRelease",
+                            name = "editable",
                             in = ParameterIn.QUERY,
-                            description = "Indicator if filtering on pre-releases is needed or not. Leave the parameter out if you do not care for filtering on pre-releases or not.",
-                            example = "false"
-                    ),
-                    @Parameter(
-                            name = "isSnapshot",
-                            in = ParameterIn.QUERY,
-                            description = "Indicator if filtering on snapshots is needed or not. Leave the parameter out if you do not care for filtering on snapshots or not.",
+                            description = "Indicator if filtering on editable is needed or not. Leave the parameter out if you do not care for filtering on editable.",
                             example = "false"
                     )
             }
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Returns the count of available game versions, which match the given search parameter.")
+                    description = "Returns the count of available mapping types, which match the given search parameter.")
     })
     @GetMapping(value = "search/count", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Long> countForSearch(
             final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
-            final @RequestParam(name = "isPreRelease", required = false) Boolean isPreRelease,
-            final @RequestParam(name = "isSnapshot", required = false) Boolean isSnapshot,
+            final @RequestParam(name = "editable", required = false, defaultValue = "true") Boolean editable,
             ServerHttpResponse response) {
-        return gameVersionService.countForSearch(nameRegex, isPreRelease, isSnapshot)
+        return mappingTypeService.countForSearch(nameRegex, editable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -214,14 +202,14 @@ public class GameVersionController {
     }
 
     @Operation(
-            summary = "Deletes the game version with the given id.",
-            description = "This looks up the game version with the given id from the database and deletes it. A user needs to be authorized to perform this request. A user needs to have the role 'GAMEVERSIONS_DELETE' to execute this action successfully.",
+            summary = "Deletes the mapping type with the given id.",
+            description = "This looks up the mapping type with the given id from the database and deletes it. A user needs to be authorized to perform this request. A user needs to have the role 'MAPPINGTYPES_DELETE' to execute this action successfully.",
             parameters = {
                     @Parameter(
                             name = "id",
                             in = ParameterIn.PATH,
                             required = true,
-                            description = "The id of the game version to delete.",
+                            description = "The id of the mapping type to delete.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     )
             },
@@ -237,16 +225,16 @@ public class GameVersionController {
             }
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Deletes the game version with the given id."),
+            @ApiResponse(responseCode = "200", description = "Deletes the mapping type with the given id."),
             @ApiResponse(responseCode = "403", description = "The user is not authorized to perform this action.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema()))
     })
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('GAMEVERSIONS_DELETE')")
+    @PreAuthorize("hasRole('MAPPINGTYPES_DELETE')")
     public Mono<Void> deleteBy(@PathVariable UUID id, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> gameVersionService.deleteBy(id, principal))
+                .flatMap(principal -> mappingTypeService.deleteBy(id, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -254,8 +242,8 @@ public class GameVersionController {
     }
 
     @Operation(
-            summary = "Creates the game version from the data in the request body.",
-            description = "This converts the data in the request body into a full game version, and stores it in the database. The name of the game version can not already be in use. A user needs to be authorized to perform this request. A user needs to have the role 'GAMEVERSIONS_CREATE' to execute this action successfully.",
+            summary = "Creates the mapping type from the data in the request body.",
+            description = "This converts the data in the request body into a full mapping type, and stores it in the database. The name of the mapping type can not already be in use. A user needs to be authorized to perform this request. A user needs to have the role 'MAPPINGTYPES_CREATE' to execute this action successfully.",
             security = {
                     @SecurityRequirement(
                             name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
@@ -268,19 +256,19 @@ public class GameVersionController {
             }
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Creates the game version with the given id."),
+            @ApiResponse(responseCode = "200", description = "Creates the mapping type with the given id."),
             @ApiResponse(responseCode = "403", description = "The user is not authorized to perform this action.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema())),
-            @ApiResponse(responseCode = "400", description = "The name for the given game version is already in use.",
+            @ApiResponse(responseCode = "400", description = "The name for the given mapping type is already in use.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema()))
     })
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('GAMEVERSIONS_CREATE')")
-    public Mono<GameVersionDTO> create(@RequestBody GameVersionDTO newGameVersion, ServerWebExchange exchange) {
+    @PreAuthorize("hasRole('MAPPINGTYPES_CREATE')")
+    public Mono<MappingTypeDTO> create(@RequestBody MappingTypeDTO newMappingType, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> gameVersionService.create(newGameVersion, principal))
+                .flatMap(principal -> mappingTypeService.create(newMappingType, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -288,14 +276,14 @@ public class GameVersionController {
     }
 
     @Operation(
-            summary = "Updates, but does not create, the game version from the data in the request body.",
-            description = "This converts the data in the request body into a full game version, then updates the game version with the given id, and stores the updated game version in the database. The new name of the game version can not already be in use by a different game version. A user needs to be authorized to perform this request. A user needs to have the role 'GAMEVERSION_UPDATES' to execute this action successfully.",
+            summary = "Updates, but does not create, the mapping type from the data in the request body.",
+            description = "This converts the data in the request body into a full mapping type, then updates the mapping type with the given id, and stores the updated mapping type in the database. The new name of the mapping type can not already be in use by a different mapping type. A user needs to be authorized to perform this request. A user needs to have the role 'MAPPINGTYPES_UPDATE' to execute this action successfully.",
             parameters = {
                     @Parameter(
                             name = "id",
                             in = ParameterIn.PATH,
                             required = true,
-                            description = "The id of the game version to update.",
+                            description = "The id of the mapping type to update.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     )
             },
@@ -311,22 +299,22 @@ public class GameVersionController {
             }
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Updates the game version with the given id."),
+            @ApiResponse(responseCode = "200", description = "Updates the mapping type with the given id."),
             @ApiResponse(responseCode = "403", description = "The user is not authorized to perform this action.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema())),
-            @ApiResponse(responseCode = "400", description = "The name for the given game version is already in use.",
+            @ApiResponse(responseCode = "400", description = "The name for the given mapping type is already in use.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "No game version with the given id could be found.",
+            @ApiResponse(responseCode = "404", description = "No mapping type with the given id could be found.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema()))
     })
     @PatchMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('GAMEVERSIONS_UPDATE')")
-    public Mono<GameVersionDTO> update(@PathVariable UUID id, @RequestBody GameVersionDTO gameVersionToUpdate, ServerWebExchange exchange) {
+    @PreAuthorize("hasRole('MAPPINGTYPES_UPDATE')")
+    public Mono<MappingTypeDTO> update(@PathVariable UUID id, @RequestBody MappingTypeDTO gameVersionToUpdate, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> gameVersionService.update(id, gameVersionToUpdate, principal))
+                .flatMap(principal -> mappingTypeService.update(id, gameVersionToUpdate, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

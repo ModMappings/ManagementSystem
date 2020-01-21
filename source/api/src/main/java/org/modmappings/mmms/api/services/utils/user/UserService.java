@@ -18,46 +18,7 @@ import java.util.UUID;
 @Component
 public class UserService {
 
-    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    /**
-     * Create a new log entry in the given logger,
-     * prefixed with the id of the current logged in user.
-     *
-     * The log level is information.
-     *
-     * @param logger The logger that logs the message.
-     * @param message The message to log in the name of the current user.
-     */
-    public void info(Logger logger, Principal principal, String message) {
-        logger.info(String.format("[%s]: %s", getCurrentUserId(principal), message));
-    }
-
-    /**
-     * Create a new log entry in the given logger,
-     * prefixed with the id of the current logged in user.
-     *
-     * The log level is warning.
-     *
-     * @param logger The logger that logs the message.
-     * @param message The message to log in the name of the current user.
-     */
-    public void warn(Logger logger, Principal principal, String message) {
-        logger.warn(String.format("[%s]: %s", getCurrentUserId(principal), message));
-    }
-
-    /**
-     * Create a new log entry in the given logger,
-     * prefixed with the id of the current logged in user.
-     *
-     * The log level is error.
-     *
-     * @param logger The logger that logs the message.
-     * @param message The message to log in the name of the current user.
-     */
-    public void error(Logger logger, Principal principal, String message) {
-        logger.error(String.format("[%s]: %s", getCurrentUserId(principal), message));
-    }
 
     /**
      * Looks up the current id of the user.

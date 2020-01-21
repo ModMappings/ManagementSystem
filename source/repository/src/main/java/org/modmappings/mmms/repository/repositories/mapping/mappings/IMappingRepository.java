@@ -69,8 +69,15 @@ public interface IMappingRepository extends IPageableR2DBCRepository<MappingDMO>
      * @param gameVersionId The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
      * @return All latest mappings who' matche the given regexes and are part of the mapping type and game version if those are specified.
      */
-    @Query("select m.* from mapping m left join mapping m2 on (m.versionedMappableId = m2.versionedMappableId And m.mappingTypeId = m2.mappingTypeId And m.createdOn < m2.createdOn) join versioned_mappable vm on m.versionedMappableId = vm.id Where m2.id is null AND ($1 is null or m.input ~ $1) AND ($2 is null or m.output ~ $2) AND ($3 is null OR m.mappingTypeId = $3) AND ($4 is null OR vm.gameVersionId = $4) order by m.createdOn")
-    Flux<MappingDMO> findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(Optional<String> inputRegex, Optional<String> outputRegex, Optional<UUID> mappingTypeId, Optional<UUID> gameVersionId);
+    @Query("select m.* from mapping m " +
+            "left join mapping m2 on (" +
+                "m.versionedMappableId = m2.versionedMappableId " +
+                "And m.mappingTypeId = m2.mappingTypeId " +
+                "And m.createdOn < m2.createdOn" +
+            ") " +
+            "join versioned_mappable vm on m.versionedMappableId = vm.id " +
+            "Where m2.id is null AND ($1 is null or m.input ~ $1) AND ($2 is null or m.output ~ $2) AND ($3 is null OR m.mappingTypeId = $3) AND ($4 is null OR vm.gameVersionId = $4) order by m.createdOn")
+    Flux<MappingDMO> findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId);
 
     /**
      * Finds all mappings which are part of a given release and who are for a given type.
@@ -82,7 +89,7 @@ public interface IMappingRepository extends IPageableR2DBCRepository<MappingDMO>
      * @return All mappings which are part of a given release and are for a given mappable type.
      */
     @Query("select m.* from mapping m join release_component rc on rc.mappableId = m.id join versioned_mappable vm on m.versionedMappableId = vm.id join mappable mp on vm.mappableId = mp.id where rc.releaseId = $1 and ($2 is null or mp.type = $2)")
-    Flux<MappingDMO> findAllInReleaseAndMappableType(UUID releaseId, Optional<MappableTypeDMO> type);
+    Flux<MappingDMO> findAllInReleaseAndMappableType(UUID releaseId, MappableTypeDMO type);
 
     @Override()
     @Query("select * from mapping m")

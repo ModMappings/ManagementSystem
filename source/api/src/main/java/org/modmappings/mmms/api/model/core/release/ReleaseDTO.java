@@ -22,8 +22,10 @@ public class ReleaseDTO {
     private String name;
 
     @NotNull
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private UUID gameVersionId;
     @NotNull
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private UUID mappingType;
 
     private boolean isSnapshot;
