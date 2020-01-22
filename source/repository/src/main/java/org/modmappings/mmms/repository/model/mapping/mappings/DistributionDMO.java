@@ -1,4 +1,4 @@
-package org.modmappings.mmms.repository.model.core;
+package org.modmappings.mmms.repository.model.mapping.mappings;
 
 /**
  * Represents all possible distribution a given mapping could be in.
