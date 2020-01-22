@@ -87,10 +87,14 @@ public class MappingTypeController {
                     description = "Returns all mapping types in the database."),
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no mapping type exists in the database.",
-                    content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                            schema = @Schema()))
+                    content = {
+                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                                    schema = @Schema()),
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema())
+                    })
     })
-    @GetMapping(value = "", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public Flux<MappingTypeDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                        final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                                        ServerHttpResponse response) {
@@ -151,10 +155,14 @@ public class MappingTypeController {
                     description = "Returns all mapping types in the database, that match the search criteria."),
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no mapping type exists in the database.",
-                    content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                            schema = @Schema()))
+                    content = {
+                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                                    schema = @Schema()),
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema())
+                    })
     })
-    @GetMapping(value = "search", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "search", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public Flux<MappingTypeDTO> search(
             final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
             final @RequestParam(name = "editable", required = false) Boolean editable,

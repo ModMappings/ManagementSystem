@@ -87,10 +87,14 @@ public class ReleaseController {
                     description = "Returns all releases in the database."),
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no release exists in the database.",
-                    content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                            schema = @Schema()))
+                    content = {
+                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                                    schema = @Schema()),
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema())
+                    })
     })
-    @GetMapping(value = "", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public Flux<ReleaseDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                        final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                                        ServerHttpResponse response) {
@@ -175,10 +179,14 @@ public class ReleaseController {
                     description = "Returns all releases in the database, that match the search criteria."),
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no release exists in the database.",
-                    content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                            schema = @Schema()))
+                    content = {
+                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                                    schema = @Schema()),
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema())
+                    })
     })
-    @GetMapping(value = "search", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "search", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public Flux<ReleaseDTO> search(
             final @RequestParam(name = "nameRegex", required = false) String nameRegex,
             final @RequestParam(name = "gameVersion", required = false) UUID gameVersionId,
