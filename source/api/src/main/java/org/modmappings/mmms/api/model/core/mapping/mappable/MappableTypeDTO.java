@@ -2,7 +2,7 @@ package org.modmappings.mmms.api.model.core.mapping.mappable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(name = "MappableType", description="Indicates which types (as in kind of pieces of the source code) can be remapped.")
+@Schema(name = "MappableType", description="Indicates which types (as in kind of pieces of the source code) can be remapped.", enumAsRef = true)
 public enum MappableTypeDTO {
     @Schema(description = "Indicates that the mappable is a package.")
     PACKAGE,

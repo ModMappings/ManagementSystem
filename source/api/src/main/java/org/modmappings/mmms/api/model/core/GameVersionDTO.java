@@ -1,37 +1,36 @@
 package org.modmappings.mmms.api.model.core;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Schema(name="GameVersion")
 public class GameVersionDTO {
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the game version.")
     private UUID      id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the user who created the game version.")
     private UUID      createdBy;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The moment the game version was created.")
     private Timestamp createdOn;
 
+    @Schema(description = "The name of the game version. Has to be unique", minLength = 1, required = true)
     @NotBlank
     private String    name;
-    private Boolean   isPreRelease;
-    private Boolean   isSnapshot;
+    @Schema(description = "Indicates if this game version is a prerelease.", required = true)
+    private Boolean preRelease;
+    @Schema(description = "Indicates if this game version is a snapshot or not.", required = true)
+    private Boolean snapshot;
 
-    public GameVersionDTO(UUID id, UUID createdBy, Timestamp createdOn, String name, Boolean isPreRelease, Boolean isSnapshot) {
+    public GameVersionDTO(UUID id, UUID createdBy, Timestamp createdOn, String name, Boolean preRelease, Boolean snapshot) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
         this.name = name;
-        this.isPreRelease = isPreRelease;
-        this.isSnapshot = isSnapshot;
+        this.preRelease = preRelease;
+        this.snapshot = snapshot;
     }
 
     public GameVersionDTO() {
@@ -70,18 +69,18 @@ public class GameVersionDTO {
     }
 
     public Boolean getPreRelease() {
-        return isPreRelease;
+        return preRelease;
     }
 
     public void setPreRelease(final Boolean preRelease) {
-        isPreRelease = preRelease;
+        this.preRelease = preRelease;
     }
 
     public Boolean getSnapshot() {
-        return isSnapshot;
+        return snapshot;
     }
 
     public void setSnapshot(final Boolean snapshot) {
-        isSnapshot = snapshot;
+        this.snapshot = snapshot;
     }
 }

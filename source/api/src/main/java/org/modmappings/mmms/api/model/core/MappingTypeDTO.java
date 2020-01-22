@@ -9,15 +9,16 @@ import java.util.UUID;
 @Schema(name="MappingType")
 public class MappingTypeDTO {
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the mapping type.")
     private UUID id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the user who created the mapping type.")
     private UUID      createdBy;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The moment the mapping type was created.")
     private Timestamp createdOn;
+    @Schema(description = "The name of the mapping type. Has to be unique.", minLength = 1, required = true)
     @NotBlank
     private String    name;
-
+    @Schema(description = "Indicates if this mapping type is editable or not. For none editable mapping types the api prevents users from making and proposing new mappings. Making this mapping type basically only available for lookup purposes!")
     private boolean editable;
 
     public MappingTypeDTO(UUID id, UUID createdBy, Timestamp createdOn, @NotBlank String name, boolean editable) {

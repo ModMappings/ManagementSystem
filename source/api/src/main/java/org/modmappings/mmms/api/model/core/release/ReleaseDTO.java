@@ -11,47 +11,49 @@ import java.util.UUID;
 @Schema(name = "Release")
 public class ReleaseDTO {
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the release.")
     private UUID id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the user who created the release.")
     private UUID createdBy;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The moment the release was created.")
     private Timestamp createdOn;
 
+    @Schema(description = "The name of the release, has to be unique inside a given mapping type.", minLength = 1, required = true)
     @NotBlank
     private String name;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the game version for which this release is.", required = true, example = "9b4a9c76-3588-48b5-bedf-b0df90b00381")
     private UUID gameVersionId;
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the mapping type for which this release is.", required = true, example = "9b4a9c76-3588-48b5-bedf-b0df90b00381")
     private UUID mappingType;
 
+    @Schema(description = "Indicates if this release is a snapshot or not. Snapshot release are potentially not stable.", required = true)
     private boolean isSnapshot;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap packages that are part of this release")
     private Set<UUID> packageMappings;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap classes that are part of this release")
     private Set<UUID> classMappings;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap methods that are part of this release")
     private Set<UUID> methodMappings;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap fields that are part of this release")
     private Set<UUID> fieldMappings;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap parameters that are part of this release")
     private Set<UUID> parameterMappings;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the comments which were made on this release.")
     private Set<UUID> commentsMappings;
 
     public ReleaseDTO(UUID id, UUID createdBy, Timestamp createdOn, @NotBlank String name, @NotNull UUID gameVersionId, @NotNull UUID mappingType, boolean isSnapshot, @NotNull Set<UUID> packageMappings, @NotNull Set<UUID> classMappings, @NotNull Set<UUID> methodMappings, @NotNull Set<UUID> fieldMappings, @NotNull Set<UUID> parameterMappings, @NotNull Set<UUID> commentsMappings) {
