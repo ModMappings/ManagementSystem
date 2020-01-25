@@ -9,10 +9,10 @@ import org.modmappings.mmms.repository.model.comments.CommentDMO;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.model.core.release.ReleaseComponentDMO;
 import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;
-import org.modmappings.mmms.repository.repositories.comments.ICommentRepository;
+import org.modmappings.mmms.repository.repositories.comments.CommentRepository;
 import org.modmappings.mmms.repository.repositories.core.IMappingTypeRepository;
-import org.modmappings.mmms.repository.repositories.core.release.IReleaseComponentRepository;
-import org.modmappings.mmms.repository.repositories.core.release.IReleaseRepository;
+import org.modmappings.mmms.repository.repositories.core.release.ReleaseComponentRepository;
+import org.modmappings.mmms.repository.repositories.core.release.ReleaseRepository;
 import org.modmappings.mmms.repository.repositories.mapping.mappings.IMappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,15 +39,15 @@ import java.util.stream.Collectors;
 public class ReleaseService {
 
     private final Logger logger = LoggerFactory.getLogger(ReleaseService.class);
-    private final IReleaseRepository repository;
-    private final IReleaseComponentRepository releaseComponentRepository;
+    private final ReleaseRepository repository;
+    private final ReleaseComponentRepository releaseComponentRepository;
     private final IMappingRepository mappingRepository;
     private final IMappingTypeRepository mappingTypeRepository;
-    private final ICommentRepository commentRepository;
+    private final CommentRepository commentRepository;
     
     private final UserLoggingService userLoggingService;
 
-    public ReleaseService(IReleaseRepository repository, IReleaseComponentRepository releaseComponentRepository, IMappingRepository mappingRepository, IMappingTypeRepository mappingTypeRepository, ICommentRepository commentRepository, UserLoggingService userLoggingService) {
+    public ReleaseService(ReleaseRepository repository, ReleaseComponentRepository releaseComponentRepository, IMappingRepository mappingRepository, IMappingTypeRepository mappingTypeRepository, CommentRepository commentRepository, UserLoggingService userLoggingService) {
         this.repository = repository;
         this.releaseComponentRepository = releaseComponentRepository;
         this.mappingRepository = mappingRepository;

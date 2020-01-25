@@ -5,17 +5,15 @@ import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
-import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
-import org.springframework.data.domain.Pageable;
+import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * Represents a repository which can provide and store {@link MappingDMO} objects.
  */
-public interface IMappingRepository extends IPageableR2DBCRepository<MappingDMO> {
+public interface IMappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
 
     /**
      * Finds all mappings for a given versioned mappable id.

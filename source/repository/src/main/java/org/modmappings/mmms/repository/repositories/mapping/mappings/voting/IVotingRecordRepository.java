@@ -1,19 +1,16 @@
 package org.modmappings.mmms.repository.repositories.mapping.mappings.voting;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.mapping.mappings.voting.VotingRecordDMO;
-import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
-import org.springframework.data.domain.Pageable;
+import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository that can store and provide {@link VotingRecordDMO} objects.
  */
-public interface IVotingRecordRepository extends IPageableR2DBCRepository<VotingRecordDMO> {
+public interface IVotingRecordRepository extends ModMappingR2DBCRepository<VotingRecordDMO> {
 
     /**
      * Finds all voting records for a given proposed mapping.

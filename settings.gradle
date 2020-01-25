@@ -1,4 +1,5 @@
 rootProject.name = 'ModMappingManagementSystem'
 
 include ':source:api'
+include ':source:er2dbc'
 include ':source:repository'

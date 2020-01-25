@@ -1,7 +1,7 @@
 package org.modmappings.mmms.repository.repositories.core;
 
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
-import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.query.Param;
 import reactor.core.publisher.Flux;
@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 /**
  * Represents a repository which provides and stores {@link MappingTypeDMO} objects.
  */
-public interface IMappingTypeRepository extends IPageableR2DBCRepository<MappingTypeDMO> {
+public interface IMappingTypeRepository extends ModMappingR2DBCRepository<MappingTypeDMO> {
 
     /**
      * Finds all mapping types which match the given name regex.

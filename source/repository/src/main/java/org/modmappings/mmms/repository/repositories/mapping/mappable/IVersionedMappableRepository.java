@@ -3,17 +3,15 @@ package org.modmappings.mmms.repository.repositories.mapping.mappable;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.mapping.mappable.VersionedMappableDMO;
-import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
-import org.springframework.data.domain.Pageable;
+import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * Represents a repository which can provide and store {@link VersionedMappableDMO} objects.
  */
-public interface IVersionedMappableRepository extends IPageableR2DBCRepository<VersionedMappableDMO> {
+public interface IVersionedMappableRepository extends ModMappingR2DBCRepository<VersionedMappableDMO> {
 
     /**
      * Finds all versioned mappables for a given game version.

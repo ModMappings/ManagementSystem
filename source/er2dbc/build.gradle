@@ -23,8 +23,6 @@ jar {
 }
 
 dependencies {
-    implementation project(':source:er2dbc')
-
     implementation platform('io.projectreactor:reactor-bom:Dysprosium-SR1')
     implementation platform('org.springframework.boot.experimental:spring-boot-bom-r2dbc:0.1.0.M3')
 

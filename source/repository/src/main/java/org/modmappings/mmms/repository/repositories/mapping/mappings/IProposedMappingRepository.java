@@ -1,19 +1,16 @@
 package org.modmappings.mmms.repository.repositories.mapping.mappings;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.modmappings.mmms.repository.model.mapping.mappings.ProposedMappingDMO;
-import org.modmappings.mmms.repository.repositories.IPageableR2DBCRepository;
-import org.springframework.data.domain.Pageable;
+import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
 /**
  * Represents a repository that can store and provide {@link ProposedMappingDMO} objects.
  */
-public interface IProposedMappingRepository extends IPageableR2DBCRepository<ProposedMappingDMO> {
+public interface IProposedMappingRepository extends ModMappingR2DBCRepository<ProposedMappingDMO> {
 
     /**
      * Finds all proposed mappings for a given versioned mappable id.
