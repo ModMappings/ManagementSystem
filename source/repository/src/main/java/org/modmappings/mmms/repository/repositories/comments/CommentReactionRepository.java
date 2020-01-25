@@ -20,11 +20,8 @@ import java.util.UUID;
 @Repository
 public class CommentReactionRepository extends ModMappingR2DBCRepository<CommentReactionDMO> {
 
-    private final ExtendedDataAccessStrategy accessStrategy;
-
     public CommentReactionRepository(RelationalEntityInformation<CommentReactionDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
-        this.accessStrategy = accessStrategy;
     }
 
     /**
@@ -48,9 +45,8 @@ public class CommentReactionRepository extends ModMappingR2DBCRepository<Comment
      * @return The comment reactions by the given user.
      * @throws IllegalArgumentException in case the given {@literal userId} is {@literal null}.
      */
-    Flux<CommentReactionDMO> findAllForUser(final UUID userId, final Pageable pageable)
+    public Mono<Page<CommentReactionDMO>> findAllForUser(final UUID userId, final Pageable pageable)
     {
-
-        return createSelectWithSingleWhereRequest("created_by", userId, pageable);
+        return createPagedSingleWhereRequest("created_by", userId, pageable);
     }
 }
