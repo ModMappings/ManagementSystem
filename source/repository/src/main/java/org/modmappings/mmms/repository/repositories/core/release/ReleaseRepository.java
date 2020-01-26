@@ -9,16 +9,21 @@ import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMappe
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;
 import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.relational.core.sql.Functions;
+import org.springframework.data.relational.core.sql.Table;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
 
@@ -45,7 +50,7 @@ public class ReleaseRepository extends ModMappingR2DBCRepository<ReleaseDMO> {
      * @param pageable The paging information for the query.
      * @return All releases which match the given criteria.
      */
-    Flux<ReleaseDMO> findAllBySearchParameter(
+    Flux<ReleaseDMO> findAllByOld(
             final String nameRegex,
             final UUID gameVersionId,
             final UUID mappingTypeId,
@@ -79,5 +84,94 @@ public class ReleaseRepository extends ModMappingR2DBCRepository<ReleaseDMO> {
                 .as(this.getEntity().getJavaType()) //
                 .fetch()
                 .all();
+    }
+
+    private Flux<ReleaseDMO> createFindAllByRequest(
+            final String nameRegex,
+            final UUID gameVersionId,
+            final UUID mappingTypeId,
+            final Boolean isSnapshot,
+            final UUID mappingId,
+            final UUID userId,
+            final Pageable pageable
+    ) {
+        List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
+
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName()) //
+                .withProjectionFromColumnName(columns)
+                .withJoin(
+                        JoinSpec.join("release_component", "rc")
+                                .withOn(on(reference("id")).is(reference("rc", "release_id")))
+                )
+                .withCriteria(
+                        where(
+                                parameter(nameRegex)).isNull().or(reference("r", "name")).matches(parameter(nameRegex))
+                                .and(parameter(gameVersionId)).isNull().or(reference("r", "game_version_id")).is(parameter(gameVersionId))
+                                .and(parameter(mappingTypeId)).isNull().or(reference("r", "mapping_type_id")).is(parameter(mappingTypeId))
+                                .and(parameter(isSnapshot)).isNull().or(reference("r", "is_snapshot")).is(parameter(isSnapshot))
+                                .and(parameter(mappingId)).isNull().or(reference("rc", "mapping_id")).is(parameter(mappingId))
+                                .and(parameter(userId)).isNull().or(reference("r", "created_by")).is(parameter(userId))
+                )
+                .withPage(pageable);
+
+        PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
+
+        return this.getDatabaseClient().execute(operation) //
+                .as(this.getEntity().getJavaType()) //
+                .fetch()
+                .all();
+    }
+
+    private Mono<Long> createCountAllByRequest(
+            final String nameRegex,
+            final UUID gameVersionId,
+            final UUID mappingTypeId,
+            final Boolean isSnapshot,
+            final UUID mappingId,
+            final UUID userId,
+            final Pageable pageable
+    ) {
+        Table table = Table.create(this.getEntity().getTableName());
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName()) //
+                .withProjection(spring(Functions.count(table.column(getIdColumnName()))))
+                .withJoin(
+                        JoinSpec.join("release_component", "rc")
+                                .withOn(on(reference("id")).is(reference("rc", "release_id")))
+                )
+                .withCriteria(
+                        where(
+                                parameter(nameRegex)).isNull().or(reference("r", "name")).matches(parameter(nameRegex))
+                                .and(parameter(gameVersionId)).isNull().or(reference("r", "game_version_id")).is(parameter(gameVersionId))
+                                .and(parameter(mappingTypeId)).isNull().or(reference("r", "mapping_type_id")).is(parameter(mappingTypeId))
+                                .and(parameter(isSnapshot)).isNull().or(reference("r", "is_snapshot")).is(parameter(isSnapshot))
+                                .and(parameter(mappingId)).isNull().or(reference("rc", "mapping_id")).is(parameter(mappingId))
+                                .and(parameter(userId)).isNull().or(reference("r", "created_by")).is(parameter(userId))
+                )
+                .withPage(pageable);
+
+        PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
+
+        return this.getDatabaseClient().execute(operation) //
+                .map((r, md) -> r.get(0, Long.class)) //
+                .first() //
+                .defaultIfEmpty(0L);
+    }
+
+    private Mono<Page<ReleaseDMO>> createPagedAllByRequest(
+            final String nameRegex,
+            final UUID gameVersionId,
+            final UUID mappingTypeId,
+            final Boolean isSnapshot,
+            final UUID mappingId,
+            final UUID userId,
+            final Pageable pageable
+    ) {
+        return createFindAllByRequest(
+                nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, pageable)
+                .collectList()
+                .flatMap(releases -> createCountAllByRequest(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, pageable)
+                            .flatMap(count -> Mono.just(new PageImpl<>(releases, pageable, count))));
     }
 }
