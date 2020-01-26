@@ -7,22 +7,17 @@ import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrate
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
-import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.model.core.release.ReleaseComponentDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
-import org.springframework.data.r2dbc.query.Criteria;
-import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.relational.core.sql.Functions;
 import org.springframework.data.relational.core.sql.Table;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -49,7 +44,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      */
     public Mono<Page<ReleaseComponentDMO>> findAllByReleaseId(final UUID releaseId, final Pageable pageable)
     {
-        return createPagedSingleWhereRequest("release_id", releaseId, pageable);
+        return createPagedStarSingleWhereRequest("release_id", releaseId, pageable);
     }
 
     /**
@@ -61,7 +56,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      */
     public Mono<Page<ReleaseComponentDMO>> findAllByMappingId(final UUID mappingId, final Pageable pageable)
     {
-        return createPagedSingleWhereRequest("mapping_id", mappingId, pageable);
+        return createPagedStarSingleWhereRequest("mapping_id", mappingId, pageable);
     }
 
     /**
@@ -124,85 +119,23 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
         return createPagedMappingIdsByReleaseIdForTypeRequest(releaseId, MappableTypeDMO.PARAMETER, pageable);
     }
 
-    /**
-     * Finds all mapping ids which are part of the given release and represent a mapping for a given mappable type.
-     *
-     * @param releaseId The id of the release to get the package mappings for.
-     * @param mappableType The type of mappables to find the mapping ids for.
-     * @param pageable The paging information for the query.
-     * @return The mappings for a package which are part of the given release.
-     */
-    private Flux<UUID> createFindAllMappingIdsByReleaseIdForTypeRequest(final UUID releaseId, final MappableTypeDMO mappableType, final Pageable pageable) {
-        Assert.notNull(releaseId, "ReleaseId must not be null!");
-        Assert.notNull(pageable, "Pageable most not be null!");
-
-        List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
-
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(UUID.class);
-        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName()) //
-                .withProjection(reference("mp", "mapping_id")) //
-                .withJoin(
-                        JoinSpec.join("mapping", "mp")
-                                .withOn(on(reference("mapping_id")).is(reference("mp", "id"))),
-                        JoinSpec.join("versioned_mappable", "vm")
-                                .withOn(on(reference("versioned_mappable_id")).is(reference("vm", "id"))),
-                        JoinSpec.join("mappable", "m")
-                                .withOn(on(reference("vm", "mappable_id")).is(reference("m", "id")))
-                )
-                .withCriteria(
-                        where(reference("release_id")).is(parameter(releaseId))
-                                .and(reference("mappable", "type")).is(parameter(mappableType.ordinal())))
-                .withPage(pageable);
-
-        PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
-
-        return this.getDatabaseClient().execute(operation) //
-                .as(UUID.class) //
-                .fetch()
-                .all();
-    }
-
-    /**
-     * Counts all mapping ids which are part of the given release and represent a mapping for a given mappable type.
-     *
-     * @param releaseId The id of the release to get the package mappings for.
-     * @param mappableType The type of mappables to find the mapping ids for.
-     * @param pageable The paging information for the query.
-     * @return The mappings for a package which are part of the given release.
-     */
-    private Mono<Long> countAllMappingIdsByReleaseIdForTypeRequest(final UUID releaseId, final MappableTypeDMO mappableType, final Pageable pageable) {
-        Assert.notNull(releaseId, "ReleaseId must not be null!");
-        Assert.notNull(pageable, "Pageable most not be null!");
-
-        Table table = Table.create(this.getEntity().getTableName());
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(UUID.class);
-        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName()) //
-                .withProjection(spring(Functions.count(table.column(getIdColumnName())))) //
-                .withJoin(
-                        JoinSpec.join("mapping", "mp")
-                                .withOn(on(reference("mapping_id")).is(reference("mp", "id"))),
-                        JoinSpec.join("versioned_mappable", "vm")
-                                .withOn(on(reference("versioned_mappable_id")).is(reference("vm", "id"))),
-                        JoinSpec.join("mappable", "m")
-                                .withOn(on(reference("vm", "mappable_id")).is(reference("m", "id")))
-                )
-                .withCriteria(
-                        where(reference("release_id")).is(parameter(releaseId))
-                                .and(reference("mappable", "type")).is(parameter(mappableType.ordinal())))
-                .withPage(pageable);
-
-        PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
-
-        return this.getDatabaseClient().execute(operation) //
-                .map((r, md) -> r.get(0, Long.class)) //
-                .first() //
-                .defaultIfEmpty(0L);
-    }
-
     private Mono<Page<UUID>> createPagedMappingIdsByReleaseIdForTypeRequest(final UUID releaseId, final MappableTypeDMO mappableType, final Pageable pageable) {
-        return createFindAllMappingIdsByReleaseIdForTypeRequest(releaseId, mappableType, pageable)
-                .collectList()
-                .flatMap(ids -> countAllMappingIdsByReleaseIdForTypeRequest(releaseId, mappableType, pageable)
-                        .flatMap(count -> Mono.just(new PageImpl<>(ids, pageable, count))));
+        return createPagedRequest(
+                selectSpec -> selectSpec
+                        .withProjection(reference("mp", "mapping_id")) //
+                        .withJoin(
+                                JoinSpec.join("mapping", "mp")
+                                        .withOn(on(reference("mapping_id")).is(reference("mp", "id"))),
+                                JoinSpec.join("versioned_mappable", "vm")
+                                        .withOn(on(reference("versioned_mappable_id")).is(reference("vm", "id"))),
+                                JoinSpec.join("mappable", "m")
+                                        .withOn(on(reference("vm", "mappable_id")).is(reference("m", "id")))
+                        )
+                        .withCriteria(
+                                where(reference("release_id")).is(parameter(releaseId))
+                                        .and(reference("mappable", "type")).is(parameter(mappableType.ordinal()))),
+                UUID.class,
+                pageable
+        );
     }
 }

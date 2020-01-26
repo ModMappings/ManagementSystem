@@ -9,7 +9,6 @@ import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -33,7 +32,7 @@ public class CommentReactionRepository extends ModMappingR2DBCRepository<Comment
      * @throws IllegalArgumentException in case the given {@literal commentId} is {@literal null}.
      */
     public Mono<Page<CommentReactionDMO>> findAllByCommentId(final UUID commentId, Pageable pageable) {
-        return createPagedSingleWhereRequest("comment_id", commentId, pageable);
+        return createPagedStarSingleWhereRequest("comment_id", commentId, pageable);
     }
 
     /**
@@ -47,6 +46,6 @@ public class CommentReactionRepository extends ModMappingR2DBCRepository<Comment
      */
     public Mono<Page<CommentReactionDMO>> findAllForUser(final UUID userId, final Pageable pageable)
     {
-        return createPagedSingleWhereRequest("created_by", userId, pageable);
+        return createPagedStarSingleWhereRequest("created_by", userId, pageable);
     }
 }

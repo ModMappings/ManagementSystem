@@ -82,6 +82,51 @@ public class SelectSpecWithJoin {
     }
 
     /**
+     * Override {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin setProjection(ColumnBasedCriteria.Expression... projectedFields) {
+        final List<ColumnBasedCriteria.Expression> expressions = Arrays.asList(projectedFields);
+        Assert.noNullElements(expressions, "Expressions is not allowed to contain null elements!");
+        Assert.isTrue(expressions.stream().allMatch(ColumnBasedCriteria.Expression::isReference), "All expressions need to be references!");
+
+        return this.setProjection(expressions);
+    }
+
+    /**
+     * Override {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin setProjectionFromColumnName(Collection<String> projectedFields) {
+        Assert.notNull(projectedFields, "ProjectedFields can not be null!");
+        Assert.noNullElements(projectedFields, "ProjectedFields is not allowed to contain null elements!");
+
+        List<ColumnBasedCriteria.Expression> fields = projectedFields.stream().map(ColumnBasedCriteria::reference).collect(Collectors.toList());
+
+        return new SelectSpecWithJoin(this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+    }
+
+    /**
+     * Override {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin setProjection(Collection<ColumnBasedCriteria.Expression> projectedFields) {
+        Assert.notNull(projectedFields, "ProjectedFields can not be null!");
+        Assert.noNullElements(projectedFields, "ProjectedFields is not allowed to contain null elements!");
+        Assert.isTrue(projectedFields.stream().allMatch(ColumnBasedCriteria.Expression::isReference), "All ProjectedFields need to be references!");
+
+        List<ColumnBasedCriteria.Expression> fields = new ArrayList<>(projectedFields);
+
+        return new SelectSpecWithJoin(this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+    }
+
+    /**
      * Associate a {@link ColumnBasedCriteria} with the select and return a new {@link SelectSpecWithJoin}.
      *
      * @param criteria

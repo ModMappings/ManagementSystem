@@ -6,7 +6,7 @@ import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToD
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
-import org.modmappings.mmms.repository.repositories.core.IMappingTypeRepository;
+import org.modmappings.mmms.repository.repositories.core.MappingTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -31,10 +31,10 @@ import java.util.function.Supplier;
 public class MappingTypeService {
 
     private final Logger logger = LoggerFactory.getLogger(MappingTypeService.class);
-    private final IMappingTypeRepository repository;
+    private final MappingTypeRepository repository;
     private final UserLoggingService userLoggingService;
 
-    public MappingTypeService(IMappingTypeRepository repository, UserLoggingService userLoggingService) {
+    public MappingTypeService(MappingTypeRepository repository, UserLoggingService userLoggingService) {
         this.repository = repository;
         this.userLoggingService = userLoggingService;
     }

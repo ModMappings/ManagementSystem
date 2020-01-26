@@ -1,25 +1,16 @@
 package org.modmappings.mmms.repository.repositories.comments;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
-import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.repository.model.comments.CommentDMO;
 import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
-import org.springframework.data.r2dbc.core.PreparedOperation;
-import org.springframework.data.r2dbc.core.ReactiveDataAccessStrategy;
-import org.springframework.data.r2dbc.core.StatementMapper;
-import org.springframework.data.r2dbc.query.Criteria;
-import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -42,7 +33,7 @@ public class CommentRepository extends ModMappingR2DBCRepository<CommentDMO> {
      */
     public Mono<Page<CommentDMO>> findAllForRelease(final UUID releaseId, final Pageable pageable)
     {
-        return createPagedSingleWhereRequest("release_id", releaseId, pageable);
+        return createPagedStarSingleWhereRequest("release_id", releaseId, pageable);
     }
 
     /**
@@ -57,7 +48,7 @@ public class CommentRepository extends ModMappingR2DBCRepository<CommentDMO> {
      */
     public Mono<Page<CommentDMO>> findAllForProposedMapping(final UUID proposedMappingId, final Pageable pageable)
     {
-        return createPagedSingleWhereRequest("proposed_mapping_id", proposedMappingId, pageable);
+        return createPagedStarSingleWhereRequest("proposed_mapping_id", proposedMappingId, pageable);
     }
 
     /**
@@ -72,7 +63,7 @@ public class CommentRepository extends ModMappingR2DBCRepository<CommentDMO> {
      */
     public Mono<Page<CommentDMO>> findAllForComment(final UUID commentId, final Pageable pageable)
     {
-        return createPagedSingleWhereRequest("parent_comment_id", commentId, pageable);
+        return createPagedStarSingleWhereRequest("parent_comment_id", commentId, pageable);
     }
 
     /**
@@ -87,6 +78,6 @@ public class CommentRepository extends ModMappingR2DBCRepository<CommentDMO> {
      */
     public Mono<Page<CommentDMO>> findAllForUser(final UUID userId, final Pageable pageable)
     {
-        return createPagedSingleWhereRequest("created_by", userId, pageable);
+        return createPagedStarSingleWhereRequest("created_by", userId, pageable);
     }
 }
