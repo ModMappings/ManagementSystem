@@ -1,10 +1,7 @@
 package org.modmappings.mmms.repository.repositories;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Consumer;
-
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
+import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.springframework.data.domain.Page;
@@ -15,12 +12,19 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.r2dbc.repository.support.SimpleR2dbcRepository;
-import org.springframework.data.relational.core.sql.*;
+import org.springframework.data.relational.core.sql.Functions;
+import org.springframework.data.relational.core.sql.Table;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
 
@@ -63,6 +67,24 @@ public class ModMappingR2DBCRepository<T> extends SimpleR2dbcRepository<T, UUID>
 
     protected ExtendedDataAccessStrategy getAccessStrategy() {
         return accessStrategy;
+    }
+
+    /**
+     * Gets all entries in the repository.
+     * Is identical to {@link #findAll()} but accepts page and sorting information.
+     *
+     * @param pageable The page and sorting information.
+     * @return The page that is requested.
+     */
+    public Mono<Page<T>> findAll(
+            final Pageable pageable
+    ) {
+        return createPagedStarRequest(
+                selectSpecWithJoin -> {
+                    //Noop the default works here!
+                },
+                pageable
+        );
     }
 
     protected Flux<T> createFindStarRequest(final SelectSpecWithJoin selectSpec, final Pageable pageable)
@@ -163,6 +185,34 @@ public class ModMappingR2DBCRepository<T> extends SimpleR2dbcRepository<T, UUID>
         return createPagedStarRequest(
                 selectSpec -> selectSpec.withCriteria(where(reference(parameterName)).is(parameter(value))),
                 pageable);
+    }
+
+    protected ColumnBasedCriteria nonNullMatchesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable Object parameter, @NonNull String tableName, @NonNull String columnName) {
+        if (parameter != null) {
+            if (criteria == null) {
+                return where(reference(tableName, columnName)).matches(parameter(parameter));
+            }
+            else
+            {
+                return criteria.and(reference(tableName, columnName)).matches(parameter(parameter));
+            }
+        }
+
+        return criteria;
+    }
+
+    protected ColumnBasedCriteria nonNullEqualsCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable Object parameter, @NonNull String tableName, @NonNull String columnName) {
+        if (parameter != null) {
+            if (criteria == null) {
+                return where(reference(tableName, columnName)).is(parameter(parameter));
+            }
+            else
+            {
+                return criteria.and(reference(tableName, columnName)).is(parameter(parameter));
+            }
+        }
+
+        return criteria;
     }
 
     protected String getIdColumnName()

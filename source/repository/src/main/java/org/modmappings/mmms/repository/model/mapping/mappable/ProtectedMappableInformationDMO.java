@@ -1,10 +1,10 @@
 package org.modmappings.mmms.repository.model.mapping.mappable;
 
-import java.util.UUID;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.UUID;
 
 /**
  * A record which indicates a many-to-many relationship between a component in a given game version, as well

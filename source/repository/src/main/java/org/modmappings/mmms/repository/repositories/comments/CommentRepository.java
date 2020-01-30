@@ -1,7 +1,5 @@
 package org.modmappings.mmms.repository.repositories.comments;
 
-import java.util.UUID;
-
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.repository.model.comments.CommentDMO;
 import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
@@ -12,6 +10,8 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 /**
  * Represents a repository which can provide and store {@link CommentDMO} objects.

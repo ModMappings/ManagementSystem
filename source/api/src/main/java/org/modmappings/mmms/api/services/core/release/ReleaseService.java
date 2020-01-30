@@ -13,7 +13,7 @@ import org.modmappings.mmms.repository.repositories.comments.CommentRepository;
 import org.modmappings.mmms.repository.repositories.core.MappingTypeRepository;
 import org.modmappings.mmms.repository.repositories.core.release.ReleaseComponentRepository;
 import org.modmappings.mmms.repository.repositories.core.release.ReleaseRepository;
-import org.modmappings.mmms.repository.repositories.mapping.mappings.IMappingRepository;
+import org.modmappings.mmms.repository.repositories.mapping.mappings.MappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,13 +41,13 @@ public class ReleaseService {
     private final Logger logger = LoggerFactory.getLogger(ReleaseService.class);
     private final ReleaseRepository repository;
     private final ReleaseComponentRepository releaseComponentRepository;
-    private final IMappingRepository mappingRepository;
+    private final MappingRepository mappingRepository;
     private final MappingTypeRepository mappingTypeRepository;
     private final CommentRepository commentRepository;
     
     private final UserLoggingService userLoggingService;
 
-    public ReleaseService(ReleaseRepository repository, ReleaseComponentRepository releaseComponentRepository, IMappingRepository mappingRepository, MappingTypeRepository mappingTypeRepository, CommentRepository commentRepository, UserLoggingService userLoggingService) {
+    public ReleaseService(ReleaseRepository repository, ReleaseComponentRepository releaseComponentRepository, MappingRepository mappingRepository, MappingTypeRepository mappingTypeRepository, CommentRepository commentRepository, UserLoggingService userLoggingService) {
         this.repository = repository;
         this.releaseComponentRepository = releaseComponentRepository;
         this.mappingRepository = mappingRepository;

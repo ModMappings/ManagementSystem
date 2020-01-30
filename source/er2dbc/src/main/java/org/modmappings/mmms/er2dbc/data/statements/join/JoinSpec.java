@@ -5,6 +5,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.function.Supplier;
+
 public class JoinSpec {
 
     private final JoinType type;
@@ -44,6 +46,14 @@ public class JoinSpec {
         Assert.isTrue(columnBasedCriteria.getType() == ColumnBasedCriteria.Type.ON, "On statement criteria needs to be of on type! use columnBasedCriteria.on() to create one!");
         this.onCriteria = columnBasedCriteria;
 
+        return this;
+    }
+
+    public JoinSpec on(Supplier<ColumnBasedCriteria> columnBasedCriteriaSupplier) {
+        ColumnBasedCriteria criteria = columnBasedCriteriaSupplier.get();
+        if (criteria != null) {
+            return withOn(criteria);
+        }
         return this;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SelectSpecWithJoin {
@@ -136,6 +137,16 @@ public class SelectSpecWithJoin {
         return new SelectSpecWithJoin(this.table, this.joinSpecs, this.projectedFields, criteria, this.sort, this.page);
     }
 
+    public SelectSpecWithJoin where(final Supplier<ColumnBasedCriteria> criteriaSupplier) {
+        final ColumnBasedCriteria criteria = criteriaSupplier.get();
+        if (criteria != null)
+        {
+            return withCriteria(criteria);
+        }
+
+        return this;
+    }
+
     public SelectSpecWithJoin withJoin(JoinSpec join)
     {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
@@ -159,6 +170,32 @@ public class SelectSpecWithJoin {
 
         return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
+
+    public SelectSpecWithJoin join(Supplier<JoinSpec> join)
+    {
+        final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
+        joinSpecs.add(join.get());
+
+        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+    }
+
+    public SelectSpecWithJoin join(Supplier<JoinSpec>... joins)
+    {
+        final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
+        joinSpecs.addAll(Arrays.stream(joins).map(Supplier::get).collect(Collectors.toList()));
+
+        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+    }
+
+    public SelectSpecWithJoin join(Collection<Supplier<JoinSpec>> joins)
+    {
+        final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
+        joinSpecs.addAll(joins.stream().map(Supplier::get).collect(Collectors.toList()));
+
+        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+    }
+
+
 
     /**
      * Associate {@link Sort} with the select and create a new {@link SelectSpecWithJoin}.

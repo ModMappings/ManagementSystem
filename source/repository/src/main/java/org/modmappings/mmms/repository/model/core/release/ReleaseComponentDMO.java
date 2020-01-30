@@ -1,10 +1,10 @@
 package org.modmappings.mmms.repository.model.core.release;
 
-import java.util.UUID;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.UUID;
 
 /**
  * Represents a single mapping that is part of a given release.

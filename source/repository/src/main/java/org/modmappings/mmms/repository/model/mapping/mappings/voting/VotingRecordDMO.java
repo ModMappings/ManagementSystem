@@ -1,12 +1,12 @@
 package org.modmappings.mmms.repository.model.mapping.mappings.voting;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.UUID;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 
 /**
  * Represents a single vote for or against a given proposal.

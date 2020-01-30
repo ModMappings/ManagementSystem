@@ -1,12 +1,12 @@
 package org.modmappings.mmms.repository.model.comments;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.UUID;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 
 /**
  * Represents a single mini reaction on a comment via a small set of integrated and supported emoji.

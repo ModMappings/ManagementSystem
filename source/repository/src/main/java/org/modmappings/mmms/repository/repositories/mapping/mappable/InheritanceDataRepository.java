@@ -1,7 +1,5 @@
 package org.modmappings.mmms.repository.repositories.mapping.mappable;
 
-import java.util.UUID;
-
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.repository.model.mapping.mappable.InheritanceDataDMO;
 import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
@@ -9,16 +7,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
-import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import reactor.core.publisher.Flux;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
 
 /**
  * Represents a repository which can provide and store {@link InheritanceDataDMO} objects.
  */
+@Repository
 public class InheritanceDataRepository extends ModMappingR2DBCRepository<InheritanceDataDMO> {
 
     public InheritanceDataRepository(RelationalEntityInformation<InheritanceDataDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
