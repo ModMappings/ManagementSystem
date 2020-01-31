@@ -20,6 +20,10 @@ public class MappingTypeDTO {
     private String    name;
     @Schema(description = "Indicates if this mapping type is editable or not. For none editable mapping types the api prevents users from making and proposing new mappings. Making this mapping type basically only available for lookup purposes!")
     private boolean editable;
+    @Schema(description = "The state of the source code that this mapping type maps away from.", required = true, minLength = 1)
+    private String stateIn;
+    @Schema(description = "The state of the source code that this mapping type maps into.", required = true, minLength = 1)
+    private String stateOut;
 
     public MappingTypeDTO(UUID id, UUID createdBy, Timestamp createdOn, @NotBlank String name, boolean editable) {
         this.id = id;
@@ -70,5 +74,21 @@ public class MappingTypeDTO {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public String getStateIn() {
+        return stateIn;
+    }
+
+    public void setStateIn(String stateIn) {
+        this.stateIn = stateIn;
+    }
+
+    public String getStateOut() {
+        return stateOut;
+    }
+
+    public void setStateOut(String stateOut) {
+        this.stateOut = stateOut;
     }
 }

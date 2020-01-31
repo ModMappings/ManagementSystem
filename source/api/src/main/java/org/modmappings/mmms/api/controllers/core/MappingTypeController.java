@@ -169,7 +169,7 @@ public class MappingTypeController {
             final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
             ServerHttpResponse response) {
-        return mappingTypeService.search(nameRegex, editable, page, size)
+        return mappingTypeService.getAll(nameRegex, editable, page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Flux.empty();

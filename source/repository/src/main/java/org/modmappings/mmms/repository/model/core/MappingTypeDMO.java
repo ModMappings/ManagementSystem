@@ -70,6 +70,14 @@ public class MappingTypeDMO {
         return stateOut;
     }
 
+    public void setStateIn(String stateIn) {
+        this.stateIn = stateIn;
+    }
+
+    public void setStateOut(String stateOut) {
+        this.stateOut = stateOut;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -85,6 +93,8 @@ public class MappingTypeDMO {
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
+
+
 
 
 }
