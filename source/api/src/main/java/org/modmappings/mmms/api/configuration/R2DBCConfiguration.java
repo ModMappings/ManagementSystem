@@ -1,7 +1,5 @@
 package org.modmappings.mmms.api.configuration;
 
-import javax.sql.DataSource;
-
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import org.modmappings.mmms.repository.repositories.Repositories;
@@ -12,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableR2dbcRepositories(basePackageClasses = Repositories.class)

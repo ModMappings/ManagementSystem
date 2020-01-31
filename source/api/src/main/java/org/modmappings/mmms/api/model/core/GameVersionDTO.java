@@ -1,11 +1,10 @@
 package org.modmappings.mmms.api.model.core;
 
-import java.sql.Timestamp;
-import java.util.UUID;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
+import java.util.UUID;
 
 @Schema(name="GameVersion")
 public class GameVersionDTO {

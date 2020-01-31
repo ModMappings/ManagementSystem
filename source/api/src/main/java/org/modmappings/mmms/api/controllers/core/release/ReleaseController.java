@@ -14,18 +14,18 @@ import org.modmappings.mmms.api.services.core.release.ReleaseService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.api.util.Constants;
-import org.springframework.hateoas.PagedModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.*;
 
 @Tag(name = "Releases", description = "Gives access to available releases, allows existing releases to be modified and new ones to be created.")
 @RequestMapping("/releases")
@@ -60,7 +60,7 @@ public class ReleaseController {
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ReleaseDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
-        return releaseService.getBy(id)
+        return releaseService.getBy(id, true)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -68,56 +68,7 @@ public class ReleaseController {
     }
 
     @Operation(
-            summary = "Looks up all releases.",
-            parameters = {
-                    @Parameter(
-                            name = "page",
-                            in = ParameterIn.QUERY,
-                            description = "The 0-based page index to perform pagination lookup.",
-                            example = "0"
-                    ),
-                    @Parameter(
-                            name = "size",
-                            in = ParameterIn.QUERY,
-                            description = "The size of a given page.",
-                            example = "10"
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Returns all releases in the database."),
-            @ApiResponse(responseCode = "404",
-                    description = "Indicates that no release exists in the database.",
-                    content = {
-                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                                    schema = @Schema()),
-                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema())
-                    })
-    })
-    @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Mono<PagedModel<ReleaseDTO>> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-                                               final @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
-                                               ServerHttpResponse response) {
-        var controller = methodOn(ReleaseController.class);
-
-        return releaseService.getAll(page, size)
-                .collectList()
-                .flatMap(collection -> releaseService.count()
-                        .flatMap(totalCount -> linkTo(controller.getAll(null, null, null)).withSelfRel()
-                                .andAffordance(controller.create(null, null, null, null))
-                                .andAffordance(controller.search(null, null, null, null, null, null, null, null, null))
-                                .toMono()
-                                .map(selfLink -> new PagedModel<ReleaseDTO>(collection, new PagedModel.PageMetadata(size, page, totalCount, (int) Math.ceil((double) totalCount / size)), selfLink))))
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Mono.empty();
-                });
-    }
-
-    @Operation(
-            summary = "Searches through the known releases and finds the ones that match the given parameters.",
+            summary = "Gets all known releases and finds the ones that match the given parameters.",
             parameters = {
                     @Parameter(
                             name = "name",
@@ -154,18 +105,6 @@ public class ReleaseController {
                             in = ParameterIn.QUERY,
                             description = "The id of the user who created the release to filter releases on.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
-                    ),
-                    @Parameter(
-                            name = "page",
-                            in = ParameterIn.QUERY,
-                            description = "The 0-based page index to perform pagination lookup.",
-                            example = "0"
-                    ),
-                    @Parameter(
-                            name = "size",
-                            in = ParameterIn.QUERY,
-                            description = "The size of a given page.",
-                            example = "10"
                     )
             }
     )
@@ -181,79 +120,17 @@ public class ReleaseController {
                                     schema = @Schema())
                     })
     })
-    @GetMapping(value = "search", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Flux<ReleaseDTO> search(
+    @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public Mono<Page<ReleaseDTO>> getAll(
             final @RequestParam(name = "nameRegex", required = false) String nameRegex,
             final @RequestParam(name = "gameVersion", required = false) UUID gameVersionId,
             final @RequestParam(name = "mappingType", required = false) UUID mappingTypeId,
             final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
             final @RequestParam(name = "mapping", required = false) UUID mappingId,
             final @RequestParam(name = "user", required = false) UUID userId,
-            final @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-            final @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+            final @PageableDefault(size = 25, sort="created_by") Pageable pageable,
             ServerHttpResponse response) {
-        return releaseService.getAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, page, size)
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Flux.empty();
-                });
-    }
-
-    @Operation(
-            summary = "Determines the amount of releases which match the given parameters.",
-            parameters = {
-                    @Parameter(
-                            name = "name",
-                            in = ParameterIn.QUERY,
-                            description = "The regular expression to match the name of the release against.",
-                            example = "*"
-                    ),
-                    @Parameter(
-                            name = "gameVersion",
-                            in = ParameterIn.QUERY,
-                            description = "The id of the game version to filter releases on.",
-                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
-                    ),
-                    @Parameter(
-                            name = "mappingType",
-                            in = ParameterIn.QUERY,
-                            description = "The id of the mapping type to filter releases on.",
-                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
-                    ),
-                    @Parameter(
-                            name = "isSnapshot",
-                            in = ParameterIn.QUERY,
-                            description = "Determines if snapshot releases are supposed to be filtered out, leave the parameter out to not filter on snapshot state of releases.",
-                            example = "*"
-                    ),
-                    @Parameter(
-                            name = "mapping",
-                            in = ParameterIn.QUERY,
-                            description = "The id of the mapping to filter releases on.",
-                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
-                    ),
-                    @Parameter(
-                            name = "user",
-                            in = ParameterIn.QUERY,
-                            description = "The id of the user who created the release to filter releases on.",
-                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Returns the count of available releases, which match the given search parameter.")
-    })
-    @GetMapping(value = "search/count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Long> countForSearch(
-            final @RequestParam(name = "nameRegex", required = false) String nameRegex,
-            final @RequestParam(name = "gameVersion", required = false) UUID gameVersionId,
-            final @RequestParam(name = "mappingType", required = false) UUID mappingTypeId,
-            final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
-            final @RequestParam(name = "mapping", required = false) UUID mappingId,
-            final @RequestParam(name = "user", required = false) UUID userId,
-            ServerHttpResponse response) {
-        return releaseService.countForSearch(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId)
+        return releaseService.getAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -293,7 +170,7 @@ public class ReleaseController {
     @PreAuthorize("hasRole('RELEASES_DELETE')")
     public Mono<Void> deleteBy(@PathVariable UUID id, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> releaseService.deleteBy(id, () -> userService.getCurrentUserId(principal)))
+                .flatMap(principal -> releaseService.deleteBy(id, true, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -377,7 +254,7 @@ public class ReleaseController {
     @PreAuthorize("hasRole('RELEASES_UPDATE')")
     public Mono<ReleaseDTO> update(@PathVariable UUID id, @RequestBody ReleaseDTO releaseToUpdate, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> releaseService.update(id, releaseToUpdate, () -> userService.getCurrentUserId(principal)))
+                .flatMap(principal -> releaseService.update(id, releaseToUpdate, true, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

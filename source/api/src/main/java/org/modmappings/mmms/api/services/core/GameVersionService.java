@@ -1,13 +1,12 @@
 package org.modmappings.mmms.api.services.core;
 
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
-import org.modmappings.mmms.api.model.core.release.ReleaseDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.core.GameVersionDMO;
-import org.modmappings.mmms.repository.repositories.core.GameVersionRepository;
+import org.modmappings.mmms.repository.repositories.core.gameversions.GameVersionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**

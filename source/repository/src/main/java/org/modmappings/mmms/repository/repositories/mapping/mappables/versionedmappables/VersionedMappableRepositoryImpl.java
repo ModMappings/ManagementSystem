@@ -1,11 +1,12 @@
-package org.modmappings.mmms.repository.repositories.mapping.mappable;
+package org.modmappings.mmms.repository.repositories.mapping.mappables.versionedmappables;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.modmappings.mmms.repository.model.mapping.mappable.VersionedMappableDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,10 +25,10 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 /**
  * Represents a repository which can provide and store {@link VersionedMappableDMO} objects.
  */
-@Repository
-public class VersionedMappableRepository extends ModMappingR2DBCRepository<VersionedMappableDMO> {
+@Primary
+public class VersionedMappableRepositoryImpl extends AbstractModMappingRepository<VersionedMappableDMO> implements VersionedMappableRepository {
 
-    public VersionedMappableRepository(RelationalEntityInformation<VersionedMappableDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public VersionedMappableRepositoryImpl(RelationalEntityInformation<VersionedMappableDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -39,6 +40,7 @@ public class VersionedMappableRepository extends ModMappingR2DBCRepository<Versi
      * @param pageable The paging and sorting information.
      * @return The versioned mappables which are part of the given game version.
      */
+    @Override
     public Mono<Page<VersionedMappableDMO>> findAllForGameVersion(
             final UUID gameVersionId,
             final Pageable pageable
@@ -53,6 +55,7 @@ public class VersionedMappableRepository extends ModMappingR2DBCRepository<Versi
      * @param pageable The paging and sorting information.
      * @return The versioned mappables which are part of the package of which the versioned mappable has the given id.
      */
+    @Override
     public Mono<Page<VersionedMappableDMO>> findAllWhichArePartOfPackage(
             final UUID packageVersionedMappableId,
             final Pageable pageable
@@ -67,6 +70,7 @@ public class VersionedMappableRepository extends ModMappingR2DBCRepository<Versi
      * @param pageable The paging and sorting information.
      * @return The versioned mappables which are part of the class of which the versioned mappable has the given id.
      */
+    @Override
     public Mono<Page<VersionedMappableDMO>> findAllWhichArePartOfClass(
             final UUID classVersionedMappableId,
             final Pageable pageable
@@ -81,6 +85,7 @@ public class VersionedMappableRepository extends ModMappingR2DBCRepository<Versi
      * @param pageable The paging and sorting information.
      * @return The versioned mappables which are part of the method of which the versioned mappable has the given id.
      */
+    @Override
     public Mono<Page<VersionedMappableDMO>> findAllWhichArePartOfMethod(
             final UUID methodVersionedMappableId,
             final Pageable pageable
@@ -94,6 +99,7 @@ public class VersionedMappableRepository extends ModMappingR2DBCRepository<Versi
      * @param mappingId The id of the mapping to look up.
      * @return The versioned mappable who has the given mapping.
      */
+    @Override
     public Mono<VersionedMappableDMO> findAllForMapping(
             final UUID mappingId
     ) {
@@ -125,6 +131,7 @@ public class VersionedMappableRepository extends ModMappingR2DBCRepository<Versi
      * @param pageable The paging and sorting information.
      * @return The versioned mappables which represent the super types of the class of which the id of its versioned mappable was provided.
      */
+    @Override
     public Mono<Page<VersionedMappableDMO>> findAllSuperTypesOf(
             final UUID classVersionedMappableId,
             final Pageable pageable) {
@@ -146,6 +153,7 @@ public class VersionedMappableRepository extends ModMappingR2DBCRepository<Versi
      * @param pageable The paging and sorting information.
      * @return The versioned mappables which represent the super types of the class of which the id of its versioned mappable was provided.
      */
+    @Override
     public Mono<Page<VersionedMappableDMO>> findAllSubTypesOf(
             final UUID classVersionedMappableId,
             final Pageable pageable) {

@@ -1,12 +1,12 @@
-package org.modmappings.mmms.repository.repositories.core;
+package org.modmappings.mmms.repository.repositories.core.mappingtypes;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
-import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
@@ -20,20 +20,17 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.reference;
-import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
-
 /**
  * Represents a repository which provides and stores {@link MappingTypeDMO} objects.
  */
-@Repository
-public class MappingTypeRepository extends ModMappingR2DBCRepository<MappingTypeDMO> {
+@Primary
+class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingTypeDMO> implements MappingTypeRepository {
 
-    public MappingTypeRepository(RelationalEntityInformation<MappingTypeDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public MappingTypeRepositoryImpl(RelationalEntityInformation<MappingTypeDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
+    @Override
     public Mono<MappingTypeDMO> findById(
             final UUID id,
             final boolean externallyVisibleOnly
@@ -87,6 +84,7 @@ public class MappingTypeRepository extends ModMappingR2DBCRepository<MappingType
      * @param pageable The paging and sorting information.
      * @return The mapping types of which the name match the regex.
      */
+    @Override
     public Mono<Page<MappingTypeDMO>> findAllBy(
             final String nameRegex,
             final Boolean editable,

@@ -10,16 +10,9 @@ import io.swagger.v3.oas.models.security.Scopes;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.modmappings.mmms.api.util.Constants;
-import org.springdoc.core.*;
-import org.springdoc.core.customizers.OperationCustomizer;
-import org.springdoc.core.customizers.ParameterCustomizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
-
-import java.util.List;
-import java.util.Optional;
 
 @Configuration
 public class OpenApiConfiguration {

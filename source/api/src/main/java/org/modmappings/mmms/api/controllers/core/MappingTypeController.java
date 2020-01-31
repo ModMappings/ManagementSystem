@@ -14,13 +14,15 @@ import org.modmappings.mmms.api.services.core.MappingTypeService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.api.util.Constants;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -58,7 +60,7 @@ public class MappingTypeController {
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<MappingTypeDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
-        return mappingTypeService.getBy(id)
+        return mappingTypeService.getBy(id, true)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -66,63 +68,7 @@ public class MappingTypeController {
     }
 
     @Operation(
-            summary = "Looks up all mapping types.",
-            parameters = {
-                    @Parameter(
-                            name = "page",
-                            in = ParameterIn.QUERY,
-                            description = "The 0-based page index to perform pagination lookup.",
-                            example = "0"
-                    ),
-                    @Parameter(
-                            name = "size",
-                            in = ParameterIn.QUERY,
-                            description = "The size of a given page.",
-                            example = "10"
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Returns all mapping types in the database."),
-            @ApiResponse(responseCode = "404",
-                    description = "Indicates that no mapping type exists in the database.",
-                    content = {
-                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                                    schema = @Schema()),
-                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema())
-                    })
-    })
-    @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Flux<MappingTypeDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-                                       final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
-                                       ServerHttpResponse response) {
-        return mappingTypeService.getAll(page, size)
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Flux.empty();
-                });
-    }
-
-    @Operation(
-            summary = "Determines the amount of all available mapping types."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Returns the count of available mapping types.")
-    })
-    @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Long> countAll(ServerHttpResponse response) {
-        return mappingTypeService.count()
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Mono.empty();
-                });
-    }
-
-    @Operation(
-            summary = "Searches through the known mapping types and finds the ones that match the given parameters.",
+            summary = "Gets all known mapping types and finds the ones that match the given parameters.",
             parameters = {
                     @Parameter(
                             name = "name",
@@ -135,18 +81,6 @@ public class MappingTypeController {
                             in = ParameterIn.QUERY,
                             description = "Indicator if filtering on editable is needed or not. Leave the parameter out if you do not care for filtering on editable.",
                             example = "false"
-                    ),
-                    @Parameter(
-                            name = "page",
-                            in = ParameterIn.QUERY,
-                            description = "The 0-based page index to perform pagination lookup.",
-                            example = "0"
-                    ),
-                    @Parameter(
-                            name = "size",
-                            in = ParameterIn.QUERY,
-                            description = "The size of a given page.",
-                            example = "10"
                     )
             }
     )
@@ -162,47 +96,13 @@ public class MappingTypeController {
                                     schema = @Schema())
                     })
     })
-    @GetMapping(value = "search", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Flux<MappingTypeDTO> search(
+    @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public Mono<Page<MappingTypeDTO>> getAll(
             final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
             final @RequestParam(name = "editable", required = false) Boolean editable,
-            final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-            final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+            final @PageableDefault(size = 25, sort="created_by") Pageable pageable,
             ServerHttpResponse response) {
-        return mappingTypeService.getAll(nameRegex, editable, page, size)
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Flux.empty();
-                });
-    }
-
-    @Operation(
-            summary = "Determines the amount of mapping types which match the given parameters.",
-            parameters = {
-                    @Parameter(
-                            name = "name",
-                            in = ParameterIn.QUERY,
-                            description = "The regular expression to match the name of the mapping type against.",
-                            example = "*"
-                    ),
-                    @Parameter(
-                            name = "editable",
-                            in = ParameterIn.QUERY,
-                            description = "Indicator if filtering on editable is needed or not. Leave the parameter out if you do not care for filtering on editable.",
-                            example = "false"
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Returns the count of available mapping types, which match the given search parameter.")
-    })
-    @GetMapping(value = "search/count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Long> countForSearch(
-            final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
-            final @RequestParam(name = "editable", required = false, defaultValue = "true") Boolean editable,
-            ServerHttpResponse response) {
-        return mappingTypeService.countForSearch(nameRegex, editable)
+        return mappingTypeService.getAll(nameRegex, editable, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -242,7 +142,7 @@ public class MappingTypeController {
     @PreAuthorize("hasRole('MAPPINGTYPES_DELETE')")
     public Mono<Void> deleteBy(@PathVariable UUID id, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> mappingTypeService.deleteBy(id, () -> userService.getCurrentUserId(principal)))
+                .flatMap(principal -> mappingTypeService.deleteBy(id, true, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -322,7 +222,7 @@ public class MappingTypeController {
     @PreAuthorize("hasRole('MAPPINGTYPES_UPDATE')")
     public Mono<MappingTypeDTO> update(@PathVariable UUID id, @RequestBody MappingTypeDTO gameVersionToUpdate, ServerWebExchange exchange) {
         return exchange.getPrincipal()
-                .flatMap(principal -> mappingTypeService.update(id, gameVersionToUpdate, () -> userService.getCurrentUserId(principal)))
+                .flatMap(principal -> mappingTypeService.update(id, gameVersionToUpdate, true, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

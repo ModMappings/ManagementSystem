@@ -1,9 +1,10 @@
-package org.modmappings.mmms.repository.repositories.mapping.mappable;
+package org.modmappings.mmms.repository.repositories.mapping.mappables.mappable;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
@@ -17,10 +18,10 @@ import java.util.UUID;
 /**
  * Represents a repository which can provide and store {@link MappableDMO} objects.
  */
-@Repository
-public class MappableRepository extends ModMappingR2DBCRepository<MappableDMO> {
+@Primary
+class MappableRepositoryImpl extends AbstractModMappingRepository<MappableDMO> implements MappableRepository {
 
-    public MappableRepository(RelationalEntityInformation<MappableDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public MappableRepositoryImpl(RelationalEntityInformation<MappableDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -32,7 +33,8 @@ public class MappableRepository extends ModMappingR2DBCRepository<MappableDMO> {
      * @param pageable The paging and sorting information.
      * @return The mappables of the given type.
      */
-    Mono<Page<MappableDMO>> findAllByType(
+    @Override
+    public Mono<Page<MappableDMO>> findAllBy(
             final MappableTypeDMO type,
             final Pageable pageable
     ) {

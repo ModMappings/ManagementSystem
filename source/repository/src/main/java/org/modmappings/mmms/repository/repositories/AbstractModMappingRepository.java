@@ -38,14 +38,14 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
  * @param <T> The type stored in the repository.
  */
 @NoRepositoryBean
-public class ModMappingR2DBCRepository<T> extends SimpleR2dbcRepository<T, UUID> implements R2dbcRepository<T, UUID> {
+public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcRepository<T, UUID> implements ModMappingRepository<T> {
 
     private final RelationalEntityInformation<T, UUID> entity;
     private final DatabaseClient databaseClient;
     private final R2dbcConverter converter;
     private final ExtendedDataAccessStrategy accessStrategy;
 
-    public ModMappingR2DBCRepository(RelationalEntityInformation<T, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public AbstractModMappingRepository(RelationalEntityInformation<T, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
         this.entity = entity;
         this.databaseClient = databaseClient;
@@ -76,6 +76,7 @@ public class ModMappingR2DBCRepository<T> extends SimpleR2dbcRepository<T, UUID>
      * @param pageable The page and sorting information.
      * @return The page that is requested.
      */
+    @Override
     public Mono<Page<T>> findAll(
             final Pageable pageable
     ) {

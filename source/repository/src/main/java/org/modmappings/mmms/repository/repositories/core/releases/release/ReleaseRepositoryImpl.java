@@ -1,41 +1,40 @@
-package org.modmappings.mmms.repository.repositories.core.release;
+package org.modmappings.mmms.repository.repositories.core.releases.release;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
-import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
-import org.springframework.data.r2dbc.core.StatementMapper;
-import org.springframework.data.r2dbc.query.Criteria;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.UUID;
 
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.reference;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
 
 /**
  * Represents a repository which can provide and store {@link ReleaseDMO} objects.
  */
-@Repository
-public class ReleaseRepository extends ModMappingR2DBCRepository<ReleaseDMO> {
+@Primary
+class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> implements ReleaseRepository {
 
-    public ReleaseRepository(RelationalEntityInformation<ReleaseDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public ReleaseRepositoryImpl(RelationalEntityInformation<ReleaseDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
+    @Override
     public Mono<ReleaseDMO> findById(
             final UUID id,
             final boolean externallyVisibleOnly
@@ -94,6 +93,7 @@ public class ReleaseRepository extends ModMappingR2DBCRepository<ReleaseDMO> {
      * @param pageable      The paging information for the query.
      * @return All releases which match the given criteria.
      */
+    @Override
     public Mono<Page<ReleaseDMO>> findAllBy(
             final String nameRegex,
             final UUID gameVersionId,

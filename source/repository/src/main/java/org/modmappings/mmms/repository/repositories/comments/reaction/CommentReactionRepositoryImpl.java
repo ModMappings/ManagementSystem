@@ -1,14 +1,14 @@
-package org.modmappings.mmms.repository.repositories.comments;
+package org.modmappings.mmms.repository.repositories.comments.reaction;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.repository.model.comments.CommentReactionDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -16,10 +16,10 @@ import java.util.UUID;
 /**
  * Represents a repository that can provide and store {@link CommentReactionDMO} objects.
  */
-@Repository
-public class CommentReactionRepository extends ModMappingR2DBCRepository<CommentReactionDMO> {
+@Primary
+class CommentReactionRepositoryImpl extends AbstractModMappingRepository<CommentReactionDMO> implements CommentReactionRepository {
 
-    public CommentReactionRepository(RelationalEntityInformation<CommentReactionDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public CommentReactionRepositoryImpl(RelationalEntityInformation<CommentReactionDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -31,6 +31,7 @@ public class CommentReactionRepository extends ModMappingR2DBCRepository<Comment
      * @return The comment reactions on the given comment.
      * @throws IllegalArgumentException in case the given {@literal commentId} is {@literal null}.
      */
+    @Override
     public Mono<Page<CommentReactionDMO>> findAllByCommentId(final UUID commentId, Pageable pageable) {
         return createPagedStarSingleWhereRequest("comment_id", commentId, pageable);
     }
@@ -44,6 +45,7 @@ public class CommentReactionRepository extends ModMappingR2DBCRepository<Comment
      * @return The comment reactions by the given user.
      * @throws IllegalArgumentException in case the given {@literal userId} is {@literal null}.
      */
+    @Override
     public Mono<Page<CommentReactionDMO>> findAllForUser(final UUID userId, final Pageable pageable)
     {
         return createPagedStarSingleWhereRequest("created_by", userId, pageable);

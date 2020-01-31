@@ -1,8 +1,9 @@
-package org.modmappings.mmms.repository.repositories.mapping.mappable;
+package org.modmappings.mmms.repository.repositories.mapping.mappables.inheritancedata;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.repository.model.mapping.mappable.InheritanceDataDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
@@ -18,10 +19,10 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 /**
  * Represents a repository which can provide and store {@link InheritanceDataDMO} objects.
  */
-@Repository
-public class InheritanceDataRepository extends ModMappingR2DBCRepository<InheritanceDataDMO> {
+@Primary
+class InheritanceDataRepositoryImpl extends AbstractModMappingRepository<InheritanceDataDMO> implements InheritanceDataRepository {
 
-    public InheritanceDataRepository(RelationalEntityInformation<InheritanceDataDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public InheritanceDataRepositoryImpl(RelationalEntityInformation<InheritanceDataDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -33,6 +34,7 @@ public class InheritanceDataRepository extends ModMappingR2DBCRepository<Inherit
      * @param pageable The pageable information in the request.
      * @return All inheritance data which indicates that the given mappable in a game version is a super type.
      */
+    @Override
     public Mono<Page<InheritanceDataDMO>> findAllForSuperType(
             final UUID superTypeVersionedMappableId,
             final Pageable pageable)
@@ -51,6 +53,7 @@ public class InheritanceDataRepository extends ModMappingR2DBCRepository<Inherit
      * @param pageable The pageable information in the request.
      * @return All inheritance data which indicates that the given mappable in a game version is a sub type.
      */
+    @Override
     public Mono<Page<InheritanceDataDMO>> findAllForSubType(
             final UUID subTypeVersionedMappableId,
             final Pageable pageable

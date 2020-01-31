@@ -1,9 +1,10 @@
-package org.modmappings.mmms.repository.repositories.mapping.mappings;
+package org.modmappings.mmms.repository.repositories.mapping.mappings.proposedmapping;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
 import org.modmappings.mmms.repository.model.mapping.mappings.ProposedMappingDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
@@ -19,10 +20,10 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 /**
  * Represents a repository that can store and provide {@link ProposedMappingDMO} objects.
  */
-@Repository
-public class ProposedMappingRepository extends ModMappingR2DBCRepository<ProposedMappingDMO> {
+@Primary
+class ProposedMappingRepositoryImpl extends AbstractModMappingRepository<ProposedMappingDMO> implements ProposedMappingRepository {
 
-    public ProposedMappingRepository(RelationalEntityInformation<ProposedMappingDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public ProposedMappingRepositoryImpl(RelationalEntityInformation<ProposedMappingDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -33,6 +34,7 @@ public class ProposedMappingRepository extends ModMappingR2DBCRepository<Propose
      * @param pageable The paging and sorting information.
      * @return The proposed mappings for the given versioned mappable.
      */
+    @Override
     public Mono<Page<ProposedMappingDMO>> findAllForVersionedMappableAndStateAndMerged(UUID versionedMappableId, Boolean state, Boolean merged, Pageable pageable)
     {
         return createPagedStarRequest(

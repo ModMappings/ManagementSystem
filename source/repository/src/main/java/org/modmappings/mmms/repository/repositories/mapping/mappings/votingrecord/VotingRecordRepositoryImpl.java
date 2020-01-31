@@ -1,9 +1,10 @@
-package org.modmappings.mmms.repository.repositories.mapping.mappings.voting;
+package org.modmappings.mmms.repository.repositories.mapping.mappings.votingrecord;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
 import org.modmappings.mmms.repository.model.mapping.mappings.voting.VotingRecordDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
@@ -19,10 +20,10 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 /**
  * Represents a repository that can store and provide {@link VotingRecordDMO} objects.
  */
-@Repository
-public class VotingRecordRepository extends ModMappingR2DBCRepository<VotingRecordDMO> {
+@Primary
+class VotingRecordRepositoryImpl extends AbstractModMappingRepository<VotingRecordDMO> implements VotingRecordRepository {
 
-    public VotingRecordRepository(RelationalEntityInformation<VotingRecordDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public VotingRecordRepositoryImpl(RelationalEntityInformation<VotingRecordDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -37,6 +38,7 @@ public class VotingRecordRepository extends ModMappingR2DBCRepository<VotingReco
      * @param pageable The paging and sorting information.
      * @return All the voting records that match the filter criteria.
      */
+    @Override
     public Mono<Page<VotingRecordDMO>> findAllForProposedMappingAndIndicationAndRescinded(
             final UUID proposedMappingId,
             final Boolean indication,

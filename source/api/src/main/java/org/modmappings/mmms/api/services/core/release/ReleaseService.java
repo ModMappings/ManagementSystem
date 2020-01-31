@@ -9,11 +9,11 @@ import org.modmappings.mmms.repository.model.comments.CommentDMO;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.model.core.release.ReleaseComponentDMO;
 import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;
-import org.modmappings.mmms.repository.repositories.comments.CommentRepository;
-import org.modmappings.mmms.repository.repositories.core.MappingTypeRepository;
-import org.modmappings.mmms.repository.repositories.core.release.ReleaseComponentRepository;
-import org.modmappings.mmms.repository.repositories.core.release.ReleaseRepository;
-import org.modmappings.mmms.repository.repositories.mapping.mappings.MappingRepository;
+import org.modmappings.mmms.repository.repositories.comments.comment.CommentRepository;
+import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
+import org.modmappings.mmms.repository.repositories.core.releases.components.ReleaseComponentRepository;
+import org.modmappings.mmms.repository.repositories.core.releases.release.ReleaseRepository;
+import org.modmappings.mmms.repository.repositories.mapping.mappings.mapping.MappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -178,8 +178,8 @@ public class ReleaseService {
     public Mono<ReleaseDTO> update(
             final UUID idToUpdate,
             final ReleaseDTO newRelease,
-            final Supplier<UUID> userIdSupplier,
-            final boolean externallyVisibleOnly) {
+            final boolean externallyVisibleOnly,
+            final Supplier<UUID> userIdSupplier) {
         return repository.findById(idToUpdate, externallyVisibleOnly)
                 .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating release: %s", idToUpdate)))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(newRelease.getId(), "Release")))

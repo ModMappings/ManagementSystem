@@ -1,7 +1,6 @@
 package org.modmappings.mmms.er2dbc.relational.core.sql;
 
 import org.springframework.data.relational.core.sql.Condition;
-import org.springframework.data.relational.core.sql.Join;
 import org.springframework.data.relational.core.sql.Table;
 
 public class Join extends AbstractSegment {

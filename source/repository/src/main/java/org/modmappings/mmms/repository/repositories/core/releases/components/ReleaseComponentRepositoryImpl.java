@@ -1,16 +1,16 @@
-package org.modmappings.mmms.repository.repositories.core.release;
+package org.modmappings.mmms.repository.repositories.core.releases.components;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
 import org.modmappings.mmms.repository.model.core.release.ReleaseComponentDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -20,10 +20,10 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 /**
  * Represents a repository which can provide and store {@link ReleaseComponentDMO} objects.
  */
-@Repository
-public class ReleaseComponentRepository extends ModMappingR2DBCRepository<ReleaseComponentDMO> {
+@Primary
+class ReleaseComponentRepositoryImpl extends AbstractModMappingRepository<ReleaseComponentDMO> implements ReleaseComponentRepository {
 
-    public ReleaseComponentRepository(RelationalEntityInformation<ReleaseComponentDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public ReleaseComponentRepositoryImpl(RelationalEntityInformation<ReleaseComponentDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -34,6 +34,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      * @param pageable The paging information for the query.
      * @return The release components which are part of the release with the given id.
      */
+    @Override
     public Mono<Page<ReleaseComponentDMO>> findAllByReleaseId(final UUID releaseId, final Pageable pageable)
     {
         return createPagedStarSingleWhereRequest("release_id", releaseId, pageable);
@@ -46,6 +47,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      * @param pageable The paging information for the query.
      * @return The release components which target the mapping with the given id.
      */
+    @Override
     public Mono<Page<ReleaseComponentDMO>> findAllByMappingId(final UUID mappingId, final Pageable pageable)
     {
         return createPagedStarSingleWhereRequest("mapping_id", mappingId, pageable);
@@ -58,6 +60,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      * @param pageable The paging information for the query.
      * @return The mappings for a package which are part of the given release.
      */
+    @Override
     public Mono<Page<UUID>> findAllMappingIdsByReleaseIdForPackage(final UUID releaseId, final Pageable pageable)
     {
         return createPagedMappingIdsByReleaseIdForTypeRequest(releaseId, MappableTypeDMO.PACKAGE, pageable);
@@ -70,6 +73,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      * @param pageable The paging information for the query.
      * @return The mappings for a class which are part of the given release.
      */
+    @Override
     public Mono<Page<UUID>> findAllMappingIdsByReleaseIdForClass(final UUID releaseId, final Pageable pageable)
     {
         return createPagedMappingIdsByReleaseIdForTypeRequest(releaseId, MappableTypeDMO.CLASS, pageable);
@@ -82,6 +86,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      * @param pageable The paging information for the query.
      * @return The mappings for a method which are part of the given release.
      */
+    @Override
     public Mono<Page<UUID>> findAllMappingIdsByReleaseIdForMethod(final UUID releaseId, final Pageable pageable)
     {
         return createPagedMappingIdsByReleaseIdForTypeRequest(releaseId, MappableTypeDMO.METHOD, pageable);
@@ -94,6 +99,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      * @param pageable The paging information for the query.
      * @return The mappings for a field which are part of the given release.
      */
+    @Override
     public Mono<Page<UUID>> findAllMappingIdsByReleaseIdForField(final UUID releaseId, final Pageable pageable)
     {
         return createPagedMappingIdsByReleaseIdForTypeRequest(releaseId, MappableTypeDMO.FIELD, pageable);
@@ -106,6 +112,7 @@ public class ReleaseComponentRepository extends ModMappingR2DBCRepository<Releas
      * @param pageable The paging information for the query.
      * @return The mappings for a parameter which are part of the given release.
      */
+    @Override
     public Mono<Page<UUID>> findAllMappingIdsByReleaseIdForParameter(final UUID releaseId, final Pageable pageable)
     {
         return createPagedMappingIdsByReleaseIdForTypeRequest(releaseId, MappableTypeDMO.PARAMETER, pageable);

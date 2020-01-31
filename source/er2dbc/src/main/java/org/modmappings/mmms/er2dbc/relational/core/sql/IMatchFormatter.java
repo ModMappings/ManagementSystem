@@ -1,7 +1,5 @@
 package org.modmappings.mmms.er2dbc.relational.core.sql;
 
-import org.springframework.data.relational.core.sql.Expression;
-
 /**
  * Allows for the formatting of the match statement in regex form based on the platform.
  */

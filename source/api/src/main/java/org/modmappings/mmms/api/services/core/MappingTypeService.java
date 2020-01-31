@@ -1,13 +1,12 @@
 package org.modmappings.mmms.api.services.core;
 
-import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.modmappings.mmms.api.model.core.MappingTypeDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
-import org.modmappings.mmms.repository.repositories.core.MappingTypeRepository;
+import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;

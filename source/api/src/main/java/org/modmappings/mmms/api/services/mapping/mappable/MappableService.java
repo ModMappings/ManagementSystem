@@ -8,9 +8,12 @@ import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundExceptio
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
-import org.modmappings.mmms.repository.repositories.mapping.mappable.IMappableRepository;
+import org.modmappings.mmms.repository.repositories.mapping.mappables.mappable.MappableRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -33,10 +36,10 @@ import java.util.function.Supplier;
 public class MappableService {
 
     private final Logger logger = LoggerFactory.getLogger(MappableService.class);
-    private final IMappableRepository repository;
+    private final MappableRepository repository;
     private final UserLoggingService userLoggingService;
 
-    public MappableService(IMappableRepository repository, UserLoggingService userLoggingService) {
+    public MappableService(MappableRepository repository, UserLoggingService userLoggingService) {
         this.repository = repository;
         this.userLoggingService = userLoggingService;
     }
@@ -57,41 +60,39 @@ public class MappableService {
 
     /**
      * Looks up multiple mappables.
-     * The returned order is newest to oldest.
      *
-     * @param page The 0-based page index used during pagination logic.
-     * @param size The maximum amount of items on a given page.
+     * @param type The type of mappables to lookup.
+     * @param pageable The pagination and sorting info for the request.
      * @return A {@link Flux} with the mappables, or an errored {@link Flux} that indicates a failure.
      */
-    public Flux<MappableDTO> getAll(int page, int size) {
-        return repository.findAll()
+    public Mono<Page<MappableDTO>> getAll(
+            final MappableTypeDTO type,
+            final Pageable pageable
+            ) {
+        return repository.findAllBy(
+                toTypeDMO(type),
+                pageable
+        )
                 .doFirst(() -> logger.debug("Looking up mappables."))
-                .skip(page * size)
-                .limitRequest(size)
-                .map(this::toDTO)
-                .doOnNext(dto -> logger.debug("Found mappable: {} with id: {}", dto.getType(), dto.getId()))
-                .switchIfEmpty(Flux.error(new NoEntriesFoundException("Mappable")));
-    }
-
-    /**
-     * Determines the amount of mappables that exist in the database.
-     *
-     * @return A {@link Mono} that indicates the amount of mappables in the database.
-     */
-    public Mono<Long> count() {
-        return repository
-                .count()
-                .doFirst(() -> logger.debug("Determining the available amount of mappables"))
-                .doOnNext((cnt) -> logger.debug("There are {} mappables available.", cnt));
+                .flatMap(page -> Flux.fromIterable(page)
+                        .map(this::toDTO)
+                        .collectList()
+                        .map(mappables -> (Page<MappableDTO>) new PageImpl<>(mappables, page.getPageable(), page.getTotalElements())))
+                .doOnNext(page -> logger.debug("Found mappables: {}", page))
+                .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mappable")));
     }
 
     /**
      * Deletes a given mappable if it exists.
      *
      * @param id The id of the mappable that should be deleted.
+     * @param userIdSupplier The provider that gives access to the user id of the currently interacting user or service.
      * @return A {@link Mono} indicating success or failure.
      */
-    public Mono<Void> deleteBy(UUID id, Supplier<UUID> userIdSupplier) {
+    public Mono<Void> deleteBy(
+            final UUID id,
+            final Supplier<UUID> userIdSupplier
+    ) {
         return repository.deleteById(id)
                 .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleting mappable with id: %s", id)))
                 .doOnNext(aVoid -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleted mappable with id: %s", id)));
@@ -101,9 +102,13 @@ public class MappableService {
      * Creates a new mappable from a type DTO and saves it in the repository.
      *
      * @param mappableTypeDMO The type dto to create a new mappable for.
+     * @param userIdSupplier The provider that gives access to the user id of the currently interacting user or service.
      * @return A {@link Mono} that indicates success or failure.
      */
-    public Mono<MappableDTO> create(MappableTypeDTO mappableTypeDMO, Supplier<UUID> userIdSupplier) {
+    public Mono<MappableDTO> create(
+            final MappableTypeDTO mappableTypeDMO,
+            final Supplier<UUID> userIdSupplier
+    ) {
         return Mono.just(mappableTypeDMO)
                 .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new mappable: %s", mappableTypeDMO)))
                 .map(dto -> this.toNewDMO(dto, userIdSupplier))
@@ -130,10 +135,16 @@ public class MappableService {
     }
 
     private MappableTypeDTO toTypeDTO(MappableTypeDMO dmo) {
+        if (dmo == null)
+            return null;
+
         return MappableTypeDTO.valueOf(MappableTypeDTO.class, dmo.name());
     }
 
     private MappableTypeDMO toTypeDMO(MappableTypeDTO dto) {
+        if (dto == null)
+            return null;
+
         return MappableTypeDMO.valueOf(MappableTypeDMO.class, dto.name());
     }
 }

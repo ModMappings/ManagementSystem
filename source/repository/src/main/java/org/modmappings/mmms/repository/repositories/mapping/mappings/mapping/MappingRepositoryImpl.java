@@ -1,4 +1,4 @@
-package org.modmappings.mmms.repository.repositories.mapping.mappings;
+package org.modmappings.mmms.repository.repositories.mapping.mappings.mapping;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
@@ -6,7 +6,8 @@ import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMappe
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +29,10 @@ import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.leftOute
 /**
  * Represents a repository which can provide and store {@link MappingDMO} objects.
  */
-@Repository
-public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
+@Primary
+class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> implements MappingRepository {
 
-    public MappingRepository(RelationalEntityInformation<MappingDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public MappingRepositoryImpl(RelationalEntityInformation<MappingDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -42,6 +43,7 @@ public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
      * @param pageable The paging and sorting information.
      * @return The mappings for the given versioned mappable.
      */
+    @Override
     public Mono<Page<MappingDMO>> findAllForVersionedMappable(UUID versionedMappableId, final Pageable pageable)
     {
         return createPagedStarSingleWhereRequest(
@@ -57,6 +59,7 @@ public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
      * @param versionedMappableId The id of the versioned mappable to get the latest mapping for.
      * @return The latest mapping for the given versioned mappable.
      */
+    @Override
     public Mono<MappingDMO> findLatestForVersionedMappable(UUID versionedMappableId)
     {
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
@@ -89,6 +92,7 @@ public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
      * @param pageable The paging and sorting information.
      * @return All mappings who' matches the given regexes and are part of the mapping type and game version if those are specified.
      */
+    @Override
     public Mono<Page<MappingDMO>> findAllForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId, Pageable pageable)
     {
         return createPagedStarRequest(selectSpecWithJoin -> {
@@ -140,6 +144,7 @@ public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
      * @param pageable The paging and sorting information.
      * @return All latest mappings who' matches the given regexes and are part of the mapping type and game version if those are specified.
      */
+    @Override
     public Mono<Page<MappingDMO>> findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId, Pageable pageable)
     {
         return createPagedStarRequest(selectSpecWithJoin -> {
@@ -191,6 +196,7 @@ public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
      * @param pageable The paging and sorting information.
      * @return All mappings which are part of a given release and are for a given mappable type.
      */
+    @Override
     public Mono<Page<MappingDMO>> findAllInReleaseAndMappableType(UUID releaseId, MappableTypeDMO type, Pageable pageable)
     {
         return createPagedStarRequest(selectSpecWithJoin -> {

@@ -1,7 +1,6 @@
 package org.modmappings.mmms.er2dbc.data.statements.criteria;
 
 import org.springframework.data.r2dbc.query.Criteria;
-import org.springframework.data.relational.core.sql.Expression;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 

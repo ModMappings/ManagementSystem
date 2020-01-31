@@ -1,8 +1,9 @@
-package org.modmappings.mmms.repository.repositories.mapping.mappable;
+package org.modmappings.mmms.repository.repositories.mapping.mappables.protectedmappableinformation;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.repository.model.mapping.mappable.ProtectedMappableInformationDMO;
-import org.modmappings.mmms.repository.repositories.ModMappingR2DBCRepository;
+import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
@@ -16,10 +17,10 @@ import java.util.UUID;
 /**
  * Represents a repository that can provide and store {@link ProtectedMappableInformationDMO} objects.
  */
-@Repository
-public class ProtectedMappableInformationRepository extends ModMappingR2DBCRepository<ProtectedMappableInformationDMO> {
+@Primary
+class ProtectedMappableInformationRepositoryImpl extends AbstractModMappingRepository<ProtectedMappableInformationDMO> implements ProtectedMappableInformationRepository {
 
-    public ProtectedMappableInformationRepository(RelationalEntityInformation<ProtectedMappableInformationDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
+    public ProtectedMappableInformationRepositoryImpl(RelationalEntityInformation<ProtectedMappableInformationDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
         super(entity, databaseClient, converter, accessStrategy);
     }
 
@@ -31,6 +32,7 @@ public class ProtectedMappableInformationRepository extends ModMappingR2DBCRepos
      * @param pageable The pageable information for request.
      * @return Protected mappable information that indicates that the versioned mappable is locked for a given mapping type.
      */
+    @Override
     public Mono<Page<ProtectedMappableInformationDMO>> findAllByVersionedMappable(
             final UUID versionedMappableId,
             final Pageable pageable
@@ -46,6 +48,7 @@ public class ProtectedMappableInformationRepository extends ModMappingR2DBCRepos
      * @param pageable The paging and sorting information.
      * @return Protected mappable information that indicates that the mapping type is locked for a given versioned mappable.
      */
+    @Override
     public Mono<Page<ProtectedMappableInformationDMO>> findAllByMappingType(
             final UUID mappingTypeId,
             final Pageable pageable

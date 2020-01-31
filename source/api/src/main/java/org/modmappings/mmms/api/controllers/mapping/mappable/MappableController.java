@@ -15,13 +15,15 @@ import org.modmappings.mmms.api.services.mapping.mappable.MappableService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.api.util.Constants;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -67,19 +69,11 @@ public class MappableController {
     }
 
     @Operation(
-            summary = "Looks up all mappables.",
+            summary = "Gets all known mappables that match the given parameters.",
             parameters = {
                     @Parameter(
-                            name = "page",
-                            in = ParameterIn.QUERY,
-                            description = "The 0-based page index to perform pagination lookup.",
-                            example = "0"
-                    ),
-                    @Parameter(
-                            name = "size",
-                            in = ParameterIn.QUERY,
-                            description = "The size of a given page.",
-                            example = "10"
+                            name = "type",
+                            description = "An optional type to limit the lookup of mappables to."
                     )
             }
     )
@@ -96,26 +90,11 @@ public class MappableController {
                     })
     })
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Flux<MappableDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-                                       final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+    public Mono<Page<MappableDTO>> getAll(
+            final @RequestParam(value = "type", required = false) MappableTypeDTO type,
+            final @PageableDefault(size = 25, sort="created_by") Pageable pageable,
                                        ServerHttpResponse response) {
-        return mappableService.getAll(page, size)
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Flux.empty();
-                });
-    }
-
-    @Operation(
-            summary = "Determines the amount of all available mappables."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Returns the count of available mappables.")
-    })
-    @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Long> countAll(ServerHttpResponse response) {
-        return mappableService.count()
+        return mappableService.getAll(type, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

@@ -1,7 +1,5 @@
 package org.modmappings.mmms.api.util;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
 public final class Constants {
     public static final String MOD_MAPPINGS_OFFICIAL_AUTH = "ModMappings Official auth";
     public static final String BEARER_AUTH_SCHEME = "bearer";
