@@ -14,6 +14,7 @@ import org.modmappings.mmms.api.services.core.release.ReleaseService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.api.util.Constants;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.*;
 
 @Tag(name = "Releases", description = "Gives access to available releases, allows existing releases to be modified and new ones to be created.")
 @RequestMapping("/releases")
@@ -95,26 +97,19 @@ public class ReleaseController {
                     })
     })
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public Flux<ReleaseDTO> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-                                       final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
-                                       ServerHttpResponse response) {
-        return releaseService.getAll(page, size)
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Flux.empty();
-                });
-    }
+    public Mono<PagedModel<ReleaseDTO>> getAll(final @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                                               final @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+                                               ServerHttpResponse response) {
+        var controller = methodOn(ReleaseController.class);
 
-    @Operation(
-            summary = "Determines the amount of all available releases."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Returns the count of available releases.")
-    })
-    @GetMapping(value = "count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Long> countAll(ServerHttpResponse response) {
-        return releaseService.count()
+        return releaseService.getAll(page, size)
+                .collectList()
+                .flatMap(collection -> releaseService.count()
+                        .flatMap(totalCount -> linkTo(controller.getAll(null, null, null)).withSelfRel()
+                                .andAffordance(controller.create(null, null, null, null))
+                                .andAffordance(controller.search(null, null, null, null, null, null, null, null, null))
+                                .toMono()
+                                .map(selfLink -> new PagedModel<ReleaseDTO>(collection, new PagedModel.PageMetadata(size, page, totalCount, (int) Math.ceil((double) totalCount / size)), selfLink))))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -194,8 +189,8 @@ public class ReleaseController {
             final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
             final @RequestParam(name = "mapping", required = false) UUID mappingId,
             final @RequestParam(name = "user", required = false) UUID userId,
-            final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
-            final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+            final @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            final @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
             ServerHttpResponse response) {
         return releaseService.search(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
@@ -333,7 +328,8 @@ public class ReleaseController {
     public Mono<ReleaseDTO> create(
             @PathVariable(name = "gameVersion") UUID gameVersionId,
             @PathVariable(name = "mappingType") UUID mappingTypeId,
-            @RequestBody ReleaseDTO newRelease, ServerWebExchange exchange) {
+            @RequestBody ReleaseDTO newRelease,
+            ServerWebExchange exchange) {
         return exchange.getPrincipal()
                 .flatMap(principal -> releaseService.create(gameVersionId, mappingTypeId, newRelease, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

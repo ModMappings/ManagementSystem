@@ -16,6 +16,7 @@ import org.modmappings.mmms.repository.repositories.core.release.ReleaseReposito
 import org.modmappings.mmms.repository.repositories.mapping.mappings.MappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -80,13 +81,12 @@ public class ReleaseService {
      * @param size The maximum amount of items on a given page.
      * @return A {@link Flux} with the releases, or an errored {@link Flux} that indicates a failure.
      */
-    public Flux<ReleaseDTO> getAll(int page, int size) {
-        return repository.findAll()
+    public Flux<ReleaseDTO> getAll(final Pageable pageable) {
+        return repository.findAll(pageable)
                 .doFirst(() -> logger.debug("Looking up releases."))
+                .
                 .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
                         .map(MappingTypeDMO::isVisible)) //Only return releases which are visible to the outside world.
-                .skip(page * size)
-                .limitRequest(size)
                 .flatMap(this::toDTO)
                 .doOnNext(dto -> logger.debug("Found release: {} with id: {}", dto.getName(), dto.getId()))
                 .switchIfEmpty(Flux.error(new NoEntriesFoundException("Release")));
