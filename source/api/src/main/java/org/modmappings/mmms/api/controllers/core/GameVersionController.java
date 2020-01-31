@@ -176,7 +176,7 @@ public class GameVersionController {
             final @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             final @RequestParam(name = "size", required = false, defaultValue = "10") int size,
             ServerHttpResponse response) {
-        return gameVersionService.search(nameRegex, isPreRelease, isSnapshot, page, size)
+        return gameVersionService.getAll(nameRegex, isPreRelease, isSnapshot, page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Flux.empty();

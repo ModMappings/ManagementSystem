@@ -33,7 +33,7 @@ public class GameVersionRepository extends ModMappingR2DBCRepository<GameVersion
      * @param pageable The paging information for the request.s
      * @return The game versions which match the given search criteria.
      */
-    Mono<Page<GameVersionDMO>> findAllBy(
+    public Mono<Page<GameVersionDMO>> findAllBy(
             final String nameRegex,
             final Boolean preRelease,
             final Boolean snapshot,
