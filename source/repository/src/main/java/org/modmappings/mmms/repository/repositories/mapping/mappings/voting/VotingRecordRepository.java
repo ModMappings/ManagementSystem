@@ -47,14 +47,14 @@ public class VotingRecordRepository extends ModMappingR2DBCRepository<VotingReco
                     selectSpecWithJoin
                         .where(() -> {
                             ColumnBasedCriteria criteria = where(reference("proposed_mapping_id")).is(parameter(proposedMappingId));
-                            criteria = nonNullEqualsCheckForWhere(
+                            criteria = nonNullAndEqualsCheckForWhere(
                                     criteria,
                                     indication,
                                     "",
                                     "is_for_vote"
                             );
 
-                            criteria = nonNullEqualsCheckForWhere(
+                            criteria = nonNullAndEqualsCheckForWhere(
                                     criteria,
                                     isRescinded,
                                     "",

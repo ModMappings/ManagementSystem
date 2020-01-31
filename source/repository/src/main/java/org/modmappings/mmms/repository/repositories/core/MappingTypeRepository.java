@@ -40,13 +40,13 @@ public class MappingTypeRepository extends ModMappingR2DBCRepository<MappingType
         return createPagedStarRequest(
                 selectSpec -> selectSpec
                         .where(() -> {
-                            ColumnBasedCriteria criteria = nonNullMatchesCheckForWhere(
+                            ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
                                     null,
                                     nameRegex,
                                     "",
                                     "name"
                             );
-                            criteria = nonNullEqualsCheckForWhere(
+                            criteria = nonNullAndEqualsCheckForWhere(
                                     criteria,
                                     editable,
                                     "",

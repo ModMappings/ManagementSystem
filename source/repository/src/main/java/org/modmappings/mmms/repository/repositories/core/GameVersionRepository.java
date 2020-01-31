@@ -43,19 +43,19 @@ public class GameVersionRepository extends ModMappingR2DBCRepository<GameVersion
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
                         .where(() -> {
-                                    ColumnBasedCriteria criteria = nonNullMatchesCheckForWhere(
+                                    ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
                                             null,
                                             nameRegex,
                                             "",
                                             "name"
                                     );
-                                    criteria = nonNullEqualsCheckForWhere(
+                                    criteria = nonNullAndEqualsCheckForWhere(
                                             criteria,
                                             preRelease,
                                             "",
                                             "is_pre_release"
                                     );
-                                    criteria = nonNullEqualsCheckForWhere(
+                                    criteria = nonNullAndEqualsCheckForWhere(
                                             criteria,
                                             snapshot,
                                             "",

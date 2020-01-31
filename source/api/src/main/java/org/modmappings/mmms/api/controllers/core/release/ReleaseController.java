@@ -192,7 +192,7 @@ public class ReleaseController {
             final @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
             final @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
             ServerHttpResponse response) {
-        return releaseService.search(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, page, size)
+        return releaseService.getAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, page, size)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Flux.empty();

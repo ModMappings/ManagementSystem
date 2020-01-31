@@ -95,25 +95,25 @@ public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
             selectSpecWithJoin
                     .join(() -> join("versioned_mappable", "vm").on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
                     .where(() -> {
-                        ColumnBasedCriteria criteria = nonNullMatchesCheckForWhere(
+                        ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
                                 null,
                                 inputRegex,
                                 "",
                                 "input"
                         );
-                        criteria = nonNullMatchesCheckForWhere(
+                        criteria = nonNullAndMatchesCheckForWhere(
                                 criteria,
                                 outputRegex,
                                 "",
                                 "output"
                         );
-                        criteria = nonNullEqualsCheckForWhere(
+                        criteria = nonNullAndEqualsCheckForWhere(
                                 criteria,
                                 mappingTypeId,
                                 "",
                                 "mapping_type_id"
                         );
-                        criteria = nonNullEqualsCheckForWhere(
+                        criteria = nonNullAndEqualsCheckForWhere(
                                 criteria,
                                 gameVersionId,
                                 "vm",
@@ -152,25 +152,25 @@ public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
                             .join(() -> join("versioned_mappable", "vm").on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
                             .where(() -> {
                                 ColumnBasedCriteria criteria = where(reference("m2", "id")).isNull();
-                                criteria = nonNullMatchesCheckForWhere(
+                                criteria = nonNullAndMatchesCheckForWhere(
                                         criteria,
                                         inputRegex,
                                         "",
                                         "input"
                                 );
-                                criteria = nonNullMatchesCheckForWhere(
+                                criteria = nonNullAndMatchesCheckForWhere(
                                         criteria,
                                         outputRegex,
                                         "",
                                         "output"
                                 );
-                                criteria = nonNullEqualsCheckForWhere(
+                                criteria = nonNullAndEqualsCheckForWhere(
                                         criteria,
                                         mappingTypeId,
                                         "",
                                         "mapping_type_id"
                                 );
-                                criteria = nonNullEqualsCheckForWhere(
+                                criteria = nonNullAndEqualsCheckForWhere(
                                         criteria,
                                         gameVersionId,
                                         "vm",
@@ -203,7 +203,7 @@ public class MappingRepository extends ModMappingR2DBCRepository<MappingDMO> {
                                     .on(() -> on(reference("vm", "mappable_id")).is(reference("mp", "id"))))
                     .where(() -> {
                         ColumnBasedCriteria criteria = where(reference("rc", "release_id")).is(parameter(releaseId));
-                        criteria = nonNullEqualsCheckForWhere(
+                        criteria = nonNullAndEqualsCheckForWhere(
                                 criteria,
                                 type,
                                 "mp",

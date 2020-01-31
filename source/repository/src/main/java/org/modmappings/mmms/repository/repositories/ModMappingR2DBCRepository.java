@@ -187,7 +187,7 @@ public class ModMappingR2DBCRepository<T> extends SimpleR2dbcRepository<T, UUID>
                 pageable);
     }
 
-    protected ColumnBasedCriteria nonNullMatchesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable Object parameter, @NonNull String tableName, @NonNull String columnName) {
+    protected ColumnBasedCriteria nonNullAndMatchesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable Object parameter, @NonNull String tableName, @NonNull String columnName) {
         if (parameter != null) {
             if (criteria == null) {
                 return where(reference(tableName, columnName)).matches(parameter(parameter));
@@ -201,7 +201,7 @@ public class ModMappingR2DBCRepository<T> extends SimpleR2dbcRepository<T, UUID>
         return criteria;
     }
 
-    protected ColumnBasedCriteria nonNullEqualsCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable Object parameter, @NonNull String tableName, @NonNull String columnName) {
+    protected ColumnBasedCriteria nonNullAndEqualsCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable Object parameter, @NonNull String tableName, @NonNull String columnName) {
         if (parameter != null) {
             if (criteria == null) {
                 return where(reference(tableName, columnName)).is(parameter(parameter));

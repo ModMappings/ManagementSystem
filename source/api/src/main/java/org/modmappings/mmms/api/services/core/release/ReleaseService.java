@@ -16,12 +16,15 @@ import org.modmappings.mmms.repository.repositories.core.release.ReleaseReposito
 import org.modmappings.mmms.repository.repositories.mapping.mappings.MappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -61,50 +64,20 @@ public class ReleaseService {
      * Looks up a release with a given id.
      *
      * @param id The id to look the release up for.
+     * @param externallyVisibleOnly Indicator if only externally visible releases should be taken into account.
      * @return A {@link Mono} containing the requested release or a errored {@link Mono} that indicates a failure.
      */
-    public Mono<ReleaseDTO> getBy(UUID id) {
-        return repository.findById(id)
+    public Mono<ReleaseDTO> getBy(
+            final UUID id,
+            final boolean externallyVisibleOnly
+    ) {
+        return repository.findById(id, externallyVisibleOnly)
                 .doFirst(() -> logger.debug("Looking up a release by id: {}", id))
                 .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
                         .map(MappingTypeDMO::isVisible)) //Only return a release when it is supposed to be visible.
                 .flatMap(this::toDTO)
                 .doOnNext(dto -> logger.debug("Found release: {} with id: {}", dto.getName(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Release")));
-    }
-
-    /**
-     * Looks up multiple releases.
-     * The returned order is newest to oldest.
-     *
-     * @param page The 0-based page index used during pagination logic.
-     * @param size The maximum amount of items on a given page.
-     * @return A {@link Flux} with the releases, or an errored {@link Flux} that indicates a failure.
-     */
-    public Flux<ReleaseDTO> getAll(final Pageable pageable) {
-        return repository.findAll(pageable)
-                .doFirst(() -> logger.debug("Looking up releases."))
-                .
-                .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
-                        .map(MappingTypeDMO::isVisible)) //Only return releases which are visible to the outside world.
-                .flatMap(this::toDTO)
-                .doOnNext(dto -> logger.debug("Found release: {} with id: {}", dto.getName(), dto.getId()))
-                .switchIfEmpty(Flux.error(new NoEntriesFoundException("Release")));
-    }
-
-    /**
-     * Determines the amount of releases that exist in the database.
-     *
-     * @return A {@link Mono} that indicates the amount of releases in the database.
-     */
-    public Mono<Long> count() {
-        return repository
-                .findAll()
-                .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
-                        .map(MappingTypeDMO::isVisible)) //Only count releases which are visible to the outside world.
-                .count()
-                .doFirst(() -> logger.debug("Determining the available amount of releases"))
-                .doOnNext((cnt) -> logger.debug("There are {} releases available.", cnt));
     }
 
     /**
@@ -117,65 +90,43 @@ public class ReleaseService {
      * @param isSnapshot Indicate if snapshots should be included or not.
      * @param mappingId The id of the mapping to filter releases on.
      * @param userId The id of the creating user to filter releases on.
-     * @param page The 0-based page index used during pagination logic.
-     * @param size The maximum amount of items on a given page.
+     * @param externallyVisibleOnly Indicates if only externally visible releases (those for visible mapping types) should be returned.
+     *                              This value should be true for any call coming from an api endpoint.
+     * @param pageable The paging and sorting information for the request.
      * @return A {@link Flux} with the releases, or an errored {@link Flux} that indicates a failure.
      */
-    public Flux<ReleaseDTO> search(String nameRegex,
-                                   UUID gameVersionId,
-                                   UUID mappingTypeId,
-                                   Boolean isSnapshot,
-                                   UUID mappingId,
-                                   UUID userId,
-                                   int page,
-                                   int size) {
-        return repository.findAllFor(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId)
-                .doFirst(() -> logger.debug("Looking up releases in search mode: {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingId, isSnapshot, mappingId, userId))
-                .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
-                        .map(MappingTypeDMO::isVisible)) //Only return releases which are not visible to the outside world.
-                .skip(page * size)
-                .limitRequest(size)
-                .flatMap(this::toDTO)
-                .doOnNext(dto -> logger.debug("Found release: {} with id: {}", dto.getName(), dto.getId()))
-                .switchIfEmpty(Flux.error(new NoEntriesFoundException("Release")));
-    }
-
-    /**
-     * Counts the releases, that match the search criteria.
-     *
-     * @param nameRegex The regex to filter the name on-
-     * @param gameVersionId The id of the game version to filter releases on.
-     * @param mappingTypeId The id of the mapping type to filter releases on.
-     * @param isSnapshot Indicate if snapshots should be included or not.
-     * @param mappingId The id of the mapping to filter releases on.
-     * @param userId The id of the creating user to filter releases on.
-     * @return A {@link Mono} with the count, or an errored {@link Mono} that indicates a failure.
-     */
-    public Mono<Long> countForSearch(String nameRegex,
-                                     UUID gameVersionId,
-                                     UUID mappingTypeId,
-                                     Boolean isSnapshot,
-                                     UUID mappingId,
-                                     UUID userId) {
-        return repository.findAllFor(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId)
-                .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
-                        .map(MappingTypeDMO::isVisible)) //Exclude all releases for mapping types which are not visible to the outside world.
-                .count()
-                .doFirst(() -> logger.debug("Counting releases in search mode: {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingId, isSnapshot, mappingId, userId))
-                .doOnNext(cnt -> logger.debug("Found releases: {}", cnt));
+    public Mono<Page<ReleaseDTO>> getAllBy(final String nameRegex,
+                               final UUID gameVersionId,
+                               final UUID mappingTypeId,
+                               final Boolean isSnapshot,
+                               final UUID mappingId,
+                               final UUID userId,
+                               final boolean externallyVisibleOnly,
+                               final Pageable pageable) {
+        return repository.findAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable)
+                .doFirst(() -> logger.debug("Looking up releases: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
+                .flatMap(page -> Flux.fromIterable(page)
+                    .flatMap(this::toDTO)
+                    .collectList()
+                    .map(releases -> (Page<ReleaseDTO>) new PageImpl<>(releases, page.getPageable(), page.getTotalElements())))
+                .doOnNext(page -> logger.debug("Found releases: {}", page))
+                .switchIfEmpty(Mono.error(new NoEntriesFoundException("Release")));
     }
 
     /**
      * Deletes a given release if it exists.
      *
      * @param id The id of the release that should be deleted.
+     * @param externallyVisibleOnly Indicator if only externally visible releases should be taken into account.
+     * @param userIdSupplier A provider that gives access to the id of the current user.
      * @return A {@link Mono} indicating success or failure.
      */
-    public Mono<Void> deleteBy(UUID id, Supplier<UUID> userIdSupplier) {
+    public Mono<Void> deleteBy(
+            final UUID id,
+            final boolean externallyVisibleOnly,
+            final Supplier<UUID> userIdSupplier) {
         return repository
-                .findById(id)
-                .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
-                        .map(MappingTypeDMO::isVisible)) //Only allow deletion if the mapping type is even visible to the outside world.
+                .findById(id, externallyVisibleOnly)
                 .flatMap(dmo -> repository.deleteById(id)
                         .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleting release with id: %s", id)))
                         .doOnNext(aVoid -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleted release with id: %s", id))));
@@ -188,16 +139,23 @@ public class ReleaseService {
      * @param gameVersionId The id of the game version to create a new release for.
      * @param mappingTypeId The id of the mapping type to create a new release for.
      * @param newRelease The dto to create a new release from.
+     * @param userIdSupplier The provider that gives access to the user id of the current interacting user or system.
      * @return A {@link Mono} that indicates success or failure.
      */
-    public Mono<ReleaseDTO> create(UUID gameVersionId, UUID mappingTypeId, ReleaseDTO newRelease, Supplier<UUID> userIdSupplier) {
+    public Mono<ReleaseDTO> create(
+            final UUID gameVersionId,
+            final UUID mappingTypeId,
+            final ReleaseDTO newRelease,
+            final Supplier<UUID> userIdSupplier
+    ) {
         return mappingTypeRepository.findById(mappingTypeId)
                 .filter(MappingTypeDMO::isVisible)
                 .flatMap(mdto -> Mono.just(newRelease)
                         .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new release: %s", newRelease.getName())))
                         .map(dto -> this.toNewDMO(gameVersionId, mappingTypeId, dto, userIdSupplier))
                         .flatMap(repository::save) //Creates the release object in the database
-                        .flatMap(dmo -> mappingRepository.findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(null, null, mappingTypeId, gameVersionId) // Gets all latest mappings of the mapping type and game version.
+                        .flatMap(dmo -> mappingRepository.findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(null, null, mappingTypeId, gameVersionId, Pageable.unpaged()) // Gets all latest mappings of the mapping type and game version.
+                                .flatMapIterable(Function.identity()) //Unwrap the page.
                                 .map(mdmo -> new ReleaseComponentDMO(dmo.getId(), mdmo.getId())) //Turns them into release components.
                                 .collect(Collectors.toList()) //Collects them
                                 .map(releaseComponentRepository::saveAll) //Saves them all in one go in the DB.
@@ -212,12 +170,17 @@ public class ReleaseService {
      * Updates an existing release with the data in the dto and saves it in the repo.
      *
      * @param newRelease The dto to update the data in the dmo with.
+     * @param idToUpdate The id of the dmo to update with the data from the dto.
+     * @param externallyVisibleOnly Indicates if updates are only allowed to happen on externally visible releases.
+     * @param userIdSupplier The supplier for the user id of the current interacting user or system.
      * @return A {@link Mono} that indicates success or failure.
      */
-    public Mono<ReleaseDTO> update(UUID idToUpdate, ReleaseDTO newRelease, Supplier<UUID> userIdSupplier) {
-        return repository.findById(idToUpdate)
-                .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
-                        .map(MappingTypeDMO::isVisible))
+    public Mono<ReleaseDTO> update(
+            final UUID idToUpdate,
+            final ReleaseDTO newRelease,
+            final Supplier<UUID> userIdSupplier,
+            final boolean externallyVisibleOnly) {
+        return repository.findById(idToUpdate, externallyVisibleOnly)
                 .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating release: %s", idToUpdate)))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(newRelease.getId(), "Release")))
                 .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating db release: %s with id: %s, and data: %s", dmo.getName(), dmo.getId(), newRelease)))
@@ -237,17 +200,23 @@ public class ReleaseService {
      * @return The release DMO in a Mono.
      */
     private Mono<ReleaseDTO> toDTO(ReleaseDMO dmo) {
-        return releaseComponentRepository.findAllPackageMappingIdsForRelease(dmo.getId())
+        return releaseComponentRepository.findAllMappingIdsByReleaseIdForPackage(dmo.getId(), Pageable.unpaged())
+            .flatMapIterable(Function.identity())
             .collect(Collectors.toSet())
-            .flatMap(packageComponents -> releaseComponentRepository.findAllClassMappingIdsForRelease(dmo.getId())
+            .flatMap(packageComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForClass(dmo.getId(), Pageable.unpaged())
+                .flatMapIterable(Function.identity())
                 .collect(Collectors.toSet())
-                .flatMap(classComponents -> releaseComponentRepository.findAllMethodMappingIdsForRelease(dmo.getId())
+                .flatMap(classComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForMethod(dmo.getId(), Pageable.unpaged())
+                        .flatMapIterable(Function.identity())
                         .collect(Collectors.toSet())
-                        .flatMap(methodComponents -> releaseComponentRepository.findAllFieldMappingIdsForRelease(dmo.getId())
+                        .flatMap(methodComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForField(dmo.getId(), Pageable.unpaged())
+                                .flatMapIterable(Function.identity())
                                 .collect(Collectors.toSet())
-                                .flatMap(fieldComponents -> releaseComponentRepository.findAllParameterMappingIdsForRelease(dmo.getId())
+                                .flatMap(fieldComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForParameter(dmo.getId(), Pageable.unpaged())
+                                        .flatMapIterable(Function.identity())
                                         .collect(Collectors.toSet())
-                                        .flatMap(parameterComponents -> commentRepository.findAllForRelease(dmo.getId())
+                                        .flatMap(parameterComponents -> commentRepository.findAllForRelease(dmo.getId(), Pageable.unpaged())
+                                                .flatMapIterable(Function.identity())
                                                 .collect(Collectors.toSet())
                                                 .map(comments -> comments.stream().map(CommentDMO::getId).collect(Collectors.toSet()))
                                                 .map(comments -> new ReleaseDTO(
