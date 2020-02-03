@@ -1,5 +1,9 @@
 package org.modmappings.mmms.er2dbc.data.statements.builder;
 
+import org.modmappings.mmms.er2dbc.relational.core.sql.From;
+import org.modmappings.mmms.er2dbc.relational.core.sql.Join;
+import org.modmappings.mmms.er2dbc.relational.core.sql.Select;
+import org.modmappings.mmms.er2dbc.relational.core.sql.Where;
 import org.springframework.data.relational.core.sql.*;
 import org.springframework.lang.Nullable;
 
@@ -73,8 +77,6 @@ public class ExtendedSelectValidator implements Visitor {
      */
     @Override
     public void enter(Visitable segment) {
-
-
 
         if (segment instanceof Select) {
             selects.push((Select) segment);

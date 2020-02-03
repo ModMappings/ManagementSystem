@@ -13,10 +13,10 @@ import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,10 +24,11 @@ import java.util.UUID;
  * Represents a repository which provides and stores {@link MappingTypeDMO} objects.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingTypeDMO> implements MappingTypeRepository {
 
-    public MappingTypeRepositoryImpl(RelationalEntityInformation<MappingTypeDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public MappingTypeRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, MappingTypeDMO.class);
     }
 
     @Override

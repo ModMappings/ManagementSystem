@@ -9,19 +9,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.UUID;
 
 /**
  * Represents a repository that can provide and store {@link ProtectedMappableInformationDMO} objects.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 class ProtectedMappableInformationRepositoryImpl extends AbstractModMappingRepository<ProtectedMappableInformationDMO> implements ProtectedMappableInformationRepository {
 
-    public ProtectedMappableInformationRepositoryImpl(RelationalEntityInformation<ProtectedMappableInformationDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public ProtectedMappableInformationRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, ProtectedMappableInformationDMO.class);
     }
 
     /**

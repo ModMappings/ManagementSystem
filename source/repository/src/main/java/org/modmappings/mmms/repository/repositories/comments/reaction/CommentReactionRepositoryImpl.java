@@ -11,16 +11,18 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.UUID;
 
 /**
  * Represents a repository that can provide and store {@link CommentReactionDMO} objects.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 class CommentReactionRepositoryImpl extends AbstractModMappingRepository<CommentReactionDMO> implements CommentReactionRepository {
 
-    public CommentReactionRepositoryImpl(RelationalEntityInformation<CommentReactionDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public CommentReactionRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, CommentReactionDMO.class);
     }
 
     /**

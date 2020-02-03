@@ -12,9 +12,11 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.r2dbc.repository.support.SimpleR2dbcRepository;
+import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
 import org.springframework.data.relational.core.sql.Functions;
 import org.springframework.data.relational.core.sql.Table;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
+import org.springframework.data.relational.repository.support.MappingRelationalEntityInformation;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -25,6 +27,8 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
 
@@ -45,11 +49,11 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
     private final R2dbcConverter converter;
     private final ExtendedDataAccessStrategy accessStrategy;
 
-    public AbstractModMappingRepository(RelationalEntityInformation<T, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
-        this.entity = entity;
+    public AbstractModMappingRepository(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy, Class<T> entityClass) {
+        super(new MappingRelationalEntityInformation<>((RelationalPersistentEntity<T>) accessStrategy.getConverter().getMappingContext().getRequiredPersistentEntity(entityClass)), databaseClient, accessStrategy.getConverter(), accessStrategy);
+        this.entity = new MappingRelationalEntityInformation<>((RelationalPersistentEntity<T>) accessStrategy.getConverter().getMappingContext().getRequiredPersistentEntity(entityClass));
         this.databaseClient = databaseClient;
-        this.converter = converter;
+        this.converter = accessStrategy.getConverter();
         this.accessStrategy = accessStrategy;
     }
 
@@ -81,9 +85,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
             final Pageable pageable
     ) {
         return createPagedStarRequest(
-                selectSpecWithJoin -> {
-                    //Noop the default works here!
-                },
+                UnaryOperator.identity(),
                 pageable
         );
     }
@@ -95,10 +97,10 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
 
         List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
 
-        selectSpec
+        final SelectSpecWithJoin selectSpecWithProj = selectSpec
                 .withProjectionFromColumnName(columns);
 
-        return createFindRequest(selectSpec, this.getEntity().getJavaType(), pageable);
+        return createFindRequest(selectSpecWithProj, this.getEntity().getJavaType(), pageable);
     }
 
     protected <R> Flux<R> createFindRequest(final SelectSpecWithJoin selectSpec, final Class<R> resultType, final Pageable pageable)
@@ -106,11 +108,11 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         Assert.notNull(selectSpec, "SelectSpec must not be null");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        selectSpec
+        final SelectSpecWithJoin selectSpecWithPagination = selectSpec
                 .withPage(pageable);
 
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
+        PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithPagination);
 
         return this.getDatabaseClient().execute(operation) //
                 .as(resultType) //
@@ -123,11 +125,11 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         Assert.notNull(selectSpec, "SelectSpec must not be null");
 
         Table table = Table.create(this.entity.getTableName());
-        selectSpec
+        final SelectSpecWithJoin selectSpecWithProj = selectSpec
                 .setProjection(spring(Functions.count(table.column(getIdColumnName()))));
 
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
+        PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
 
         return this.getDatabaseClient().execute(operation) //
                 .map((r, md) -> r.get(0, Long.class)) //
@@ -143,7 +145,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
                         .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
     }
 
-    protected <R> Mono<Page<R>> createPagedRequest(final Consumer<SelectSpecWithJoin> selectSpecBuilder, final Class<R> resultType, final Pageable pageable)
+    protected <R> Mono<Page<R>> createPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final Class<R> resultType, final Pageable pageable)
     {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
@@ -151,7 +153,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
         SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
 
-        selectSpecBuilder.accept(selectSpec);
+        selectSpec = selectSpecBuilder.apply(selectSpec);
 
         return createPagedRequest(selectSpec, resultType, pageable);
     }
@@ -164,7 +166,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
                         .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
     }
 
-    protected Mono<Page<T>> createPagedStarRequest(final Consumer<SelectSpecWithJoin> selectSpecBuilder, final Pageable pageable)
+    protected Mono<Page<T>> createPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final Pageable pageable)
     {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
@@ -172,7 +174,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
         SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
 
-        selectSpecBuilder.accept(selectSpec);
+        selectSpec = selectSpecBuilder.apply(selectSpec);
 
         return createPagedStarRequest(selectSpec, pageable);
     }

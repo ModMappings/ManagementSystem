@@ -16,9 +16,9 @@ import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,10 +30,11 @@ import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.leftOute
  * Represents a repository which can provide and store {@link MappingDMO} objects.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> implements MappingRepository {
 
-    public MappingRepositoryImpl(RelationalEntityInformation<MappingDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public MappingRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, MappingDMO.class);
     }
 
     /**
@@ -95,37 +96,35 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
     @Override
     public Mono<Page<MappingDMO>> findAllForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId, Pageable pageable)
     {
-        return createPagedStarRequest(selectSpecWithJoin -> {
-            selectSpecWithJoin
-                    .join(() -> join("versioned_mappable", "vm").on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
-                    .where(() -> {
-                        ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
-                                null,
-                                inputRegex,
-                                "",
-                                "input"
-                        );
-                        criteria = nonNullAndMatchesCheckForWhere(
-                                criteria,
-                                outputRegex,
-                                "",
-                                "output"
-                        );
-                        criteria = nonNullAndEqualsCheckForWhere(
-                                criteria,
-                                mappingTypeId,
-                                "",
-                                "mapping_type_id"
-                        );
-                        criteria = nonNullAndEqualsCheckForWhere(
-                                criteria,
-                                gameVersionId,
-                                "vm",
-                                "game_version_id"
-                        );
-                        return criteria;
-                    });
-            },
+        return createPagedStarRequest(selectSpecWithJoin -> selectSpecWithJoin
+                .join(() -> join("versioned_mappable", "vm").on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
+                .where(() -> {
+                    ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
+                            null,
+                            inputRegex,
+                            "",
+                            "input"
+                    );
+                    criteria = nonNullAndMatchesCheckForWhere(
+                            criteria,
+                            outputRegex,
+                            "",
+                            "output"
+                    );
+                    criteria = nonNullAndEqualsCheckForWhere(
+                            criteria,
+                            mappingTypeId,
+                            "",
+                            "mapping_type_id"
+                    );
+                    criteria = nonNullAndEqualsCheckForWhere(
+                            criteria,
+                            gameVersionId,
+                            "vm",
+                            "game_version_id"
+                    );
+                    return criteria;
+                }),
             pageable
         );
     }
@@ -147,43 +146,41 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
     @Override
     public Mono<Page<MappingDMO>> findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId, Pageable pageable)
     {
-        return createPagedStarRequest(selectSpecWithJoin -> {
-                    selectSpecWithJoin
-                            .join(() -> leftOuterJoin("mapping", "m2").on(() ->
-                                            on(reference("versioned_mappable_id")).is(reference("m2", "versioned_mappable_id"))
-                                                .and(reference("mapping_type_id")).is(reference("m2", "versioned_mappable_id"))
-                                                .and(reference("created_on")).lessThan(reference("m2", "versioned_mappable_id")))
-                            )
-                            .join(() -> join("versioned_mappable", "vm").on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
-                            .where(() -> {
-                                ColumnBasedCriteria criteria = where(reference("m2", "id")).isNull();
-                                criteria = nonNullAndMatchesCheckForWhere(
-                                        criteria,
-                                        inputRegex,
-                                        "",
-                                        "input"
-                                );
-                                criteria = nonNullAndMatchesCheckForWhere(
-                                        criteria,
-                                        outputRegex,
-                                        "",
-                                        "output"
-                                );
-                                criteria = nonNullAndEqualsCheckForWhere(
-                                        criteria,
-                                        mappingTypeId,
-                                        "",
-                                        "mapping_type_id"
-                                );
-                                criteria = nonNullAndEqualsCheckForWhere(
-                                        criteria,
-                                        gameVersionId,
-                                        "vm",
-                                        "game_version_id"
-                                );
-                                return criteria;
-                            });
-                },
+        return createPagedStarRequest(selectSpecWithJoin -> selectSpecWithJoin
+                .join(() -> leftOuterJoin("mapping", "m2").on(() ->
+                                on(reference("versioned_mappable_id")).is(reference("m2", "versioned_mappable_id"))
+                                    .and(reference("mapping_type_id")).is(reference("m2", "versioned_mappable_id"))
+                                    .and(reference("created_on")).lessThan(reference("m2", "versioned_mappable_id")))
+                )
+                .join(() -> join("versioned_mappable", "vm").on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
+                .where(() -> {
+                    ColumnBasedCriteria criteria = where(reference("m2", "id")).isNull();
+                    criteria = nonNullAndMatchesCheckForWhere(
+                            criteria,
+                            inputRegex,
+                            "",
+                            "input"
+                    );
+                    criteria = nonNullAndMatchesCheckForWhere(
+                            criteria,
+                            outputRegex,
+                            "",
+                            "output"
+                    );
+                    criteria = nonNullAndEqualsCheckForWhere(
+                            criteria,
+                            mappingTypeId,
+                            "",
+                            "mapping_type_id"
+                    );
+                    criteria = nonNullAndEqualsCheckForWhere(
+                            criteria,
+                            gameVersionId,
+                            "vm",
+                            "game_version_id"
+                    );
+                    return criteria;
+                }),
                 pageable
         );
     }
@@ -199,25 +196,23 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
     @Override
     public Mono<Page<MappingDMO>> findAllInReleaseAndMappableType(UUID releaseId, MappableTypeDMO type, Pageable pageable)
     {
-        return createPagedStarRequest(selectSpecWithJoin -> {
-                selectSpecWithJoin
-                    .join(() -> join("release_component", "rc")
-                                    .on(() -> on(reference("id")).is(reference("rc", "mappable_Id"))))
-                    .join(() -> join("versioned_mappable", "vm")
-                                    .on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
-                    .join(() -> join("mappable", "mp")
-                                    .on(() -> on(reference("vm", "mappable_id")).is(reference("mp", "id"))))
-                    .where(() -> {
-                        ColumnBasedCriteria criteria = where(reference("rc", "release_id")).is(parameter(releaseId));
-                        criteria = nonNullAndEqualsCheckForWhere(
-                                criteria,
-                                type,
-                                "mp",
-                                "type"
-                        );
-                        return criteria;
-                    });
-            },
+        return createPagedStarRequest(selectSpecWithJoin -> selectSpecWithJoin
+            .join(() -> join("release_component", "rc")
+                            .on(() -> on(reference("id")).is(reference("rc", "mappable_Id"))))
+            .join(() -> join("versioned_mappable", "vm")
+                            .on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
+            .join(() -> join("mappable", "mp")
+                            .on(() -> on(reference("vm", "mappable_id")).is(reference("mp", "id"))))
+            .where(() -> {
+                ColumnBasedCriteria criteria = where(reference("rc", "release_id")).is(parameter(releaseId));
+                criteria = nonNullAndEqualsCheckForWhere(
+                        criteria,
+                        type,
+                        "mp",
+                        "type"
+                );
+                return criteria;
+            }),
             pageable
         );
     }

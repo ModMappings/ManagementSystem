@@ -2,7 +2,10 @@ package org.modmappings.mmms.api.configuration;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.IssuerUriCondition;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
@@ -11,6 +14,8 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -24,8 +29,15 @@ import java.util.stream.Collectors;
 @EnableWebFluxSecurity
 public class WebSecurityConfiguration {
 
+    private final OAuth2ResourceServerProperties.Jwt properties;
+
+    public WebSecurityConfiguration(OAuth2ResourceServerProperties properties) {
+        this.properties = properties.getJwt();
+    }
+
+
     @Bean
-    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
             .authorizeExchange(exchanges ->
                    exchanges.anyExchange().permitAll()

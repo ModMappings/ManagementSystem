@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+	implementation project(':source:er2dbc')
     implementation project(':source:repository')
 
 	implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
@@ -33,8 +34,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-    implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.2.26'
+	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.2.26'
 	implementation 'org.springdoc:springdoc-openapi-security:1.2.26'
     implementation 'org.flywaydb:flyway-core:6.1.4'
     implementation 'io.r2dbc:r2dbc-postgresql'

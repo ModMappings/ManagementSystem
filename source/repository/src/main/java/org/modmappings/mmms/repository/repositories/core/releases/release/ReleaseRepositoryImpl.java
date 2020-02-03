@@ -17,6 +17,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,10 +29,11 @@ import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
  * Represents a repository which can provide and store {@link ReleaseDMO} objects.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> implements ReleaseRepository {
 
-    public ReleaseRepositoryImpl(RelationalEntityInformation<ReleaseDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public ReleaseRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, ReleaseDMO.class);
     }
 
     @Override

@@ -13,9 +13,11 @@ import org.modmappings.mmms.api.model.core.release.ReleaseDTO;
 import org.modmappings.mmms.api.services.core.release.ReleaseService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
+import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
 import org.modmappings.mmms.api.util.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -121,6 +123,7 @@ public class ReleaseController {
                     })
     })
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PageableAsQueryParam
     public Mono<Page<ReleaseDTO>> getAll(
             final @RequestParam(name = "nameRegex", required = false) String nameRegex,
             final @RequestParam(name = "gameVersion", required = false) UUID gameVersionId,
@@ -128,7 +131,7 @@ public class ReleaseController {
             final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
             final @RequestParam(name = "mapping", required = false) UUID mappingId,
             final @RequestParam(name = "user", required = false) UUID userId,
-            final @PageableDefault(size = 25, sort="created_by") Pageable pageable,
+            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
             ServerHttpResponse response) {
         return releaseService.getAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

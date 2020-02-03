@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
@@ -20,10 +20,11 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
  * Represents a repository which can provide and store {@link InheritanceDataDMO} objects.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 class InheritanceDataRepositoryImpl extends AbstractModMappingRepository<InheritanceDataDMO> implements InheritanceDataRepository {
 
-    public InheritanceDataRepositoryImpl(RelationalEntityInformation<InheritanceDataDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public InheritanceDataRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, InheritanceDataDMO.class);
     }
 
     /**

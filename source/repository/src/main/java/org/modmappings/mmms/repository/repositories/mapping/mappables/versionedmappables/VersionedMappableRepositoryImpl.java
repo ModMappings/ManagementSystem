@@ -14,9 +14,9 @@ import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,10 +26,11 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
  * Represents a repository which can provide and store {@link VersionedMappableDMO} objects.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 public class VersionedMappableRepositoryImpl extends AbstractModMappingRepository<VersionedMappableDMO> implements VersionedMappableRepository {
 
-    public VersionedMappableRepositoryImpl(RelationalEntityInformation<VersionedMappableDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public VersionedMappableRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, VersionedMappableDMO.class);
     }
 
     /**

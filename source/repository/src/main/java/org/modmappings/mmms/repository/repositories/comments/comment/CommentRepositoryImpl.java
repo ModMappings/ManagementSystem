@@ -11,6 +11,7 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.UUID;
 
 /**
@@ -19,10 +20,11 @@ import java.util.UUID;
  * Uses the methods that are part of the {@link AbstractModMappingRepository} to build querries if possible.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 class CommentRepositoryImpl extends AbstractModMappingRepository<CommentDMO> implements CommentRepository {
 
-    public CommentRepositoryImpl(RelationalEntityInformation<CommentDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public CommentRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, CommentDMO.class);
     }
 
     /**

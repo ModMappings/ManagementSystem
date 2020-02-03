@@ -10,19 +10,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Priority;
 import java.util.UUID;
 
 /**
  * Represents a repository which can provide and store {@link MappableDMO} objects.
  */
 @Primary
+@Priority(Integer.MAX_VALUE)
 class MappableRepositoryImpl extends AbstractModMappingRepository<MappableDMO> implements MappableRepository {
 
-    public MappableRepositoryImpl(RelationalEntityInformation<MappableDMO, UUID> entity, DatabaseClient databaseClient, R2dbcConverter converter, ExtendedDataAccessStrategy accessStrategy) {
-        super(entity, databaseClient, converter, accessStrategy);
+    public MappableRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+        super(databaseClient, accessStrategy, MappableDMO.class);
     }
 
     /**

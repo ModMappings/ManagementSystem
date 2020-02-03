@@ -13,9 +13,11 @@ import org.modmappings.mmms.api.model.core.MappingTypeDTO;
 import org.modmappings.mmms.api.services.core.MappingTypeService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
+import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
 import org.modmappings.mmms.api.util.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -97,10 +99,11 @@ public class MappingTypeController {
                     })
     })
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PageableAsQueryParam
     public Mono<Page<MappingTypeDTO>> getAll(
             final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
             final @RequestParam(name = "editable", required = false) Boolean editable,
-            final @PageableDefault(size = 25, sort="created_by") Pageable pageable,
+            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
             ServerHttpResponse response) {
         return mappingTypeService.getAll(nameRegex, editable, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

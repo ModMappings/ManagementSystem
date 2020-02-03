@@ -9,6 +9,7 @@ import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.Scopes;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.modmappings.mmms.api.springdoc.PageableSupportConverter;
 import org.modmappings.mmms.api.util.Constants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -75,5 +76,10 @@ public class OpenApiConfiguration {
                     .url("http://localhost:8080")
                     .description("The local development server url.")
                 );
+    }
+
+    @Bean
+    public PageableSupportConverter pageableSupportConverter() {
+        return new PageableSupportConverter();
     }
 }

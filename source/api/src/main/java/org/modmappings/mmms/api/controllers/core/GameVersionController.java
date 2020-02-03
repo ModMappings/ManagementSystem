@@ -10,12 +10,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
+import org.modmappings.mmms.api.model.util.PaginationData;
 import org.modmappings.mmms.api.services.core.GameVersionService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
+import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
 import org.modmappings.mmms.api.util.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -103,11 +106,12 @@ public class GameVersionController {
                     })
     })
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PageableAsQueryParam
     public Mono<Page<GameVersionDTO>> getAll(
             final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
             final @RequestParam(name = "isPreRelease", required = false) Boolean isPreRelease,
             final @RequestParam(name = "isSnapshot", required = false) Boolean isSnapshot,
-            final @PageableDefault(size = 25, sort="created_by") Pageable pageable,
+            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
             ServerHttpResponse response) {
         return gameVersionService.getAll(nameRegex, isPreRelease, isSnapshot, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

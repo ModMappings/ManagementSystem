@@ -3,6 +3,7 @@ package org.modmappings.mmms.er2dbc.data.statements.mapper;
 import org.modmappings.mmms.er2dbc.data.query.mapper.ExtendedMapper;
 import org.modmappings.mmms.er2dbc.data.statements.builder.ExtendedSelectBuilder;
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
+import org.modmappings.mmms.er2dbc.data.statements.mapper.renderer.SqlWithJoinSpecificSqlRenderer;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.modmappings.mmms.er2dbc.relational.core.sql.Join;
 import org.springframework.data.domain.Pageable;
@@ -337,7 +338,8 @@ public class ExtendedStatementMapper implements StatementMapper {
             SqlRenderer sqlRenderer = SqlRenderer.create(this.renderContext);
 
             if (this.source instanceof Select) {
-                return sqlRenderer.render((Select) this.source);
+                final SqlWithJoinSpecificSqlRenderer specificSqlRenderer = new SqlWithJoinSpecificSqlRenderer();
+                return specificSqlRenderer.render((Select) this.source);
             }
 
             if (this.source instanceof Insert) {
