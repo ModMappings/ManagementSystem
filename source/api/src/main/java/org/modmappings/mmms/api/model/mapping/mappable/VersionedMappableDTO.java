@@ -8,6 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -49,31 +50,29 @@ public class VersionedMappableDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The descriptor that describes (ha) this versioned mappable. As with the type this descriptor is a raw obfuscated data entry. If the client wants to display this to a human in readable form he will need to parse this descriptor himself and request the human readable form of the mapping in the mapping type he wishes to display. This field will contain an empty string when the type of mappable that this versioned mappable represents is not a method.")
     private String descriptor;
 
-    public VersionedMappableDTO(
-                    UUID id,
-                    UUID createdBy,
-                    Timestamp createdOn,
-                    UUID gameVersionId,
-                    UUID mappableId,
-                    VisibilityDTO visibility,
-                    boolean isStatic,
-                    String type,
-                    UUID parentPackageId,
-                    UUID parentClassId,
-                    UUID parentMethodId,
-                    String descriptor) {
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of all mapping types for which no changes can be made via proposals. Only changes can be made via directly committing a mapping.")
+    private List<UUID> lockedIn;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the super types of the versioned mappable if this represents a class. If this is not a class, then this field will be null. If this is a class and the field is empty then no super types are known.")
+    private List<UUID> superTypes;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the sub types of the versioned mappables if this represents a class. If this is not a class, then this field will be null. If this is a class and the field is empty then no sub types are known.")
+    private List<UUID> subTypes;
+
+    public VersionedMappableDTO(UUID id, UUID createdBy, Timestamp createdOn, UUID gameVersionId, UUID mappableId, UUID parentPackageId, UUID parentClassId, UUID parentMethodId, VisibilityDTO visibility, boolean isStatic, String type, String descriptor, List<UUID> lockedIn, List<UUID> superTypes, List<UUID> subTypes) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
         this.gameVersionId = gameVersionId;
         this.mappableId = mappableId;
-        this.visibility = visibility;
-        this.isStatic = isStatic;
-        this.type = type;
         this.parentPackageId = parentPackageId;
         this.parentClassId = parentClassId;
         this.parentMethodId = parentMethodId;
+        this.visibility = visibility;
+        this.isStatic = isStatic;
+        this.type = type;
         this.descriptor = descriptor;
+        this.lockedIn = lockedIn;
+        this.superTypes = superTypes;
+        this.subTypes = subTypes;
     }
 
     public UUID getId() {
@@ -96,6 +95,18 @@ public class VersionedMappableDTO {
         return mappableId;
     }
 
+    public UUID getParentPackageId() {
+        return parentPackageId;
+    }
+
+    public UUID getParentClassId() {
+        return parentClassId;
+    }
+
+    public UUID getParentMethodId() {
+        return parentMethodId;
+    }
+
     public VisibilityDTO getVisibility() {
         return visibility;
     }
@@ -108,19 +119,19 @@ public class VersionedMappableDTO {
         return type;
     }
 
-    public UUID getParentPackageId() {
-        return parentPackageId;
-    }
-
-    public UUID getParentClassId() {
-        return parentClassId;
-    }
-
     public String getDescriptor() {
         return descriptor;
     }
 
-    public UUID getParentMethodId() {
-        return parentMethodId;
+    public List<UUID> getLockedIn() {
+        return lockedIn;
+    }
+
+    public List<UUID> getSuperTypes() {
+        return superTypes;
+    }
+
+    public List<UUID> getSubTypes() {
+        return subTypes;
     }
 }

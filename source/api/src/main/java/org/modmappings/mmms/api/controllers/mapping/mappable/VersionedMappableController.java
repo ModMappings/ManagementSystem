@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modmappings.mmms.api.model.mapping.mappable.VersionedMappableDTO;
-import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.services.mapping.mappable.VersionedMappableService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
@@ -38,6 +37,7 @@ public class VersionedMappableController {
     }
 
     @Operation(
+            operationId = "getVersionedMappableById",
             summary = "Looks up a versioned mappable using a given id.",
             parameters = {
                     @Parameter(
@@ -65,6 +65,7 @@ public class VersionedMappableController {
     }
 
     @Operation(
+            operationId = "getVersionedMappablesBySearchCriteria",
             summary = "Gets all known versioned mappables that match the given parameters.",
             parameters = {
                     @Parameter(

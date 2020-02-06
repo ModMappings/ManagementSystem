@@ -43,6 +43,7 @@ public class ReleaseController {
     }
 
     @Operation(
+            operationId = "getReleasesById",
             summary = "Looks up a release using a given id.",
             parameters = {
                     @Parameter(
@@ -70,6 +71,7 @@ public class ReleaseController {
     }
 
     @Operation(
+            operationId = "getReleasesBySearchCriteria",
             summary = "Gets all known releases and finds the ones that match the given parameters.",
             parameters = {
                     @Parameter(
@@ -141,6 +143,7 @@ public class ReleaseController {
     }
 
     @Operation(
+            operationId = "deleteRelease",
             summary = "Deletes the release with the given id.",
             description = "This looks up the release with the given id from the database and deletes it. A user needs to be authorized to perform this request. A user needs to have the role 'RELEASES_DELETE' to execute this action successfully.",
             parameters = {
@@ -181,6 +184,7 @@ public class ReleaseController {
     }
 
     @Operation(
+            operationId = "createRelease",
             summary = "Creates the release from the data in the request body.",
             description = "This converts the data in the request body into a full release, and stores it in the database. The components of this release are populated from the latest available mappings in the given mapping type and game version. The name of the release can not already be in use. A user needs to be authorized to perform this request. A user needs to have the role 'RELEASES_CREATE' to execute this action successfully.",
             security = {
@@ -219,6 +223,7 @@ public class ReleaseController {
     }
 
     @Operation(
+            operationId = "updateRelease",
             summary = "Updates, but does not create, the release from the data in the request body.",
             description = "This converts the data in the request body into a full release, then updates the release with the given id, and stores the updated release in the database. The new name of the release can not already be in use by a different release. A user needs to be authorized to perform this request. A user needs to have the role 'RELEASE_UPDATES' to execute this action successfully.",
             parameters = {

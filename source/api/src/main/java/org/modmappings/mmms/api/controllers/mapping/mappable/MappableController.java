@@ -42,6 +42,7 @@ public class MappableController {
     }
 
     @Operation(
+            operationId = "getMappableById",
             summary = "Looks up a mappable using a given id.",
             parameters = {
                     @Parameter(
@@ -69,6 +70,7 @@ public class MappableController {
     }
 
     @Operation(
+            operationId = "getMappablesBySearchCriteria",
             summary = "Gets all known mappables that match the given parameters.",
             parameters = {
                     @Parameter(

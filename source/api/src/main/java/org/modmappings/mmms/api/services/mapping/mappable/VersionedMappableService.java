@@ -4,9 +4,12 @@ import org.modmappings.mmms.api.model.mapping.mappable.VersionedMappableDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.VisibilityDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
-import org.modmappings.mmms.repository.model.mapping.mappable.VersionedMappableDMO;
-import org.modmappings.mmms.repository.model.mapping.mappable.VisibilityDMO;
+import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
+import org.modmappings.mmms.repository.model.mapping.mappable.*;
+import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
+import org.modmappings.mmms.repository.repositories.mapping.mappables.inheritancedata.InheritanceDataRepository;
+import org.modmappings.mmms.repository.repositories.mapping.mappables.mappable.MappableRepository;
+import org.modmappings.mmms.repository.repositories.mapping.mappables.protectedmappableinformation.ProtectedMappableInformationRepository;
 import org.modmappings.mmms.repository.repositories.mapping.mappables.versionedmappables.VersionedMappableRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * Business layer service which handles the interactions of the API with the DataLayer.
@@ -34,10 +38,19 @@ import java.util.UUID;
 public class VersionedMappableService {
 
     private final Logger logger = LoggerFactory.getLogger(VersionedMappableService.class);
-    private final VersionedMappableRepository repository;
 
-    public VersionedMappableService(VersionedMappableRepository repository) {
+    private final VersionedMappableRepository repository;
+    private final InheritanceDataRepository inheritanceDataRepository;
+    private final MappableRepository mappableRepository;
+    private final ProtectedMappableInformationRepository protectedMappableInformationRepository;
+    private final MappingTypeRepository mappingTypeRepository;
+
+    public VersionedMappableService(VersionedMappableRepository repository, InheritanceDataRepository inheritanceDataRepository, MappableRepository mappableRepository, ProtectedMappableInformationRepository protectedMappableInformationRepository, MappingTypeRepository mappingTypeRepository) {
         this.repository = repository;
+        this.inheritanceDataRepository = inheritanceDataRepository;
+        this.mappableRepository = mappableRepository;
+        this.protectedMappableInformationRepository = protectedMappableInformationRepository;
+        this.mappingTypeRepository = mappingTypeRepository;
     }
 
     /**
@@ -49,7 +62,7 @@ public class VersionedMappableService {
     public Mono<VersionedMappableDTO> getBy(UUID id) {
         return repository.findById(id)
                 .doFirst(() -> logger.debug("Looking up a mappable by id: {}", id))
-                .map(this::toDTO)
+                .flatMap(this::toDTO)
                 .doOnNext(dto -> logger.debug("Found mappable: {} with id: {}", dto.getType(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mappable")));
     }
@@ -85,28 +98,52 @@ public class VersionedMappableService {
         )
                 .doFirst(() -> logger.debug("Looking up mappables."))
                 .flatMap(page -> Flux.fromIterable(page)
-                        .map(this::toDTO)
+                        .flatMap(this::toDTO)
                         .collectList()
                         .map(mappables -> (Page<VersionedMappableDTO>) new PageImpl<>(mappables, page.getPageable(), page.getTotalElements())))
                 .doOnNext(page -> logger.debug("Found mappables: {}", page))
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mappable")));
     }
 
-    private VersionedMappableDTO toDTO(VersionedMappableDMO dmo) {
-        return new VersionedMappableDTO(
-                dmo.getId(),
-                dmo.getCreatedBy(),
-                dmo.getCreatedOn(),
-                dmo.getGameVersionId(),
-                dmo.getMappableId(),
-                toTypeDTO(dmo.getVisibility()),
-                dmo.isStatic(),
-                dmo.getType(),
-                dmo.getParentPackageId(),
-                dmo.getParentClassId(),
-                dmo.getParentMethodId(),
-                dmo.getDescriptor()
-        );
+    private Mono<VersionedMappableDTO> toDTO(VersionedMappableDMO dmo) {
+        return mappableRepository.findById(dmo.getMappableId())
+                .flatMap(mappableDMO -> inheritanceDataRepository.findAllForSuperType(dmo.getId(), Pageable.unpaged())
+                        .flatMapIterable(Function.identity())
+                        .map(InheritanceDataDMO::getSubTypeVersionedMappableId)
+                        .collectList()
+                        .flatMap(superTypeIds -> inheritanceDataRepository.findAllForSubType(dmo.getId(), Pageable.unpaged())
+                            .flatMapIterable(Function.identity())
+                            .map(InheritanceDataDMO::getSuperTypeVersionedMappableId)
+                            .collectList()
+                            .flatMap(subTypeIds -> protectedMappableInformationRepository.findAllByVersionedMappable(dmo.getId(), Pageable.unpaged())
+                                .flatMapIterable(Function.identity())
+                                .map(ProtectedMappableInformationDMO::getMappingType)
+                                .filterWhen(mappingTypeId -> mappingTypeRepository.findById(mappingTypeId)
+                                    .filter(MappingTypeDMO::isVisible)
+                                    .hasElement()
+                                )
+                                .collectList()
+                                .map(lockedIds -> new VersionedMappableDTO(
+                                        dmo.getId(),
+                                        dmo.getCreatedBy(),
+                                        dmo.getCreatedOn(),
+                                        dmo.getGameVersionId(),
+                                        dmo.getMappableId(),
+                                        dmo.getParentPackageId(),
+                                        dmo.getParentClassId(),
+                                        dmo.getParentMethodId(),
+                                        toTypeDTO(dmo.getVisibility()),
+                                        dmo.isStatic(),
+                                        dmo.getType(),
+                                        dmo.getDescriptor(),
+                                        lockedIds,
+                                        superTypeIds,
+                                        subTypeIds
+                                ))
+                            )
+                        )
+
+                );
     }
 
     private VisibilityDTO toTypeDTO(VisibilityDMO dmo) {

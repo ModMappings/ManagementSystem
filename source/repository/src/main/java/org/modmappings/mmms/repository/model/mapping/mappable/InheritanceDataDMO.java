@@ -25,4 +25,16 @@ public class InheritanceDataDMO {
         this.superTypeVersionedMappableId = superTypeVersionedMappableId;
         this.subTypeVersionedMappableId = subTypeVersionedMappableId;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getSuperTypeVersionedMappableId() {
+        return superTypeVersionedMappableId;
+    }
+
+    public UUID getSubTypeVersionedMappableId() {
+        return subTypeVersionedMappableId;
+    }
 }

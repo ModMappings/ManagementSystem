@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-@Tag(name = "GameVersions", description = "Gives access to available game versions, allows existing game versions to be modified and new ones to be created.")
+@Tag(name = "GameVersions", description = "Gives access to available game versions. The system creates the game versions automatically when new Minecraft releases are created and published by Mojang.")
 @RequestMapping("/versions")
 @RestController
 public class GameVersionController {
@@ -44,6 +44,7 @@ public class GameVersionController {
     }
 
     @Operation(
+            operationId = "getGameVersionById",
             summary = "Looks up a game version using a given id.",
             parameters = {
                     @Parameter(
@@ -71,6 +72,7 @@ public class GameVersionController {
     }
 
     @Operation(
+            operationId = "getGameVersionsBySearchCriteria",
             summary = "Gets all known game versions and finds the ones that match the given parameters.",
             parameters = {
                     @Parameter(

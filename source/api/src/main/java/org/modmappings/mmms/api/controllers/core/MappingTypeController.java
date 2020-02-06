@@ -29,20 +29,19 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-@Tag(name = "MappingTypes", description = "Gives access to available mapping types, allows existing mapping types to be modified and new ones to be created.")
+@Tag(name = "MappingTypes", description = "Gives access to available mapping types. The system creates new mapping types when needed, however no external systems can create mapping types.")
 @RequestMapping("/types")
 @RestController
 public class MappingTypeController {
 
     private final MappingTypeService mappingTypeService;
-    private final UserService userService;
 
-    public MappingTypeController(final MappingTypeService mappingTypeService, UserService userService) {
+    public MappingTypeController(final MappingTypeService mappingTypeService) {
         this.mappingTypeService = mappingTypeService;
-        this.userService = userService;
     }
 
     @Operation(
+            operationId = "getMappingTypeById",
             summary = "Looks up a mapping type using a given id.",
             parameters = {
                     @Parameter(
@@ -70,6 +69,7 @@ public class MappingTypeController {
     }
 
     @Operation(
+            operationId = "getMappingTypesBySearchCriteria",
             summary = "Gets all known mapping types and finds the ones that match the given parameters.",
             parameters = {
                     @Parameter(
