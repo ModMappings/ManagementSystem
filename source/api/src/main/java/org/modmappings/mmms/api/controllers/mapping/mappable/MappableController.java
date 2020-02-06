@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.modmappings.mmms.api.model.core.mapping.mappable.MappableDTO;
-import org.modmappings.mmms.api.model.core.mapping.mappable.MappableTypeDTO;
+import org.modmappings.mmms.api.model.mapping.mappable.MappableDTO;
+import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.services.mapping.mappable.MappableService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
@@ -30,17 +30,15 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-@Tag(name = "Mappables", description = "Gives access to available mappables, allows existing mappables to be modified and new ones to be created.")
+@Tag(name = "Mappables", description = "Gives access to available mappables, mappables are created and controlled by the importing system, and can not be created or externally modified.")
 @RequestMapping("/mappables")
 @RestController
 public class MappableController {
 
     private final MappableService mappableService;
-    private final UserService userService;
 
-    public MappableController(final MappableService mappableService, UserService userService) {
+    public MappableController(final MappableService mappableService) {
         this.mappableService = mappableService;
-        this.userService = userService;
     }
 
     @Operation(
@@ -100,80 +98,6 @@ public class MappableController {
         return mappableService.getAll(type, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Mono.empty();
-                });
-    }
-
-    @Operation(
-            summary = "Deletes the mappable with the given id.",
-            description = "This looks up the mappable with the given id from the database and deletes it. A user needs to be authorized to perform this request. A user needs to have the role 'MAPPABLES_DELETE' to execute this action successfully.",
-            parameters = {
-                    @Parameter(
-                            name = "id",
-                            in = ParameterIn.PATH,
-                            required = true,
-                            description = "The id of the mappable to delete.",
-                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
-                    )
-            },
-            security = {
-                    @SecurityRequirement(
-                            name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
-                            scopes = {Constants.SCOPE_ROLES_NAME}
-                    ),
-                    @SecurityRequirement(
-                            name = Constants.MOD_MAPPINGS_DEV_AUTH,
-                            scopes = {Constants.SCOPE_ROLES_NAME}
-                    ),
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Deletes the mappable with the given id."),
-            @ApiResponse(responseCode = "403", description = "The user is not authorized to perform this action.",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema()))
-    })
-    @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('MAPPABLES_DELETE')")
-    public Mono<Void> deleteBy(@PathVariable UUID id, ServerWebExchange exchange) {
-        return exchange.getPrincipal()
-                .flatMap(principal -> mappableService.deleteBy(id, () -> userService.getCurrentUserId(principal)))
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                    return Mono.empty();
-                });
-    }
-
-    @Operation(
-            summary = "Creates the mappable from the data in the mappable type.",
-            description = "This converts the data in the mappable into a full mappable, and stores it in the database. A user needs to be authorized to perform this request. A user needs to have the role 'MAPPABLES_CREATE' to execute this action successfully.",
-            security = {
-                    @SecurityRequirement(
-                            name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
-                            scopes = {Constants.SCOPE_ROLES_NAME}
-                    ),
-                    @SecurityRequirement(
-                            name = Constants.MOD_MAPPINGS_DEV_AUTH,
-                            scopes = {Constants.SCOPE_ROLES_NAME}
-                    ),
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Creates the mappable with the given id."),
-            @ApiResponse(responseCode = "403", description = "The user is not authorized to perform this action.",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema())),
-            @ApiResponse(responseCode = "400", description = "The name for the given mappable is already in use.",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema()))
-    })
-    @PostMapping(value = "{type}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('MAPPABLES_CREATE')")
-    public Mono<MappableDTO> create(@PathVariable("type") MappableTypeDTO newMappable, ServerWebExchange exchange) {
-        return exchange.getPrincipal()
-                .flatMap(principal -> mappableService.create(newMappable, () -> userService.getCurrentUserId(principal)))
-                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                    exchange.getResponse().setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
                 });
     }

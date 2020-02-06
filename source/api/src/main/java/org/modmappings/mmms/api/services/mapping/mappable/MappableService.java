@@ -1,11 +1,9 @@
 package org.modmappings.mmms.api.services.mapping.mappable;
 
-import org.modmappings.mmms.api.model.core.mapping.mappable.MappableDTO;
-import org.modmappings.mmms.api.model.core.mapping.mappable.MappableTypeDTO;
+import org.modmappings.mmms.api.model.mapping.mappable.MappableDTO;
+import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
-import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
-import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.repositories.mapping.mappables.mappable.MappableRepository;
@@ -19,7 +17,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * Business layer service which handles the interactions of the API with the DataLayer.
@@ -37,11 +34,9 @@ public class MappableService {
 
     private final Logger logger = LoggerFactory.getLogger(MappableService.class);
     private final MappableRepository repository;
-    private final UserLoggingService userLoggingService;
 
-    public MappableService(MappableRepository repository, UserLoggingService userLoggingService) {
+    public MappableService(MappableRepository repository) {
         this.repository = repository;
-        this.userLoggingService = userLoggingService;
     }
 
     /**
@@ -82,55 +77,12 @@ public class MappableService {
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mappable")));
     }
 
-    /**
-     * Deletes a given mappable if it exists.
-     *
-     * @param id The id of the mappable that should be deleted.
-     * @param userIdSupplier The provider that gives access to the user id of the currently interacting user or service.
-     * @return A {@link Mono} indicating success or failure.
-     */
-    public Mono<Void> deleteBy(
-            final UUID id,
-            final Supplier<UUID> userIdSupplier
-    ) {
-        return repository.deleteById(id)
-                .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleting mappable with id: %s", id)))
-                .doOnNext(aVoid -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleted mappable with id: %s", id)));
-    }
-
-    /**
-     * Creates a new mappable from a type DTO and saves it in the repository.
-     *
-     * @param mappableTypeDMO The type dto to create a new mappable for.
-     * @param userIdSupplier The provider that gives access to the user id of the currently interacting user or service.
-     * @return A {@link Mono} that indicates success or failure.
-     */
-    public Mono<MappableDTO> create(
-            final MappableTypeDTO mappableTypeDMO,
-            final Supplier<UUID> userIdSupplier
-    ) {
-        return Mono.just(mappableTypeDMO)
-                .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new mappable: %s", mappableTypeDMO)))
-                .map(dto -> this.toNewDMO(dto, userIdSupplier))
-                .flatMap(repository::save)
-                .map(this::toDTO)
-                .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Created new mappable: %s with id: %s", dmo.getType(), dmo.getId())))
-                .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("Mappable", "Name")));
-    }
-
     private MappableDTO toDTO(MappableDMO dmo) {
         return new MappableDTO(
                 dmo.getId(),
                 dmo.getCreatedBy(),
                 dmo.getCreatedOn(),
                 this.toTypeDTO(dmo.getType())
-        );
-    }
-
-    private MappableDMO toNewDMO(MappableTypeDTO dto, Supplier<UUID> userIdSupplier) {
-        return new MappableDMO(
-                userIdSupplier.get(),
-                this.toTypeDMO(dto)
         );
     }
 

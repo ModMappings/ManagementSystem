@@ -81,67 +81,6 @@ public class GameVersionService {
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("GameVersion")));
     }
 
-    /**
-     * Deletes a given game version if it exists.
-     *
-     * @param id The id of the game version that should be deleted.
-     * @param userIdSupplier The provider that gives access to the user id of the currently interacting user or service.
-     * @return A {@link Mono} indicating success or failure.
-     */
-    public Mono<Void> deleteBy(
-            final UUID id,
-            final Supplier<UUID> userIdSupplier
-    ) {
-        return repository.deleteById(id)
-                .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleting game version with id: %s", id)))
-                .doOnNext(aVoid -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleted game version with id: %s", id)));
-    }
-
-    /**
-     * Creates a new game version from a DTO and saves it in the repository.
-     *
-     * @param newGameVersion The dto to create a new game version from.
-     * @param userIdSupplier The provider that gives access to the user id of the currently interacting user or service.
-     * @return A {@link Mono} that indicates success or failure.
-     */
-    public Mono<GameVersionDTO> create(
-            final GameVersionDTO newGameVersion,
-            final Supplier<UUID> userIdSupplier
-    ) {
-        return Mono.just(newGameVersion)
-                .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new game version: %s", newGameVersion.getName())))
-                .map(dto -> this.toNewDMO(dto, userIdSupplier))
-                .flatMap(repository::save)
-                .map(this::toDTO)
-                .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Created new game version: %s with id: %s", dmo.getName(), dmo.getId())))
-                .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("GameVersion", "Name")));
-    }
-
-    /**
-     * Updates an existing game version with the data in the dto and saves it in the repo.
-     *
-     * @param idToUpdate The id of the dmo to update with the data from the dto.
-     * @param newGameVersion The dto to update the data in the dmo with.
-     * @param userIdSupplier The provider that gives access to the user id of the currently interacting user or service.
-     * @return A {@link Mono} that indicates success or failure.
-     */
-    public Mono<GameVersionDTO> update(
-            final UUID idToUpdate,
-            final GameVersionDTO newGameVersion,
-            final Supplier<UUID> userIdSupplier
-    ) {
-        return repository.findById(idToUpdate)
-                .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating game version: %s", idToUpdate)))
-                .switchIfEmpty(Mono.error(new EntryNotFoundException(newGameVersion.getId(), "GameVersion")))
-                .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating db game version: %s with id: %s, and data: %s", dmo.getName(), dmo.getId(), newGameVersion)))
-                .doOnNext(dmo -> this.updateDMO(newGameVersion, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
-                .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updated db game version to: %s", dmo)))
-                .flatMap(dmo -> repository.save(dmo)
-                        .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_game_version_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("GameVersion", "Name"))))
-                .map(this::toDTO)
-                .doOnNext(dto -> userLoggingService.warn(logger, userIdSupplier, String.format("Updated game version: %s with id: %s, to data: %s", dto.getName(), dto.getId(), dto)));
-    }
-
     private GameVersionDTO toDTO(GameVersionDMO dmo) {
         return new GameVersionDTO(
                 dmo.getId(),
@@ -151,20 +90,5 @@ public class GameVersionService {
                 dmo.isPreRelease(),
                 dmo.isSnapshot()
         );
-    }
-
-    private GameVersionDMO toNewDMO(GameVersionDTO dto, Supplier<UUID> userIdSupplier) {
-        return new GameVersionDMO(
-                userIdSupplier.get(),
-                dto.getName(),
-                dto.getPreRelease(),
-                dto.getSnapshot()
-        );
-    }
-
-    private void updateDMO(GameVersionDTO dto, GameVersionDMO dmo) {
-        dmo.setName(dto.getName());
-        dmo.setPreRelease(dto.getPreRelease());
-        dmo.setSnapshot(dto.getSnapshot());
     }
 }

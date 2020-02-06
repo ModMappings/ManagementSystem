@@ -90,74 +90,6 @@ public class MappingTypeService {
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("MappingType")));
     }
 
-    /**
-     * Deletes a given mapping type if it exists.
-     *
-     * @param id The id of the mapping type that should be deleted.
-     * @param externallyVisibleOnly Indicator if only externally visible mapping types should be taken into account.
-     * @return A {@link Mono} indicating success or failure.
-     */
-    public Mono<Void> deleteBy(
-            final UUID id,
-            final boolean externallyVisibleOnly,
-            final Supplier<UUID> userIdSupplier
-    ) {
-        return repository
-                .findById(id, externallyVisibleOnly)
-                .flatMap(dmo -> repository.deleteById(id)
-                        .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleting mapping type with id: %s", id)))
-                        .doOnNext(aVoid -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleted mapping type with id: %s", id))));
-
-    }
-
-    /**
-     * Creates a new mapping type from a DTO and saves it in the repository.
-     *
-     * @param newMappingType The dto to create a new mapping type from.
-     * @param userIdSupplier A provider that gives access to the user id of the currently interacting user or service.
-     * @return A {@link Mono} that indicates success or failure.
-     */
-    public Mono<MappingTypeDTO> create(
-            final MappingTypeDTO newMappingType,
-            final Supplier<UUID> userIdSupplier
-    ) {
-        return Mono.just(newMappingType)
-                .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new mapping type: %s", newMappingType.getName())))
-                .map(dto -> this.toNewDMO(dto, userIdSupplier))
-                .flatMap(repository::save)
-                .map(this::toDTO)
-                .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Created new mapping type: %s with id: %s", dmo.getName(), dmo.getId())))
-                .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_mapping_type_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("MappingType", "Name")));
-    }
-
-    /**
-     * Updates an existing mapping type with the data in the dto and saves it in the repo.
-     *
-     * @param idToUpdate The id of the dmo that should be updated with the data in the dto.
-     * @param newMappingType The dto to update the data in the dmo with.
-     * @param externallyVisibleOnly Indicator if only externally visible mapping types should be considered.
-     * @param userIdSupplier A provider that gives access to the user id of the currently interacting user or service.
-     * @return A {@link Mono} that indicates success or failure.
-     */
-    public Mono<MappingTypeDTO> update(
-            final UUID idToUpdate,
-            final MappingTypeDTO newMappingType,
-            final boolean externallyVisibleOnly,
-            final Supplier<UUID> userIdSupplier
-    ) {
-        return repository.findById(idToUpdate, externallyVisibleOnly)
-                .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating mapping type: %s", idToUpdate)))
-                .switchIfEmpty(Mono.error(new EntryNotFoundException(newMappingType.getId(), "MappingType")))
-                .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating db mapping type: %s with id: %s, and data: %s", dmo.getName(), dmo.getId(), newMappingType)))
-                .filter(MappingTypeDMO::isVisible)
-                .doOnNext(dmo -> this.updateDMO(newMappingType, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
-                .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updated db mapping type to: %s", dmo)))
-                .flatMap(dmo -> repository.save(dmo)
-                        .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_mapping_type_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("MappingType", "Name"))))
-                .map(this::toDTO)
-                .doOnNext(dto -> userLoggingService.warn(logger, userIdSupplier, String.format("Updated mapping type: %s with id: %s, to data: %s", dto.getName(), dto.getId(), dto)));
-    }
-
     private MappingTypeDTO toDTO(MappingTypeDMO dmo) {
         return new MappingTypeDTO(
                 dmo.getId(),
@@ -166,23 +98,5 @@ public class MappingTypeService {
                 dmo.getName(),
                 dmo.isEditable()
         );
-    }
-
-    private MappingTypeDMO toNewDMO(MappingTypeDTO dto, Supplier<UUID> userIdSupplier) {
-        return new MappingTypeDMO(
-                userIdSupplier.get(),
-                dto.getName(),
-                true,
-                dto.isEditable(),
-                dto.getStateIn(),
-                dto.getStateOut()
-        );
-    }
-
-    private void updateDMO(MappingTypeDTO dto, MappingTypeDMO dmo) {
-        dmo.setName(dto.getName());
-        dmo.setEditable(dmo.isEditable());
-        dmo.setStateIn(dmo.getStateIn());
-        dmo.setStateOut(dmo.getStateOut());
     }
 }

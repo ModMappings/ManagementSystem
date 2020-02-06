@@ -1,4 +1,4 @@
-package org.modmappings.mmms.api.model.core.mapping.mappable;
+package org.modmappings.mmms.api.model.mapping.mappable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
