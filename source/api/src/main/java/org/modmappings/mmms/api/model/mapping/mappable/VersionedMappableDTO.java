@@ -50,7 +50,7 @@ public class VersionedMappableDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The descriptor that describes (ha) this versioned mappable. As with the type this descriptor is a raw obfuscated data entry. If the client wants to display this to a human in readable form he will need to parse this descriptor himself and request the human readable form of the mapping in the mapping type he wishes to display. This field will contain an empty string when the type of mappable that this versioned mappable represents is not a method.")
     private String descriptor;
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of all mapping types for which no changes can be made via proposals. Only changes can be made via directly committing a mapping.")
+    @Schema(description = "A list of all mapping types for which no changes can be made via proposals. Only changes can be made via directly committing a mapping.")
     private List<UUID> lockedIn;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the super types of the versioned mappable if this represents a class. If this is not a class, then this field will be null. If this is a class and the field is empty then no super types are known.")
     private List<UUID> superTypes;

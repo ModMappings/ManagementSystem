@@ -225,7 +225,7 @@ public class ReleaseController {
     @Operation(
             operationId = "updateRelease",
             summary = "Updates, but does not create, the release from the data in the request body.",
-            description = "This converts the data in the request body into a full release, then updates the release with the given id, and stores the updated release in the database. The new name of the release can not already be in use by a different release. A user needs to be authorized to perform this request. A user needs to have the role 'RELEASE_UPDATES' to execute this action successfully.",
+            description = "This converts the data in the request body into a full release, then updates the release with the given id, and stores the updated release in the database. The new name of the release can not already be in use by a different release. A user needs to be authorized to perform this request. A user needs to have the role 'RELEASE_UPDATE' to execute this action successfully.",
             parameters = {
                     @Parameter(
                             name = "id",
