@@ -111,17 +111,17 @@ public class SelectSpecWithJoin {
     }
 
     /**
-     * Override {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
+     * Override {@code expressions} with the select and create a new {@link SelectSpecWithJoin}.
      *
-     * @param projectedFields
+     * @param expressions Expressions that form the projections in the statement.
      * @return the {@link SelectSpecWithJoin}.
      */
-    public SelectSpecWithJoin setProjection(final Collection<ColumnBasedCriteria.Expression> projectedFields) {
-        Assert.notNull(projectedFields, "ProjectedFields can not be null!");
-        Assert.noNullElements(projectedFields, "ProjectedFields is not allowed to contain null elements!");
-        Assert.isTrue(projectedFields.stream().allMatch(ColumnBasedCriteria.Expression::isReference), "All ProjectedFields need to be references!");
+    public SelectSpecWithJoin setProjection(final Collection<ColumnBasedCriteria.Expression> expressions) {
+        Assert.notNull(expressions, "ProjectedFields can not be null!");
+        Assert.noNullElements(expressions, "ProjectedFields is not allowed to contain null elements!");
+        Assert.isTrue(expressions.stream().allMatch(ex -> ex.isReference() || ex.isNative()), "All expressions need to be references!");
 
-        final List<ColumnBasedCriteria.Expression> fields = new ArrayList<>(projectedFields);
+        final List<ColumnBasedCriteria.Expression> fields = new ArrayList<>(expressions);
 
         return new SelectSpecWithJoin(this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
     }
