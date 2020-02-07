@@ -14,7 +14,7 @@ public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implement
     // subelements.
 
 
-    SelectListVisitor(RenderContext context, RenderTarget target) {
+    SelectListVisitor(final RenderContext context, final RenderTarget target) {
         this.context = context;
         this.target = target;
     }
@@ -24,7 +24,7 @@ public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implement
      * @see TypedSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
 
         if (requiresComma) {
             builder.append(", ");
@@ -43,7 +43,7 @@ public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implement
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(SelectList segment) {
+    Delegation leaveMatched(final SelectList segment) {
 
         target.onRendered(builder);
         return super.leaveMatched(segment);
@@ -54,7 +54,7 @@ public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implement
      * @see TypedSubtreeVisitor#leaveNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
 
         if (segment instanceof Table) {
             builder.append(context.getNamingStrategy().getReferenceName((Table) segment)).append('.');

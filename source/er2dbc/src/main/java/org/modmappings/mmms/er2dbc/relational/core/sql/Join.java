@@ -9,7 +9,7 @@ public class Join extends AbstractSegment {
     private final Table joinTable;
     private final Condition on;
 
-    public Join(org.springframework.data.relational.core.sql.Join.JoinType type, Table joinTable, Condition on) {
+    public Join(final org.springframework.data.relational.core.sql.Join.JoinType type, final Table joinTable, final Condition on) {
 
         super(joinTable, on);
 

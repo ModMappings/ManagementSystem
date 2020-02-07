@@ -37,11 +37,11 @@ public class ExtendedSelectValidator implements Visitor {
      * @param select the {@link Select} statement.
      * @throws IllegalStateException if the statement is not valid.
      */
-    public static void validate(Select select) {
+    public static void validate(final Select select) {
         new ExtendedSelectValidator().doValidate(select);
     }
 
-    private void doValidate(Select select) {
+    private void doValidate(final Select select) {
 
         select.visit(this);
 
@@ -49,21 +49,21 @@ public class ExtendedSelectValidator implements Visitor {
             throw new IllegalStateException("SELECT does not declare a select list");
         }
 
-        for (Table table : requiredBySelect) {
+        for (final Table table : requiredBySelect) {
             if (!join.contains(table) && !from.contains(table)) {
                 throw new IllegalStateException(String
                         .format("Required table [%s] by a SELECT column not imported by FROM %s or JOIN %s", table, from, join));
             }
         }
 
-        for (Table table : requiredByWhere) {
+        for (final Table table : requiredByWhere) {
             if (!join.contains(table) && !from.contains(table)) {
                 throw new IllegalStateException(String
                         .format("Required table [%s] by a WHERE predicate not imported by FROM %s or JOIN %s", table, from, join));
             }
         }
 
-        for (Table table : requiredByOrderBy) {
+        for (final Table table : requiredByOrderBy) {
             if (!join.contains(table) && !from.contains(table)) {
                 throw new IllegalStateException(String
                         .format("Required table [%s] by a ORDER BY column not imported by FROM %s or JOIN %s", table, from, join));
@@ -76,7 +76,7 @@ public class ExtendedSelectValidator implements Visitor {
      * @see org.springframework.data.relational.core.sql.Visitor#enter(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    public void enter(Visitable segment) {
+    public void enter(final Visitable segment) {
 
         if (segment instanceof Select) {
             selects.push((Select) segment);
@@ -92,13 +92,13 @@ public class ExtendedSelectValidator implements Visitor {
 
         if (segment instanceof AsteriskFromTable && parent instanceof Select) {
 
-            Table table = ((AsteriskFromTable) segment).getTable();
+            final Table table = ((AsteriskFromTable) segment).getTable();
             requiredBySelect.add(table);
         }
 
         if (segment instanceof Column && (parent instanceof Select || parent instanceof SimpleFunction)) {
 
-            Table table = ((Column) segment).getTable();
+            final Table table = ((Column) segment).getTable();
 
             if (table != null) {
                 requiredBySelect.add(table);
@@ -107,7 +107,7 @@ public class ExtendedSelectValidator implements Visitor {
 
         if (segment instanceof Column && parent instanceof OrderByField) {
 
-            Table table = ((Column) segment).getTable();
+            final Table table = ((Column) segment).getTable();
 
             if (table != null) {
                 requiredByOrderBy.add(table);
@@ -137,7 +137,7 @@ public class ExtendedSelectValidator implements Visitor {
      * @see org.springframework.data.relational.core.sql.AbstractImportValidator#leave(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    public void leave(Visitable segment) {
+    public void leave(final Visitable segment) {
 
 
 
@@ -163,7 +163,7 @@ public class ExtendedSelectValidator implements Visitor {
          * @see org.springframework.data.relational.core.sql.Visitor#enter(org.springframework.data.relational.core.sql.Visitable)
          */
         @Override
-        public void enter(Visitable segment) {
+        public void enter(final Visitable segment) {
 
             if (selectFilter != null) {
                 return;
@@ -184,7 +184,7 @@ public class ExtendedSelectValidator implements Visitor {
          * @see org.springframework.data.relational.core.sql.Visitor#leave(org.springframework.data.relational.core.sql.Visitable)
          */
         @Override
-        public void leave(Visitable segment) {
+        public void leave(final Visitable segment) {
 
             if (this.selectFilter == segment) {
                 this.selectFilter = null;

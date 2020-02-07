@@ -25,7 +25,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 @Priority(Integer.MAX_VALUE)
 class ReleaseComponentRepositoryImpl extends AbstractModMappingRepository<ReleaseComponentDMO> implements ReleaseComponentRepository {
 
-    public ReleaseComponentRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public ReleaseComponentRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, ReleaseComponentDMO.class);
     }
 

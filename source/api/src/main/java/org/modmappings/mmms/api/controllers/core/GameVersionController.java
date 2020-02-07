@@ -38,7 +38,7 @@ public class GameVersionController {
     private final GameVersionService gameVersionService;
     private final UserService userService;
 
-    public GameVersionController(final GameVersionService gameVersionService, UserService userService) {
+    public GameVersionController(final GameVersionService gameVersionService, final UserService userService) {
         this.gameVersionService = gameVersionService;
         this.userService = userService;
     }
@@ -63,7 +63,7 @@ public class GameVersionController {
                             schema = @Schema()))
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<GameVersionDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
+    public Mono<GameVersionDTO> getBy(@PathVariable final UUID id, final ServerHttpResponse response) {
         return gameVersionService.getBy(id)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
@@ -114,7 +114,7 @@ public class GameVersionController {
             final @RequestParam(name = "isPreRelease", required = false) Boolean isPreRelease,
             final @RequestParam(name = "isSnapshot", required = false) Boolean isSnapshot,
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
-            ServerHttpResponse response) {
+            final ServerHttpResponse response) {
         return gameVersionService.getAll(nameRegex, isPreRelease, isSnapshot, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));

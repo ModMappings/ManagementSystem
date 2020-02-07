@@ -24,7 +24,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 @Priority(Integer.MAX_VALUE)
 class VotingRecordRepositoryImpl extends AbstractModMappingRepository<VotingRecordDMO> implements VotingRecordRepository {
 
-    public VotingRecordRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public VotingRecordRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, VotingRecordDMO.class);
     }
 

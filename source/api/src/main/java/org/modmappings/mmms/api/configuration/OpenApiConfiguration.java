@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfiguration {
 
     @Bean
-    public OpenAPI buildModMappingsOpenAPISpecification(@Value("${springdoc.version:0.0.0-Dev}") String appVersion) {
+    public OpenAPI buildModMappingsOpenAPISpecification(@Value("${springdoc.version:0.0.0-Dev}") final String appVersion) {
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes(Constants.MOD_MAPPINGS_OFFICIAL_AUTH, new SecurityScheme()

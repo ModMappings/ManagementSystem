@@ -6,7 +6,7 @@ public class Where extends AbstractSegment {
 
     private final Condition condition;
 
-    Where(Condition condition) {
+    Where(final Condition condition) {
 
         super(condition);
 

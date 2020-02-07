@@ -15,7 +15,7 @@ public class LikeVisitor extends FilteredSubtreeVisitor {
     private @Nullable
     PartRenderer current;
 
-    LikeVisitor(Like condition, RenderContext context, RenderTarget target) {
+    LikeVisitor(final Like condition, final RenderContext context, final RenderTarget target) {
         super(it -> it == condition);
         this.context = context;
         this.target = target;
@@ -26,16 +26,16 @@ public class LikeVisitor extends FilteredSubtreeVisitor {
      * @see FilteredSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
 
         if (segment instanceof Expression) {
-            ExpressionVisitor visitor = new ExpressionVisitor(context);
+            final ExpressionVisitor visitor = new ExpressionVisitor(context);
             current = visitor;
             return Delegation.delegateTo(visitor);
         }
 
         if (segment instanceof Condition) {
-            ConditionVisitor visitor = new ConditionVisitor(context);
+            final ConditionVisitor visitor = new ConditionVisitor(context);
             current = visitor;
             return Delegation.delegateTo(visitor);
         }
@@ -48,7 +48,7 @@ public class LikeVisitor extends FilteredSubtreeVisitor {
      * @see FilteredSubtreeVisitor#leaveNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
 
         if (current != null) {
             if (part.length() != 0) {
@@ -67,7 +67,7 @@ public class LikeVisitor extends FilteredSubtreeVisitor {
      * @see FilteredSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(Visitable segment) {
+    Delegation leaveMatched(final Visitable segment) {
 
         target.onRendered(part);
 

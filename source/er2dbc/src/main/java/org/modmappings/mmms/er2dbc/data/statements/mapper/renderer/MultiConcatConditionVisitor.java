@@ -11,13 +11,13 @@ public class MultiConcatConditionVisitor extends FilteredSingleConditionRenderSu
     private final String concat;
     private final StringBuilder part = new StringBuilder();
 
-    MultiConcatConditionVisitor(RenderContext context, AndCondition condition, RenderTarget target) {
+    MultiConcatConditionVisitor(final RenderContext context, final AndCondition condition, final RenderTarget target) {
         super(context, it -> it == condition);
         this.target = target;
         this.concat = " AND ";
     }
 
-    MultiConcatConditionVisitor(RenderContext context, OrCondition condition, RenderTarget target) {
+    MultiConcatConditionVisitor(final RenderContext context, final OrCondition condition, final RenderTarget target) {
         super(context, it -> it == condition);
         this.target = target;
         this.concat = " OR ";
@@ -28,7 +28,7 @@ public class MultiConcatConditionVisitor extends FilteredSingleConditionRenderSu
      * @see FilteredSubtreeVisitor#leaveNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
 
         if (hasDelegatedRendering()) {
             if (part.length() != 0) {
@@ -46,7 +46,7 @@ public class MultiConcatConditionVisitor extends FilteredSingleConditionRenderSu
      * @see FilteredSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(Visitable segment) {
+    Delegation leaveMatched(final Visitable segment) {
 
         target.onRendered(part);
 

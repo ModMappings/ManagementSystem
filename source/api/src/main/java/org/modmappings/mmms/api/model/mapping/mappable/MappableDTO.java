@@ -17,7 +17,7 @@ public class MappableDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The type (package, class, method, field or parameter) that this mappable represents.")
     private MappableTypeDTO type;
 
-    public MappableDTO(UUID id, UUID createdBy, Timestamp createdOn, MappableTypeDTO type) {
+    public MappableDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final MappableTypeDTO type) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;

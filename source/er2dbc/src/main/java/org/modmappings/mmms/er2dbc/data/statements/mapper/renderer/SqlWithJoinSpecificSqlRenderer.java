@@ -5,8 +5,8 @@ import org.springframework.data.relational.core.sql.Select;
 import org.springframework.data.relational.core.sql.render.NamingStrategies;
 
 public class SqlWithJoinSpecificSqlRenderer {
-    public String render(Select select) {
-        SelectWithJoinStatementVisitor visitor = new SelectWithJoinStatementVisitor(new SimpleRenderContext(NamingStrategies.asIs()));
+    public String render(final Select select) {
+        final SelectWithJoinStatementVisitor visitor = new SelectWithJoinStatementVisitor(new SimpleRenderContext(NamingStrategies.asIs()));
         select.visit(visitor);
 
         return visitor.getRenderedPart().toString();

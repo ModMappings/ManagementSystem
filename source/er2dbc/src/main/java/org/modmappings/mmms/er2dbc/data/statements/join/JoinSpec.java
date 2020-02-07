@@ -15,33 +15,33 @@ public class JoinSpec {
     @Nullable
     private ColumnBasedCriteria onCriteria = null;
 
-    private JoinSpec(JoinType type, String tableName, String tableAlias) {
+    private JoinSpec(final JoinType type, final String tableName, final String tableAlias) {
         this.type = type;
         this.tableName = tableName;
         this.tableAlias = tableAlias;
     }
 
-    public static JoinSpec join(String tableName, String tableAlias) {
+    public static JoinSpec join(final String tableName, final String tableAlias) {
         return new JoinSpec(JoinType.JOIN, tableName, tableAlias);
     }
 
-    public static JoinSpec crossJoin(String tableName, String tableAlias) {
+    public static JoinSpec crossJoin(final String tableName, final String tableAlias) {
         return new JoinSpec(JoinType.CROSS_JOIN, tableName, tableAlias);
     }
 
-    public static JoinSpec leftOuterJoin(String tableName, String tableAlias) {
+    public static JoinSpec leftOuterJoin(final String tableName, final String tableAlias) {
         return new JoinSpec(JoinType.LEFT_OUTER_JOIN, tableName, tableAlias);
     }
 
-    public static JoinSpec rightOuterJoin(String tableName, String tableAlias) {
+    public static JoinSpec rightOuterJoin(final String tableName, final String tableAlias) {
         return new JoinSpec(JoinType.RIGHT_OUTER_JOIN, tableName, tableAlias);
     }
 
-    public static JoinSpec fullOuterJoin(String tableName, String tableAlias) {
+    public static JoinSpec fullOuterJoin(final String tableName, final String tableAlias) {
         return new JoinSpec(JoinType.FULL_OUTER_JOIN, tableName, tableAlias);
     }
 
-    public JoinSpec withOn(ColumnBasedCriteria columnBasedCriteria)
+    public JoinSpec withOn(final ColumnBasedCriteria columnBasedCriteria)
     {
         Assert.isTrue(columnBasedCriteria.getType() == ColumnBasedCriteria.Type.ON, "On statement criteria needs to be of on type! use columnBasedCriteria.on() to create one!");
         this.onCriteria = columnBasedCriteria;
@@ -49,8 +49,8 @@ public class JoinSpec {
         return this;
     }
 
-    public JoinSpec on(Supplier<ColumnBasedCriteria> columnBasedCriteriaSupplier) {
-        ColumnBasedCriteria criteria = columnBasedCriteriaSupplier.get();
+    public JoinSpec on(final Supplier<ColumnBasedCriteria> columnBasedCriteriaSupplier) {
+        final ColumnBasedCriteria criteria = columnBasedCriteriaSupplier.get();
         if (criteria != null) {
             return withOn(criteria);
         }

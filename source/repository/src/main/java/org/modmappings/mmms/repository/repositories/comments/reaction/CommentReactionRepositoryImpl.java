@@ -21,7 +21,7 @@ import java.util.UUID;
 @Priority(Integer.MAX_VALUE)
 class CommentReactionRepositoryImpl extends AbstractModMappingRepository<CommentReactionDMO> implements CommentReactionRepository {
 
-    public CommentReactionRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public CommentReactionRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, CommentReactionDMO.class);
     }
 
@@ -34,7 +34,7 @@ class CommentReactionRepositoryImpl extends AbstractModMappingRepository<Comment
      * @throws IllegalArgumentException in case the given {@literal commentId} is {@literal null}.
      */
     @Override
-    public Mono<Page<CommentReactionDMO>> findAllByCommentId(final UUID commentId, Pageable pageable) {
+    public Mono<Page<CommentReactionDMO>> findAllByCommentId(final UUID commentId, final Pageable pageable) {
         return createPagedStarSingleWhereRequest("comment_id", commentId, pageable);
     }
 

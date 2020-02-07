@@ -9,7 +9,7 @@ public class IsNullVisitor extends TypedSingleConditionRenderSupport<IsNull> {
     private final RenderTarget target;
     private final StringBuilder part = new StringBuilder();
 
-    IsNullVisitor(RenderContext context, RenderTarget target) {
+    IsNullVisitor(final RenderContext context, final RenderTarget target) {
         super(context);
         this.target = target;
     }
@@ -19,7 +19,7 @@ public class IsNullVisitor extends TypedSingleConditionRenderSupport<IsNull> {
      * @see TypedSubtreeVisitor#leaveNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
 
         if (hasDelegatedRendering()) {
             part.append(consumeRenderedPart());
@@ -33,7 +33,7 @@ public class IsNullVisitor extends TypedSingleConditionRenderSupport<IsNull> {
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(IsNull segment) {
+    Delegation leaveMatched(final IsNull segment) {
 
         if (segment.isNegated()) {
             part.append(" IS NOT NULL");

@@ -11,7 +11,7 @@ public class FromClauseVisitor extends TypedSubtreeVisitor<From> {
     private final StringBuilder builder = new StringBuilder();
     private boolean first = true;
 
-    FromClauseVisitor(RenderContext context, RenderTarget parent) {
+    FromClauseVisitor(final RenderContext context, final RenderTarget parent) {
 
         this.visitor = new FromTableVisitor(context, it -> {
 
@@ -32,7 +32,7 @@ public class FromClauseVisitor extends TypedSubtreeVisitor<From> {
      * @see TypedSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
         return Delegation.delegateTo(visitor);
     }
 
@@ -41,7 +41,7 @@ public class FromClauseVisitor extends TypedSubtreeVisitor<From> {
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(From segment) {
+    Delegation leaveMatched(final From segment) {
         parent.onRendered(builder);
         return super.leaveMatched(segment);
     }

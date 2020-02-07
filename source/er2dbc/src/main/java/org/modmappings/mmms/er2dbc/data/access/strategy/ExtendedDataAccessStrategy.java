@@ -24,7 +24,7 @@ public class ExtendedDataAccessStrategy extends DefaultReactiveDataAccessStrateg
      * @param dialect the {@link R2dbcDialect} to use.
      * @param matchFormatter
      */
-    public ExtendedDataAccessStrategy(R2dbcDialect dialect, IMatchFormatter matchFormatter) {
+    public ExtendedDataAccessStrategy(final R2dbcDialect dialect, final IMatchFormatter matchFormatter) {
         this(dialect, Collections.emptyList(), matchFormatter);
     }
 
@@ -38,7 +38,7 @@ public class ExtendedDataAccessStrategy extends DefaultReactiveDataAccessStrateg
      * @see R2dbcCustomConversions
      * @see org.springframework.core.convert.converter.Converter
      */
-    public ExtendedDataAccessStrategy(R2dbcDialect dialect, Collection<?> converters, IMatchFormatter matchFormatter) {
+    public ExtendedDataAccessStrategy(final R2dbcDialect dialect, final Collection<?> converters, final IMatchFormatter matchFormatter) {
         this(dialect, createConverter(dialect, converters), matchFormatter);
     }
 
@@ -49,7 +49,7 @@ public class ExtendedDataAccessStrategy extends DefaultReactiveDataAccessStrateg
      * @param converter must not be {@literal null}.
      * @param matchFormatter
      */
-    public ExtendedDataAccessStrategy(R2dbcDialect dialect, R2dbcConverter converter, IMatchFormatter matchFormatter) {
+    public ExtendedDataAccessStrategy(final R2dbcDialect dialect, final R2dbcConverter converter, final IMatchFormatter matchFormatter) {
         this(dialect, converter, new NamedParameterExpander(), matchFormatter);
     }
 
@@ -61,12 +61,12 @@ public class ExtendedDataAccessStrategy extends DefaultReactiveDataAccessStrateg
      * @param matchFormatter
      */
     @SuppressWarnings("unchecked")
-    public ExtendedDataAccessStrategy(R2dbcDialect dialect, R2dbcConverter converter,
-                                      NamedParameterExpander expander, IMatchFormatter matchFormatter) {
+    public ExtendedDataAccessStrategy(final R2dbcDialect dialect, final R2dbcConverter converter,
+                                      final NamedParameterExpander expander, final IMatchFormatter matchFormatter) {
         super(dialect, converter, expander);
         this.matchFormatter = matchFormatter;
 
-        RenderContextFactory factory = new RenderContextFactory(dialect);
+        final RenderContextFactory factory = new RenderContextFactory(dialect);
         this.statementMapper = new ExtendedStatementMapper(dialect, factory.createRenderContext(), new ExtendedMapper(converter, this.matchFormatter),
                 this.getMappingContext());
     }

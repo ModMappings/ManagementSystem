@@ -27,7 +27,7 @@ import java.util.UUID;
 @Priority(Integer.MAX_VALUE)
 class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingTypeDMO> implements MappingTypeRepository {
 
-    public MappingTypeRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public MappingTypeRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, MappingTypeDMO.class);
     }
 
@@ -38,11 +38,11 @@ class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingType
     ) {
         Assert.notNull(id, "Id must not be null!");
 
-        List<String> columns = getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
-        String idColumnName = getIdColumnName();
+        final List<String> columns = getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
+        final String idColumnName = getIdColumnName();
 
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        SelectSpecWithJoin specWithJoin = mapper.createSelectWithJoin(this.getEntity().getTableName())
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final SelectSpecWithJoin specWithJoin = mapper.createSelectWithJoin(this.getEntity().getTableName())
                 .withProjectionFromColumnName(columns)
                 .where(() -> {
                     ColumnBasedCriteria criteria = nonNullAndEqualsCheckForWhere(
@@ -66,7 +66,7 @@ class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingType
                 });
 
 
-        PreparedOperation<?> operation = mapper.getMappedObject(specWithJoin);
+        final PreparedOperation<?> operation = mapper.getMappedObject(specWithJoin);
 
         return this.getDatabaseClient().execute(operation) //
                 .as(this.getEntity().getJavaType()) //

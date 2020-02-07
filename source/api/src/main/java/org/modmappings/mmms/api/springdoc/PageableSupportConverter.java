@@ -14,9 +14,10 @@ public class PageableSupportConverter implements ModelConverter {
 
     private static final AnnotatedType PAGEABLE = new AnnotatedType(Pageable.class);
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Schema resolve(AnnotatedType type, ModelConverterContext context, Iterator<ModelConverter> chain) {
-        String typeName = type.getType().getTypeName();
+    public Schema resolve(AnnotatedType type, final ModelConverterContext context, final Iterator<ModelConverter> chain) {
+        final String typeName = type.getType().getTypeName();
         if (PAGEABLE_TO_REPLACE.equals(typeName) || PAGE_REQUEST_TO_REPLACE.equals(typeName)) {
             type = PAGEABLE;
         }

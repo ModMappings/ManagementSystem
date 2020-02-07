@@ -28,11 +28,11 @@ public abstract class DelegatingVisitor implements Visitor {
      * @see org.springframework.data.relational.core.sql.Visitor#enter(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    public final void enter(Visitable segment) {
+    public final void enter(final Visitable segment) {
 
         if (delegation.isEmpty()) {
 
-            DelegatingVisitor.Delegation visitor = doEnter(segment);
+            final DelegatingVisitor.Delegation visitor = doEnter(segment);
             Assert.notNull(visitor,
                     () -> String.format("Visitor must not be null. Caused by %s.doEnter(…)", getClass().getName()));
             Assert.state(!visitor.isLeave(),
@@ -63,11 +63,11 @@ public abstract class DelegatingVisitor implements Visitor {
      * (non-Javadoc)
      * @see org.springframework.data.relational.core.sql.Visitor#leave(org.springframework.data.relational.core.sql.Visitable)
      */
-    public final void leave(Visitable segment) {
+    public final void leave(final Visitable segment) {
         doLeave0(segment);
     }
 
-    private DelegatingVisitor.Delegation doLeave0(Visitable segment) {
+    private DelegatingVisitor.Delegation doLeave0(final Visitable segment) {
 
         if (delegation.isEmpty()) {
             return doLeave(segment);
@@ -76,7 +76,7 @@ public abstract class DelegatingVisitor implements Visitor {
             DelegatingVisitor visitor = delegation.peek();
             while (visitor != null) {
 
-                DelegatingVisitor.Delegation result = visitor.doLeave0(segment);
+                final DelegatingVisitor.Delegation result = visitor.doLeave0(segment);
                 Assert.notNull(visitor,
                         () -> String.format("Visitor must not be null. Caused by %s.doLeave(…)", getClass().getName()));
 
@@ -123,7 +123,7 @@ public abstract class DelegatingVisitor implements Visitor {
         private final @Nullable
         DelegatingVisitor delegate;
 
-        private Delegation(boolean retain, boolean leave, @Nullable DelegatingVisitor delegate) {
+        private Delegation(final boolean retain, final boolean leave, @Nullable final DelegatingVisitor delegate) {
             this.retain = retain;
             this.leave = leave;
             this.delegate = delegate;
@@ -137,7 +137,7 @@ public abstract class DelegatingVisitor implements Visitor {
             return LEAVE;
         }
 
-        public static DelegatingVisitor.Delegation delegateTo(DelegatingVisitor visitor) {
+        public static DelegatingVisitor.Delegation delegateTo(final DelegatingVisitor visitor) {
             return new DelegatingVisitor.Delegation(false, false, visitor);
         }
 

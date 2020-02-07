@@ -28,19 +28,19 @@ public class ProposedMappingDMO {
 
     @PersistenceConstructor
     ProposedMappingDMO(
-                    UUID id,
-                    UUID createdBy,
-                    Timestamp createdOn,
-                    UUID versionedMappableId,
-                    UUID mappingTypeId,
-                    String input,
-                    String output,
-                    String documentation,
-                    DistributionDMO distribution,
-                    boolean isPublic,
-                    UUID closedBy,
-                    Timestamp closedOn,
-                    UUID mappingId) {
+            final UUID id,
+            final UUID createdBy,
+            final Timestamp createdOn,
+            final UUID versionedMappableId,
+            final UUID mappingTypeId,
+            final String input,
+            final String output,
+            final String documentation,
+            final DistributionDMO distribution,
+            final boolean isPublic,
+            final UUID closedBy,
+            final Timestamp closedOn,
+            final UUID mappingId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -57,13 +57,13 @@ public class ProposedMappingDMO {
     }
 
     public ProposedMappingDMO(
-                    UUID createdBy,
-                    UUID versionedMappableId,
-                    UUID mappingTypeId,
-                    String input,
-                    String output,
-                    String documentation,
-                    DistributionDMO distribution, boolean isPublic) {
+            final UUID createdBy,
+            final UUID versionedMappableId,
+            final UUID mappingTypeId,
+            final String input,
+            final String output,
+            final String documentation,
+            final DistributionDMO distribution, final boolean isPublic) {
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
@@ -146,7 +146,7 @@ public class ProposedMappingDMO {
      *
      * @return This proposed mapping in a closed none merged state.
      */
-    public ProposedMappingDMO close(UUID closedBy)
+    public ProposedMappingDMO close(final UUID closedBy)
     {
         return new ProposedMappingDMO(
                         id,
@@ -173,7 +173,7 @@ public class ProposedMappingDMO {
      *
      * @return This proposed mapping in a closed merged state.
      */
-    public ProposedMappingDMO merge(UUID closedBy, UUID mappingId)
+    public ProposedMappingDMO merge(final UUID closedBy, final UUID mappingId)
     {
         return new ProposedMappingDMO(
                         id,

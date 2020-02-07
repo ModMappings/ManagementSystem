@@ -24,7 +24,7 @@ public class UserLoggingService {
      * @param logger The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
-    public void info(Logger logger, Supplier<UUID> principalSupplier, String message) {
+    public void info(final Logger logger, final Supplier<UUID> principalSupplier, final String message) {
         logger.info(String.format("[%s]: %s", principalSupplier, message));
     }
 
@@ -37,7 +37,7 @@ public class UserLoggingService {
      * @param logger The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
-    public void warn(Logger logger, Supplier<UUID> principalSupplier, String message) {
+    public void warn(final Logger logger, final Supplier<UUID> principalSupplier, final String message) {
         logger.warn(String.format("[%s]: %s", principalSupplier.get(), message));
     }
 
@@ -50,7 +50,7 @@ public class UserLoggingService {
      * @param logger The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
-    public void error(Logger logger, Supplier<UUID> principalSupplier, String message) {
+    public void error(final Logger logger, final Supplier<UUID> principalSupplier, final String message) {
         logger.error(String.format("[%s]: %s", principalSupplier.get(), message));
     }
 }

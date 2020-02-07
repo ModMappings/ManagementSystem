@@ -24,7 +24,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 @Priority(Integer.MAX_VALUE)
 class ProposedMappingRepositoryImpl extends AbstractModMappingRepository<ProposedMappingDMO> implements ProposedMappingRepository {
 
-    public ProposedMappingRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public ProposedMappingRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, ProposedMappingDMO.class);
     }
 
@@ -36,7 +36,7 @@ class ProposedMappingRepositoryImpl extends AbstractModMappingRepository<Propose
      * @return The proposed mappings for the given versioned mappable.
      */
     @Override
-    public Mono<Page<ProposedMappingDMO>> findAllForVersionedMappableAndStateAndMerged(UUID versionedMappableId, Boolean state, Boolean merged, Pageable pageable)
+    public Mono<Page<ProposedMappingDMO>> findAllForVersionedMappableAndStateAndMerged(final UUID versionedMappableId, final Boolean state, final Boolean merged, final Pageable pageable)
     {
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin

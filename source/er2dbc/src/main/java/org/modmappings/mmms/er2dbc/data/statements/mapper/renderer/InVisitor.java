@@ -11,7 +11,7 @@ public class InVisitor extends TypedSingleConditionRenderSupport<In> {
     private boolean needsComma = false;
     private boolean notIn = false;
 
-    InVisitor(RenderContext context, RenderTarget target) {
+    InVisitor(final RenderContext context, final RenderTarget target) {
         super(context);
         this.target = target;
     }
@@ -21,10 +21,10 @@ public class InVisitor extends TypedSingleConditionRenderSupport<In> {
      * @see TypedSubtreeVisitor#leaveNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
 
         if (hasDelegatedRendering()) {
-            CharSequence renderedPart = consumeRenderedPart();
+            final CharSequence renderedPart = consumeRenderedPart();
 
             if (needsComma) {
                 part.append(", ");
@@ -46,7 +46,7 @@ public class InVisitor extends TypedSingleConditionRenderSupport<In> {
     }
 
     @Override
-    Delegation enterMatched(In segment) {
+    Delegation enterMatched(final In segment) {
 
         notIn = segment.isNotIn();
 
@@ -58,7 +58,7 @@ public class InVisitor extends TypedSingleConditionRenderSupport<In> {
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(In segment) {
+    Delegation leaveMatched(final In segment) {
 
         part.append(")");
         target.onRendered(part);

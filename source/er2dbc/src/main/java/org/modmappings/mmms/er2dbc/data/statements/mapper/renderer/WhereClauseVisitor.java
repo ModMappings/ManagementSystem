@@ -10,7 +10,7 @@ public class WhereClauseVisitor extends TypedSubtreeVisitor<Where> {
     private final RenderTarget parent;
     private final ConditionVisitor conditionVisitor;
 
-    WhereClauseVisitor(RenderContext context, RenderTarget parent) {
+    WhereClauseVisitor(final RenderContext context, final RenderTarget parent) {
         this.conditionVisitor = new ConditionVisitor(context);
         this.parent = parent;
     }
@@ -20,7 +20,7 @@ public class WhereClauseVisitor extends TypedSubtreeVisitor<Where> {
      * @see TypedSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
 
         if (segment instanceof Condition) {
             return Delegation.delegateTo(conditionVisitor);
@@ -34,7 +34,7 @@ public class WhereClauseVisitor extends TypedSubtreeVisitor<Where> {
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(Where segment) {
+    Delegation leaveMatched(final Where segment) {
 
         parent.onRendered(conditionVisitor.getRenderedPart());
         return super.leaveMatched(segment);

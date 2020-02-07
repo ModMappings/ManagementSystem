@@ -22,7 +22,7 @@ public class Pageable {
 
     private List<String> sort;
 
-    public Pageable(@NotNull @Min(0) int page, @NotNull @Min(1) @Max(2000) int size, List<String> sort) {
+    public Pageable(@NotNull @Min(0) final int page, @NotNull @Min(1) @Max(2000) final int size, final List<String> sort) {
         this.page = page;
         this.size = size;
         this.sort = sort;
@@ -32,7 +32,7 @@ public class Pageable {
         return page;
     }
 
-    public void setPage(int page) {
+    public void setPage(final int page) {
         this.page = page;
     }
 
@@ -40,7 +40,7 @@ public class Pageable {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(final int size) {
         this.size = size;
     }
 
@@ -48,22 +48,22 @@ public class Pageable {
         return sort;
     }
 
-    public void setSort(List<String> sort) {
+    public void setSort(final List<String> sort) {
         if (sort == null) {
             this.sort.clear();
         }
         this.sort = sort;
     }
 
-    public void addSort(String sort) {
+    public void addSort(final String sort) {
         this.sort.add(sort);
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Pageable pageable = (Pageable) o;
+        final Pageable pageable = (Pageable) o;
         return page == pageable.page &&
                 size == pageable.size &&
                 Objects.equals(sort, pageable.sort);

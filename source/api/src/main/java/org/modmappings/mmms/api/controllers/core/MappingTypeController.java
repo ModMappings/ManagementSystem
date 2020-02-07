@@ -60,7 +60,7 @@ public class MappingTypeController {
                             schema = @Schema()))
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<MappingTypeDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
+    public Mono<MappingTypeDTO> getBy(@PathVariable final UUID id, final ServerHttpResponse response) {
         return mappingTypeService.getBy(id, true)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
@@ -104,7 +104,7 @@ public class MappingTypeController {
             final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
             final @RequestParam(name = "editable", required = false) Boolean editable,
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
-            ServerHttpResponse response) {
+            final ServerHttpResponse response) {
         return mappingTypeService.getAll(nameRegex, editable, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));

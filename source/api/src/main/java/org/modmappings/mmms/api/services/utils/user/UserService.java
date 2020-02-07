@@ -25,7 +25,7 @@ public class UserService {
      * @return The uuid that represents the id of the JWT.
      * @throws IllegalStateException When their is currently no authenticated user or when the subject id is not in valid uuid form.
      */
-    public UUID getCurrentUserId(Principal principal) {
+    public UUID getCurrentUserId(final Principal principal) {
         if (principal == null)
             throw new IllegalStateException("No principal provided.");
 
@@ -40,7 +40,7 @@ public class UserService {
         try {
             return UUID.fromString(idString);
         }
-        catch (IllegalArgumentException ex)
+        catch (final IllegalArgumentException ex)
         {
             throw new IllegalStateException("Subject id does not contain UUID", ex);
         }

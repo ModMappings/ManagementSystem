@@ -13,7 +13,7 @@ public class ExpressionVisitor extends TypedSubtreeVisitor<Expression> implement
     private @Nullable
     PartRenderer partRenderer;
 
-    ExpressionVisitor(RenderContext context) {
+    ExpressionVisitor(final RenderContext context) {
         this.context = context;
     }
 
@@ -22,19 +22,19 @@ public class ExpressionVisitor extends TypedSubtreeVisitor<Expression> implement
      * @see TypedSubtreeVisitor#enterMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterMatched(Expression segment) {
+    Delegation enterMatched(final Expression segment) {
 
         if (segment instanceof SubselectExpression) {
 
-            SelectWithJoinStatementVisitor visitor = new SelectWithJoinStatementVisitor(context);
+            final SelectWithJoinStatementVisitor visitor = new SelectWithJoinStatementVisitor(context);
             partRenderer = visitor;
             return Delegation.delegateTo(visitor);
         }
 
         if (segment instanceof Column) {
 
-            RenderNamingStrategy namingStrategy = context.getNamingStrategy();
-            Column column = (Column) segment;
+            final RenderNamingStrategy namingStrategy = context.getNamingStrategy();
+            final Column column = (Column) segment;
 
             value = namingStrategy.getReferenceName(column.getTable()) + "." + namingStrategy.getReferenceName(column);
         } else if (segment instanceof BindMarker) {
@@ -56,10 +56,10 @@ public class ExpressionVisitor extends TypedSubtreeVisitor<Expression> implement
      * @see TypedSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
 
         if (segment instanceof Condition) {
-            ConditionVisitor visitor = new ConditionVisitor(context);
+            final ConditionVisitor visitor = new ConditionVisitor(context);
             partRenderer = visitor;
             return Delegation.delegateTo(visitor);
         }
@@ -72,7 +72,7 @@ public class ExpressionVisitor extends TypedSubtreeVisitor<Expression> implement
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(Expression segment) {
+    Delegation leaveMatched(final Expression segment) {
 
         if (partRenderer != null) {
             value = partRenderer.getRenderedPart();

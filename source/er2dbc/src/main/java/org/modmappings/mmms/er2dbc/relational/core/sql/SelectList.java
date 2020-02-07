@@ -9,7 +9,7 @@ public class SelectList extends AbstractSegment {
 
     private final List<Expression> selectList;
 
-    SelectList(List<Expression> selectList) {
+    SelectList(final List<Expression> selectList) {
         super(selectList.toArray(new Expression[0]));
         this.selectList = selectList;
     }

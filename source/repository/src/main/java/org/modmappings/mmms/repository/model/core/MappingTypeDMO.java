@@ -26,7 +26,7 @@ public class MappingTypeDMO {
     private String stateOut;
 
     @PersistenceConstructor
-    MappingTypeDMO(UUID id, UUID createdBy, Timestamp createdOn, String name, boolean visible, boolean editable, String stateIn, String stateOut) {
+    MappingTypeDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean visible, final boolean editable, final String stateIn, final String stateOut) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -37,7 +37,7 @@ public class MappingTypeDMO {
         this.stateOut = stateOut;
     }
 
-    public MappingTypeDMO(UUID createdBy, String name, boolean visible, boolean editable, String stateIn, String stateOut) {
+    public MappingTypeDMO(final UUID createdBy, final String name, final boolean visible, final boolean editable, final String stateIn, final String stateOut) {
         this.visible = visible;
         this.editable = editable;
         this.id = null;
@@ -70,15 +70,15 @@ public class MappingTypeDMO {
         return stateOut;
     }
 
-    public void setStateIn(String stateIn) {
+    public void setStateIn(final String stateIn) {
         this.stateIn = stateIn;
     }
 
-    public void setStateOut(String stateOut) {
+    public void setStateOut(final String stateOut) {
         this.stateOut = stateOut;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -90,7 +90,7 @@ public class MappingTypeDMO {
         return editable;
     }
 
-    public void setEditable(boolean editable) {
+    public void setEditable(final boolean editable) {
         this.editable = editable;
     }
 

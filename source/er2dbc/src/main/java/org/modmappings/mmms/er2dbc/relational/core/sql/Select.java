@@ -23,8 +23,8 @@ public class Select implements org.springframework.data.relational.core.sql.Sele
     private final Where where;
     private final List<OrderByField> orderBy;
 
-    public Select(boolean distinct, List<Expression> selectList, List<Table> from, long limit, long offset,
-                  List<Join> joins, @Nullable Condition where, List<OrderByField> orderBy) {
+    public Select(final boolean distinct, final List<Expression> selectList, final List<Table> from, final long limit, final long offset,
+                  final List<Join> joins, @Nullable final Condition where, final List<OrderByField> orderBy) {
 
         this.distinct = distinct;
         this.selectList = new SelectList(new ArrayList<>(selectList));
@@ -73,7 +73,7 @@ public class Select implements org.springframework.data.relational.core.sql.Sele
      * @see org.springframework.data.relational.core.sql.Visitable#visit(org.springframework.data.relational.core.sql.Visitor)
      */
     @Override
-    public void visit(Visitor visitor) {
+    public void visit(final Visitor visitor) {
 
         Assert.notNull(visitor, "Visitor must not be null!");
 
@@ -90,7 +90,7 @@ public class Select implements org.springframework.data.relational.core.sql.Sele
         visitor.leave(this);
     }
 
-    private void visitIfNotNull(@Nullable Visitable visitable, Visitor visitor) {
+    private void visitIfNotNull(@Nullable final Visitable visitable, final Visitor visitor) {
 
         if (visitable != null) {
             visitable.visit(visitor);

@@ -32,7 +32,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
 @Priority(Integer.MAX_VALUE)
 class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> implements ReleaseRepository {
 
-    public ReleaseRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public ReleaseRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, ReleaseDMO.class);
     }
 
@@ -43,11 +43,11 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
     ) {
         Assert.notNull(id, "Id must not be null!");
 
-        List<String> columns = getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
-        String idColumnName = getIdColumnName();
+        final List<String> columns = getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
+        final String idColumnName = getIdColumnName();
 
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        SelectSpecWithJoin specWithJoin = mapper.createSelectWithJoin(this.getEntity().getTableName())
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final SelectSpecWithJoin specWithJoin = mapper.createSelectWithJoin(this.getEntity().getTableName())
                 .withProjectionFromColumnName(columns)
                 .join(() -> join("mapping_type", "mt")
                                 .on(() -> on(reference("mapping_type_id")).is(reference("mt", "id"))))
@@ -73,7 +73,7 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
                 });
 
 
-        PreparedOperation<?> operation = mapper.getMappedObject(specWithJoin);
+        final PreparedOperation<?> operation = mapper.getMappedObject(specWithJoin);
 
         return this.getDatabaseClient().execute(operation) //
                 .as(this.getEntity().getJavaType()) //

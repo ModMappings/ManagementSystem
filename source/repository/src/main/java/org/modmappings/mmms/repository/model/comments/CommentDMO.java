@@ -30,7 +30,7 @@ public class CommentDMO {
      *
      * @return The comment data.
      */
-    public static CommentDMO createNewForRelease(UUID createdBy, String content, UUID releaseId)
+    public static CommentDMO createNewForRelease(final UUID createdBy, final String content, final UUID releaseId)
     {
         return new CommentDMO(
                         null,
@@ -56,7 +56,7 @@ public class CommentDMO {
      *
      * @return The comment data.
      */
-    public static CommentDMO createNewForProposedMapping(UUID createdBy, String content, UUID proposedMappingId)
+    public static CommentDMO createNewForProposedMapping(final UUID createdBy, final String content, final UUID proposedMappingId)
     {
         return new CommentDMO(
                         null,
@@ -82,7 +82,7 @@ public class CommentDMO {
      *
      * @return The comment data.
      */
-    public static CommentDMO createNewForComment(UUID createdBy, String content, UUID parentCommentId)
+    public static CommentDMO createNewForComment(final UUID createdBy, final String content, final UUID parentCommentId)
     {
         return new CommentDMO(
                         null,
@@ -114,17 +114,17 @@ public class CommentDMO {
 
     @PersistenceConstructor
     CommentDMO(
-                    UUID id,
-                    UUID createdBy,
-                    Timestamp createdOn,
-                    String content,
-                    UUID lastEditBy,
-                    Timestamp lastEditOn,
-                    UUID deletedBy,
-                    Timestamp deletedOn,
-                    UUID proposedMappingId,
-                    UUID releaseId,
-                    UUID parentCommentId) {
+            final UUID id,
+            final UUID createdBy,
+            final Timestamp createdOn,
+            final String content,
+            final UUID lastEditBy,
+            final Timestamp lastEditOn,
+            final UUID deletedBy,
+            final Timestamp deletedOn,
+            final UUID proposedMappingId,
+            final UUID releaseId,
+            final UUID parentCommentId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -198,7 +198,7 @@ public class CommentDMO {
      *
      * @return The new comment with the edited data.
      */
-    public CommentDMO edit(UUID editedBy, String newContents)
+    public CommentDMO edit(final UUID editedBy, final String newContents)
     {
         return new CommentDMO(
                         id,
@@ -222,7 +222,7 @@ public class CommentDMO {
      *
      * @return The comment with the delete flags.
      */
-    public CommentDMO delete(UUID deletedBy)
+    public CommentDMO delete(final UUID deletedBy)
     {
         return new CommentDMO(
                         id,

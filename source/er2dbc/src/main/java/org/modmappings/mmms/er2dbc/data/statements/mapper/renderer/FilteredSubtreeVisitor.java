@@ -20,7 +20,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      *          enter}/{@link #leaveMatched(Visitable) leave} the {@link Visitable segment} that this visitor is
      *          responsible for.
      */
-    FilteredSubtreeVisitor(Predicate<Visitable> filter) {
+    FilteredSubtreeVisitor(final Predicate<Visitable> filter) {
         this.filter = filter;
     }
 
@@ -33,7 +33,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      *         {@link Delegation#delegateTo(DelegatingVisitor)}.
      * @see Delegation#retain()
      */
-    Delegation enterMatched(Visitable segment) {
+    Delegation enterMatched(final Visitable segment) {
         return Delegation.retain();
     }
 
@@ -46,7 +46,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      *         {@link Delegation#delegateTo(DelegatingVisitor)}.
      * @see Delegation#retain()
      */
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
         return Delegation.retain();
     }
 
@@ -58,7 +58,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      * @return delegation options. Can be either {@link Delegation#retain()} or {@link Delegation#leave()}.
      * @see Delegation#leave()
      */
-    Delegation leaveMatched(Visitable segment) {
+    Delegation leaveMatched(final Visitable segment) {
         return Delegation.leave();
     }
 
@@ -70,7 +70,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      * @return delegation options. Can be either {@link Delegation#retain()} or {@link Delegation#leave()}.
      * @see Delegation#retain()
      */
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
         return Delegation.retain();
     }
 
@@ -79,7 +79,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      * @see DelegatingVisitor#doEnter(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    public final Delegation doEnter(Visitable segment) {
+    public final Delegation doEnter(final Visitable segment) {
 
         if (currentSegment == null) {
 
@@ -99,7 +99,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      * @see DelegatingVisitor#doLeave(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    public final Delegation doLeave(Visitable segment) {
+    public final Delegation doLeave(final Visitable segment) {
 
         if (currentSegment == null) {
             return Delegation.leave();

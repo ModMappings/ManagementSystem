@@ -20,13 +20,13 @@ public class ProtectedMappableInformationDMO {
     private UUID mappingType;
 
     @PersistenceConstructor
-    ProtectedMappableInformationDMO(UUID id, UUID versionedMappableId, UUID mappingType) {
+    ProtectedMappableInformationDMO(final UUID id, final UUID versionedMappableId, final UUID mappingType) {
         this.id = id;
         this.versionedMappableId = versionedMappableId;
         this.mappingType = mappingType;
     }
 
-    public ProtectedMappableInformationDMO(UUID versionedMappableId, UUID mappingType) {
+    public ProtectedMappableInformationDMO(final UUID versionedMappableId, final UUID mappingType) {
         this.id = null;
         this.versionedMappableId = versionedMappableId;
         this.mappingType = mappingType;

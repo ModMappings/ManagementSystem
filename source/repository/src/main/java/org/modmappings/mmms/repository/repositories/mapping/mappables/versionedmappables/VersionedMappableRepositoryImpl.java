@@ -31,7 +31,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
 @Priority(Integer.MAX_VALUE)
 public class VersionedMappableRepositoryImpl extends AbstractModMappingRepository<VersionedMappableDMO> implements VersionedMappableRepository {
 
-    public VersionedMappableRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public VersionedMappableRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, VersionedMappableDMO.class);
     }
 
@@ -107,9 +107,9 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
     public Mono<VersionedMappableDMO> findAllForMapping(
             final UUID mappingId
     ) {
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
-        List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
+        final List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
 
         selectSpec
                 .withProjectionFromColumnName(columns)
@@ -120,7 +120,7 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                 .withCriteria(where(reference("m", "id")).is(parameter(mappingId)))
                 .withPage(PageRequest.of(0, 1));
 
-        PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
+        final PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
 
         return this.getDatabaseClient().execute(operation) //
                 .as(this.getEntity().getJavaType()) //

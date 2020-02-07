@@ -25,7 +25,7 @@ public class MappingTypeDTO {
     @Schema(description = "The state of the source code that this mapping type maps into.", required = true, minLength = 1)
     private String stateOut;
 
-    public MappingTypeDTO(UUID id, UUID createdBy, Timestamp createdOn, @NotBlank String name, boolean editable) {
+    public MappingTypeDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, @NotBlank final String name, final boolean editable) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -40,7 +40,7 @@ public class MappingTypeDTO {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(final UUID id) {
         this.id = id;
     }
 
@@ -48,7 +48,7 @@ public class MappingTypeDTO {
         return createdBy;
     }
 
-    public void setCreatedBy(UUID createdBy) {
+    public void setCreatedBy(final UUID createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -56,7 +56,7 @@ public class MappingTypeDTO {
         return createdOn;
     }
 
-    public void setCreatedOn(Timestamp createdOn) {
+    public void setCreatedOn(final Timestamp createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -64,7 +64,7 @@ public class MappingTypeDTO {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -72,7 +72,7 @@ public class MappingTypeDTO {
         return editable;
     }
 
-    public void setEditable(boolean editable) {
+    public void setEditable(final boolean editable) {
         this.editable = editable;
     }
 
@@ -80,7 +80,7 @@ public class MappingTypeDTO {
         return stateIn;
     }
 
-    public void setStateIn(String stateIn) {
+    public void setStateIn(final String stateIn) {
         this.stateIn = stateIn;
     }
 
@@ -88,7 +88,7 @@ public class MappingTypeDTO {
         return stateOut;
     }
 
-    public void setStateOut(String stateOut) {
+    public void setStateOut(final String stateOut) {
         this.stateOut = stateOut;
     }
 }

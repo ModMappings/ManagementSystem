@@ -24,7 +24,7 @@ public class VotingRecordDMO {
     private boolean hasBeenRescinded;
 
     @PersistenceConstructor
-    VotingRecordDMO(UUID id, UUID createdBy, Timestamp createdOn, UUID proposedMappingId, boolean isForVote, boolean hasBeenRescinded) {
+    VotingRecordDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID proposedMappingId, final boolean isForVote, final boolean hasBeenRescinded) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -33,7 +33,7 @@ public class VotingRecordDMO {
         this.hasBeenRescinded = hasBeenRescinded;
     }
 
-    public VotingRecordDMO(UUID createdBy, UUID proposedMappingId, boolean isForVote) {
+    public VotingRecordDMO(final UUID createdBy, final UUID proposedMappingId, final boolean isForVote) {
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());

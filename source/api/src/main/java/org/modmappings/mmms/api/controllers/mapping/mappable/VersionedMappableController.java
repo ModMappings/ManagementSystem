@@ -38,7 +38,7 @@ public class VersionedMappableController {
     private final VersionedMappableService versionedMappableService;
     private final UserService userService;
 
-    public VersionedMappableController(final VersionedMappableService versionedMappableService, UserService userService) {
+    public VersionedMappableController(final VersionedMappableService versionedMappableService, final UserService userService) {
         this.versionedMappableService = versionedMappableService;
         this.userService = userService;
     }
@@ -63,7 +63,7 @@ public class VersionedMappableController {
                             schema = @Schema()))
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<VersionedMappableDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
+    public Mono<VersionedMappableDTO> getBy(@PathVariable final UUID id, final ServerHttpResponse response) {
         return versionedMappableService.getBy(id)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
@@ -149,7 +149,7 @@ public class VersionedMappableController {
             final @RequestParam(value = "superTypeTargetId", required = false) UUID superTypeTargetId,
             final @RequestParam(value = "subTypeTargetId", required = false) UUID subTypeTargetId,
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
-                                       ServerHttpResponse response) {
+            final ServerHttpResponse response) {
         return versionedMappableService.getAll(
                 gameVersionId, mappableTypeDMO, packageId, classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
         )
@@ -194,7 +194,7 @@ public class VersionedMappableController {
     })
     @PatchMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('VERSIONED_MAPPABLE_UPDATE')")
-    public Mono<VersionedMappableDTO> update(@PathVariable UUID id, @RequestBody VersionedMappableDTO releaseToUpdate, ServerWebExchange exchange) {
+    public Mono<VersionedMappableDTO> update(@PathVariable final UUID id, @RequestBody final VersionedMappableDTO releaseToUpdate, final ServerWebExchange exchange) {
         return exchange.getPrincipal()
                 .flatMap(principal -> versionedMappableService.update(id, releaseToUpdate, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

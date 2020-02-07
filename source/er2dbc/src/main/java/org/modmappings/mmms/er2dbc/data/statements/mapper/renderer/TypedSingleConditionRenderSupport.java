@@ -13,7 +13,7 @@ public class TypedSingleConditionRenderSupport<T extends Visitable & Condition> 
     private @Nullable
     PartRenderer current;
 
-    TypedSingleConditionRenderSupport(RenderContext context) {
+    TypedSingleConditionRenderSupport(final RenderContext context) {
         this.context = context;
     }
 
@@ -22,16 +22,16 @@ public class TypedSingleConditionRenderSupport<T extends Visitable & Condition> 
      * @see TypedSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
 
         if (segment instanceof Expression) {
-            ExpressionVisitor visitor = new ExpressionVisitor(context);
+            final ExpressionVisitor visitor = new ExpressionVisitor(context);
             current = visitor;
             return Delegation.delegateTo(visitor);
         }
 
         if (segment instanceof Condition) {
-            ConditionVisitor visitor = new ConditionVisitor(context);
+            final ConditionVisitor visitor = new ConditionVisitor(context);
             current = visitor;
             return Delegation.delegateTo(visitor);
         }
@@ -59,7 +59,7 @@ public class TypedSingleConditionRenderSupport<T extends Visitable & Condition> 
 
         Assert.state(hasDelegatedRendering(), "Rendering not delegated. Cannot consume delegated rendering part.");
 
-        PartRenderer current = this.current;
+        final PartRenderer current = this.current;
         this.current = null;
         return current.getRenderedPart();
     }

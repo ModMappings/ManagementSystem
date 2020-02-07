@@ -31,13 +31,13 @@ public class WebSecurityConfiguration {
 
     private final OAuth2ResourceServerProperties.Jwt properties;
 
-    public WebSecurityConfiguration(OAuth2ResourceServerProperties properties) {
+    public WebSecurityConfiguration(final OAuth2ResourceServerProperties properties) {
         this.properties = properties.getJwt();
     }
 
 
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http) {
         http
             .authorizeExchange(exchanges ->
                    exchanges.anyExchange().permitAll()
@@ -62,17 +62,17 @@ public class WebSecurityConfiguration {
          * @return The {@link GrantedAuthority authorities} read from the token scopes
          */
         @Override
-        public Collection<GrantedAuthority> convert(Jwt jwt) {
-            Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-            for (String authority : getRealmRoles(jwt)) {
+        public Collection<GrantedAuthority> convert(final Jwt jwt) {
+            final Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+            for (final String authority : getRealmRoles(jwt)) {
                 grantedAuthorities.add(new SimpleGrantedAuthority(authority));
             }
             return grantedAuthorities;
         }
 
-        private Collection<String> getRealmRoles(Jwt jwt) {
-            JSONObject authData = jwt.getClaim("realm_access");
-            JSONArray roleData = (JSONArray) authData.get("roles");
+        private Collection<String> getRealmRoles(final Jwt jwt) {
+            final JSONObject authData = jwt.getClaim("realm_access");
+            final JSONArray roleData = (JSONArray) authData.get("roles");
             return roleData.stream().map(roleObj -> (String) roleObj).map(roleStr -> "ROLE_" + roleStr).collect(Collectors.toSet());
         }
     }

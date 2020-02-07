@@ -22,7 +22,7 @@ public class PaginationData {
     public PaginationData() {
     }
 
-    public PaginationData(int page, int size, List<String> sort) {
+    public PaginationData(final int page, final int size, final List<String> sort) {
         this.paged = true;
         this.page = page;
         this.size = size;
@@ -37,7 +37,7 @@ public class PaginationData {
         return page;
     }
 
-    public void setPage(int page) {
+    public void setPage(final int page) {
         this.page = page;
         this.paged = true;
     }
@@ -46,7 +46,7 @@ public class PaginationData {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(final int size) {
         this.size = size;
         this.paged = true;
     }
@@ -55,7 +55,7 @@ public class PaginationData {
         return sort;
     }
 
-    public void setSort(List<String> sort) {
+    public void setSort(final List<String> sort) {
         this.sort = sort;
         this.paged = true;
     }

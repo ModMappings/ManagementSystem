@@ -29,7 +29,7 @@ public class CommentReactionDMO {
     private UUID                   commentId;
 
     @PersistenceConstructor
-    CommentReactionDMO(UUID id, UUID createdBy, Timestamp createdOn, CommentReactionTypeDMO type, UUID commentId) {
+    CommentReactionDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final CommentReactionTypeDMO type, final UUID commentId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -37,7 +37,7 @@ public class CommentReactionDMO {
         this.commentId = commentId;
     }
 
-    public CommentReactionDMO(UUID createdBy, CommentReactionTypeDMO type, UUID commentId) {
+    public CommentReactionDMO(final UUID createdBy, final CommentReactionTypeDMO type, final UUID commentId) {
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());

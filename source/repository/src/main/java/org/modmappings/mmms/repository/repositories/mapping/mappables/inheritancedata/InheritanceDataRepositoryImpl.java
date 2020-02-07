@@ -23,7 +23,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 @Priority(Integer.MAX_VALUE)
 class InheritanceDataRepositoryImpl extends AbstractModMappingRepository<InheritanceDataDMO> implements InheritanceDataRepository {
 
-    public InheritanceDataRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public InheritanceDataRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, InheritanceDataDMO.class);
     }
 

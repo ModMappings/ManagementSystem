@@ -49,7 +49,7 @@ public class VersionedMappableService {
 
     private final UserLoggingService userLoggingService;
 
-    public VersionedMappableService(VersionedMappableRepository repository, InheritanceDataRepository inheritanceDataRepository, MappableRepository mappableRepository, ProtectedMappableInformationRepository protectedMappableInformationRepository, MappingTypeRepository mappingTypeRepository, UserLoggingService userLoggingService) {
+    public VersionedMappableService(final VersionedMappableRepository repository, final InheritanceDataRepository inheritanceDataRepository, final MappableRepository mappableRepository, final ProtectedMappableInformationRepository protectedMappableInformationRepository, final MappingTypeRepository mappingTypeRepository, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.inheritanceDataRepository = inheritanceDataRepository;
         this.mappableRepository = mappableRepository;
@@ -64,7 +64,7 @@ public class VersionedMappableService {
      * @param id The id to look the mappable up for.
      * @return A {@link Mono} containing the requested mappable or a errored {@link Mono} that indicates a failure.
      */
-    public Mono<VersionedMappableDTO> getBy(UUID id) {
+    public Mono<VersionedMappableDTO> getBy(final UUID id) {
         return repository.findById(id)
                 .doFirst(() -> logger.debug("Looking up a mappable by id: {}", id))
                 .flatMap(this::toDTO)
@@ -144,7 +144,7 @@ public class VersionedMappableService {
                 .flatMap(v -> repository.findById(id).flatMap(this::toDTO));
     }
 
-    private Mono<VersionedMappableDTO> toDTO(VersionedMappableDMO dmo) {
+    private Mono<VersionedMappableDTO> toDTO(final VersionedMappableDMO dmo) {
         return mappableRepository.findById(dmo.getMappableId())
                 .flatMap(mappableDMO -> inheritanceDataRepository.findAllForSuperType(dmo.getId(), Pageable.unpaged())
                         .flatMapIterable(Function.identity())
@@ -185,7 +185,7 @@ public class VersionedMappableService {
                 );
     }
 
-    private VisibilityDTO toTypeDTO(VisibilityDMO dmo) {
+    private VisibilityDTO toTypeDTO(final VisibilityDMO dmo) {
         if (dmo == null)
             return null;
 

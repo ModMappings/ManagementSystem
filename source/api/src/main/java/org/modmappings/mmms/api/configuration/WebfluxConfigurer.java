@@ -10,7 +10,7 @@ import org.springframework.web.reactive.result.method.annotation.ArgumentResolve
 public class WebfluxConfigurer implements WebFluxConfigurer {
 
     @Override
-    public void configureArgumentResolvers(ArgumentResolverConfigurer configurer) {
+    public void configureArgumentResolvers(final ArgumentResolverConfigurer configurer) {
         configurer.addCustomResolver(new ReactivePageableHandlerMethodArgumentResolver());
         configurer.addCustomResolver(new ReactiveSortHandlerMethodArgumentResolver());
     }

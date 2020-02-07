@@ -19,7 +19,7 @@ import javax.annotation.Priority;
 @Priority(Integer.MAX_VALUE)
 class GameVersionRepositoryImpl extends AbstractModMappingRepository<GameVersionDMO> implements GameVersionRepository {
 
-    public GameVersionRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public GameVersionRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, GameVersionDMO.class);
     }
 

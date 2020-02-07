@@ -49,7 +49,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
     private final R2dbcConverter converter;
     private final ExtendedDataAccessStrategy accessStrategy;
 
-    public AbstractModMappingRepository(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy, Class<T> entityClass) {
+    public AbstractModMappingRepository(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy, final Class<T> entityClass) {
         super(new MappingRelationalEntityInformation<>((RelationalPersistentEntity<T>) accessStrategy.getConverter().getMappingContext().getRequiredPersistentEntity(entityClass)), databaseClient, accessStrategy.getConverter(), accessStrategy);
         this.entity = new MappingRelationalEntityInformation<>((RelationalPersistentEntity<T>) accessStrategy.getConverter().getMappingContext().getRequiredPersistentEntity(entityClass));
         this.databaseClient = databaseClient;
@@ -95,7 +95,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         Assert.notNull(selectSpec, "SelectSpec must not be null");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
+        final List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
 
         final SelectSpecWithJoin selectSpecWithProj = selectSpec
                 .withProjectionFromColumnName(columns);
@@ -111,8 +111,8 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         final SelectSpecWithJoin selectSpecWithPagination = selectSpec
                 .withPage(pageable);
 
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithPagination);
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithPagination);
 
         return this.getDatabaseClient().execute(operation) //
                 .as(resultType) //
@@ -124,12 +124,12 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
     {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
 
-        Table table = Table.create(this.entity.getTableName());
+        final Table table = Table.create(this.entity.getTableName());
         final SelectSpecWithJoin selectSpecWithProj = selectSpec
                 .setProjection(spring(Functions.count(table.column(getIdColumnName()))));
 
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
 
         return this.getDatabaseClient().execute(operation) //
                 .map((r, md) -> r.get(0, Long.class)) //
@@ -150,7 +150,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
         SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
 
         selectSpec = selectSpecBuilder.apply(selectSpec);
@@ -171,7 +171,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
         SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
 
         selectSpec = selectSpecBuilder.apply(selectSpec);
@@ -190,7 +190,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
                 pageable);
     }
 
-    protected ColumnBasedCriteria nonNullAndMatchesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable Object parameter, @NonNull String tableName, @NonNull String columnName) {
+    protected ColumnBasedCriteria nonNullAndMatchesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable final Object parameter, @NonNull final String tableName, @NonNull final String columnName) {
         if (parameter != null) {
             if (criteria == null) {
                 return where(reference(tableName, columnName)).matches(parameter(parameter));
@@ -204,7 +204,7 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         return criteria;
     }
 
-    protected ColumnBasedCriteria nonNullAndEqualsCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable Object parameter, @NonNull String tableName, @NonNull String columnName) {
+    protected ColumnBasedCriteria nonNullAndEqualsCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable final Object parameter, @NonNull final String tableName, @NonNull final String columnName) {
         if (parameter != null) {
             if (criteria == null) {
                 return where(reference(tableName, columnName)).is(parameter(parameter));

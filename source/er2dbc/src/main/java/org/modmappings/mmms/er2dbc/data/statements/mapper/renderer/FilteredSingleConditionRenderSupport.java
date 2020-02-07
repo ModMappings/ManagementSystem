@@ -23,7 +23,7 @@ public class FilteredSingleConditionRenderSupport extends FilteredSubtreeVisitor
      *          enter}/{@link #leaveMatched(Visitable) leave} the {@link Visitable segment} that this visitor is
      *          responsible for.
      */
-    FilteredSingleConditionRenderSupport(RenderContext context, Predicate<Visitable> filter) {
+    FilteredSingleConditionRenderSupport(final RenderContext context, final Predicate<Visitable> filter) {
         super(filter);
         this.context = context;
     }
@@ -33,16 +33,16 @@ public class FilteredSingleConditionRenderSupport extends FilteredSubtreeVisitor
      * @see FilteredSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
 
         if (segment instanceof Expression) {
-            ExpressionVisitor visitor = new ExpressionVisitor(context);
+            final ExpressionVisitor visitor = new ExpressionVisitor(context);
             current = visitor;
             return Delegation.delegateTo(visitor);
         }
 
         if (segment instanceof Condition) {
-            ConditionVisitor visitor = new ConditionVisitor(context);
+            final ConditionVisitor visitor = new ConditionVisitor(context);
             current = visitor;
             return Delegation.delegateTo(visitor);
         }
@@ -70,7 +70,7 @@ public class FilteredSingleConditionRenderSupport extends FilteredSubtreeVisitor
 
         Assert.state(hasDelegatedRendering(), "Rendering not delegated. Cannot consume delegated rendering part.");
 
-        PartRenderer current = this.current;
+        final PartRenderer current = this.current;
         this.current = null;
         return current.getRenderedPart();
     }

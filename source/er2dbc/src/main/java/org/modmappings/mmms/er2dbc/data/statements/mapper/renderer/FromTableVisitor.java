@@ -9,7 +9,7 @@ public class FromTableVisitor extends TypedSubtreeVisitor<Table> {
     private final RenderContext context;
     private final RenderTarget parent;
 
-    FromTableVisitor(RenderContext context, RenderTarget parent) {
+    FromTableVisitor(final RenderContext context, final RenderTarget parent) {
         super();
         this.context = context;
         this.parent = parent;
@@ -20,9 +20,9 @@ public class FromTableVisitor extends TypedSubtreeVisitor<Table> {
      * @see TypedSubtreeVisitor#enterMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterMatched(Table segment) {
+    Delegation enterMatched(final Table segment) {
 
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
         builder.append(context.getNamingStrategy().getName(segment));
         if (segment instanceof Aliased) {

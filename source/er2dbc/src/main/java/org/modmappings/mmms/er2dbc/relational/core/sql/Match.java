@@ -11,7 +11,7 @@ public class Match extends AbstractSegment implements Condition {
     private final Expression pattern;
     private final IMatchFormatter formatter;
 
-    private Match(Expression target, Expression pattern, IMatchFormatter formatter) {
+    private Match(final Expression target, final Expression pattern, final IMatchFormatter formatter) {
 
         super(target, pattern);
 
@@ -28,7 +28,7 @@ public class Match extends AbstractSegment implements Condition {
      * @param formatter The match statement formatter to use.
      * @return the {@link Like} condition.
      */
-    public static Match create(Expression target, Expression pattern, IMatchFormatter formatter) {
+    public static Match create(final Expression target, final Expression pattern, final IMatchFormatter formatter) {
 
         Assert.notNull(pattern, "Left expression must not be null!");
         Assert.notNull(target, "Right expression must not be null!");

@@ -56,7 +56,7 @@ public class ReleaseDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the comments which were made on this release.")
     private Set<UUID> commentsMappings;
 
-    public ReleaseDTO(UUID id, UUID createdBy, Timestamp createdOn, @NotBlank String name, @NotNull UUID gameVersionId, @NotNull UUID mappingType, boolean isSnapshot, @NotNull Set<UUID> packageMappings, @NotNull Set<UUID> classMappings, @NotNull Set<UUID> methodMappings, @NotNull Set<UUID> fieldMappings, @NotNull Set<UUID> parameterMappings, @NotNull Set<UUID> commentsMappings) {
+    public ReleaseDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, @NotBlank final String name, @NotNull final UUID gameVersionId, @NotNull final UUID mappingType, final boolean isSnapshot, @NotNull final Set<UUID> packageMappings, @NotNull final Set<UUID> classMappings, @NotNull final Set<UUID> methodMappings, @NotNull final Set<UUID> fieldMappings, @NotNull final Set<UUID> parameterMappings, @NotNull final Set<UUID> commentsMappings) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -79,7 +79,7 @@ public class ReleaseDTO {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(final UUID id) {
         this.id = id;
     }
 
@@ -87,7 +87,7 @@ public class ReleaseDTO {
         return createdBy;
     }
 
-    public void setCreatedBy(UUID createdBy) {
+    public void setCreatedBy(final UUID createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -95,7 +95,7 @@ public class ReleaseDTO {
         return createdOn;
     }
 
-    public void setCreatedOn(Timestamp createdOn) {
+    public void setCreatedOn(final Timestamp createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -103,7 +103,7 @@ public class ReleaseDTO {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -111,7 +111,7 @@ public class ReleaseDTO {
         return gameVersionId;
     }
 
-    public void setGameVersionId(UUID gameVersionId) {
+    public void setGameVersionId(final UUID gameVersionId) {
         this.gameVersionId = gameVersionId;
     }
 
@@ -119,7 +119,7 @@ public class ReleaseDTO {
         return mappingType;
     }
 
-    public void setMappingType(UUID mappingType) {
+    public void setMappingType(final UUID mappingType) {
         this.mappingType = mappingType;
     }
 
@@ -127,7 +127,7 @@ public class ReleaseDTO {
         return isSnapshot;
     }
 
-    public void setSnapshot(boolean snapshot) {
+    public void setSnapshot(final boolean snapshot) {
         isSnapshot = snapshot;
     }
 
@@ -135,7 +135,7 @@ public class ReleaseDTO {
         return packageMappings;
     }
 
-    public void setPackageMappings(Set<UUID> packageMappings) {
+    public void setPackageMappings(final Set<UUID> packageMappings) {
         this.packageMappings = packageMappings;
     }
 
@@ -143,7 +143,7 @@ public class ReleaseDTO {
         return classMappings;
     }
 
-    public void setClassMappings(Set<UUID> classMappings) {
+    public void setClassMappings(final Set<UUID> classMappings) {
         this.classMappings = classMappings;
     }
 
@@ -151,7 +151,7 @@ public class ReleaseDTO {
         return methodMappings;
     }
 
-    public void setMethodMappings(Set<UUID> methodMappings) {
+    public void setMethodMappings(final Set<UUID> methodMappings) {
         this.methodMappings = methodMappings;
     }
 
@@ -159,7 +159,7 @@ public class ReleaseDTO {
         return fieldMappings;
     }
 
-    public void setFieldMappings(Set<UUID> fieldMappings) {
+    public void setFieldMappings(final Set<UUID> fieldMappings) {
         this.fieldMappings = fieldMappings;
     }
 
@@ -167,7 +167,7 @@ public class ReleaseDTO {
         return parameterMappings;
     }
 
-    public void setParameterMappings(Set<UUID> parameterMappings) {
+    public void setParameterMappings(final Set<UUID> parameterMappings) {
         this.parameterMappings = parameterMappings;
     }
 
@@ -175,7 +175,7 @@ public class ReleaseDTO {
         return commentsMappings;
     }
 
-    public void setCommentsMappings(Set<UUID> commentsMappings) {
+    public void setCommentsMappings(final Set<UUID> commentsMappings) {
         this.commentsMappings = commentsMappings;
     }
 }

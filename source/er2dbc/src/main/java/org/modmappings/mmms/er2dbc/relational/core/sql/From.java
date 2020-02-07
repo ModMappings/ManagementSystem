@@ -10,11 +10,11 @@ public class From extends AbstractSegment {
 
     private final List<Table> tables;
 
-    public From(Table... tables) {
+    public From(final Table... tables) {
         this(Arrays.asList(tables));
     }
 
-    public From(List<Table> tables) {
+    public From(final List<Table> tables) {
 
         super(tables.toArray(new Table[] {}));
 

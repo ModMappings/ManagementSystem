@@ -27,13 +27,13 @@ public class ReleaseDMO {
 
     @PersistenceConstructor
     ReleaseDMO(
-                    UUID id,
-                    UUID createdBy,
-                    Timestamp createdOn,
-                    String name,
-                    UUID gameVersionId,
-                    UUID mappingType,
-                    boolean isSnapshot) {
+            final UUID id,
+            final UUID createdBy,
+            final Timestamp createdOn,
+            final String name,
+            final UUID gameVersionId,
+            final UUID mappingType,
+            final boolean isSnapshot) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -43,7 +43,7 @@ public class ReleaseDMO {
         this.isSnapshot = isSnapshot;
     }
 
-    public ReleaseDMO(UUID createdBy, String name, UUID gameVersionId, UUID mappingType, boolean isSnapshot) {
+    public ReleaseDMO(final UUID createdBy, final String name, final UUID gameVersionId, final UUID mappingType, final boolean isSnapshot) {
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
@@ -81,11 +81,11 @@ public class ReleaseDMO {
         return isSnapshot;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
-    public void setSnapshot(boolean snapshot) {
+    public void setSnapshot(final boolean snapshot) {
         isSnapshot = snapshot;
     }
 }

@@ -25,16 +25,16 @@ public class ER2DBCAutoConfiguration {
 
     private final ConnectionFactory connectionFactory;
 
-    public ER2DBCAutoConfiguration(ConnectionFactory connectionFactory) {
+    public ER2DBCAutoConfiguration(final ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
     @Bean
     @Primary
-    public ExtendedDataAccessStrategy extendedDataAccessStrategy(RelationalMappingContext mappingContext,
-                                                                 R2dbcCustomConversions r2dbcCustomConversions,
-                                                                 IMatchFormatter matchFormatter) {
-        MappingR2dbcConverter converter = new MappingR2dbcConverter(mappingContext, r2dbcCustomConversions);
+    public ExtendedDataAccessStrategy extendedDataAccessStrategy(final RelationalMappingContext mappingContext,
+                                                                 final R2dbcCustomConversions r2dbcCustomConversions,
+                                                                 final IMatchFormatter matchFormatter) {
+        final MappingR2dbcConverter converter = new MappingR2dbcConverter(mappingContext, r2dbcCustomConversions);
         return new ExtendedDataAccessStrategy(DialectResolver.getDialect(this.connectionFactory), converter, matchFormatter);
     }
 

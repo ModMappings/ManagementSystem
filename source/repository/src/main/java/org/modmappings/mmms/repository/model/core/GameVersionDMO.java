@@ -23,7 +23,7 @@ public class GameVersionDMO {
     private boolean isSnapshot;
 
     @PersistenceConstructor
-    GameVersionDMO(UUID id, UUID createdBy, Timestamp createdOn, String name, boolean isPreRelease, boolean isSnapshot) {
+    GameVersionDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean isPreRelease, final boolean isSnapshot) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -32,7 +32,7 @@ public class GameVersionDMO {
         this.isSnapshot = isSnapshot;
     }
 
-    public GameVersionDMO(UUID createdBy, String name, boolean isPreRelease, boolean isSnapshot) {
+    public GameVersionDMO(final UUID createdBy, final String name, final boolean isPreRelease, final boolean isSnapshot) {
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
@@ -57,7 +57,7 @@ public class GameVersionDMO {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -65,7 +65,7 @@ public class GameVersionDMO {
         return isPreRelease;
     }
 
-    public void setPreRelease(boolean preRelease) {
+    public void setPreRelease(final boolean preRelease) {
         isPreRelease = preRelease;
     }
 
@@ -73,7 +73,7 @@ public class GameVersionDMO {
         return isSnapshot;
     }
 
-    public void setSnapshot(boolean snapshot) {
+    public void setSnapshot(final boolean snapshot) {
         isSnapshot = snapshot;
     }
 
@@ -90,11 +90,11 @@ public class GameVersionDMO {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GameVersionDMO that = (GameVersionDMO) o;
+        final GameVersionDMO that = (GameVersionDMO) o;
 
         return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
     }

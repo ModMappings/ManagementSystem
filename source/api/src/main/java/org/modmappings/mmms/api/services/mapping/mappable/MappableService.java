@@ -35,7 +35,7 @@ public class MappableService {
     private final Logger logger = LoggerFactory.getLogger(MappableService.class);
     private final MappableRepository repository;
 
-    public MappableService(MappableRepository repository) {
+    public MappableService(final MappableRepository repository) {
         this.repository = repository;
     }
 
@@ -45,7 +45,7 @@ public class MappableService {
      * @param id The id to look the mappable up for.
      * @return A {@link Mono} containing the requested mappable or a errored {@link Mono} that indicates a failure.
      */
-    public Mono<MappableDTO> getBy(UUID id) {
+    public Mono<MappableDTO> getBy(final UUID id) {
         return repository.findById(id)
                 .doFirst(() -> logger.debug("Looking up a mappable by id: {}", id))
                 .map(this::toDTO)
@@ -77,7 +77,7 @@ public class MappableService {
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mappable")));
     }
 
-    private MappableDTO toDTO(MappableDMO dmo) {
+    private MappableDTO toDTO(final MappableDMO dmo) {
         return new MappableDTO(
                 dmo.getId(),
                 dmo.getCreatedBy(),
@@ -86,14 +86,14 @@ public class MappableService {
         );
     }
 
-    private MappableTypeDTO toTypeDTO(MappableTypeDMO dmo) {
+    private MappableTypeDTO toTypeDTO(final MappableTypeDMO dmo) {
         if (dmo == null)
             return null;
 
         return MappableTypeDTO.valueOf(MappableTypeDTO.class, dmo.name());
     }
 
-    private MappableTypeDMO toTypeDMO(MappableTypeDTO dto) {
+    private MappableTypeDMO toTypeDMO(final MappableTypeDTO dto) {
         if (dto == null)
             return null;
 

@@ -38,7 +38,7 @@ class R2DBCConfiguration extends AbstractR2dbcConfiguration {
     @Bean
     @Override
     public PostgresqlConnectionFactory connectionFactory() {
-        PostgresqlConnectionConfiguration config = PostgresqlConnectionConfiguration.builder()
+        final PostgresqlConnectionConfiguration config = PostgresqlConnectionConfiguration.builder()
                                                                    .host(host)
                                                                    .port(port)
                                                                    .database(database)
@@ -50,7 +50,7 @@ class R2DBCConfiguration extends AbstractR2dbcConfiguration {
 
     @Bean
     public DataSource dataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        final DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("org.postgresql.Driver");
         dataSourceBuilder.url("jdbc:postgresql://" + host + ":" + port + "/" + database);
         dataSourceBuilder.username(username);
@@ -60,7 +60,7 @@ class R2DBCConfiguration extends AbstractR2dbcConfiguration {
 
     @Bean
     @Primary
-    R2dbcTransactionManager connectionFactoryTransactionManager(ConnectionFactory connectionFactory) {
+    R2dbcTransactionManager connectionFactoryTransactionManager(final ConnectionFactory connectionFactory) {
         return new R2dbcTransactionManager(connectionFactory);
     }
 }

@@ -51,7 +51,7 @@ public class ReleaseService {
     
     private final UserLoggingService userLoggingService;
 
-    public ReleaseService(ReleaseRepository repository, ReleaseComponentRepository releaseComponentRepository, MappingRepository mappingRepository, MappingTypeRepository mappingTypeRepository, CommentRepository commentRepository, UserLoggingService userLoggingService) {
+    public ReleaseService(final ReleaseRepository repository, final ReleaseComponentRepository releaseComponentRepository, final MappingRepository mappingRepository, final MappingTypeRepository mappingTypeRepository, final CommentRepository commentRepository, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.releaseComponentRepository = releaseComponentRepository;
         this.mappingRepository = mappingRepository;
@@ -154,7 +154,7 @@ public class ReleaseService {
                         .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new release: %s", newRelease.getName())))
                         .map(dto -> this.toNewDMO(gameVersionId, mappingTypeId, dto, userIdSupplier))
                         .flatMap(repository::save) //Creates the release object in the database
-                        .flatMap(dmo -> mappingRepository.findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(null, null, mappingTypeId, gameVersionId, Pageable.unpaged()) // Gets all latest mappings of the mapping type and game version.
+                        .flatMap(dmo -> mappingRepository.findAllOrLatestFor(true, null, null, null, null, null, mappingTypeId, gameVersionId, null, true, Pageable.unpaged()) // Gets all latest mappings of the mapping type and game version.
                                 .flatMapIterable(Function.identity()) //Unwrap the page.
                                 .map(mdmo -> new ReleaseComponentDMO(dmo.getId(), mdmo.getId())) //Turns them into release components.
                                 .collect(Collectors.toList()) //Collects them
@@ -199,7 +199,7 @@ public class ReleaseService {
      * @param dmo The DMO to turn into a DTO.
      * @return The release DMO in a Mono.
      */
-    private Mono<ReleaseDTO> toDTO(ReleaseDMO dmo) {
+    private Mono<ReleaseDTO> toDTO(final ReleaseDMO dmo) {
         return releaseComponentRepository.findAllMappingIdsByReleaseIdForPackage(dmo.getId(), Pageable.unpaged())
             .flatMapIterable(Function.identity())
             .collect(Collectors.toSet())
@@ -247,7 +247,7 @@ public class ReleaseService {
      * @param userIdSupplier The supplier for the ID of the creating user.
      * @return The initial DMO with the data.
      */
-    private ReleaseDMO toNewDMO(UUID gameVersionId, UUID mappingTypeId, ReleaseDTO dto, Supplier<UUID> userIdSupplier) {
+    private ReleaseDMO toNewDMO(final UUID gameVersionId, final UUID mappingTypeId, final ReleaseDTO dto, final Supplier<UUID> userIdSupplier) {
         return new ReleaseDMO(
             userIdSupplier.get(),
             dto.getName(),
@@ -263,7 +263,7 @@ public class ReleaseService {
      * @param dto The DTO to pull information from.
      * @param dmo The DMO to write information into.
      */
-    private void updateDMO(ReleaseDTO dto, ReleaseDMO dmo) {
+    private void updateDMO(final ReleaseDTO dto, final ReleaseDMO dmo) {
         dmo.setName(dto.getName());
         dmo.setSnapshot(dto.isSnapshot());
     }

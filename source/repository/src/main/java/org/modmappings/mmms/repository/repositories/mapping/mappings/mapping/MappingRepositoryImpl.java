@@ -16,6 +16,7 @@ import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
@@ -33,187 +34,101 @@ import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.leftOute
 @Priority(Integer.MAX_VALUE)
 class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> implements MappingRepository {
 
-    public MappingRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public MappingRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, MappingDMO.class);
     }
 
-    /**
-     * Finds all mappings for a given versioned mappable id.
-     *
-     * @param versionedMappableId The id of the versioned mappable to get the mappings for.
-     * @param pageable The paging and sorting information.
-     * @return The mappings for the given versioned mappable.
-     */
     @Override
-    public Mono<Page<MappingDMO>> findAllForVersionedMappable(UUID versionedMappableId, final Pageable pageable)
-    {
-        return createPagedStarSingleWhereRequest(
-                "versioned_mappable_id",
-                versionedMappableId,
+    public Mono<Page<MappingDMO>> findAllOrLatestFor(final boolean latestOnly,
+                                                     final UUID versionedMappableId,
+                                                     final UUID releaseId,
+                                                     final MappableTypeDMO mappableType,
+                                                     final String inputRegex,
+                                                     final String outputRegex,
+                                                     final UUID mappingTypeId,
+                                                     final UUID gameVersionId,
+                                                     final UUID userId,
+                                                     final boolean externallyVisibleOnly,
+                                                     final Pageable pageable) {
+        return createPagedStarRequest(
+                selectSpecWithJoin -> selectSpecWithJoin
+                        .join(() -> join("release_component", "rc")
+                                .on(() -> on(reference("id")).is(reference("rc", "mappable_Id"))))
+                        .join(() -> join("versioned_mappable", "vm")
+                                .on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
+                        .join(() -> join("mappable", "mp")
+                                .on(() -> on(reference("vm", "mappable_id")).is(reference("mp", "id"))))
+                        .join(() -> join("mapping_type", "mt")
+                                .on(() -> on(reference("mapping_type_id")).is(reference("mt", "id"))))
+                        .join(() -> leftOuterJoin("mapping", "m2")
+                                .on(() -> on(reference("versioned_mappable_id")).is(reference("m2", "versioned_mappable_id"))
+                                        .and(reference("mapping_type_id")).is(reference("m2", "mapping_type_id"))
+                                        .and(reference("created_on")).lessThan(reference("m2", "created_on")))
+                        )
+                        .where(
+                                () -> {
+                                    ColumnBasedCriteria criteria = latestOnly ? where(reference("m2", "id")).isNull() : null;
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, versionedMappableId, "", "versioned_mappable_id");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, releaseId, "rc", "release_id");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, mappableType, "mp", "type");
+                                    criteria = nonNullAndMatchesCheckForWhere(criteria, inputRegex, "", "input");
+                                    criteria = nonNullAndMatchesCheckForWhere(criteria, outputRegex, "", "output");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "", "mapping_type_id");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, gameVersionId, "vm", "game_version_id");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, userId, "", "created_by");
+
+                                    if (externallyVisibleOnly)
+                                    {
+                                        criteria = nonNullAndEqualsCheckForWhere(criteria, true, "mt", "visible");
+                                    }
+
+                                    return criteria;
+                                }
+                        )
+                ,
                 pageable
         );
     }
 
-    /**
-     * Finds the latest mappings for a given versioned mappable id.
-     *
-     * @param versionedMappableId The id of the versioned mappable to get the latest mapping for.
-     * @return The latest mapping for the given versioned mappable.
-     */
     @Override
-    public Mono<MappingDMO> findLatestForVersionedMappable(UUID versionedMappableId)
-    {
-        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
-        List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
+    public Mono<MappingDMO> findById(final UUID id,
+                                     final boolean externallyVisibleOnly) {
+        Assert.notNull(id, "Id must not be null!");
 
-        selectSpec
+        final List<String> columns = getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
+        final String idColumnName = getIdColumnName();
+
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final SelectSpecWithJoin specWithJoin = mapper.createSelectWithJoin(this.getEntity().getTableName())
                 .withProjectionFromColumnName(columns)
-                .withCriteria(where(reference( "versioned_mappable_id")).is(parameter(versionedMappableId)))
-                .withPage(PageRequest.of(0, 1, Sort.by(Sort.Order.desc("created_on"))));
+                .join(() -> join("mapping_type", "mt").on(() -> on(reference("mapping_type_id")).is(reference("mt", "id"))))
+                .where(() -> {
+                    ColumnBasedCriteria criteria = nonNullAndEqualsCheckForWhere(
+                            null,
+                            id,
+                            "",
+                            idColumnName
+                    );
 
-        PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
+                    if (externallyVisibleOnly)
+                    {
+                        criteria = nonNullAndEqualsCheckForWhere(
+                                criteria,
+                                true,
+                                "mt",
+                                "visible"
+                        );
+                    }
+
+                    return criteria;
+                });
+
+
+        final PreparedOperation<?> operation = mapper.getMappedObject(specWithJoin);
 
         return this.getDatabaseClient().execute(operation) //
                 .as(this.getEntity().getJavaType()) //
-                .fetch()
-                .first();
-    }
-
-    /**
-     * Finds all mappings of which the input matches the given regex.
-     * The mapping also has to be for a mapping type with the given id.
-     * The mapping also has to be for a versioned mappable who targets the game version with
-     * the given id.
-     *
-     * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
-     * @param outputRegex The regex against which the output of the mappings is matched to be included in the result.
-     * @param mappingTypeId The id of the mapping type that a mapping needs to be for. Use an empty optional for any mapping type.
-     * @param gameVersionId The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
-     * @param pageable The paging and sorting information.
-     * @return All mappings who' matches the given regexes and are part of the mapping type and game version if those are specified.
-     */
-    @Override
-    public Mono<Page<MappingDMO>> findAllForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId, Pageable pageable)
-    {
-        return createPagedStarRequest(selectSpecWithJoin -> selectSpecWithJoin
-                .join(() -> join("versioned_mappable", "vm").on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
-                .where(() -> {
-                    ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
-                            null,
-                            inputRegex,
-                            "",
-                            "input"
-                    );
-                    criteria = nonNullAndMatchesCheckForWhere(
-                            criteria,
-                            outputRegex,
-                            "",
-                            "output"
-                    );
-                    criteria = nonNullAndEqualsCheckForWhere(
-                            criteria,
-                            mappingTypeId,
-                            "",
-                            "mapping_type_id"
-                    );
-                    criteria = nonNullAndEqualsCheckForWhere(
-                            criteria,
-                            gameVersionId,
-                            "vm",
-                            "game_version_id"
-                    );
-                    return criteria;
-                }),
-            pageable
-        );
-    }
-
-    /**
-     * Finds all mappings of which the input matches the given regex.
-     * Will only return the latest mapping for any given versioned mappable.
-     * The mapping also has to be for a mapping type with the given id.
-     * The mapping also has to be for a versioned mappable who targets the game version with
-     * the given id.
-     *
-     * @param inputRegex The regex against which the input of the mappings is matched to be included in the result.
-     * @param outputRegex The regex against which the output of the mappings is matched to be included in the result.
-     * @param mappingTypeId The id of the mapping type that a mapping needs to be for. Use an empty optional for any mapping type.
-     * @param gameVersionId The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
-     * @param pageable The paging and sorting information.
-     * @return All latest mappings who' matches the given regexes and are part of the mapping type and game version if those are specified.
-     */
-    @Override
-    public Mono<Page<MappingDMO>> findLatestForInputRegexAndOutputRegexAndMappingTypeAndGameVersion(String inputRegex, String outputRegex, UUID mappingTypeId, UUID gameVersionId, Pageable pageable)
-    {
-        return createPagedStarRequest(selectSpecWithJoin -> selectSpecWithJoin
-                .join(() -> leftOuterJoin("mapping", "m2").on(() ->
-                                on(reference("versioned_mappable_id")).is(reference("m2", "versioned_mappable_id"))
-                                    .and(reference("mapping_type_id")).is(reference("m2", "versioned_mappable_id"))
-                                    .and(reference("created_on")).lessThan(reference("m2", "versioned_mappable_id")))
-                )
-                .join(() -> join("versioned_mappable", "vm").on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
-                .where(() -> {
-                    ColumnBasedCriteria criteria = where(reference("m2", "id")).isNull();
-                    criteria = nonNullAndMatchesCheckForWhere(
-                            criteria,
-                            inputRegex,
-                            "",
-                            "input"
-                    );
-                    criteria = nonNullAndMatchesCheckForWhere(
-                            criteria,
-                            outputRegex,
-                            "",
-                            "output"
-                    );
-                    criteria = nonNullAndEqualsCheckForWhere(
-                            criteria,
-                            mappingTypeId,
-                            "",
-                            "mapping_type_id"
-                    );
-                    criteria = nonNullAndEqualsCheckForWhere(
-                            criteria,
-                            gameVersionId,
-                            "vm",
-                            "game_version_id"
-                    );
-                    return criteria;
-                }),
-                pageable
-        );
-    }
-
-    /**
-     * Finds all mappings which are part of a given release and who are for a given type.
-     *
-     * @param releaseId The id of the release where mappings are being looked up for.
-     * @param type The type of the mappable where ids are being looked up for. Use a empty optional to get all.
-     * @param pageable The paging and sorting information.
-     * @return All mappings which are part of a given release and are for a given mappable type.
-     */
-    @Override
-    public Mono<Page<MappingDMO>> findAllInReleaseAndMappableType(UUID releaseId, MappableTypeDMO type, Pageable pageable)
-    {
-        return createPagedStarRequest(selectSpecWithJoin -> selectSpecWithJoin
-            .join(() -> join("release_component", "rc")
-                            .on(() -> on(reference("id")).is(reference("rc", "mappable_Id"))))
-            .join(() -> join("versioned_mappable", "vm")
-                            .on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
-            .join(() -> join("mappable", "mp")
-                            .on(() -> on(reference("vm", "mappable_id")).is(reference("mp", "id"))))
-            .where(() -> {
-                ColumnBasedCriteria criteria = where(reference("rc", "release_id")).is(parameter(releaseId));
-                criteria = nonNullAndEqualsCheckForWhere(
-                        criteria,
-                        type,
-                        "mp",
-                        "type"
-                );
-                return criteria;
-            }),
-            pageable
-        );
+                .fetch() //
+                .one();
     }
 }

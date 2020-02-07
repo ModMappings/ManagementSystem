@@ -32,12 +32,12 @@ public class ColumnBasedCriteria {
     private final Comparator comparator;
     private final Expression rightExpression;
 
-    private ColumnBasedCriteria(Type type, Expression leftExpression, Comparator comparator, Expression rightExpression) {
+    private ColumnBasedCriteria(final Type type, final Expression leftExpression, final Comparator comparator, final Expression rightExpression) {
         this(null, Combinator.INITIAL, type, leftExpression, comparator, rightExpression);
     }
 
-    private ColumnBasedCriteria(@Nullable ColumnBasedCriteria previous, Combinator combinator, Type type, Expression leftExpression, Comparator comparator,
-                                Expression rightExpression) {
+    private ColumnBasedCriteria(@Nullable final ColumnBasedCriteria previous, final Combinator combinator, final Type type, final Expression leftExpression, final Comparator comparator,
+                                final Expression rightExpression) {
 
         this.previous = previous;
         this.combinator = combinator;
@@ -53,7 +53,7 @@ public class ColumnBasedCriteria {
      * @param left Must not be {@literal null} or empty.
      * @return a new {@link CriteriaStep} object to complete the first {@link ColumnBasedCriteria}.
      */
-    public static CriteriaStep where(Expression left) {
+    public static CriteriaStep where(final Expression left) {
         Assert.notNull(left, "left must not be null or empty!");
 
         return new DefaultCriteriaStep(Type.WHERE, left);
@@ -65,7 +65,7 @@ public class ColumnBasedCriteria {
      * @param left Must not be {@literal null} or empty.
      * @return a new {@link CriteriaStep} object to complete the first {@link ColumnBasedCriteria}.
      */
-    public static CriteriaStep on(Expression left) {
+    public static CriteriaStep on(final Expression left) {
         Assert.notNull(left, "left must not be null or empty!");
 
         return new DefaultCriteriaStep(Type.ON, left);
@@ -77,13 +77,13 @@ public class ColumnBasedCriteria {
      * @param left Must not be {@literal null} or empty.
      * @return a new {@link CriteriaStep} object to complete the next {@link ColumnBasedCriteria}.
      */
-    public CriteriaStep and(Expression left) {
+    public CriteriaStep and(final Expression left) {
 
         Assert.notNull(left, "left must not be null!");
 
         return new DefaultCriteriaStep(type, left) {
             @Override
-            protected ColumnBasedCriteria createCriteria(Comparator comparator, Expression right) {
+            protected ColumnBasedCriteria createCriteria(final Comparator comparator, final Expression right) {
                 return new ColumnBasedCriteria(ColumnBasedCriteria.this, Combinator.AND, type, left, comparator, right);
             }
         };
@@ -95,46 +95,46 @@ public class ColumnBasedCriteria {
      * @param left Must not be {@literal null} or empty.
      * @return a new {@link CriteriaStep} object to complete the next {@link ColumnBasedCriteria}.
      */
-    public CriteriaStep or(Expression left) {
+    public CriteriaStep or(final Expression left) {
 
         Assert.notNull(left, "left name must not be null!");
 
         return new DefaultCriteriaStep(type, left) {
             @Override
-            protected ColumnBasedCriteria createCriteria(Comparator comparator, Expression right) {
+            protected ColumnBasedCriteria createCriteria(final Comparator comparator, final Expression right) {
                 return new ColumnBasedCriteria(ColumnBasedCriteria.this, Combinator.OR, type, left, comparator, right);
             }
         };
     }
 
-    public static Expression parameter(Object value) {
+    public static Expression parameter(final Object value) {
         if (value == null)
             return Expression.NULL;
 
         return new ValueExpression(value);
     }
 
-    public static Expression parameter(Object... values)
+    public static Expression parameter(final Object... values)
     {
         return parameter(Arrays.asList(values));
     }
 
-    public static Expression parameter(Collection<?> values)
+    public static Expression parameter(final Collection<?> values)
     {
         return new CollectionExpression(values.stream().map(ColumnBasedCriteria::parameter).collect(Collectors.toSet()));
     }
 
-    public static Expression reference(String columnName)
+    public static Expression reference(final String columnName)
     {
         return new ColumnBasedCriteria.ReferenceExpression("", columnName);
     }
 
-    public static Expression reference(String tableName, String columnName)
+    public static Expression reference(final String tableName, final String columnName)
     {
         return new ColumnBasedCriteria.ReferenceExpression(tableName, columnName);
     }
 
-    public static Expression spring(org.springframework.data.relational.core.sql.Expression sqlExpression)
+    public static Expression spring(final org.springframework.data.relational.core.sql.Expression sqlExpression)
     {
         return new NativeExpression(sqlExpression);
     }
@@ -332,7 +332,7 @@ public class ColumnBasedCriteria {
         private final Type type;
         private final Expression left;
 
-        public DefaultCriteriaStep(Type type, Expression left) {
+        public DefaultCriteriaStep(final Type type, final Expression left) {
             this.type = type;
             this.left = left;
         }
@@ -342,7 +342,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#is(java.lang.Object)
          */
         @Override
-        public ColumnBasedCriteria is(Expression right) {
+        public ColumnBasedCriteria is(final Expression right) {
 
             Assert.notNull(right, "right must not be null!");
 
@@ -354,7 +354,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#not(java.lang.Object)
          */
         @Override
-        public ColumnBasedCriteria not(Expression right) {
+        public ColumnBasedCriteria not(final Expression right) {
 
             Assert.notNull(right, "right must not be null!");
 
@@ -366,8 +366,8 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#in(java.lang.Object[])
          */
         @Override
-        public ColumnBasedCriteria in(Expression... rights) {
-            Expression right;
+        public ColumnBasedCriteria in(final Expression... rights) {
+            final Expression right;
 
             Assert.notNull(rights, "rights must not be null!");
             if (rights.length == 1 && rights[1].isCollection()) {
@@ -385,7 +385,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#in(java.util.Collection)
          */
         @Override
-        public ColumnBasedCriteria in(Collection<Expression> rights) {
+        public ColumnBasedCriteria in(final Collection<Expression> rights) {
 
             Assert.notNull(rights, "rights must not be null!");
             Assert.noNullElements(rights.toArray(), "rights must not contain a null value!");
@@ -398,8 +398,8 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#notIn(java.lang.Object[])
          */
         @Override
-        public ColumnBasedCriteria notIn(Expression... rights) {
-            Expression right;
+        public ColumnBasedCriteria notIn(final Expression... rights) {
+            final Expression right;
 
             Assert.notNull(rights, "rights must not be null!");
             if (rights.length == 1 && rights[1].isCollection()) {
@@ -418,7 +418,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#notIn(java.util.Collection)
          */
         @Override
-        public ColumnBasedCriteria notIn(Collection<Expression> rights) {
+        public ColumnBasedCriteria notIn(final Collection<Expression> rights) {
 
             Assert.notNull(rights, "rights must not be null!");
             Assert.noNullElements(rights.toArray(), "rights must not contain a null value!");
@@ -431,7 +431,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#lessThan(java.lang.Object)
          */
         @Override
-        public ColumnBasedCriteria lessThan(Expression right) {
+        public ColumnBasedCriteria lessThan(final Expression right) {
 
             Assert.notNull(right, "right must not be null!");
 
@@ -443,7 +443,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#lessThanOrEquals(java.lang.Object)
          */
         @Override
-        public ColumnBasedCriteria lessThanOrEquals(Expression right) {
+        public ColumnBasedCriteria lessThanOrEquals(final Expression right) {
 
             Assert.notNull(right, "right must not be null!");
 
@@ -455,7 +455,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#greaterThan(java.lang.Object)
          */
         @Override
-        public ColumnBasedCriteria greaterThan(Expression right) {
+        public ColumnBasedCriteria greaterThan(final Expression right) {
 
             Assert.notNull(right, "right must not be null!");
 
@@ -467,7 +467,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#greaterThanOrEquals(java.lang.Object)
          */
         @Override
-        public ColumnBasedCriteria greaterThanOrEquals(Expression right) {
+        public ColumnBasedCriteria greaterThanOrEquals(final Expression right) {
 
             Assert.notNull(right, "right must not be null!");
 
@@ -479,7 +479,7 @@ public class ColumnBasedCriteria {
          * @see org.springframework.data.r2dbc.function.query.Criteria.CriteriaStep#like(java.lang.Object)
          */
         @Override
-        public ColumnBasedCriteria like(Expression right) {
+        public ColumnBasedCriteria like(final Expression right) {
 
             Assert.notNull(right, "right must not be null!");
 
@@ -487,7 +487,7 @@ public class ColumnBasedCriteria {
         }
 
         @Override
-        public ColumnBasedCriteria matches(Expression right) {
+        public ColumnBasedCriteria matches(final Expression right) {
 
             Assert.notNull(right, "right must not be null!");
 
@@ -512,7 +512,7 @@ public class ColumnBasedCriteria {
             return createCriteria(Comparator.IS_NOT_NULL, Expression.NULL);
         }
 
-        protected ColumnBasedCriteria createCriteria(Comparator comparator, Expression right) {
+        protected ColumnBasedCriteria createCriteria(final Comparator comparator, final Expression right) {
             return new ColumnBasedCriteria(type, this.left, comparator, right);
         }
     }
@@ -538,7 +538,7 @@ public class ColumnBasedCriteria {
     public static class ValueExpression implements Expression {
         private final Object value;
 
-        ValueExpression(Object value) {
+        ValueExpression(final Object value) {
             this.value = value;
         }
 
@@ -556,7 +556,7 @@ public class ColumnBasedCriteria {
         private final String tableName;
         private final String columnName;
 
-        ReferenceExpression(String tableName, String columnName) {
+        ReferenceExpression(final String tableName, final String columnName) {
             this.tableName = tableName;
             this.columnName = columnName;
         }
@@ -578,13 +578,13 @@ public class ColumnBasedCriteria {
     public static class CollectionExpression implements Expression {
         private final Collection<Expression> expressions;
 
-        CollectionExpression(Expression... expressions) {
+        CollectionExpression(final Expression... expressions) {
             this(Arrays.asList(expressions));
         }
 
-        CollectionExpression(Collection<Expression> expressions) {
+        CollectionExpression(final Collection<Expression> expressions) {
             this.expressions = expressions;
-            for (Expression expression : expressions) {
+            for (final Expression expression : expressions) {
                 if (expression.isCollection())
                     throw new IllegalArgumentException("Can not create a collection in a collection!");
             }
@@ -603,7 +603,7 @@ public class ColumnBasedCriteria {
     public static class NativeExpression implements Expression {
         private final org.springframework.data.relational.core.sql.Expression sqlExpression;
 
-        public NativeExpression(org.springframework.data.relational.core.sql.Expression sqlExpression) {
+        public NativeExpression(final org.springframework.data.relational.core.sql.Expression sqlExpression) {
             this.sqlExpression = sqlExpression;
         }
 

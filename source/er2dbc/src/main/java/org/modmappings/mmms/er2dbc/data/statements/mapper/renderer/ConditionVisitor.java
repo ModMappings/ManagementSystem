@@ -10,7 +10,7 @@ public class ConditionVisitor extends TypedSubtreeVisitor<Condition> implements 
     private final RenderContext context;
     private StringBuilder builder = new StringBuilder();
 
-    ConditionVisitor(RenderContext context) {
+    ConditionVisitor(final RenderContext context) {
         this.context = context;
     }
 
@@ -19,15 +19,15 @@ public class ConditionVisitor extends TypedSubtreeVisitor<Condition> implements 
      * @see TypedSubtreeVisitor#enterMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterMatched(Condition segment) {
+    Delegation enterMatched(final Condition segment) {
 
-        DelegatingVisitor visitor = getDelegation(segment);
+        final DelegatingVisitor visitor = getDelegation(segment);
 
         return visitor != null ? Delegation.delegateTo(visitor) : Delegation.retain();
     }
 
     @Nullable
-    private DelegatingVisitor getDelegation(Condition segment) {
+    private DelegatingVisitor getDelegation(final Condition segment) {
 
         if (segment instanceof AndCondition) {
             return new MultiConcatConditionVisitor(context, (AndCondition) segment, builder::append);

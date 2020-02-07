@@ -27,15 +27,15 @@ public class MappingDMO {
 
     @PersistenceConstructor
     MappingDMO(
-                    UUID id,
-                    UUID createdBy,
-                    Timestamp createdOn,
-                    UUID versionedMappableId,
-                    UUID mappingTypeId,
-                    String input,
-                    String output,
-                    String documentation,
-                    DistributionDMO distribution) {
+            final UUID id,
+            final UUID createdBy,
+            final Timestamp createdOn,
+            final UUID versionedMappableId,
+            final UUID mappingTypeId,
+            final String input,
+            final String output,
+            final String documentation,
+            final DistributionDMO distribution) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -48,13 +48,13 @@ public class MappingDMO {
     }
 
     public MappingDMO(
-                    UUID createdBy,
-                    UUID versionedMappableId,
-                    UUID mappingTypeId,
-                    String input,
-                    String output,
-                    String documentation,
-                    DistributionDMO distribution) {
+            final UUID createdBy,
+            final UUID versionedMappableId,
+            final UUID mappingTypeId,
+            final String input,
+            final String output,
+            final String documentation,
+            final DistributionDMO distribution) {
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());

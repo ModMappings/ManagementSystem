@@ -20,7 +20,7 @@ public class SelectWithJoinStatementVisitor extends DelegatingVisitor implements
     private FromClauseVisitor fromClauseVisitor;
     private WhereClauseVisitor whereClauseVisitor;
 
-    SelectWithJoinStatementVisitor(RenderContext context) {
+    SelectWithJoinStatementVisitor(final RenderContext context) {
 
         this.context = context;
         this.selectRenderContext = context.getSelect();
@@ -43,7 +43,7 @@ public class SelectWithJoinStatementVisitor extends DelegatingVisitor implements
      * @see org.springframework.data.relational.core.sql.render.DelegatingVisitor#doEnter(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    public DelegatingVisitor.Delegation doEnter(Visitable segment) {
+    public DelegatingVisitor.Delegation doEnter(final Visitable segment) {
 
         if (segment instanceof SelectList) {
             return DelegatingVisitor.Delegation.delegateTo(selectListVisitor);
@@ -80,11 +80,11 @@ public class SelectWithJoinStatementVisitor extends DelegatingVisitor implements
      * @see org.springframework.data.relational.core.sql.render.DelegatingVisitor#doLeave(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    public DelegatingVisitor.Delegation doLeave(Visitable segment) {
+    public DelegatingVisitor.Delegation doLeave(final Visitable segment) {
 
         if (segment instanceof Select) {
 
-            Select select = (Select) segment;
+            final Select select = (Select) segment;
 
             builder.append("SELECT ");
 
@@ -107,7 +107,7 @@ public class SelectWithJoinStatementVisitor extends DelegatingVisitor implements
                 builder.append(" WHERE ").append(where);
             }
 
-            CharSequence orderBy = orderByClauseVisitor.getRenderedPart();
+            final CharSequence orderBy = orderByClauseVisitor.getRenderedPart();
             if (orderBy.length() != 0) {
                 builder.append(" ORDER BY ").append(orderBy);
             }

@@ -57,7 +57,7 @@ public class VersionedMappableDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the sub types of the versioned mappables if this represents a class. If this is not a class, then this field will be null. If this is a class and the field is empty then no sub types are known.")
     private List<UUID> subTypes;
 
-    public VersionedMappableDTO(UUID id, UUID createdBy, Timestamp createdOn, UUID gameVersionId, UUID mappableId, UUID parentPackageId, UUID parentClassId, UUID parentMethodId, VisibilityDTO visibility, boolean isStatic, String type, String descriptor, List<UUID> lockedIn, List<UUID> superTypes, List<UUID> subTypes) {
+    public VersionedMappableDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID gameVersionId, final UUID mappableId, final UUID parentPackageId, final UUID parentClassId, final UUID parentMethodId, final VisibilityDTO visibility, final boolean isStatic, final String type, final String descriptor, final List<UUID> lockedIn, final List<UUID> superTypes, final List<UUID> subTypes) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -73,6 +73,9 @@ public class VersionedMappableDTO {
         this.lockedIn = lockedIn;
         this.superTypes = superTypes;
         this.subTypes = subTypes;
+    }
+
+    public VersionedMappableDTO() {
     }
 
     public UUID getId() {

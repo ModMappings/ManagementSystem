@@ -23,7 +23,7 @@ public class GameVersionDTO {
     @Schema(description = "Indicates if this game version is a snapshot or not.", required = true)
     private Boolean snapshot;
 
-    public GameVersionDTO(UUID id, UUID createdBy, Timestamp createdOn, String name, Boolean preRelease, Boolean snapshot) {
+    public GameVersionDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final Boolean preRelease, final Boolean snapshot) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;

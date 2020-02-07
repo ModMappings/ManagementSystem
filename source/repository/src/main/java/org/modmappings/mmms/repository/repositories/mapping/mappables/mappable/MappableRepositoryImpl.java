@@ -22,7 +22,7 @@ import java.util.UUID;
 @Priority(Integer.MAX_VALUE)
 class MappableRepositoryImpl extends AbstractModMappingRepository<MappableDMO> implements MappableRepository {
 
-    public MappableRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public MappableRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, MappableDMO.class);
     }
 

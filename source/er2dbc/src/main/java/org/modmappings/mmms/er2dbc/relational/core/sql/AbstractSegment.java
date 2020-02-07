@@ -8,7 +8,7 @@ public class AbstractSegment implements Segment {
 
     private final Segment[] children;
 
-    protected AbstractSegment(Segment... children) {
+    protected AbstractSegment(final Segment... children) {
         this.children = children;
     }
 
@@ -17,12 +17,12 @@ public class AbstractSegment implements Segment {
      * @see org.springframework.data.relational.core.sql.Visitable#visit(org.springframework.data.relational.core.sql.Visitor)
      */
     @Override
-    public void visit(Visitor visitor) {
+    public void visit(final Visitor visitor) {
 
         Assert.notNull(visitor, "Visitor must not be null!");
 
         visitor.enter(this);
-        for (Segment child : children) {
+        for (final Segment child : children) {
             child.visit(visitor);
         }
         visitor.leave(this);
@@ -42,7 +42,7 @@ public class AbstractSegment implements Segment {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return obj instanceof Segment && toString().equals(obj.toString());
     }
 }

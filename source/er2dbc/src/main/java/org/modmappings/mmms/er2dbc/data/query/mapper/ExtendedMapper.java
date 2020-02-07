@@ -35,7 +35,7 @@ public class ExtendedMapper extends UpdateMapper {
      * @param converter must not be {@literal null}.
      * @param matchFormatter
      */
-    public ExtendedMapper(R2dbcConverter converter, IMatchFormatter matchFormatter) {
+    public ExtendedMapper(final R2dbcConverter converter, final IMatchFormatter matchFormatter) {
         super(converter);
 
         this.mappingContext = (MappingContext) converter.getMappingContext();
@@ -51,18 +51,18 @@ public class ExtendedMapper extends UpdateMapper {
      * @param entity related {@link RelationalPersistentEntity}, can be {@literal null}.
      * @return the mapped {@link BoundAssignments}.
      */
-    public BoundCondition getMappedObject(BindMarkers markers, ColumnBasedCriteria criteria, Table table,
-                                          @Nullable RelationalPersistentEntity<?> entity) {
+    public BoundCondition getMappedObject(final BindMarkers markers, final ColumnBasedCriteria criteria, final Table table,
+                                          @Nullable final RelationalPersistentEntity<?> entity) {
 
         Assert.notNull(markers, "BindMarkers must not be null!");
         Assert.notNull(criteria, "Criteria must not be null!");
         Assert.notNull(table, "Table must not be null!");
 
         ColumnBasedCriteria current = criteria;
-        MutableBindings bindings = new MutableBindings(markers);
+        final MutableBindings bindings = new MutableBindings(markers);
 
         // reverse unroll criteria chain
-        Map<ColumnBasedCriteria, ColumnBasedCriteria> forwardChain = new HashMap<>();
+        final Map<ColumnBasedCriteria, ColumnBasedCriteria> forwardChain = new HashMap<>();
 
         while (current.hasPrevious()) {
             forwardChain.put(current.getPrevious(), current);
@@ -73,7 +73,7 @@ public class ExtendedMapper extends UpdateMapper {
         Condition mapped = getCondition(current, bindings, table, entity);
         while (forwardChain.containsKey(current)) {
 
-            ColumnBasedCriteria nextCriteria = forwardChain.get(current);
+            final ColumnBasedCriteria nextCriteria = forwardChain.get(current);
 
             if (nextCriteria.getCombinator() == ColumnBasedCriteria.Combinator.AND) {
                 mapped = mapped.and(getCondition(nextCriteria, bindings, table, entity));
@@ -94,11 +94,11 @@ public class ExtendedMapper extends UpdateMapper {
      * @param type The ER2DBC join type.
      * @return The remapped join type.
      */
-    public Join.JoinType getMappedObject(JoinSpec.JoinType type) {
+    public Join.JoinType getMappedObject(final JoinSpec.JoinType type) {
         return Join.JoinType.valueOf(type.name());
     }
 
-    public Expression getMappedObject(ColumnBasedCriteria.Expression expression, Table defaultTable)
+    public Expression getMappedObject(final ColumnBasedCriteria.Expression expression, final Table defaultTable)
     {
         if (expression.isNative())
             return ((ColumnBasedCriteria.NativeExpression) expression).getSqlExpression();
@@ -110,8 +110,8 @@ public class ExtendedMapper extends UpdateMapper {
         return Column.create(referenceExpression.getColumnName(), StringUtils.isEmpty(referenceExpression.getTableName()) ? defaultTable : Table.create(referenceExpression.getTableName()));
     }
 
-    public Condition getCondition(ColumnBasedCriteria criteria, MutableBindings bindings, Table table,
-                                   @Nullable RelationalPersistentEntity<?> entity) {
+    public Condition getCondition(final ColumnBasedCriteria criteria, final MutableBindings bindings, final Table table,
+                                  @Nullable final RelationalPersistentEntity<?> entity) {
 
         final Expression left = convertNoneCollectiveExpression(criteria.getLeftExpression(), criteria.getRightExpression(), table, bindings);
         if (left == null)
@@ -163,7 +163,7 @@ public class ExtendedMapper extends UpdateMapper {
         }
     }
 
-    private Expression convertNoneCollectiveExpression(ColumnBasedCriteria.Expression expression, ColumnBasedCriteria.Expression otherExpression, Table defaultTable, MutableBindings bindings)
+    private Expression convertNoneCollectiveExpression(final ColumnBasedCriteria.Expression expression, final ColumnBasedCriteria.Expression otherExpression, final Table defaultTable, final MutableBindings bindings)
     {
         if (expression.isNative())
             return ((ColumnBasedCriteria.NativeExpression) expression).getSqlExpression();
@@ -183,16 +183,16 @@ public class ExtendedMapper extends UpdateMapper {
             if (otherExpression.isReference())
             {
                 Object mappedValue = null;
-                Class<?> typeHint;
+                final Class<?> typeHint;
 
                 final ColumnBasedCriteria.ReferenceExpression referenceExpression = (ColumnBasedCriteria.ReferenceExpression) otherExpression;
 
                 final Field propertyField = createPropertyField(referenceExpression.getTableName(), referenceExpression.getColumnName(), this.mappingContext);
-                TypeInformation<?> actualType = propertyField.getTypeHint().getRequiredActualType();
+                final TypeInformation<?> actualType = propertyField.getTypeHint().getRequiredActualType();
 
                 final ColumnBasedCriteria.ValueExpression valueExpression = (ColumnBasedCriteria.ValueExpression) expression;
                 if (valueExpression.getValue() instanceof SettableValue) {
-                    SettableValue settableValue = (SettableValue) valueExpression.getValue();
+                    final SettableValue settableValue = (SettableValue) valueExpression.getValue();
                     mappedValue = convertValue(settableValue.getValue(), propertyField.getTypeHint());
                     typeHint = getTypeHint(mappedValue, actualType.getType(), settableValue);
 
@@ -201,7 +201,7 @@ public class ExtendedMapper extends UpdateMapper {
                     typeHint = actualType.getType();
                 }
 
-                BindMarker bindMarker = bindings.nextMarker("");
+                final BindMarker bindMarker = bindings.nextMarker("");
                 return bind(mappedValue, typeHint, bindings, bindMarker);
             }
         }
@@ -209,13 +209,13 @@ public class ExtendedMapper extends UpdateMapper {
         return null;
     }
 
-    private Collection<Expression> convertCollectiveExpression(ColumnBasedCriteria.Expression expression, ColumnBasedCriteria.Expression otherExpression, Table defaultTable, MutableBindings bindings) {
+    private Collection<Expression> convertCollectiveExpression(final ColumnBasedCriteria.Expression expression, final ColumnBasedCriteria.Expression otherExpression, final Table defaultTable, final MutableBindings bindings) {
         if (expression.isCollection())
         {
             final ColumnBasedCriteria.CollectionExpression collectionExpression = (ColumnBasedCriteria.CollectionExpression) expression;
             final List<Expression> expressions = new ArrayList<>(collectionExpression.getExpressions().size());
 
-            for (ColumnBasedCriteria.Expression collectionExpressionExpression : collectionExpression.getExpressions()) {
+            for (final ColumnBasedCriteria.Expression collectionExpressionExpression : collectionExpression.getExpressions()) {
                 if (collectionExpressionExpression.isCollection())
                     return null;
 
@@ -229,14 +229,14 @@ public class ExtendedMapper extends UpdateMapper {
     }
 
     public Field createPropertyField(
-                              String tableName,
-                              String key,
-                              MappingContext<? extends RelationalPersistentEntity<?>, RelationalPersistentProperty> mappingContext) {
+            final String tableName,
+            final String key,
+            final MappingContext<? extends RelationalPersistentEntity<?>, RelationalPersistentProperty> mappingContext) {
         return StringUtils.isEmpty(tableName) ? new Field(key) : new ExtendedMetadataBackedField(key, findEntityFromTableName(tableName), mappingContext);
     }
 
-    public RelationalPersistentEntity<?> findEntityFromTableName(String table) {
-        for (RelationalPersistentEntity<?> persistentEntity : this.mappingContext.getPersistentEntities()) {
+    public RelationalPersistentEntity<?> findEntityFromTableName(final String table) {
+        for (final RelationalPersistentEntity<?> persistentEntity : this.mappingContext.getPersistentEntities()) {
             if (persistentEntity.getTableName().equals(table))
                 return persistentEntity;
         }
@@ -244,7 +244,7 @@ public class ExtendedMapper extends UpdateMapper {
         throw new IllegalArgumentException("Unknown table name: " + table);
     }
 
-    public Class<?> getTypeHint(Object mappedValue, Class<?> propertyType, SettableValue settableValue) {
+    public Class<?> getTypeHint(final Object mappedValue, final Class<?> propertyType, final SettableValue settableValue) {
 
         if (mappedValue == null || propertyType.equals(Object.class)) {
             return settableValue.getType();
@@ -257,8 +257,8 @@ public class ExtendedMapper extends UpdateMapper {
         return propertyType;
     }
 
-    public Expression bind(@Nullable Object mappedValue, Class<?> valueType, MutableBindings bindings,
-                            BindMarker bindMarker) {
+    public Expression bind(@Nullable final Object mappedValue, final Class<?> valueType, final MutableBindings bindings,
+                           final BindMarker bindMarker) {
 
         if (mappedValue != null) {
             bindings.bind(bindMarker, mappedValue);
@@ -271,7 +271,7 @@ public class ExtendedMapper extends UpdateMapper {
 
     public static class ExtendedMetadataBackedField extends MetadataBackedField {
 
-        public ExtendedMetadataBackedField(String name, RelationalPersistentEntity<?> entity, MappingContext<? extends RelationalPersistentEntity<?>, RelationalPersistentProperty> context) {
+        public ExtendedMetadataBackedField(final String name, final RelationalPersistentEntity<?> entity, final MappingContext<? extends RelationalPersistentEntity<?>, RelationalPersistentProperty> context) {
             super(name, entity, context);
         }
     }

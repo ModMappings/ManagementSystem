@@ -21,7 +21,7 @@ import java.util.UUID;
 @Priority(Integer.MAX_VALUE)
 class ProtectedMappableInformationRepositoryImpl extends AbstractModMappingRepository<ProtectedMappableInformationDMO> implements ProtectedMappableInformationRepository {
 
-    public ProtectedMappableInformationRepositoryImpl(DatabaseClient databaseClient, ExtendedDataAccessStrategy accessStrategy) {
+    public ProtectedMappableInformationRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, ProtectedMappableInformationDMO.class);
     }
 

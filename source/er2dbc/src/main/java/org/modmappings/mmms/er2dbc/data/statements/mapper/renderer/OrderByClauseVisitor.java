@@ -12,7 +12,7 @@ public class OrderByClauseVisitor extends TypedSubtreeVisitor<OrderByField> impl
     private final StringBuilder builder = new StringBuilder();
     private boolean first = true;
 
-    OrderByClauseVisitor(RenderContext context) {
+    OrderByClauseVisitor(final RenderContext context) {
         this.context = context;
     }
 
@@ -21,7 +21,7 @@ public class OrderByClauseVisitor extends TypedSubtreeVisitor<OrderByField> impl
      * @see TypedSubtreeVisitor#enterMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterMatched(OrderByField segment) {
+    Delegation enterMatched(final OrderByField segment) {
 
         if (!first) {
             builder.append(", ");
@@ -36,9 +36,9 @@ public class OrderByClauseVisitor extends TypedSubtreeVisitor<OrderByField> impl
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(OrderByField segment) {
+    Delegation leaveMatched(final OrderByField segment) {
 
-        OrderByField field = segment;
+        final OrderByField field = segment;
 
         if (field.getDirection() != null) {
             builder.append(" ") //
@@ -53,7 +53,7 @@ public class OrderByClauseVisitor extends TypedSubtreeVisitor<OrderByField> impl
      * @see TypedSubtreeVisitor#leaveNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
 
         if (segment instanceof Column) {
             builder.append(context.getNamingStrategy().getReferenceName(((Column) segment)));

@@ -15,7 +15,7 @@ public class JoinVisitor extends TypedSubtreeVisitor<Join> {
     private boolean inCondition = false;
     private boolean hasSeenCondition = false;
 
-    JoinVisitor(RenderContext context, RenderTarget parent) {
+    JoinVisitor(final RenderContext context, final RenderTarget parent) {
         this.context = context;
         this.parent = parent;
     }
@@ -25,7 +25,7 @@ public class JoinVisitor extends TypedSubtreeVisitor<Join> {
      * @see TypedSubtreeVisitor#enterMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterMatched(Join segment) {
+    Delegation enterMatched(final Join segment) {
 
         joinClause.append(segment.getType().getSql()).append(' ');
 
@@ -37,7 +37,7 @@ public class JoinVisitor extends TypedSubtreeVisitor<Join> {
      * @see TypedSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
 
         if (segment instanceof Table && !inCondition) {
             joinClause.append(context.getNamingStrategy().getName(((Table) segment)));
@@ -63,7 +63,7 @@ public class JoinVisitor extends TypedSubtreeVisitor<Join> {
      * @see TypedSubtreeVisitor#leaveNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
 
         if (segment instanceof Condition) {
             inCondition = false;
@@ -76,7 +76,7 @@ public class JoinVisitor extends TypedSubtreeVisitor<Join> {
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(Join segment) {
+    Delegation leaveMatched(final Join segment) {
         parent.onRendered(joinClause);
         return super.leaveMatched(segment);
     }

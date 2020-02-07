@@ -27,7 +27,7 @@ public class TypedSubtreeVisitor<T extends Visitable> extends DelegatingVisitor 
      *         {@link Delegation#delegateTo(DelegatingVisitor)}.
      * @see Delegation#retain()
      */
-    Delegation enterMatched(T segment) {
+    Delegation enterMatched(final T segment) {
         return Delegation.retain();
     }
 
@@ -40,7 +40,7 @@ public class TypedSubtreeVisitor<T extends Visitable> extends DelegatingVisitor 
      *         {@link Delegation#delegateTo(DelegatingVisitor)}.
      * @see Delegation#retain()
      */
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
         return Delegation.retain();
     }
 
@@ -52,7 +52,7 @@ public class TypedSubtreeVisitor<T extends Visitable> extends DelegatingVisitor 
      * @return delegation options. Can be either {@link Delegation#retain()} or {@link Delegation#leave()}.
      * @see Delegation#leave()
      */
-    Delegation leaveMatched(T segment) {
+    Delegation leaveMatched(final T segment) {
         return Delegation.leave();
     }
 
@@ -64,7 +64,7 @@ public class TypedSubtreeVisitor<T extends Visitable> extends DelegatingVisitor 
      * @return delegation options. Can be either {@link Delegation#retain()} or {@link Delegation#leave()}.
      * @see Delegation#retain()
      */
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
         return Delegation.retain();
     }
 
@@ -74,7 +74,7 @@ public class TypedSubtreeVisitor<T extends Visitable> extends DelegatingVisitor 
      */
     @SuppressWarnings("unchecked")
     @Override
-    public final Delegation doEnter(Visitable segment) {
+    public final Delegation doEnter(final Visitable segment) {
 
         if (currentSegment == null) {
 
@@ -96,7 +96,7 @@ public class TypedSubtreeVisitor<T extends Visitable> extends DelegatingVisitor 
      */
     @SuppressWarnings("unchecked")
     @Override
-    public final Delegation doLeave(Visitable segment) {
+    public final Delegation doLeave(final Visitable segment) {
 
         if (currentSegment == null) {
             return Delegation.leave();

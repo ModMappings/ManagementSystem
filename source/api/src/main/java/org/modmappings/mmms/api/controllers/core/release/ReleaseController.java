@@ -37,7 +37,7 @@ public class ReleaseController {
     private final ReleaseService releaseService;
     private final UserService userService;
 
-    public ReleaseController(final ReleaseService releaseService, UserService userService) {
+    public ReleaseController(final ReleaseService releaseService, final UserService userService) {
         this.releaseService = releaseService;
         this.userService = userService;
     }
@@ -62,7 +62,7 @@ public class ReleaseController {
                             schema = @Schema()))
     })
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ReleaseDTO> getBy(@PathVariable UUID id, ServerHttpResponse response) {
+    public Mono<ReleaseDTO> getBy(@PathVariable final UUID id, final ServerHttpResponse response) {
         return releaseService.getBy(id, true)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
@@ -134,7 +134,7 @@ public class ReleaseController {
             final @RequestParam(name = "mapping", required = false) UUID mappingId,
             final @RequestParam(name = "user", required = false) UUID userId,
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
-            ServerHttpResponse response) {
+            final ServerHttpResponse response) {
         return releaseService.getAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
@@ -174,7 +174,7 @@ public class ReleaseController {
     })
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('RELEASES_DELETE')")
-    public Mono<Void> deleteBy(@PathVariable UUID id, ServerWebExchange exchange) {
+    public Mono<Void> deleteBy(@PathVariable final UUID id, final ServerWebExchange exchange) {
         return exchange.getPrincipal()
                 .flatMap(principal -> releaseService.deleteBy(id, true, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
@@ -210,10 +210,10 @@ public class ReleaseController {
     @PostMapping(value = "{mappingType}/{gameVersion}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('RELEASES_CREATE')")
     public Mono<ReleaseDTO> create(
-            @PathVariable(name = "gameVersion") UUID gameVersionId,
-            @PathVariable(name = "mappingType") UUID mappingTypeId,
-            @RequestBody ReleaseDTO newRelease,
-            ServerWebExchange exchange) {
+            @PathVariable(name = "gameVersion") final UUID gameVersionId,
+            @PathVariable(name = "mappingType") final UUID mappingTypeId,
+            @RequestBody final ReleaseDTO newRelease,
+            final ServerWebExchange exchange) {
         return exchange.getPrincipal()
                 .flatMap(principal -> releaseService.create(gameVersionId, mappingTypeId, newRelease, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
@@ -260,7 +260,7 @@ public class ReleaseController {
     })
     @PatchMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('RELEASES_UPDATE')")
-    public Mono<ReleaseDTO> update(@PathVariable UUID id, @RequestBody ReleaseDTO releaseToUpdate, ServerWebExchange exchange) {
+    public Mono<ReleaseDTO> update(@PathVariable final UUID id, @RequestBody final ReleaseDTO releaseToUpdate, final ServerWebExchange exchange) {
         return exchange.getPrincipal()
                 .flatMap(principal -> releaseService.update(id, releaseToUpdate, true, () -> userService.getCurrentUserId(principal)))
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

@@ -16,7 +16,7 @@ public class MatchVisitor extends FilteredSubtreeVisitor {
     private @Nullable
     PartRenderer current;
 
-    MatchVisitor(Match condition, RenderContext context, RenderTarget target) {
+    MatchVisitor(final Match condition, final RenderContext context, final RenderTarget target) {
         super(it -> it == condition);
         this.context = context;
         this.target = target;
@@ -27,16 +27,16 @@ public class MatchVisitor extends FilteredSubtreeVisitor {
      * @see FilteredSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation enterNested(Visitable segment) {
+    Delegation enterNested(final Visitable segment) {
 
         if (segment instanceof Expression) {
-            ExpressionVisitor visitor = new ExpressionVisitor(context);
+            final ExpressionVisitor visitor = new ExpressionVisitor(context);
             current = visitor;
             return Delegation.delegateTo(visitor);
         }
 
         if (segment instanceof Condition) {
-            ConditionVisitor visitor = new ConditionVisitor(context);
+            final ConditionVisitor visitor = new ConditionVisitor(context);
             current = visitor;
             return Delegation.delegateTo(visitor);
         }
@@ -49,7 +49,7 @@ public class MatchVisitor extends FilteredSubtreeVisitor {
      * @see FilteredSubtreeVisitor#leaveNested(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveNested(Visitable segment) {
+    Delegation leaveNested(final Visitable segment) {
 
         if (current != null) {
             if (part.length() != 0) {
@@ -68,7 +68,7 @@ public class MatchVisitor extends FilteredSubtreeVisitor {
      * @see FilteredSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(Visitable segment) {
+    Delegation leaveMatched(final Visitable segment) {
 
         target.onRendered(part);
 

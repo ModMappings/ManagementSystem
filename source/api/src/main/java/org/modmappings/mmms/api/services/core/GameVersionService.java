@@ -37,7 +37,7 @@ public class GameVersionService {
     private final GameVersionRepository repository;
     private final UserLoggingService userLoggingService;
 
-    public GameVersionService(GameVersionRepository repository, UserLoggingService userLoggingService) {
+    public GameVersionService(final GameVersionRepository repository, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.userLoggingService = userLoggingService;
     }
@@ -48,7 +48,7 @@ public class GameVersionService {
      * @param id The id to look the game version up for.
      * @return A {@link Mono} containing the requested game version or a errored {@link Mono} that indicates a failure.
      */
-    public Mono<GameVersionDTO> getBy(UUID id) {
+    public Mono<GameVersionDTO> getBy(final UUID id) {
         return repository.findById(id)
                 .doFirst(() -> logger.debug("Looking up a game version by id: {}", id))
                 .map(this::toDTO)
@@ -66,7 +66,7 @@ public class GameVersionService {
      * @param pageable The pagination and sorting logic for the request.
      * @return A {@link Flux} with the game versions, or an errored {@link Flux} that indicates a failure.
      */
-    public Mono<Page<GameVersionDTO>> getAll(String nameRegex, Boolean preRelease, Boolean snapshot, Pageable pageable) {
+    public Mono<Page<GameVersionDTO>> getAll(final String nameRegex, final Boolean preRelease, final Boolean snapshot, final Pageable pageable) {
         return repository.findAllBy(
                 nameRegex,
                 preRelease,
@@ -81,7 +81,7 @@ public class GameVersionService {
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("GameVersion")));
     }
 
-    private GameVersionDTO toDTO(GameVersionDMO dmo) {
+    private GameVersionDTO toDTO(final GameVersionDMO dmo) {
         return new GameVersionDTO(
                 dmo.getId(),
                 dmo.getCreatedBy(),

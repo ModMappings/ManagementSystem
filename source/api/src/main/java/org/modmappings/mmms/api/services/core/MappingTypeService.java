@@ -37,7 +37,7 @@ public class MappingTypeService {
     private final MappingTypeRepository repository;
     private final UserLoggingService userLoggingService;
 
-    public MappingTypeService(MappingTypeRepository repository, UserLoggingService userLoggingService) {
+    public MappingTypeService(final MappingTypeRepository repository, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.userLoggingService = userLoggingService;
     }
@@ -90,7 +90,7 @@ public class MappingTypeService {
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("MappingType")));
     }
 
-    private MappingTypeDTO toDTO(MappingTypeDMO dmo) {
+    private MappingTypeDTO toDTO(final MappingTypeDMO dmo) {
         return new MappingTypeDTO(
                 dmo.getId(),
                 dmo.getCreatedBy(),

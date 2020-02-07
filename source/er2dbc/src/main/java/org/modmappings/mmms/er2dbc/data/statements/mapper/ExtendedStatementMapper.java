@@ -41,7 +41,7 @@ public class ExtendedStatementMapper implements StatementMapper {
     private final ExtendedMapper extendedMapper;
     private final MappingContext<RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> mappingContext;
 
-    public ExtendedStatementMapper(R2dbcDialect dialect, RenderContext renderContext, ExtendedMapper extendedMapper, MappingContext<RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> mappingContext) {
+    public ExtendedStatementMapper(final R2dbcDialect dialect, final RenderContext renderContext, final ExtendedMapper extendedMapper, final MappingContext<RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> mappingContext) {
         this.dialect = dialect;
         this.renderContext = renderContext;
         this.extendedMapper = extendedMapper;
@@ -49,7 +49,7 @@ public class ExtendedStatementMapper implements StatementMapper {
     }
 
     @Override
-    public <T> Typed<T> forType(Class<T> type) {
+    public <T> Typed<T> forType(final Class<T> type) {
 
         Assert.notNull(type, "Type must not be null!");
 
@@ -66,23 +66,23 @@ public class ExtendedStatementMapper implements StatementMapper {
      * @see org.springframework.data.r2dbc.function.StatementMapper#getMappedObject(org.springframework.data.r2dbc.function.StatementMapper.SelectSpec)
      */
     @Override
-    public PreparedOperation<Select> getMappedObject(SelectSpec selectSpec) {
+    public PreparedOperation<Select> getMappedObject(final SelectSpec selectSpec) {
         return getMappedObject(selectSpec, null);
     }
 
-    private PreparedOperation<Select> getMappedObject(SelectSpec selectSpec,
-                                                      @Nullable RelationalPersistentEntity<?> entity) {
+    private PreparedOperation<Select> getMappedObject(final SelectSpec selectSpec,
+                                                      @Nullable final RelationalPersistentEntity<?> entity) {
 
-        Table table = Table.create(selectSpec.getTable());
-        List<Column> columns = table.columns(selectSpec.getProjectedFields());
-        SelectBuilder.SelectFromAndJoin selectBuilder = StatementBuilder.select(columns).from(table);
+        final Table table = Table.create(selectSpec.getTable());
+        final List<Column> columns = table.columns(selectSpec.getProjectedFields());
+        final SelectBuilder.SelectFromAndJoin selectBuilder = StatementBuilder.select(columns).from(table);
 
-        BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
+        final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
         Bindings bindings = Bindings.empty();
 
         if (selectSpec.getCriteria() != null) {
 
-            BoundCondition mappedObject = this.extendedMapper.getMappedObject(bindMarkers, selectSpec.getCriteria(), table,
+            final BoundCondition mappedObject = this.extendedMapper.getMappedObject(bindMarkers, selectSpec.getCriteria(), table,
                     entity);
 
             bindings = mappedObject.getBindings();
@@ -91,42 +91,42 @@ public class ExtendedStatementMapper implements StatementMapper {
 
         if (selectSpec.getSort().isSorted()) {
 
-            Sort mappedSort = this.extendedMapper.getMappedObject(selectSpec.getSort(), entity);
+            final Sort mappedSort = this.extendedMapper.getMappedObject(selectSpec.getSort(), entity);
             selectBuilder.orderBy(createOrderByFields(table, mappedSort));
         }
 
         if (selectSpec.getPage().isPaged()) {
 
-            Pageable page = selectSpec.getPage();
+            final Pageable page = selectSpec.getPage();
 
             selectBuilder.limitOffset(page.getPageSize(), page.getOffset());
         }
 
-        Select select = selectBuilder.build();
+        final Select select = selectBuilder.build();
         return new ExtendedStatementMapper.ExtendedPreparedOperation<>(select, this.renderContext, bindings);
     }
 
-    public PreparedOperation<Select> getMappedObject(SelectSpecWithJoin selectSpecWithJoin) {
+    public PreparedOperation<Select> getMappedObject(final SelectSpecWithJoin selectSpecWithJoin) {
         return getMappedObject(selectSpecWithJoin, null);
     }
 
-    private PreparedOperation<Select> getMappedObject(SelectSpecWithJoin selectSpecWithJoin,
-                                                      @Nullable RelationalPersistentEntity<?> entity) {
+    private PreparedOperation<Select> getMappedObject(final SelectSpecWithJoin selectSpecWithJoin,
+                                                      @Nullable final RelationalPersistentEntity<?> entity) {
 
-        Table table = Table.create(selectSpecWithJoin.getTable());
-        List<Expression> projectExpressions = selectSpecWithJoin.getProjectedFields().stream().map(e -> extendedMapper.getMappedObject(e, table)).collect(Collectors.toList());
-        ExtendedSelectBuilder selectBuilder = new ExtendedSelectBuilder().select(projectExpressions).from(table);
+        final Table table = Table.create(selectSpecWithJoin.getTable());
+        final List<Expression> projectExpressions = selectSpecWithJoin.getProjectedFields().stream().map(e -> extendedMapper.getMappedObject(e, table)).collect(Collectors.toList());
+        final ExtendedSelectBuilder selectBuilder = new ExtendedSelectBuilder().select(projectExpressions).from(table);
 
-        BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
+        final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
         Bindings bindings = Bindings.empty();
 
         if (selectSpecWithJoin.getJoinSpecs()!= null && !selectSpecWithJoin.getJoinSpecs().isEmpty()) {
-            for (JoinSpec joinSpec : selectSpecWithJoin.getJoinSpecs()) {
-                Table tableToJoin = joinSpec.isAliased() ? Table.aliased(joinSpec.getTableName(), joinSpec.getTableAlias()) :
+            for (final JoinSpec joinSpec : selectSpecWithJoin.getJoinSpecs()) {
+                final Table tableToJoin = joinSpec.isAliased() ? Table.aliased(joinSpec.getTableName(), joinSpec.getTableAlias()) :
                         Table.create(joinSpec.getTableName());
 
-                org.springframework.data.relational.core.sql.Join.JoinType remappedJoinType = extendedMapper.getMappedObject(joinSpec.getType());
-                BoundCondition boundCondition = extendedMapper.getMappedObject(bindMarkers, joinSpec.getOn(), table, entity);
+                final org.springframework.data.relational.core.sql.Join.JoinType remappedJoinType = extendedMapper.getMappedObject(joinSpec.getType());
+                final BoundCondition boundCondition = extendedMapper.getMappedObject(bindMarkers, joinSpec.getOn(), table, entity);
 
                 selectBuilder.join(new Join(remappedJoinType, tableToJoin, boundCondition.getCondition()));
                 bindings = bindings.and(boundCondition.getBindings());
@@ -135,7 +135,7 @@ public class ExtendedStatementMapper implements StatementMapper {
 
         if (selectSpecWithJoin.getCriteria() != null) {
 
-            BoundCondition mappedObject = this.extendedMapper.getMappedObject(bindMarkers, selectSpecWithJoin.getCriteria(), table,
+            final BoundCondition mappedObject = this.extendedMapper.getMappedObject(bindMarkers, selectSpecWithJoin.getCriteria(), table,
                     entity);
 
             bindings = bindings.and(mappedObject.getBindings());
@@ -144,29 +144,29 @@ public class ExtendedStatementMapper implements StatementMapper {
 
         if (selectSpecWithJoin.getSort().isSorted()) {
 
-            Sort mappedSort = this.extendedMapper.getMappedObject(selectSpecWithJoin.getSort(), entity);
+            final Sort mappedSort = this.extendedMapper.getMappedObject(selectSpecWithJoin.getSort(), entity);
             selectBuilder.orderBy(createOrderByFields(table, mappedSort));
         }
 
         if (selectSpecWithJoin.getPage().isPaged()) {
 
-            Pageable page = selectSpecWithJoin.getPage();
+            final Pageable page = selectSpecWithJoin.getPage();
 
             selectBuilder.limitOffset(page.getPageSize(), page.getOffset());
         }
 
-        Select select = selectBuilder.build();
+        final Select select = selectBuilder.build();
         return new ExtendedStatementMapper.ExtendedPreparedOperation<>(select, this.renderContext, bindings);
     }
 
 
-    private Collection<? extends OrderByField> createOrderByFields(Table table, Sort sortToUse) {
+    private Collection<? extends OrderByField> createOrderByFields(final Table table, final Sort sortToUse) {
 
-        List<OrderByField> fields = new ArrayList<>();
+        final List<OrderByField> fields = new ArrayList<>();
 
-        for (Sort.Order order : sortToUse) {
+        for (final Sort.Order order : sortToUse) {
 
-            OrderByField orderByField = OrderByField.from(table.column(order.getProperty()));
+            final OrderByField orderByField = OrderByField.from(table.column(order.getProperty()));
 
             if (order.getDirection() != null) {
                 fields.add(order.isAscending() ? orderByField.asc() : orderByField.desc());
@@ -183,20 +183,20 @@ public class ExtendedStatementMapper implements StatementMapper {
      * @see org.springframework.data.r2dbc.function.StatementMapper#getMappedObject(org.springframework.data.r2dbc.function.StatementMapper.InsertSpec)
      */
     @Override
-    public PreparedOperation<Insert> getMappedObject(InsertSpec insertSpec) {
+    public PreparedOperation<Insert> getMappedObject(final InsertSpec insertSpec) {
         return getMappedObject(insertSpec, null);
     }
 
-    private PreparedOperation<Insert> getMappedObject(InsertSpec insertSpec,
-                                                      @Nullable RelationalPersistentEntity<?> entity) {
+    private PreparedOperation<Insert> getMappedObject(final InsertSpec insertSpec,
+                                                      @Nullable final RelationalPersistentEntity<?> entity) {
 
-        BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
-        Table table = Table.create(insertSpec.getTable());
+        final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
+        final Table table = Table.create(insertSpec.getTable());
 
-        BoundAssignments boundAssignments = this.extendedMapper.getMappedObject(bindMarkers, insertSpec.getAssignments(),
+        final BoundAssignments boundAssignments = this.extendedMapper.getMappedObject(bindMarkers, insertSpec.getAssignments(),
                 table, entity);
 
-        Bindings bindings;
+        final Bindings bindings;
 
         if (boundAssignments.getAssignments().isEmpty()) {
             throw new IllegalStateException("INSERT contains no values");
@@ -204,13 +204,13 @@ public class ExtendedStatementMapper implements StatementMapper {
 
         bindings = boundAssignments.getBindings();
 
-        InsertBuilder.InsertIntoColumnsAndValues insertBuilder = StatementBuilder.insert(table);
+        final InsertBuilder.InsertIntoColumnsAndValues insertBuilder = StatementBuilder.insert(table);
         InsertBuilder.InsertValuesWithBuild withBuild = (InsertBuilder.InsertValuesWithBuild) insertBuilder;
 
-        for (Assignment assignment : boundAssignments.getAssignments()) {
+        for (final Assignment assignment : boundAssignments.getAssignments()) {
 
             if (assignment instanceof AssignValue) {
-                AssignValue assignValue = (AssignValue) assignment;
+                final AssignValue assignValue = (AssignValue) assignment;
 
                 insertBuilder.column(assignValue.getColumn());
                 withBuild = insertBuilder.value(assignValue.getValue());
@@ -225,17 +225,17 @@ public class ExtendedStatementMapper implements StatementMapper {
      * @see org.springframework.data.r2dbc.function.StatementMapper#getMappedObject(org.springframework.data.r2dbc.function.StatementMapper.UpdateSpec)
      */
     @Override
-    public PreparedOperation<org.springframework.data.relational.core.sql.Update> getMappedObject(UpdateSpec updateSpec) {
+    public PreparedOperation<org.springframework.data.relational.core.sql.Update> getMappedObject(final UpdateSpec updateSpec) {
         return getMappedObject(updateSpec, null);
     }
 
-    private PreparedOperation<org.springframework.data.relational.core.sql.Update> getMappedObject(UpdateSpec updateSpec,
-                                                                                                   @Nullable RelationalPersistentEntity<?> entity) {
+    private PreparedOperation<org.springframework.data.relational.core.sql.Update> getMappedObject(final UpdateSpec updateSpec,
+                                                                                                   @Nullable final RelationalPersistentEntity<?> entity) {
 
-        BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
-        Table table = Table.create(updateSpec.getTable());
+        final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
+        final Table table = Table.create(updateSpec.getTable());
 
-        BoundAssignments boundAssignments = this.extendedMapper.getMappedObject(bindMarkers,
+        final BoundAssignments boundAssignments = this.extendedMapper.getMappedObject(bindMarkers,
                 updateSpec.getUpdate().getAssignments(), table, entity);
 
         Bindings bindings;
@@ -246,13 +246,13 @@ public class ExtendedStatementMapper implements StatementMapper {
 
         bindings = boundAssignments.getBindings();
 
-        UpdateBuilder.UpdateWhere updateBuilder = StatementBuilder.update(table).set(boundAssignments.getAssignments());
+        final UpdateBuilder.UpdateWhere updateBuilder = StatementBuilder.update(table).set(boundAssignments.getAssignments());
 
-        Update update;
+        final Update update;
 
         if (updateSpec.getCriteria() != null) {
 
-            BoundCondition boundCondition = this.extendedMapper.getMappedObject(bindMarkers, updateSpec.getCriteria(), table,
+            final BoundCondition boundCondition = this.extendedMapper.getMappedObject(bindMarkers, updateSpec.getCriteria(), table,
                     entity);
 
             bindings = bindings.and(boundCondition.getBindings());
@@ -269,24 +269,24 @@ public class ExtendedStatementMapper implements StatementMapper {
      * @see org.springframework.data.r2dbc.function.StatementMapper#getMappedObject(org.springframework.data.r2dbc.function.StatementMapper.DeleteSpec)
      */
     @Override
-    public PreparedOperation<Delete> getMappedObject(DeleteSpec deleteSpec) {
+    public PreparedOperation<Delete> getMappedObject(final DeleteSpec deleteSpec) {
         return getMappedObject(deleteSpec, null);
     }
 
-    private PreparedOperation<Delete> getMappedObject(DeleteSpec deleteSpec,
-                                                      @Nullable RelationalPersistentEntity<?> entity) {
+    private PreparedOperation<Delete> getMappedObject(final DeleteSpec deleteSpec,
+                                                      @Nullable final RelationalPersistentEntity<?> entity) {
 
-        BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
-        Table table = Table.create(deleteSpec.getTable());
+        final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
+        final Table table = Table.create(deleteSpec.getTable());
 
-        DeleteBuilder.DeleteWhere deleteBuilder = StatementBuilder.delete(table);
+        final DeleteBuilder.DeleteWhere deleteBuilder = StatementBuilder.delete(table);
 
         Bindings bindings = Bindings.empty();
 
-        Delete delete;
+        final Delete delete;
         if (deleteSpec.getCriteria() != null) {
 
-            BoundCondition boundCondition = this.extendedMapper.getMappedObject(bindMarkers, deleteSpec.getCriteria(), table,
+            final BoundCondition boundCondition = this.extendedMapper.getMappedObject(bindMarkers, deleteSpec.getCriteria(), table,
                     entity);
 
             bindings = boundCondition.getBindings();
@@ -298,7 +298,7 @@ public class ExtendedStatementMapper implements StatementMapper {
         return new ExtendedStatementMapper.ExtendedPreparedOperation<>(delete, this.renderContext, bindings);
     }
 
-    public SelectSpecWithJoin createSelectWithJoin(String table) {
+    public SelectSpecWithJoin createSelectWithJoin(final String table) {
         return SelectSpecWithJoin.create(table);
     }
 
@@ -313,7 +313,7 @@ public class ExtendedStatementMapper implements StatementMapper {
         private final RenderContext renderContext;
         private final Bindings bindings;
 
-        public ExtendedPreparedOperation(T source, RenderContext renderContext, Bindings bindings) {
+        public ExtendedPreparedOperation(final T source, final RenderContext renderContext, final Bindings bindings) {
             this.source = source;
             this.renderContext = renderContext;
             this.bindings = bindings;
@@ -335,7 +335,7 @@ public class ExtendedStatementMapper implements StatementMapper {
         @Override
         public String toQuery() {
 
-            SqlRenderer sqlRenderer = SqlRenderer.create(this.renderContext);
+            final SqlRenderer sqlRenderer = SqlRenderer.create(this.renderContext);
 
             if (this.source instanceof Select) {
                 final SqlWithJoinSpecificSqlRenderer specificSqlRenderer = new SqlWithJoinSpecificSqlRenderer();
@@ -358,7 +358,7 @@ public class ExtendedStatementMapper implements StatementMapper {
         }
 
         @Override
-        public void bindTo(BindTarget to) {
+        public void bindTo(final BindTarget to) {
             this.bindings.apply(to);
         }
     }
@@ -367,37 +367,37 @@ public class ExtendedStatementMapper implements StatementMapper {
 
         final RelationalPersistentEntity<T> entity;
 
-        public Typed(R2dbcDialect dialect, RenderContext renderContext, ExtendedMapper extendedMapper, MappingContext<RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> mappingContext, RelationalPersistentEntity<T> entity) {
+        public Typed(final R2dbcDialect dialect, final RenderContext renderContext, final ExtendedMapper extendedMapper, final MappingContext<RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> mappingContext, final RelationalPersistentEntity<T> entity) {
             super(dialect, renderContext, extendedMapper, mappingContext);
             this.entity = entity;
         }
 
         @Override
-        public <TC> Typed<TC> forType(Class<TC> type) {
+        public <TC> Typed<TC> forType(final Class<TC> type) {
             return ExtendedStatementMapper.this.forType(type);
         }
 
         @Override
-        public PreparedOperation<Select> getMappedObject(SelectSpec selectSpec) {
+        public PreparedOperation<Select> getMappedObject(final SelectSpec selectSpec) {
             return ExtendedStatementMapper.this.getMappedObject(selectSpec, entity);
         }
 
-        public PreparedOperation<Select> getMappedObject(SelectSpecWithJoin selectSpecWithJoin) {
+        public PreparedOperation<Select> getMappedObject(final SelectSpecWithJoin selectSpecWithJoin) {
             return ExtendedStatementMapper.this.getMappedObject(selectSpecWithJoin, entity);
         }
 
         @Override
-        public PreparedOperation<Insert> getMappedObject(InsertSpec insertSpec) {
+        public PreparedOperation<Insert> getMappedObject(final InsertSpec insertSpec) {
             return ExtendedStatementMapper.this.getMappedObject(insertSpec, entity);
         }
 
         @Override
-        public PreparedOperation<Update> getMappedObject(UpdateSpec updateSpec) {
+        public PreparedOperation<Update> getMappedObject(final UpdateSpec updateSpec) {
             return ExtendedStatementMapper.this.getMappedObject(updateSpec, entity);
         }
 
         @Override
-        public PreparedOperation<Delete> getMappedObject(DeleteSpec deleteSpec) {
+        public PreparedOperation<Delete> getMappedObject(final DeleteSpec deleteSpec) {
             return ExtendedStatementMapper.this.getMappedObject(deleteSpec, entity);
         }
     }

@@ -8,7 +8,7 @@ public class SimpleRenderContext implements RenderContext {
 
     private final RenderNamingStrategy namingStrategy;
 
-    public SimpleRenderContext(RenderNamingStrategy namingStrategy) {
+    public SimpleRenderContext(final RenderNamingStrategy namingStrategy) {
         this.namingStrategy = namingStrategy;
     }
 
