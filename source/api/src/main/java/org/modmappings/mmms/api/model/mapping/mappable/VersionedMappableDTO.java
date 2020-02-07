@@ -114,7 +114,7 @@ public class VersionedMappableDTO {
         return visibility;
     }
 
-    public boolean isStatic() {
+    public boolean getIsStatic() {
         return isStatic;
     }
 
