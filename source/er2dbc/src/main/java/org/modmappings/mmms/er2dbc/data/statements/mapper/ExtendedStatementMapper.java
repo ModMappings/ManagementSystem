@@ -338,8 +338,13 @@ public class ExtendedStatementMapper implements StatementMapper {
             final SqlRenderer sqlRenderer = SqlRenderer.create(this.renderContext);
 
             if (this.source instanceof Select) {
-                final SqlWithJoinSpecificSqlRenderer specificSqlRenderer = new SqlWithJoinSpecificSqlRenderer();
-                return specificSqlRenderer.render((Select) this.source);
+                if (this.source instanceof org.modmappings.mmms.er2dbc.relational.core.sql.Select)
+                {
+                    final SqlWithJoinSpecificSqlRenderer specificSqlRenderer = new SqlWithJoinSpecificSqlRenderer();
+                    return specificSqlRenderer.render((Select) this.source);
+                }
+
+                return sqlRenderer.render((Select) this.source);
             }
 
             if (this.source instanceof Insert) {

@@ -51,7 +51,7 @@ public class VersionedMappableController {
                             name = "id",
                             in = ParameterIn.PATH,
                             required = true,
-                            description = "The id of the versiond mappable to look up.",
+                            description = "The id of the versioned mappable to look up.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     )
             }

@@ -110,7 +110,7 @@ public class GameVersionController {
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<GameVersionDTO>> getAll(
-            final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
+            final @RequestParam(name = "name", required = false) String nameRegex,
             final @RequestParam(name = "isPreRelease", required = false) Boolean isPreRelease,
             final @RequestParam(name = "isSnapshot", required = false) Boolean isSnapshot,
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,

@@ -4,6 +4,7 @@ services:
   postgres:
     image: postgres
     restart: unless-stopped
+    command: ["postgres", "-c", "log_statement=all"]
     ports:
       - "5432:5432"
     environment:

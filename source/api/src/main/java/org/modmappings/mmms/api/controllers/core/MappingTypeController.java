@@ -101,7 +101,7 @@ public class MappingTypeController {
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<MappingTypeDTO>> getAll(
-            final @RequestParam(name = "name", required = false, defaultValue = "*") String nameRegex,
+            final @RequestParam(name = "name", required = false) String nameRegex,
             final @RequestParam(name = "editable", required = false) Boolean editable,
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
             final ServerHttpResponse response) {

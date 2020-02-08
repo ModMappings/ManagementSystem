@@ -13,7 +13,7 @@ public class Match extends AbstractSegment implements Condition {
 
     private Match(final Expression target, final Expression pattern, final IMatchFormatter formatter) {
 
-        super(target, pattern);
+        super(pattern, target);
 
         this.pattern = pattern;
         this.target = target;
@@ -53,6 +53,6 @@ public class Match extends AbstractSegment implements Condition {
 
     @Override
     public String toString() {
-        return formatter.format(getTarget().toString(), getPattern().toString());
+        return formatter.format(getPattern().toString(), getTarget().toString());
     }
 }
