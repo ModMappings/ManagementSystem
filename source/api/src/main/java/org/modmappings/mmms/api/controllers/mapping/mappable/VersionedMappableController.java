@@ -112,7 +112,7 @@ public class VersionedMappableController {
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     ),
                     @Parameter(
-                            name = "superTypeTargetID",
+                            name = "superTypeTargetId",
                             in = ParameterIn.QUERY,
                             description = "The id of the class to find the super types for. Null to ignore.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"

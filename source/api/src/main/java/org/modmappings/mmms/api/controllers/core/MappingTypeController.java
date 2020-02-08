@@ -76,7 +76,7 @@ public class MappingTypeController {
                             name = "name",
                             in = ParameterIn.QUERY,
                             description = "The regular expression to match the name of the mapping type against.",
-                            example = "*"
+                            example = ".*"
                     ),
                     @Parameter(
                             name = "editable",

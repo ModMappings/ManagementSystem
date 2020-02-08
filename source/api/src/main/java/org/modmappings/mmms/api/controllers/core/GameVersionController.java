@@ -79,16 +79,16 @@ public class GameVersionController {
                             name = "name",
                             in = ParameterIn.QUERY,
                             description = "The regular expression to match the name of the version against.",
-                            example = "*"
+                            example = ".*"
                     ),
                     @Parameter(
-                            name = "isPreRelease",
+                            name = "preRelease",
                             in = ParameterIn.QUERY,
                             description = "Indicator if filtering on pre-releases is needed or not. Leave the parameter out if you do not care for filtering on pre-releases or not.",
                             example = "false"
                     ),
                     @Parameter(
-                            name = "isSnapshot",
+                            name = "snapshot",
                             in = ParameterIn.QUERY,
                             description = "Indicator if filtering on snapshots is needed or not. Leave the parameter out if you do not care for filtering on snapshots or not.",
                             example = "false"
@@ -111,8 +111,8 @@ public class GameVersionController {
     @PageableAsQueryParam
     public Mono<Page<GameVersionDTO>> getAll(
             final @RequestParam(name = "name", required = false) String nameRegex,
-            final @RequestParam(name = "isPreRelease", required = false) Boolean isPreRelease,
-            final @RequestParam(name = "isSnapshot", required = false) Boolean isSnapshot,
+            final @RequestParam(name = "preRelease", required = false) Boolean isPreRelease,
+            final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
             final ServerHttpResponse response) {
         return gameVersionService.getAll(nameRegex, isPreRelease, isSnapshot, pageable)

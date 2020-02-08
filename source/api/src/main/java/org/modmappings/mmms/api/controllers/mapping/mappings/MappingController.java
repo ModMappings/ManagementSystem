@@ -103,13 +103,13 @@ public class MappingController {
                             name = "inputRegex",
                             in = ParameterIn.QUERY,
                             description = "The regular expression to match the input of the mapping against.",
-                            example = "*"
+                            example = ".*"
                     ),
                     @Parameter(
                             name = "outputRegex",
                             in = ParameterIn.QUERY,
                             description = "The regular expression to match the output of the mapping against.",
-                            example = "*"
+                            example = ".*"
                     ),
                     @Parameter(
                             name = "mappingTypeId",

@@ -78,7 +78,7 @@ public class ReleaseController {
                             name = "name",
                             in = ParameterIn.QUERY,
                             description = "The regular expression to match the name of the release against.",
-                            example = "*"
+                            example = ".*"
                     ),
                     @Parameter(
                             name = "gameVersion",
@@ -93,10 +93,10 @@ public class ReleaseController {
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     ),
                     @Parameter(
-                            name = "isSnapshot",
+                            name = "snapshot",
                             in = ParameterIn.QUERY,
                             description = "Determines if snapshot releases are supposed to be filtered out, leave the parameter out to not filter on snapshot state of releases.",
-                            example = "*"
+                            example = "false"
                     ),
                     @Parameter(
                             name = "mapping",
@@ -127,10 +127,10 @@ public class ReleaseController {
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<ReleaseDTO>> getAll(
-            final @RequestParam(name = "nameRegex", required = false) String nameRegex,
+            final @RequestParam(name = "name", required = false) String nameRegex,
             final @RequestParam(name = "gameVersion", required = false) UUID gameVersionId,
             final @RequestParam(name = "mappingType", required = false) UUID mappingTypeId,
-            final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
+            final @RequestParam(name = "snapshot", required = false) boolean isSnapshot,
             final @RequestParam(name = "mapping", required = false) UUID mappingId,
             final @RequestParam(name = "user", required = false) UUID userId,
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
