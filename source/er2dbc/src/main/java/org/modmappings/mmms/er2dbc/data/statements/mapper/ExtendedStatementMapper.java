@@ -25,9 +25,7 @@ import org.springframework.data.relational.core.sql.render.SqlRenderer;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -116,6 +114,7 @@ public class ExtendedStatementMapper implements StatementMapper {
         final Table table = Table.create(selectSpecWithJoin.getTable());
         final List<Expression> projectExpressions = selectSpecWithJoin.getProjectedFields().stream().map(e -> extendedMapper.getMappedObject(e, table)).collect(Collectors.toList());
         final ExtendedSelectBuilder selectBuilder = new ExtendedSelectBuilder().select(projectExpressions).from(table);
+        final Map<String, String> aliasing = new HashMap<>();
 
         final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
         Bindings bindings = Bindings.empty();
@@ -125,8 +124,13 @@ public class ExtendedStatementMapper implements StatementMapper {
                 final Table tableToJoin = joinSpec.isAliased() ? Table.aliased(joinSpec.getTableName(), joinSpec.getTableAlias()) :
                         Table.create(joinSpec.getTableName());
 
+                if (joinSpec.isAliased())
+                {
+                    aliasing.put(joinSpec.getTableAlias(), joinSpec.getTableName());
+                }
+
                 final org.springframework.data.relational.core.sql.Join.JoinType remappedJoinType = extendedMapper.getMappedObject(joinSpec.getType());
-                final BoundCondition boundCondition = extendedMapper.getMappedObject(bindMarkers, joinSpec.getOn(), table, entity);
+                final BoundCondition boundCondition = extendedMapper.getMappedObject(bindMarkers, joinSpec.getOn(), table, entity, aliasing);
 
                 selectBuilder.join(new Join(remappedJoinType, tableToJoin, boundCondition.getCondition()));
                 bindings = bindings.and(boundCondition.getBindings());
@@ -136,7 +140,7 @@ public class ExtendedStatementMapper implements StatementMapper {
         if (selectSpecWithJoin.getCriteria() != null) {
 
             final BoundCondition mappedObject = this.extendedMapper.getMappedObject(bindMarkers, selectSpecWithJoin.getCriteria(), table,
-                    entity);
+                    entity, aliasing);
 
             bindings = bindings.and(mappedObject.getBindings());
             selectBuilder.where(mappedObject.getCondition());

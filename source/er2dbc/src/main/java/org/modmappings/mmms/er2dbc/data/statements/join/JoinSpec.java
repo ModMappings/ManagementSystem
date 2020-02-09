@@ -70,7 +70,7 @@ public class JoinSpec {
     }
 
     public boolean isAliased() {
-        return StringUtils.isEmpty(tableAlias);
+        return !StringUtils.isEmpty(tableAlias);
     }
 
     @Nullable

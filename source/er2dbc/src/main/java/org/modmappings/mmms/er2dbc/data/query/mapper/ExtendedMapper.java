@@ -52,7 +52,8 @@ public class ExtendedMapper extends UpdateMapper {
      * @return the mapped {@link BoundAssignments}.
      */
     public BoundCondition getMappedObject(final BindMarkers markers, final ColumnBasedCriteria criteria, final Table table,
-                                          @Nullable final RelationalPersistentEntity<?> entity) {
+                                          @Nullable final RelationalPersistentEntity<?> entity,
+                                          final Map<String, String> aliasing) {
 
         Assert.notNull(markers, "BindMarkers must not be null!");
         Assert.notNull(criteria, "Criteria must not be null!");
@@ -70,17 +71,17 @@ public class ExtendedMapper extends UpdateMapper {
         }
 
         // perform the actual mapping
-        Condition mapped = getCondition(current, bindings, table, entity);
+        Condition mapped = getCondition(current, bindings, table, entity, aliasing);
         while (forwardChain.containsKey(current)) {
 
             final ColumnBasedCriteria nextCriteria = forwardChain.get(current);
 
             if (nextCriteria.getCombinator() == ColumnBasedCriteria.Combinator.AND) {
-                mapped = mapped.and(getCondition(nextCriteria, bindings, table, entity));
+                mapped = mapped.and(getCondition(nextCriteria, bindings, table, entity, aliasing));
             }
 
             if (nextCriteria.getCombinator() == ColumnBasedCriteria.Combinator.OR) {
-                mapped = mapped.or(getCondition(nextCriteria, bindings, table, entity));
+                mapped = mapped.or(getCondition(nextCriteria, bindings, table, entity, aliasing));
             }
 
             current = nextCriteria;
@@ -111,9 +112,10 @@ public class ExtendedMapper extends UpdateMapper {
     }
 
     public Condition getCondition(final ColumnBasedCriteria criteria, final MutableBindings bindings, final Table table,
-                                  @Nullable final RelationalPersistentEntity<?> entity) {
+                                  @Nullable final RelationalPersistentEntity<?> entity,
+                                  final Map<String, String> aliasing) {
 
-        final Expression left = convertNoneCollectiveExpression(criteria.getLeftExpression(), criteria.getRightExpression(), table, bindings);
+        final Expression left = convertNoneCollectiveExpression(criteria.getLeftExpression(), criteria.getRightExpression(), table, bindings, aliasing);
         if (left == null)
             throw new IllegalArgumentException("Can not create a condition from a criteria which has a null or collective left side.");
 
@@ -126,7 +128,7 @@ public class ExtendedMapper extends UpdateMapper {
         }
 
         if (criteria.getComparator() == ColumnBasedCriteria.Comparator.NOT_IN || criteria.getComparator() == ColumnBasedCriteria.Comparator.IN) {
-            final Collection<Expression> right = convertCollectiveExpression(criteria.getRightExpression(), criteria.getLeftExpression(), table, bindings);
+            final Collection<Expression> right = convertCollectiveExpression(criteria.getRightExpression(), criteria.getLeftExpression(), table, bindings, aliasing);
 
             Condition condition = Conditions.in(left, right);
 
@@ -137,7 +139,7 @@ public class ExtendedMapper extends UpdateMapper {
             return condition;
         }
 
-        final Expression right = convertNoneCollectiveExpression(criteria.getRightExpression(), criteria.getLeftExpression(), table, bindings);
+        final Expression right = convertNoneCollectiveExpression(criteria.getRightExpression(), criteria.getLeftExpression(), table, bindings, aliasing);
         if (right == null)
             throw new IllegalArgumentException("Can not use a null or collective right value, if you are not doing an is null or is in compare!");
 
@@ -163,7 +165,8 @@ public class ExtendedMapper extends UpdateMapper {
         }
     }
 
-    private Expression convertNoneCollectiveExpression(final ColumnBasedCriteria.Expression expression, final ColumnBasedCriteria.Expression otherExpression, final Table defaultTable, final MutableBindings bindings)
+    private Expression convertNoneCollectiveExpression(final ColumnBasedCriteria.Expression expression, final ColumnBasedCriteria.Expression otherExpression, final Table defaultTable, final MutableBindings bindings,
+                                                       final Map<String, String> aliasing)
     {
         if (expression.isNative())
             return ((ColumnBasedCriteria.NativeExpression) expression).getSqlExpression();
@@ -174,7 +177,20 @@ public class ExtendedMapper extends UpdateMapper {
         if (expression.isReference())
         {
             final ColumnBasedCriteria.ReferenceExpression referenceExpression = (ColumnBasedCriteria.ReferenceExpression) expression;
-            return Column.create(referenceExpression.getColumnName(), StringUtils.isEmpty(referenceExpression.getTableName()) ? defaultTable : Table.create(referenceExpression.getTableName()));
+            Table table = defaultTable;
+            if (!StringUtils.isEmpty(referenceExpression.getTableName()))
+            {
+                if (aliasing.containsKey(referenceExpression.getTableName()))
+                {
+                    table = Table.aliased(aliasing.get(referenceExpression.getTableName()), referenceExpression.getTableName());
+                }
+                else
+                {
+                    table = Table.create(referenceExpression.getTableName());
+                }
+            }
+
+            return Column.create(referenceExpression.getColumnName(), table);
         }
 
         if (expression.isValue())
@@ -187,7 +203,7 @@ public class ExtendedMapper extends UpdateMapper {
 
                 final ColumnBasedCriteria.ReferenceExpression referenceExpression = (ColumnBasedCriteria.ReferenceExpression) otherExpression;
 
-                final Field propertyField = createPropertyField(referenceExpression.getTableName(), referenceExpression.getColumnName(), this.mappingContext);
+                final Field propertyField = createPropertyField(referenceExpression.getTableName(), referenceExpression.getColumnName(), this.mappingContext, aliasing);
                 final TypeInformation<?> actualType = propertyField.getTypeHint().getRequiredActualType();
 
                 final ColumnBasedCriteria.ValueExpression valueExpression = (ColumnBasedCriteria.ValueExpression) expression;
@@ -209,7 +225,8 @@ public class ExtendedMapper extends UpdateMapper {
         return null;
     }
 
-    private Collection<Expression> convertCollectiveExpression(final ColumnBasedCriteria.Expression expression, final ColumnBasedCriteria.Expression otherExpression, final Table defaultTable, final MutableBindings bindings) {
+    private Collection<Expression> convertCollectiveExpression(final ColumnBasedCriteria.Expression expression, final ColumnBasedCriteria.Expression otherExpression, final Table defaultTable, final MutableBindings bindings,
+                                                               final Map<String, String> aliasing) {
         if (expression.isCollection())
         {
             final ColumnBasedCriteria.CollectionExpression collectionExpression = (ColumnBasedCriteria.CollectionExpression) expression;
@@ -219,7 +236,7 @@ public class ExtendedMapper extends UpdateMapper {
                 if (collectionExpressionExpression.isCollection())
                     return null;
 
-                expressions.add(convertNoneCollectiveExpression(collectionExpressionExpression, otherExpression, defaultTable, bindings));
+                expressions.add(convertNoneCollectiveExpression(collectionExpressionExpression, otherExpression, defaultTable, bindings, aliasing));
             }
 
             return expressions;
@@ -231,14 +248,21 @@ public class ExtendedMapper extends UpdateMapper {
     public Field createPropertyField(
             final String tableName,
             final String key,
-            final MappingContext<? extends RelationalPersistentEntity<?>, RelationalPersistentProperty> mappingContext) {
-        return StringUtils.isEmpty(tableName) ? new Field(key) : new ExtendedMetadataBackedField(key, findEntityFromTableName(tableName), mappingContext);
+            final MappingContext<? extends RelationalPersistentEntity<?>, RelationalPersistentProperty> mappingContext,
+            final Map<String, String> aliasing
+    ) {
+        return StringUtils.isEmpty(tableName) ? new Field(key) : new ExtendedMetadataBackedField(key, findEntityFromTableName(tableName, aliasing), mappingContext);
     }
 
-    public RelationalPersistentEntity<?> findEntityFromTableName(final String table) {
+    public RelationalPersistentEntity<?> findEntityFromTableName(final String table, final Map<String, String> aliasing) {
         for (final RelationalPersistentEntity<?> persistentEntity : this.mappingContext.getPersistentEntities()) {
             if (persistentEntity.getTableName().equals(table))
                 return persistentEntity;
+        }
+
+        if (aliasing.containsKey(table))
+        {
+            return findEntityFromTableName(aliasing.get(table), aliasing);
         }
 
         throw new IllegalArgumentException("Unknown table name: " + table);
