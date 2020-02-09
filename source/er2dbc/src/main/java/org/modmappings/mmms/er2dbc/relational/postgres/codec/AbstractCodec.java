@@ -1,4 +1,4 @@
-package org.modmappings.mmms.api.configuration.codec;
+package org.modmappings.mmms.er2dbc.relational.postgres.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;

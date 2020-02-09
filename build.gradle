@@ -11,5 +11,6 @@ semver {
 }
 
 allprojects {
+    group = 'org.modmappings.mmms'
     version = semver.info.version
 }
