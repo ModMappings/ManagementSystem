@@ -34,8 +34,6 @@ public class VersionedMappableDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the mappable which is represented by this versioned mappable in the game version.")
     private UUID mappableId;
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the package this versioned mappable resides in. Might be null if the mappable this versioned mappable represents is not representing a class or package.")
-    private UUID parentPackageId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the class this versioned mappable resides in. Might be null if the mappable this versioned mappable represents is not representing a method or field.")
     private UUID parentClassId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the method this versioned mappable resides in. Might be null if the mappable this versioned mappable represents is not representing a parameter.")
@@ -57,13 +55,12 @@ public class VersionedMappableDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the sub types of the versioned mappables if this represents a class. If this is not a class, then this field will be null. If this is a class and the field is empty then no sub types are known.")
     private List<UUID> subTypes;
 
-    public VersionedMappableDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID gameVersionId, final UUID mappableId, final UUID parentPackageId, final UUID parentClassId, final UUID parentMethodId, final VisibilityDTO visibility, final boolean isStatic, final String type, final String descriptor, final List<UUID> lockedIn, final List<UUID> superTypes, final List<UUID> subTypes) {
+    public VersionedMappableDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID gameVersionId, final UUID mappableId, final UUID parentClassId, final UUID parentMethodId, final VisibilityDTO visibility, final boolean isStatic, final String type, final String descriptor, final List<UUID> lockedIn, final List<UUID> superTypes, final List<UUID> subTypes) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
         this.gameVersionId = gameVersionId;
         this.mappableId = mappableId;
-        this.parentPackageId = parentPackageId;
         this.parentClassId = parentClassId;
         this.parentMethodId = parentMethodId;
         this.visibility = visibility;
@@ -96,10 +93,6 @@ public class VersionedMappableDTO {
 
     public UUID getMappableId() {
         return mappableId;
-    }
-
-    public UUID getParentPackageId() {
-        return parentPackageId;
     }
 
     public UUID getParentClassId() {

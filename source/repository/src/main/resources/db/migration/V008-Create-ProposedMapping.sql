@@ -12,7 +12,7 @@ create table "proposed_mapping"
 	"input" text not null,
 	"output" text not null,
 	"documentation" text,
-	"distribution" integer not null,
+	"distribution" text not null,
 	"mapping_type_id" uuid not null
 		constraint "FK_proposed_mapping_mapping_type_mappingTypeId"
 			references "mapping_type"

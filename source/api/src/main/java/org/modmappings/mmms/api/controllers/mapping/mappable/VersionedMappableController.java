@@ -88,12 +88,6 @@ public class VersionedMappableController {
                             example = "PACKAGE"
                     ),
                     @Parameter(
-                            name = "packageId",
-                            in = ParameterIn.QUERY,
-                            description = "The id of the package to find versioned mappables in. Null to ignore.",
-                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
-                    ),
-                    @Parameter(
                             name = "classId",
                             in = ParameterIn.QUERY,
                             description = "The id of the class to find versioned mappables in. Null to ignore.",
@@ -142,7 +136,6 @@ public class VersionedMappableController {
     public Mono<Page<VersionedMappableDTO>> getAll(
             final @RequestParam(value = "gameVersionId", required = false) UUID gameVersionId,
             final @RequestParam(value = "mappableType", required = false) MappableTypeDMO mappableTypeDMO,
-            final @RequestParam(value = "packageId", required = false) UUID packageId,
             final @RequestParam(value = "classId", required = false) UUID classId,
             final @RequestParam(value = "methodId", required = false) UUID methodId,
             final @RequestParam(value = "mappingId", required = false) UUID mappingId,
@@ -151,7 +144,7 @@ public class VersionedMappableController {
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
             final ServerHttpResponse response) {
         return versionedMappableService.getAll(
-                gameVersionId, mappableTypeDMO, packageId, classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
+                gameVersionId, mappableTypeDMO, classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
         )
             .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                 response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));

@@ -177,7 +177,6 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
      *
      * @param gameVersionId The id of the game version. Null to ignore.
      * @param mappableTypeDMO The type of the mappable to look up. Null to ignore.
-     * @param packageId The id of the package to find versioned mappables in. Null to ignore.
      * @param classId The id of the class to find versioned mappables in. Null to ignore.
      * @param methodId The id of the method to find versioned mappables in. Null to ignore.
      * @param mappingId The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
@@ -191,7 +190,6 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
     public Mono<Page<VersionedMappableDMO>> findAllFor(
             final UUID gameVersionId,
             final MappableTypeDMO mappableTypeDMO,
-            final UUID packageId,
             final UUID classId,
             final UUID methodId,
             final UUID mappingId,
@@ -210,17 +208,16 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                                 )
                         )
                         .join(() -> join("inheritance_data", "super_mid").on(
-                                () -> on(reference("id")).is(reference("mid", "super_type_versioned_mappable_id"))
+                                () -> on(reference("id")).is(reference("super_mid", "super_type_versioned_mappable_id"))
                                 )
                         )
                         .join(() -> join("inheritance_data", "sub_mid").on(
-                                () -> on(reference("id")).is(reference("mid", "sub_type_versioned_mappable_id"))
+                                () -> on(reference("id")).is(reference("sub_mid", "sub_type_versioned_mappable_id"))
                                 )
                         )
                         .where(() -> {
                             ColumnBasedCriteria criteria = nonNullAndEqualsCheckForWhere(null, gameVersionId, "", "game_version_id");
                             criteria = nonNullAndEqualsCheckForWhere(criteria, mappableTypeDMO, "mp", "type");
-                            criteria = nonNullAndEqualsCheckForWhere(criteria, packageId, "", "parent_package_id");
                             criteria = nonNullAndEqualsCheckForWhere(criteria, classId, "", "parent_class_id");
                             criteria = nonNullAndEqualsCheckForWhere(criteria, methodId, "", "parent_method_id");
                             criteria = nonNullAndEqualsCheckForWhere(criteria, mappingId, "m", "id");

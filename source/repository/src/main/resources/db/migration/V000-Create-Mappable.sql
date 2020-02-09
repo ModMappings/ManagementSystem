@@ -6,7 +6,7 @@ create table "mappable"
 		constraint "PK_mappable"
 			primary key
                 default uuid_generate_v4(),
-	"type" integer not null,
+	"type" text not null,
 	"created_by" uuid default '00000000-0000-0000-0000-000000000000'::uuid not null,
 	"created_on" timestamp default '0001-01-01 00:00:00'::timestamp not null
 );

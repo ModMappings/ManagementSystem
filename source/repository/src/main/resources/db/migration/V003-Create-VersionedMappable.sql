@@ -28,7 +28,7 @@ create table "versioned_mappable"
 	        references "versioned_mappable"
 	            on delete restrict,
 
-	"visibility" integer,
+	"visibility" text,
 	"is_static" boolean,
 	"type" text,
 	"descriptor" text

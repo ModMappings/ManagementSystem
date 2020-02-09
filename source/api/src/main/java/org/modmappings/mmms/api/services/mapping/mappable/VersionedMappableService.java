@@ -77,7 +77,6 @@ public class VersionedMappableService {
      *
      * @param gameVersionId     The id of the game version. Null to ignore.
      * @param mappableTypeDMO   The type of the mappable to look up. Null to ignore.
-     * @param packageId         The id of the package to find versioned mappables in. Null to ignore.
      * @param classId           The id of the class to find versioned mappables in. Null to ignore.
      * @param methodId          The id of the method to find versioned mappables in. Null to ignore.
      * @param mappingId         The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
@@ -89,7 +88,6 @@ public class VersionedMappableService {
     public Mono<Page<VersionedMappableDTO>> getAll(
             final UUID gameVersionId,
             final MappableTypeDMO mappableTypeDMO,
-            final UUID packageId,
             final UUID classId,
             final UUID methodId,
             final UUID mappingId,
@@ -98,7 +96,7 @@ public class VersionedMappableService {
             final Pageable pageable
     ) {
         return repository.findAllFor(
-                gameVersionId, mappableTypeDMO, packageId, classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
+                gameVersionId, mappableTypeDMO, classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
         )
                 .doFirst(() -> logger.debug("Looking up mappables."))
                 .flatMap(page -> Flux.fromIterable(page)
@@ -168,7 +166,6 @@ public class VersionedMappableService {
                                                 dmo.getCreatedOn(),
                                                 dmo.getGameVersionId(),
                                                 dmo.getMappableId(),
-                                                dmo.getParentPackageId(),
                                                 dmo.getParentClassId(),
                                                 dmo.getParentMethodId(),
                                                 toTypeDTO(dmo.getVisibility()),
