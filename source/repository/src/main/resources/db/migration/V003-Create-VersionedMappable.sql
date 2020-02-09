@@ -14,11 +14,7 @@ create table "versioned_mappable"
 		constraint "FK_versioned_mappable_mappable_mappableId"
 			references "mappable"
 				on delete cascade,
-	
-	"parent_package_id" uuid
-	    constraint "FK_versioned_mappable_versioned_mappable_parentPackageId"
-	        references "versioned_mappable"
-	            on delete restrict,
+
 	"parent_class_id" uuid
 	    constraint "FK_versioned_mappable_versioned_mappable_parentClassId"
 	        references "versioned_mappable"
