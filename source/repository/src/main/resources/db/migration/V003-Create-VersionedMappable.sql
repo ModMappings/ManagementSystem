@@ -36,9 +36,6 @@ create index "IX_versioned_mappable_mappableId"
 create index "IX_versioned_mappable_gameVersionId"
 	on "versioned_mappable" ("game_version_id");
 
-create index "IX_versioned_mappable_parentPackageId"
-    on "versioned_mappable" ("parent_package_id");
-
 create index "IX_versioned_mappable_parentClassId"
     on "versioned_mappable" ("parent_class_id");
 
