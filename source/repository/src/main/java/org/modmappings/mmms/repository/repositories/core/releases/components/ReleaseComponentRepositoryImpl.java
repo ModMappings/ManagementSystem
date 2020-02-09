@@ -56,19 +56,6 @@ class ReleaseComponentRepositoryImpl extends AbstractModMappingRepository<Releas
     }
 
     /**
-     * Finds all mapping ids which are part of the given release and represent a mapping of a package.
-     *
-     * @param releaseId The id of the release to get the package mappings for.
-     * @param pageable The paging information for the query.
-     * @return The mappings for a package which are part of the given release.
-     */
-    @Override
-    public Mono<Page<UUID>> findAllMappingIdsByReleaseIdForPackage(final UUID releaseId, final Pageable pageable)
-    {
-        return createPagedMappingIdsByReleaseIdForTypeRequest(releaseId, MappableTypeDMO.PACKAGE, pageable);
-    }
-
-    /**
      * Finds all mapping ids which are part of the given release and represent a mapping of a class.
      *
      * @param releaseId The id of the release to get the class mappings for.

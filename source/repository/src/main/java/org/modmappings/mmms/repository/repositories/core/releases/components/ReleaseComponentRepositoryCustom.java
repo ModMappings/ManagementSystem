@@ -35,15 +35,6 @@ public interface ReleaseComponentRepositoryCustom {
     Mono<Page<ReleaseComponentDMO>> findAllByMappingId(UUID mappingId, Pageable pageable);
 
     /**
-     * Finds all mapping ids which are part of the given release and represent a mapping of a package.
-     *
-     * @param releaseId The id of the release to get the package mappings for.
-     * @param pageable The paging information for the query.
-     * @return The mappings for a package which are part of the given release.
-     */
-    Mono<Page<UUID>> findAllMappingIdsByReleaseIdForPackage(UUID releaseId, Pageable pageable);
-
-    /**
      * Finds all mapping ids which are part of the given release and represent a mapping of a class.
      *
      * @param releaseId The id of the release to get the class mappings for.

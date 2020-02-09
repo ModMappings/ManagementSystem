@@ -200,10 +200,7 @@ public class ReleaseService {
      * @return The release DMO in a Mono.
      */
     private Mono<ReleaseDTO> toDTO(final ReleaseDMO dmo) {
-        return releaseComponentRepository.findAllMappingIdsByReleaseIdForPackage(dmo.getId(), Pageable.unpaged())
-            .flatMapIterable(Function.identity())
-            .collect(Collectors.toSet())
-            .flatMap(packageComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForClass(dmo.getId(), Pageable.unpaged())
+        return releaseComponentRepository.findAllMappingIdsByReleaseIdForClass(dmo.getId(), Pageable.unpaged())
                 .flatMapIterable(Function.identity())
                 .collect(Collectors.toSet())
                 .flatMap(classComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForMethod(dmo.getId(), Pageable.unpaged())
@@ -227,13 +224,12 @@ public class ReleaseService {
                                                             dmo.getGameVersionId(),
                                                             dmo.getMappingTypeId(),
                                                             dmo.isSnapshot(),
-                                                            packageComponents,
                                                             classComponents,
                                                             methodComponents,
                                                             fieldComponents,
                                                             parameterComponents,
                                                             comments
-                                                    )))))));
+                                                    ))))));
     }
 
     /**

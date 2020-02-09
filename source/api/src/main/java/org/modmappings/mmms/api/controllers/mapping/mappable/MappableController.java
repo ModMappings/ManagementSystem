@@ -16,6 +16,7 @@ import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseEx
 import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
 import org.modmappings.mmms.api.util.Constants;
+import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

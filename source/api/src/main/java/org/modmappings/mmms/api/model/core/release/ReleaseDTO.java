@@ -33,10 +33,6 @@ public class ReleaseDTO {
     private boolean isSnapshot;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap packages that are part of this release")
-    private Set<UUID> packageMappings;
-
-    @NotNull
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap classes that are part of this release")
     private Set<UUID> classMappings;
 
@@ -56,7 +52,7 @@ public class ReleaseDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the comments which were made on this release.")
     private Set<UUID> commentsMappings;
 
-    public ReleaseDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, @NotBlank final String name, @NotNull final UUID gameVersionId, @NotNull final UUID mappingType, final boolean isSnapshot, @NotNull final Set<UUID> packageMappings, @NotNull final Set<UUID> classMappings, @NotNull final Set<UUID> methodMappings, @NotNull final Set<UUID> fieldMappings, @NotNull final Set<UUID> parameterMappings, @NotNull final Set<UUID> commentsMappings) {
+    public ReleaseDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, @NotBlank final String name, @NotNull final UUID gameVersionId, @NotNull final UUID mappingType, final boolean isSnapshot, @NotNull final Set<UUID> classMappings, @NotNull final Set<UUID> methodMappings, @NotNull final Set<UUID> fieldMappings, @NotNull final Set<UUID> parameterMappings, @NotNull final Set<UUID> commentsMappings) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -64,7 +60,6 @@ public class ReleaseDTO {
         this.gameVersionId = gameVersionId;
         this.mappingType = mappingType;
         this.isSnapshot = isSnapshot;
-        this.packageMappings = packageMappings;
         this.classMappings = classMappings;
         this.methodMappings = methodMappings;
         this.fieldMappings = fieldMappings;
@@ -129,14 +124,6 @@ public class ReleaseDTO {
 
     public void setSnapshot(final boolean snapshot) {
         isSnapshot = snapshot;
-    }
-
-    public Set<UUID> getPackageMappings() {
-        return packageMappings;
-    }
-
-    public void setPackageMappings(final Set<UUID> packageMappings) {
-        this.packageMappings = packageMappings;
     }
 
     public Set<UUID> getClassMappings() {

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.VersionedMappableDTO;
 import org.modmappings.mmms.api.services.mapping.mappable.VersionedMappableService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
@@ -85,7 +86,7 @@ public class VersionedMappableController {
                             name = "mappableType",
                             in = ParameterIn.QUERY,
                             description = "The type of the mappable to look up. Null to ignore.",
-                            example = "PACKAGE"
+                            example = "CLASS"
                     ),
                     @Parameter(
                             name = "classId",
@@ -135,7 +136,7 @@ public class VersionedMappableController {
     @PageableAsQueryParam
     public Mono<Page<VersionedMappableDTO>> getAll(
             final @RequestParam(value = "gameVersionId", required = false) UUID gameVersionId,
-            final @RequestParam(value = "mappableType", required = false) MappableTypeDMO mappableTypeDMO,
+            final @RequestParam(value = "mappableType", required = false) MappableTypeDTO mappableTypeDTO,
             final @RequestParam(value = "classId", required = false) UUID classId,
             final @RequestParam(value = "methodId", required = false) UUID methodId,
             final @RequestParam(value = "mappingId", required = false) UUID mappingId,
@@ -144,7 +145,7 @@ public class VersionedMappableController {
             final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
             final ServerHttpResponse response) {
         return versionedMappableService.getAll(
-                gameVersionId, mappableTypeDMO, classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
+                gameVersionId, mappableTypeDTO, classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
         )
             .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                 response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));

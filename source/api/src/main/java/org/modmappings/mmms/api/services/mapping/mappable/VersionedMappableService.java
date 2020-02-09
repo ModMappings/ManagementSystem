@@ -1,5 +1,6 @@
 package org.modmappings.mmms.api.services.mapping.mappable;
 
+import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.VersionedMappableDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.VisibilityDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
@@ -76,7 +77,7 @@ public class VersionedMappableService {
      * Look up all versioned mappables who match the given search criteria.
      *
      * @param gameVersionId     The id of the game version. Null to ignore.
-     * @param mappableTypeDMO   The type of the mappable to look up. Null to ignore.
+     * @param mappableTypeDTO   The type of the mappable to look up. Null to ignore.
      * @param classId           The id of the class to find versioned mappables in. Null to ignore.
      * @param methodId          The id of the method to find versioned mappables in. Null to ignore.
      * @param mappingId         The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
@@ -87,7 +88,7 @@ public class VersionedMappableService {
      */
     public Mono<Page<VersionedMappableDTO>> getAll(
             final UUID gameVersionId,
-            final MappableTypeDMO mappableTypeDMO,
+            final MappableTypeDTO mappableTypeDTO,
             final UUID classId,
             final UUID methodId,
             final UUID mappingId,
@@ -96,7 +97,7 @@ public class VersionedMappableService {
             final Pageable pageable
     ) {
         return repository.findAllFor(
-                gameVersionId, mappableTypeDMO, classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
+                gameVersionId, toTypeDMO(mappableTypeDTO), classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
         )
                 .doFirst(() -> logger.debug("Looking up mappables."))
                 .flatMap(page -> Flux.fromIterable(page)
@@ -168,7 +169,7 @@ public class VersionedMappableService {
                                                 dmo.getMappableId(),
                                                 dmo.getParentClassId(),
                                                 dmo.getParentMethodId(),
-                                                toTypeDTO(dmo.getVisibility()),
+                                                toVisibilityDTO(dmo.getVisibility()),
                                                 dmo.isStatic(),
                                                 dmo.getType(),
                                                 dmo.getDescriptor(),
@@ -182,7 +183,15 @@ public class VersionedMappableService {
                 );
     }
 
-    private VisibilityDTO toTypeDTO(final VisibilityDMO dmo) {
+    private MappableTypeDMO toTypeDMO(final MappableTypeDTO dto)
+    {
+        if (dto == null)
+            return null;
+
+        return MappableTypeDMO.valueOf(dto.name());
+    }
+
+    private VisibilityDTO toVisibilityDTO(final VisibilityDMO dmo) {
         if (dmo == null)
             return null;
 
