@@ -53,7 +53,7 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
                         .join(() -> join("release_component", "rc")
-                                .on(() -> on(reference("id")).is(reference("rc", "mappable_Id"))))
+                                .on(() -> on(reference("id")).is(reference("rc", "mappable_id"))))
                         .join(() -> join("versioned_mappable", "vm")
                                 .on(() -> on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
                         .join(() -> join("mappable", "mp")
