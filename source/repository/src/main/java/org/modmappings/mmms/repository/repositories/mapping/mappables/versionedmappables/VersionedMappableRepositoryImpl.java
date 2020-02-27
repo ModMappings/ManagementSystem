@@ -58,21 +58,6 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
     }
 
     /**
-     * Finds all versioned mappables, which represent classes or other packages that are part of the package with the given id.
-     *
-     * @param packageVersionedMappableId The id of the package of which the contents are being looked up.
-     * @param pageable                   The paging and sorting information.
-     * @return The versioned mappables which are part of the package of which the versioned mappable has the given id.
-     */
-    @Override
-    public Mono<Page<VersionedMappableDMO>> findAllWhichArePartOfPackage(
-            final UUID packageVersionedMappableId,
-            final Pageable pageable
-    ) {
-        return createPagedStarSingleWhereRequest("parent_package_id", packageVersionedMappableId, pageable);
-    }
-
-    /**
      * Finds all versioned mappables, which represent methods, fields and inner classes that are part of the class with the given id.
      *
      * @param classVersionedMappableId The id of the class of which the contents are being looked up.
