@@ -175,7 +175,7 @@ public class VersionedMappableDMO {
         this.parentMethodId = parentMethodId;
     }
 
-    VersionedMappableDMO(
+    public VersionedMappableDMO(
             final UUID createdBy,
             final UUID gameVersionId,
             final UUID mappableId,
