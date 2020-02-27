@@ -35,6 +35,11 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
         super(databaseClient, accessStrategy, VersionedMappableDMO.class);
     }
 
+    @Override
+    public Mono<Page<VersionedMappableDMO>> findAllForMappable(final UUID mappableId, final Pageable pageable) {
+        return createPagedStarSingleWhereRequest("mappable_id", mappableId, pageable);
+    }
+
     /**
      * Finds all versioned mappables for a given game version.
      * <p>

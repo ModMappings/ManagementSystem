@@ -16,6 +16,21 @@ import java.util.UUID;
  * the code structure and the game version.
  */
 public interface VersionedMappableRepositoryCustom {
+
+
+    /**
+     * Finds all versioned mappables for a given mappable.
+     *
+     * The order of the returned versioned mappables is not guaranteed.
+     * @param mappableId The id of the mappable to look up all versioned mappables for.
+     * @param pageable The paging and sorting information.
+     * @return The versioned mappables which are part of the given mappable.
+     */
+    Mono<Page<VersionedMappableDMO>> findAllForMappable(
+            UUID mappableId,
+            Pageable pageable
+    );
+
     /**
      * Finds all versioned mappables for a given game version.
      *
