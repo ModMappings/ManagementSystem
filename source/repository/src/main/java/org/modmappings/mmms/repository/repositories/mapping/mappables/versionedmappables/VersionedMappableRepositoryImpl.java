@@ -197,11 +197,11 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                                 () -> on(reference("id")).is(reference("m", "versioned_mappable_id"))
                                 )
                         )
-                        .join(() -> join("inheritance_data", "super_mid").on(
+                        .join(() -> leftJoin("inheritance_data", "super_mid").on(
                                 () -> on(reference("id")).is(reference("super_mid", "super_type_versioned_mappable_id"))
                                 )
                         )
-                        .join(() -> join("inheritance_data", "sub_mid").on(
+                        .join(() -> leftJoin("inheritance_data", "sub_mid").on(
                                 () -> on(reference("id")).is(reference("sub_mid", "sub_type_versioned_mappable_id"))
                                 )
                         )
