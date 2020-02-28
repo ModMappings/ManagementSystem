@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
+import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.leftOuterJoin;
 
 /**
  * Represents a repository which can provide and store {@link VersionedMappableDMO} objects.
@@ -197,11 +198,11 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                                 () -> on(reference("id")).is(reference("m", "versioned_mappable_id"))
                                 )
                         )
-                        .join(() -> leftJoin("inheritance_data", "super_mid").on(
+                        .join(() -> leftOuterJoin("inheritance_data", "super_mid").on(
                                 () -> on(reference("id")).is(reference("super_mid", "super_type_versioned_mappable_id"))
                                 )
                         )
-                        .join(() -> leftJoin("inheritance_data", "sub_mid").on(
+                        .join(() -> leftOuterJoin("inheritance_data", "sub_mid").on(
                                 () -> on(reference("id")).is(reference("sub_mid", "sub_type_versioned_mappable_id"))
                                 )
                         )
