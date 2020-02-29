@@ -26,7 +26,7 @@ public class MappingTypeDMO {
     private String stateOut;
 
     @PersistenceConstructor
-    MappingTypeDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean visible, final boolean editable, final String stateIn, final String stateOut) {
+    public MappingTypeDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final boolean visible, final boolean editable, final String stateIn, final String stateOut) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;

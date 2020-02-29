@@ -26,7 +26,7 @@ public class ReleaseDMO {
     private boolean isSnapshot;
 
     @PersistenceConstructor
-    ReleaseDMO(
+    public ReleaseDMO(
             final UUID id,
             final UUID createdBy,
             final Timestamp createdOn,

@@ -150,7 +150,7 @@ public class VersionedMappableDMO {
 
 
     @PersistenceConstructor
-    VersionedMappableDMO(
+    public VersionedMappableDMO(
             final UUID id,
             final UUID createdBy,
             final Timestamp createdOn,

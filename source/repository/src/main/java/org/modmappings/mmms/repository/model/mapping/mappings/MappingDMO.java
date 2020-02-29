@@ -26,7 +26,7 @@ public class MappingDMO {
     private DistributionDMO distribution;
 
     @PersistenceConstructor
-    MappingDMO(
+    public MappingDMO(
             final UUID id,
             final UUID createdBy,
             final Timestamp createdOn,

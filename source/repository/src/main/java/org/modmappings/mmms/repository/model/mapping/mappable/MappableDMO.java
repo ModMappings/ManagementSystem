@@ -21,7 +21,7 @@ public class MappableDMO {
     private MappableTypeDMO type;
 
     @PersistenceConstructor
-    MappableDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final MappableTypeDMO type) {
+    public MappableDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final MappableTypeDMO type) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;

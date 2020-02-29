@@ -14,7 +14,7 @@ public class InheritanceDataDMO {
     private UUID subTypeVersionedMappableId;
 
     @PersistenceConstructor
-    InheritanceDataDMO(final UUID id, final UUID superTypeVersionedMappableId, final UUID subTypeVersionedMappableId) {
+    public InheritanceDataDMO(final UUID id, final UUID superTypeVersionedMappableId, final UUID subTypeVersionedMappableId) {
         this.id = id;
         this.superTypeVersionedMappableId = superTypeVersionedMappableId;
         this.subTypeVersionedMappableId = subTypeVersionedMappableId;

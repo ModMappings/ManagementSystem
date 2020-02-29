@@ -19,7 +19,7 @@ public class ReleaseComponentDMO {
     private UUID mappingId;
 
     @PersistenceConstructor
-    ReleaseComponentDMO(final UUID id, final UUID releaseId, final UUID mappingId) {
+    public ReleaseComponentDMO(final UUID id, final UUID releaseId, final UUID mappingId) {
         this.id = id;
         this.releaseId = releaseId;
         this.mappingId = mappingId;
