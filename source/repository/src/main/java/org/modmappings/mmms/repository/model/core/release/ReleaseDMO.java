@@ -26,20 +26,13 @@ public class ReleaseDMO {
     private boolean isSnapshot;
 
     @PersistenceConstructor
-    public ReleaseDMO(
-            final UUID id,
-            final UUID createdBy,
-            final Timestamp createdOn,
-            final String name,
-            final UUID gameVersionId,
-            final UUID mappingType,
-            final boolean isSnapshot) {
+    public ReleaseDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final UUID gameVersionId, final UUID mappingTypeId, final boolean isSnapshot) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
         this.name = name;
         this.gameVersionId = gameVersionId;
-        this.mappingTypeId = mappingType;
+        this.mappingTypeId = mappingTypeId;
         this.isSnapshot = isSnapshot;
     }
 
