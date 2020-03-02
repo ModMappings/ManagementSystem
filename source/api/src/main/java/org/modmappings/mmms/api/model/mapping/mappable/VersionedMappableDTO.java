@@ -1,13 +1,8 @@
 package org.modmappings.mmms.api.model.mapping.mappable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.modmappings.mmms.repository.model.mapping.mappable.VisibilityDMO;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +42,8 @@ public class VersionedMappableDTO {
     private String type;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The descriptor that describes (ha) this versioned mappable. As with the type this descriptor is a raw obfuscated data entry. If the client wants to display this to a human in readable form he will need to parse this descriptor himself and request the human readable form of the mapping in the mapping type he wishes to display. This field will contain an empty string when the type of mappable that this versioned mappable represents is not a method.")
     private String descriptor;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The signature that describes this versioned mappable. Includes the generics of the parameter and returned type, if applicable. As with the descriptor this field contains raw obfuscated data. If the client wants to display this to a human in readable form he will need to parse this signature himself and request the human readable form of the mapping in the mapping type he wishes to display. This field will contain an empty string when the type of the mappable that this versioned mappable represents is not a method.")
+    private String signature;
 
     @Schema(description = "A list of all mapping types for which no changes can be made via proposals. Only changes can be made via directly committing a mapping.")
     private List<UUID> lockedIn;
@@ -54,8 +51,12 @@ public class VersionedMappableDTO {
     private List<UUID> superTypes;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the sub types of the versioned mappables if this represents a class. If this is not a class, then this field will be null. If this is a class and the field is empty then no sub types are known.")
     private List<UUID> subTypes;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the methods overriden by this method. If this versioned mappable represents a method. If this is not a method, this field will be null. If this is a method and the field is empty then no overriden methods are known.")
+    private List<UUID> overrides;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the methods that override this method. If this versioned mappable represents a method. If this is not a method, this field will be null. If this is a method and the field is empty then no methods that override this method could be found.")
+    private List<UUID> overridenBy;
 
-    public VersionedMappableDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID gameVersionId, final UUID mappableId, final UUID parentClassId, final UUID parentMethodId, final VisibilityDTO visibility, final boolean isStatic, final String type, final String descriptor, final List<UUID> lockedIn, final List<UUID> superTypes, final List<UUID> subTypes) {
+    public VersionedMappableDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID gameVersionId, final UUID mappableId, final UUID parentClassId, final UUID parentMethodId, final VisibilityDTO visibility, final boolean isStatic, final String type, final String descriptor, final String signature, final List<UUID> lockedIn, final List<UUID> superTypes, final List<UUID> subTypes, final List<UUID> overrides, final List<UUID> overridenBy) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -67,9 +68,12 @@ public class VersionedMappableDTO {
         this.isStatic = isStatic;
         this.type = type;
         this.descriptor = descriptor;
+        this.signature = signature;
         this.lockedIn = lockedIn;
         this.superTypes = superTypes;
         this.subTypes = subTypes;
+        this.overrides = overrides;
+        this.overridenBy = overridenBy;
     }
 
     public VersionedMappableDTO() {
@@ -119,6 +123,10 @@ public class VersionedMappableDTO {
         return descriptor;
     }
 
+    public String getSignature() {
+        return signature;
+    }
+
     public List<UUID> getLockedIn() {
         return lockedIn;
     }
@@ -129,5 +137,13 @@ public class VersionedMappableDTO {
 
     public List<UUID> getSubTypes() {
         return subTypes;
+    }
+
+    public List<UUID> getOverrides() {
+        return overrides;
+    }
+
+    public List<UUID> getOverridenBy() {
+        return overridenBy;
     }
 }

@@ -173,10 +173,12 @@ public class VersionedMappableService {
                                                 dmo.isStatic(),
                                                 dmo.getType(),
                                                 dmo.getDescriptor(),
+                                                dmo.getSignature(),
                                                 lockedIds,
-                                                superTypeIds,
-                                                subTypeIds
-                                        ))
+                                                mappableDMO.getType() == MappableTypeDMO.CLASS ? superTypeIds : null,
+                                                mappableDMO.getType() == MappableTypeDMO.CLASS ? subTypeIds : null,
+                                                mappableDMO.getType() == MappableTypeDMO.METHOD ? superTypeIds : null,
+                                                mappableDMO.getType() == MappableTypeDMO.METHOD ? subTypeIds : null))
                                 )
                         )
 

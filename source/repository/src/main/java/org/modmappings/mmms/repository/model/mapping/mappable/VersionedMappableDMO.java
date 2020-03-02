@@ -20,118 +20,6 @@ import java.util.UUID;
 @Table("versioned_mappable")
 public class VersionedMappableDMO {
 
-    public static VersionedMappableDMO newClass(
-            final UUID createdBy,
-            final UUID gameVersionId,
-            final UUID mappableId,
-            final VisibilityDMO visibility,
-            final boolean isStatic
-    )
-    {
-        return new VersionedMappableDMO(
-                        createdBy,
-                        gameVersionId,
-                        mappableId,
-                        visibility,
-                        isStatic,
-                        null,
-                        null,
-                        null,
-                        null
-        );
-    }
-
-    public static VersionedMappableDMO newInnerClass(
-            final UUID createdBy,
-            final UUID gameVersionId,
-            final UUID mappableId,
-            final VisibilityDMO visibility,
-            final boolean isStatic,
-            final UUID parentClassId
-    )
-    {
-        return new VersionedMappableDMO(
-                        createdBy,
-                        gameVersionId,
-                        mappableId,
-                        visibility,
-                        isStatic,
-                        null,
-                        parentClassId,
-                        null,
-                        null
-        );
-    }
-
-    public static VersionedMappableDMO newMethod(
-            final UUID createdBy,
-            final UUID gameVersionId,
-            final UUID mappableId,
-            final VisibilityDMO visibility,
-            final boolean isStatic,
-            final UUID parentClassId,
-            final String descriptor
-    )
-    {
-        return new VersionedMappableDMO(
-                        createdBy,
-                        gameVersionId,
-                        mappableId,
-                        visibility,
-                        isStatic,
-                        null,
-                        parentClassId,
-                        descriptor,
-                        null
-        );
-    }
-
-    public static VersionedMappableDMO newField(
-            final UUID createdBy,
-            final UUID gameVersionId,
-            final UUID mappableId,
-            final VisibilityDMO visibility,
-            final boolean isStatic,
-            final String type,
-            final UUID parentClassId
-    )
-    {
-        return new VersionedMappableDMO(
-                        createdBy,
-                        gameVersionId,
-                        mappableId,
-                        visibility,
-                        isStatic,
-                        type,
-                        parentClassId,
-                        null,
-                        null
-        );
-    }
-
-    public static VersionedMappableDMO newParameter(
-            final UUID createdBy,
-            final UUID gameVersionId,
-            final UUID mappableId,
-            final VisibilityDMO visibility,
-            final boolean isStatic,
-            final String type,
-            final UUID parentMethodId
-    )
-    {
-        return new VersionedMappableDMO(
-                        createdBy,
-                        gameVersionId,
-                        mappableId,
-                        visibility,
-                        isStatic,
-                        type,
-                        null,
-                        null,
-                        parentMethodId
-        );
-    }
-
     @Id
     private UUID id;
     private UUID createdBy;
@@ -146,7 +34,7 @@ public class VersionedMappableDMO {
     private boolean isStatic;
     private String type;
     private String descriptor;
-
+    private String signature;
 
 
     @PersistenceConstructor
@@ -161,7 +49,7 @@ public class VersionedMappableDMO {
             final String type,
             final UUID parentClassId,
             final String descriptor,
-            final UUID parentMethodId) {
+            final UUID parentMethodId, final String signature) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -173,6 +61,7 @@ public class VersionedMappableDMO {
         this.parentClassId = parentClassId;
         this.descriptor = descriptor;
         this.parentMethodId = parentMethodId;
+        this.signature = signature;
     }
 
     public VersionedMappableDMO(
@@ -184,7 +73,8 @@ public class VersionedMappableDMO {
             final String type,
             final UUID parentClassId,
             final String descriptor,
-            final UUID parentMethodId) {
+            final UUID parentMethodId, final String signature) {
+        this.signature = signature;
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
@@ -236,6 +126,10 @@ public class VersionedMappableDMO {
 
     public String getDescriptor() {
         return descriptor;
+    }
+
+    public String getSignature() {
+        return signature;
     }
 
     public UUID getParentMethodId() {
