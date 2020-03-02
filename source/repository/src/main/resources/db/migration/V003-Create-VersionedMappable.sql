@@ -14,20 +14,20 @@ create table "versioned_mappable"
 		constraint "FK_versioned_mappable_mappable_mappableId"
 			references "mappable"
 				on delete cascade,
-
 	"parent_class_id" uuid
 	    constraint "FK_versioned_mappable_versioned_mappable_parentClassId"
 	        references "versioned_mappable"
-	            on delete restrict,
+	            on delete restrict ,
 	"parent_method_id" uuid
 	    constraint "FK_versioned_mappable_versioned_mappable_parentMethodId"
 	        references "versioned_mappable"
-	            on delete restrict,
+	            on delete restrict ,
 
 	"visibility" text,
 	"is_static" boolean,
 	"type" text,
-	"descriptor" text
+	"descriptor" text,
+	"signature" text
 );
 
 create index "IX_versioned_mappable_mappableId"

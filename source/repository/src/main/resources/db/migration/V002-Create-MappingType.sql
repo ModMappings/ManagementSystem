@@ -8,7 +8,9 @@ create table "mapping_type"
 	"created_by" uuid not null,
 	"created_on" timestamp not null,
 	"visible" boolean not null ,
-	"editable" boolean not null
+	"editable" boolean not null,
+	"state_in" text not null,
+	"state_out" text not null
 );
 
 create unique index "IX_mapping_type_name"

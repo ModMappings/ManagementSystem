@@ -14,15 +14,15 @@ create table "comment"
 	"proposed_mapping_id" uuid
 		constraint "FK_comment_proposed_mapping_proposedMappingId"
 			references "proposed_mapping"
-				on delete restrict,
+				on delete cascade ,
 	"release_id" uuid
 		constraint "FK_comment_releases_releaseId"
 			references "release"
-				on delete restrict,
+				on delete cascade,
 	"parent_comment_id" uuid
 		constraint "FK_comment_comment_parentCommentId"
 			references "comment"
-				on delete restrict
+				on delete cascade
 );
 
 create index "IX_comment_parentCommentId"

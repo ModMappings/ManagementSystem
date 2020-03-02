@@ -24,7 +24,7 @@ create table "proposed_mapping"
 	"mapping_id" uuid
 		constraint "FK_proposed_mapping_mapping_mappingId"
 			references "mapping"
-				on delete restrict
+				on delete cascade
 );
 
 create index "IX_proposed_mapping_mappingTypeId"

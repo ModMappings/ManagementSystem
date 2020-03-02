@@ -7,11 +7,11 @@ create table "inheritance_data"
 	"sub_type_versioned_mappable_id" uuid
 		constraint "FK_inheritance_data_versioned_mappable_subTypeId"
 			references "versioned_mappable"
-				on delete restrict,
+				on delete cascade ,
 	"super_type_versioned_mappable_id" uuid
 		constraint "FK_inheritance_data_versioned_mappable_superTypeId"
 			references "versioned_mappable"
-				on delete restrict
+				on delete cascade
 );
 
 create index "IX_inheritance_data_subTypeId"
