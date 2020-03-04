@@ -27,7 +27,8 @@ create table "versioned_mappable"
 	"is_static" boolean,
 	"type" text,
 	"descriptor" text,
-	"signature" text
+	"signature" text,
+	"external" boolean not null
 );
 
 create index "IX_versioned_mappable_mappableId"
