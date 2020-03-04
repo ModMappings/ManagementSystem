@@ -14,3 +14,7 @@ allprojects {
     group = 'org.modmappings.mmms'
     version = semver.info.version
 }
+
+afterEvaluate {
+    println "Version: " + semver.info.version
+}
