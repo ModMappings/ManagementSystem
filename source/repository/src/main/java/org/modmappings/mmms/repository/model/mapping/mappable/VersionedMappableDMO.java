@@ -35,6 +35,7 @@ public class VersionedMappableDMO {
     private String type;
     private String descriptor;
     private String signature;
+    private boolean external;
 
 
     @PersistenceConstructor
@@ -49,7 +50,7 @@ public class VersionedMappableDMO {
             final String type,
             final UUID parentClassId,
             final String descriptor,
-            final UUID parentMethodId, final String signature) {
+            final UUID parentMethodId, final String signature, final boolean external) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -62,6 +63,7 @@ public class VersionedMappableDMO {
         this.descriptor = descriptor;
         this.parentMethodId = parentMethodId;
         this.signature = signature;
+        this.external = external;
     }
 
     public VersionedMappableDMO(
@@ -73,8 +75,9 @@ public class VersionedMappableDMO {
             final String type,
             final UUID parentClassId,
             final String descriptor,
-            final UUID parentMethodId, final String signature) {
+            final UUID parentMethodId, final String signature, final boolean external) {
         this.signature = signature;
+        this.external = external;
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
@@ -134,5 +137,9 @@ public class VersionedMappableDMO {
 
     public UUID getParentMethodId() {
         return parentMethodId;
+    }
+
+    public boolean isExternal() {
+        return external;
     }
 }
