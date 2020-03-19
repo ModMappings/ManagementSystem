@@ -24,9 +24,10 @@ public class ReleaseDMO {
     private UUID gameVersionId;
     private UUID mappingTypeId;
     private boolean isSnapshot;
+    private String state;
 
     @PersistenceConstructor
-    public ReleaseDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final UUID gameVersionId, final UUID mappingTypeId, final boolean isSnapshot) {
+    public ReleaseDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final String name, final UUID gameVersionId, final UUID mappingTypeId, final boolean isSnapshot, final String state) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -34,16 +35,16 @@ public class ReleaseDMO {
         this.gameVersionId = gameVersionId;
         this.mappingTypeId = mappingTypeId;
         this.isSnapshot = isSnapshot;
+        this.state = state;
     }
 
-    public ReleaseDMO(final UUID createdBy, final String name, final UUID gameVersionId, final UUID mappingType, final boolean isSnapshot) {
-        this.id = null;
+    public ReleaseDMO(final UUID createdBy, final String name, final UUID gameVersionId, final UUID mappingTypeId, final boolean isSnapshot, final String state) {
         this.createdBy = createdBy;
-        this.createdOn = Timestamp.from(Instant.now());
         this.name = name;
         this.gameVersionId = gameVersionId;
-        this.mappingTypeId = mappingType;
+        this.mappingTypeId = mappingTypeId;
         this.isSnapshot = isSnapshot;
+        this.state = state;
     }
 
     public UUID getId() {
@@ -80,5 +81,13 @@ public class ReleaseDMO {
 
     public void setSnapshot(final boolean snapshot) {
         isSnapshot = snapshot;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(final String state) {
+        this.state = state;
     }
 }

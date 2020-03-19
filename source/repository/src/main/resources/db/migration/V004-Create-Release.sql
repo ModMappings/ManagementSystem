@@ -16,6 +16,7 @@ create table "release"
 			references "mapping_type"
 				on delete cascade,
 	"is_snapshot" boolean not null,
+	"state" text not null,
 
 	unique ("name", "mapping_type_id")
 );
