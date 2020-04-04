@@ -44,6 +44,8 @@ public class VersionedMappableDTO {
     private String descriptor;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The signature that describes this versioned mappable. Includes the generics of the parameter and returned type, if applicable. As with the descriptor this field contains raw obfuscated data. If the client wants to display this to a human in readable form he will need to parse this signature himself and request the human readable form of the mapping in the mapping type he wishes to display. This field will contain an empty string when the type of the mappable that this versioned mappable represents is not a method.")
     private String signature;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "This indicates the parameter number for a parameter. The numbers are JVM parameter indices, for a lack of a better word, and describe both the position, as well as the width of the parameter. If the method is not static then the parameter with 0 is implicitly the keyword this, and counting starts at 1. If the method is 0 then counting starts at 0. In general all parameters are 1 wide. However doubles and longs are 2. If this versioned mappable does not represent a parameter then this is null or some random value.")
+    private Integer index;
 
     @Schema(description = "A list of all mapping types for which no changes can be made via proposals. Only changes can be made via directly committing a mapping.")
     private List<UUID> lockedIn;
@@ -56,7 +58,7 @@ public class VersionedMappableDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "A list of ids of versioned mappables that represent the methods that override this method. If this versioned mappable represents a method. If this is not a method, this field will be null. If this is a method and the field is empty then no methods that override this method could be found.")
     private List<UUID> overridenBy;
 
-    public VersionedMappableDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID gameVersionId, final UUID mappableId, final UUID parentClassId, final UUID parentMethodId, final VisibilityDTO visibility, final boolean isStatic, final String type, final String descriptor, final String signature, final List<UUID> lockedIn, final List<UUID> superTypes, final List<UUID> subTypes, final List<UUID> overrides, final List<UUID> overridenBy) {
+    public VersionedMappableDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID gameVersionId, final UUID mappableId, final UUID parentClassId, final UUID parentMethodId, final VisibilityDTO visibility, final boolean isStatic, final String type, final String descriptor, final String signature, final Integer index, final List<UUID> lockedIn, final List<UUID> superTypes, final List<UUID> subTypes, final List<UUID> overrides, final List<UUID> overridenBy) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -69,6 +71,7 @@ public class VersionedMappableDTO {
         this.type = type;
         this.descriptor = descriptor;
         this.signature = signature;
+        this.index = index;
         this.lockedIn = lockedIn;
         this.superTypes = superTypes;
         this.subTypes = subTypes;
@@ -111,10 +114,6 @@ public class VersionedMappableDTO {
         return visibility;
     }
 
-    public boolean getIsStatic() {
-        return isStatic;
-    }
-
     public String getType() {
         return type;
     }
@@ -125,6 +124,14 @@ public class VersionedMappableDTO {
 
     public String getSignature() {
         return signature;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public Integer getIndex() {
+        return index;
     }
 
     public List<UUID> getLockedIn() {

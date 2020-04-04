@@ -174,6 +174,7 @@ public class VersionedMappableService {
                                                 dmo.getType(),
                                                 dmo.getDescriptor(),
                                                 dmo.getSignature(),
+                                                dmo.getIndex(),
                                                 lockedIds,
                                                 mappableDMO.getType() == MappableTypeDMO.CLASS ? superTypeIds : null,
                                                 mappableDMO.getType() == MappableTypeDMO.CLASS ? subTypeIds : null,

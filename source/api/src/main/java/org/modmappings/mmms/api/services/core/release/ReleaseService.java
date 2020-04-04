@@ -228,8 +228,8 @@ public class ReleaseService {
                                                             methodComponents,
                                                             fieldComponents,
                                                             parameterComponents,
-                                                            comments
-                                                    ))))));
+                                                            comments,
+                                                        dmo.getState()))))));
     }
 
     /**
@@ -249,7 +249,8 @@ public class ReleaseService {
             dto.getName(),
             gameVersionId,
             mappingTypeId,
-            dto.isSnapshot()
+            dto.isSnapshot(),
+            dto.getState()
         );
     }
 
@@ -262,5 +263,6 @@ public class ReleaseService {
     private void updateDMO(final ReleaseDTO dto, final ReleaseDMO dmo) {
         dmo.setName(dto.getName());
         dmo.setSnapshot(dto.isSnapshot());
+        dmo.setState(dto.getState());
     }
 }

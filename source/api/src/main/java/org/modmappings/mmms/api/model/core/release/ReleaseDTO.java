@@ -52,7 +52,11 @@ public class ReleaseDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the comments which were made on this release.")
     private Set<UUID> commentsMappings;
 
-    public ReleaseDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, @NotBlank final String name, @NotNull final UUID gameVersionId, @NotNull final UUID mappingType, final boolean isSnapshot, @NotNull final Set<UUID> classMappings, @NotNull final Set<UUID> methodMappings, @NotNull final Set<UUID> fieldMappings, @NotNull final Set<UUID> parameterMappings, @NotNull final Set<UUID> commentsMappings) {
+    @NotNull
+    @Schema(description = "The state of the release. Indicates how much of the release has been imported. Most releases have FIELD as final state. However PARAMETER is also possible.")
+    private String state;
+
+    public ReleaseDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, @NotBlank final String name, @NotNull final UUID gameVersionId, @NotNull final UUID mappingType, final boolean isSnapshot, @NotNull final Set<UUID> classMappings, @NotNull final Set<UUID> methodMappings, @NotNull final Set<UUID> fieldMappings, @NotNull final Set<UUID> parameterMappings, @NotNull final Set<UUID> commentsMappings, final String state) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -65,6 +69,7 @@ public class ReleaseDTO {
         this.fieldMappings = fieldMappings;
         this.parameterMappings = parameterMappings;
         this.commentsMappings = commentsMappings;
+        this.state = state;
     }
 
     public ReleaseDTO() {
@@ -164,5 +169,13 @@ public class ReleaseDTO {
 
     public void setCommentsMappings(final Set<UUID> commentsMappings) {
         this.commentsMappings = commentsMappings;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(final String state) {
+        this.state = state;
     }
 }
