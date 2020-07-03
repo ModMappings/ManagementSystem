@@ -81,6 +81,9 @@ public class VersionedMappableService {
      * @param classId           The id of the class to find versioned mappables in. Null to ignore.
      * @param methodId          The id of the method to find versioned mappables in. Null to ignore.
      * @param mappingId         The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
+     * @param mappingTypeId         The id of the mapping type to find the versioned mappables for. Null to ignore. Use full in combination with a input and output regex.
+     * @param mappingInputRegex A regex that is mapped against the input of the mapping. Null to ignore
+     * @param mappingOutputRegex A regex that is mapped against the output of the mapping. Null to ignore
      * @param superTypeTargetId The id of the class to find the super types for. Null to ignore.
      * @param subTypeTargetId   The id of the class to find the sub types for. Null to ignore.
      * @param pageable          The pagination and sorting information for the request.
@@ -92,12 +95,15 @@ public class VersionedMappableService {
             final UUID classId,
             final UUID methodId,
             final UUID mappingId,
+            final UUID mappingTypeId,
+            final String mappingInputRegex,
+            final String mappingOutputRegex,
             final UUID superTypeTargetId,
             final UUID subTypeTargetId,
             final Pageable pageable
     ) {
         return repository.findAllFor(
-                gameVersionId, toTypeDMO(mappableTypeDTO), classId, methodId, mappingId, superTypeTargetId, subTypeTargetId, pageable
+                gameVersionId, toTypeDMO(mappableTypeDTO), classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, true, pageable
         )
                 .doFirst(() -> logger.debug("Looking up mappables."))
                 .flatMap(page -> Flux.fromIterable(page)
@@ -126,15 +132,15 @@ public class VersionedMappableService {
                         .flatMapIterable(Function.identity())
                         .collectList()
                         .flatMap(currentlyProtectedTypes -> Flux.fromIterable(currentlyProtectedTypes)
-                                .filter(currentlyProtectedType -> !versionedMappableToUpdate.getLockedIn().contains(currentlyProtectedType.getMappingType()))
+                                .filter(currentlyProtectedType -> !versionedMappableToUpdate.getLockedIn().contains(currentlyProtectedType.getMappingTypeId()))
                                 .flatMap(currentlyProtectedTypeToDelete -> protectedMappableInformationRepository.deleteById(currentlyProtectedTypeToDelete.getId())
-                                    .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Deleting protection information for: %s with mapping type: %s", currentlyProtectedTypeToDelete.getVersionedMappableId(), currentlyProtectedTypeToDelete.getMappingType()))))
+                                    .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Deleting protection information for: %s with mapping type: %s", currentlyProtectedTypeToDelete.getVersionedMappableId(), currentlyProtectedTypeToDelete.getMappingTypeId()))))
                                 .then(Flux.fromIterable(versionedMappableToUpdate.getLockedIn())
                                         .filterWhen(newLockInId -> mappingTypeRepository.findById(newLockInId).filter(MappingTypeDMO::isVisible).filter(MappingTypeDMO::isEditable).hasElement())
                                         .filter(validNewLockInId -> currentlyProtectedTypes.stream().noneMatch(pmi -> pmi.getId() == validNewLockInId))
                                         .map(validNewLockInId -> new ProtectedMappableInformationDMO(id, validNewLockInId))
                                         .flatMap(newProtectionInformation -> protectedMappableInformationRepository.save(newProtectionInformation)
-                                            .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Creating new protection information for: %s with mapping type: %s", newProtectionInformation.getVersionedMappableId(), newProtectionInformation.getMappingType()))))
+                                            .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Creating new protection information for: %s with mapping type: %s", newProtectionInformation.getVersionedMappableId(), newProtectionInformation.getMappingTypeId()))))
                                         .collectList()
                                 )
                         )
@@ -155,7 +161,7 @@ public class VersionedMappableService {
                                 .collectList()
                                 .flatMap(subTypeIds -> protectedMappableInformationRepository.findAllByVersionedMappable(dmo.getId(), Pageable.unpaged())
                                         .flatMapIterable(Function.identity())
-                                        .map(ProtectedMappableInformationDMO::getMappingType)
+                                        .map(ProtectedMappableInformationDMO::getMappingTypeId)
                                         .filterWhen(mappingTypeId -> mappingTypeRepository.findById(mappingTypeId)
                                                 .filter(MappingTypeDMO::isVisible)
                                                 .hasElement()
