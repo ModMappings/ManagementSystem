@@ -110,18 +110,18 @@ class ReleaseComponentRepositoryImpl extends AbstractModMappingRepository<Releas
     private Mono<Page<UUID>> createPagedMappingIdsByReleaseIdForTypeRequest(final UUID releaseId, final MappableTypeDMO mappableType, final Pageable pageable) {
         return createPagedRequest(
                 selectSpec -> selectSpec
-                        .withProjection(reference("mp", "mapping_id")) //
+                        .withProjection(reference("mp", "id")) //
                         .withJoin(
                                 JoinSpec.join("mapping", "mp")
                                         .withOn(on(reference("mapping_id")).is(reference("mp", "id"))),
                                 JoinSpec.join("versioned_mappable", "vm")
-                                        .withOn(on(reference("versioned_mappable_id")).is(reference("vm", "id"))),
+                                        .withOn(on(reference("mp","versioned_mappable_id")).is(reference("vm", "id"))),
                                 JoinSpec.join("mappable", "m")
                                         .withOn(on(reference("vm", "mappable_id")).is(reference("m", "id")))
                         )
                         .withCriteria(
                                 where(reference("release_id")).is(parameter(releaseId))
-                                        .and(reference("mappable", "type")).is(parameter(mappableType.ordinal()))),
+                                        .and(reference("m", "type")).is(parameter(mappableType.ordinal()))),
                 UUID.class,
                 pageable
         );

@@ -50,21 +50,21 @@ public class ExtendedSelectValidator implements Visitor {
         }
 
         for (final Table table : requiredBySelect) {
-            if (!join.contains(table) && !from.contains(table)) {
+            if (join.stream().noneMatch(t -> t.getReferenceName().equals(table.getReferenceName())) && from.stream().noneMatch(t -> t.getReferenceName().equals(table.getReferenceName()))) {
                 throw new IllegalStateException(String
                         .format("Required table [%s] by a SELECT column not imported by FROM %s or JOIN %s", table, from, join));
             }
         }
 
         for (final Table table : requiredByWhere) {
-            if (!join.contains(table) && !from.contains(table)) {
+            if (join.stream().noneMatch(t -> t.getReferenceName().equals(table.getReferenceName())) && from.stream().noneMatch(t -> t.getReferenceName().equals(table.getReferenceName()))) {
                 throw new IllegalStateException(String
                         .format("Required table [%s] by a WHERE predicate not imported by FROM %s or JOIN %s", table, from, join));
             }
         }
 
         for (final Table table : requiredByOrderBy) {
-            if (!join.contains(table) && !from.contains(table)) {
+            if (join.stream().noneMatch(t -> t.getReferenceName().equals(table.getReferenceName())) && from.stream().noneMatch(t -> t.getReferenceName().equals(table.getReferenceName()))) {
                 throw new IllegalStateException(String
                         .format("Required table [%s] by a ORDER BY column not imported by FROM %s or JOIN %s", table, from, join));
             }

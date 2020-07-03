@@ -4,7 +4,7 @@ version: '3'
 
 services:
   postgres:
-    image: postgres
+    image: postgres:12.1
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
@@ -12,7 +12,7 @@ services:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
   keycloak:
-    image: jboss/keycloak
+    image: jboss/keycloak:8.0.1
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
