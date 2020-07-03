@@ -13,10 +13,7 @@ import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.r2dbc.repository.support.SimpleR2dbcRepository;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
-import org.springframework.data.relational.core.sql.Functions;
-import org.springframework.data.relational.core.sql.SQL;
-import org.springframework.data.relational.core.sql.StringLiteral;
-import org.springframework.data.relational.core.sql.Table;
+import org.springframework.data.relational.core.sql.*;
 import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.data.relational.repository.support.MappingRelationalEntityInformation;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -128,12 +125,13 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         Assert.notNull(selectSpec, "SelectSpec must not be null");
 
         final Table table = Table.create(this.entity.getTableName());
+        final Column column = table.column(getIdColumnName());
         final SelectSpecWithJoin selectSpecWithProj =
                 selectSpec.isDistinct() ? selectSpec
                         .notDistinct()
-                        .withProjection(spring(Functions.count(SQL.literalOf(String.format("DISTINCT %s", getIdColumnName()))))) :
+                        .setProjection(spring(Functions.count(Expressions.just(String.format("DISTINCT %s", column))))) :
                 selectSpec
-                .setProjection(spring(Functions.count(table.column(getIdColumnName()))));
+                .setProjection(spring(Functions.count(column)));
 
         final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);

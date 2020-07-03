@@ -49,7 +49,7 @@ public class SelectSpecWithJoin {
     public SelectSpecWithJoin withProjection(final ColumnBasedCriteria.Expression... projectedFields) {
         final List<ColumnBasedCriteria.Expression> expressions = Arrays.asList(projectedFields);
         Assert.noNullElements(expressions, "Expressions is not allowed to contain null elements!");
-        Assert.isTrue(expressions.stream().allMatch(ColumnBasedCriteria.Expression::isReference), "All expressions need to be references!");
+        Assert.isTrue(expressions.stream().allMatch(exp -> exp.isReference() || exp.isNative()), "All expressions need to be references!");
 
         return this.withProjection(expressions);
     }
@@ -79,7 +79,7 @@ public class SelectSpecWithJoin {
     public SelectSpecWithJoin withProjection(final Collection<ColumnBasedCriteria.Expression> projectedFields) {
         Assert.notNull(projectedFields, "ProjectedFields can not be null!");
         Assert.noNullElements(projectedFields, "ProjectedFields is not allowed to contain null elements!");
-        Assert.isTrue(projectedFields.stream().allMatch(ColumnBasedCriteria.Expression::isReference), "All ProjectedFields need to be references!");
+        Assert.isTrue(projectedFields.stream().allMatch(exp -> exp.isReference() || exp.isNative()), "All ProjectedFields need to be references!");
 
         final List<ColumnBasedCriteria.Expression> fields = new ArrayList<>(this.projectedFields);
         fields.addAll(projectedFields);
