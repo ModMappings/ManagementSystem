@@ -114,6 +114,12 @@ public class ExtendedStatementMapper implements StatementMapper {
         final Table table = Table.create(selectSpecWithJoin.getTable());
         final List<Expression> projectExpressions = selectSpecWithJoin.getProjectedFields().stream().map(e -> extendedMapper.getMappedObject(e, table)).collect(Collectors.toList());
         final ExtendedSelectBuilder selectBuilder = new ExtendedSelectBuilder().select(projectExpressions).from(table);
+
+        if (selectSpecWithJoin.isDistinct())
+        {
+            selectBuilder.distinct();
+        }
+
         final Map<String, String> aliasing = new HashMap<>();
 
         final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();

@@ -103,6 +103,7 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
         final List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
 
         selectSpec
+                .distinct()
                 .withProjectionFromColumnName(columns)
                 .withJoin(
                         join("mapping", "m")
@@ -132,6 +133,7 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
             final Pageable pageable) {
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
+                        .distinct()
                         .withJoin(
                                 join("inheritance_data", "mid")
                                         .withOn(on(reference("id")).is(reference("mid", "super_type_versioned_mappable_id")))
@@ -154,6 +156,7 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
             final Pageable pageable) {
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
+                        .distinct()
                         .withJoin(
                                 join("inheritance_data", "mid")
                                         .withOn(on(reference("id")).is(reference("mid", "sub_type_versioned_mappable_id")))

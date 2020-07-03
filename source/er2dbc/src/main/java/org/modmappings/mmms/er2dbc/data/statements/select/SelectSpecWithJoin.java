@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class SelectSpecWithJoin {
 
+    private final boolean distinct;
     private final String table;
     private final Collection<JoinSpec> joinSpecs;
     private final List<ColumnBasedCriteria.Expression> projectedFields;
@@ -21,7 +22,8 @@ public class SelectSpecWithJoin {
     private final Sort sort;
     private final Pageable page;
 
-    public SelectSpecWithJoin(final String table, final Collection<JoinSpec> joinSpecs, final List<ColumnBasedCriteria.Expression> projectedFields, @Nullable final ColumnBasedCriteria criteria, final Sort sort, final Pageable page) {
+    public SelectSpecWithJoin(final boolean distinct, final String table, final Collection<JoinSpec> joinSpecs, final List<ColumnBasedCriteria.Expression> projectedFields, @Nullable final ColumnBasedCriteria criteria, final Sort sort, final Pageable page) {
+        this.distinct = distinct;
         this.table = table;
         this.joinSpecs = joinSpecs;
         this.projectedFields = projectedFields;
@@ -31,7 +33,11 @@ public class SelectSpecWithJoin {
     }
 
     public static SelectSpecWithJoin create(final String table) {
-        return new SelectSpecWithJoin(table, Collections.emptyList(), Collections.emptyList(), null, Sort.unsorted(), Pageable.unpaged());
+        return new SelectSpecWithJoin(false, table, Collections.emptyList(), Collections.emptyList(), null, Sort.unsorted(), Pageable.unpaged());
+    }
+
+    public static SelectSpecWithJoin createDistinct(final String table) {
+        return new SelectSpecWithJoin(true, table, Collections.emptyList(), Collections.emptyList(), null, Sort.unsorted(), Pageable.unpaged());
     }
 
     /**
@@ -61,7 +67,7 @@ public class SelectSpecWithJoin {
         final List<ColumnBasedCriteria.Expression> fields = new ArrayList<>(this.projectedFields);
         fields.addAll(projectedFields.stream().map(ColumnBasedCriteria::reference).collect(Collectors.toList()));
 
-        return new SelectSpecWithJoin(this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -78,7 +84,7 @@ public class SelectSpecWithJoin {
         final List<ColumnBasedCriteria.Expression> fields = new ArrayList<>(this.projectedFields);
         fields.addAll(projectedFields);
 
-        return new SelectSpecWithJoin(this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -107,7 +113,7 @@ public class SelectSpecWithJoin {
 
         final List<ColumnBasedCriteria.Expression> fields = projectedFields.stream().map(ColumnBasedCriteria::reference).collect(Collectors.toList());
 
-        return new SelectSpecWithJoin(this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -123,7 +129,7 @@ public class SelectSpecWithJoin {
 
         final List<ColumnBasedCriteria.Expression> fields = new ArrayList<>(expressions);
 
-        return new SelectSpecWithJoin(this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -133,7 +139,7 @@ public class SelectSpecWithJoin {
      * @return the {@link SelectSpecWithJoin}.
      */
     public SelectSpecWithJoin withCriteria(final ColumnBasedCriteria criteria) {
-        return new SelectSpecWithJoin(this.table, this.joinSpecs, this.projectedFields, criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin where(final Supplier<ColumnBasedCriteria> criteriaSupplier) {
@@ -151,7 +157,7 @@ public class SelectSpecWithJoin {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.add(join);
 
-        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin withJoin(final JoinSpec... joins)
@@ -159,7 +165,7 @@ public class SelectSpecWithJoin {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.addAll(Arrays.asList(joins));
 
-        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin withJoin(final Collection<JoinSpec> joins)
@@ -167,7 +173,7 @@ public class SelectSpecWithJoin {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.addAll(joins);
 
-        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin join(final Supplier<JoinSpec> join)
@@ -175,7 +181,7 @@ public class SelectSpecWithJoin {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.add(join.get());
 
-        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin join(final Supplier<JoinSpec>... joins)
@@ -183,7 +189,7 @@ public class SelectSpecWithJoin {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.addAll(Arrays.stream(joins).map(Supplier::get).collect(Collectors.toList()));
 
-        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin join(final Collection<Supplier<JoinSpec>> joins)
@@ -191,7 +197,22 @@ public class SelectSpecWithJoin {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.addAll(joins.stream().map(Supplier::get).collect(Collectors.toList()));
 
-        return new SelectSpecWithJoin(this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+    }
+
+    public SelectSpecWithJoin distinct()
+    {
+        return withDistinct(true);
+    }
+
+    public SelectSpecWithJoin notDistinct()
+    {
+        return withDistinct(false);
+    }
+
+    public SelectSpecWithJoin withDistinct(final boolean distinct)
+    {
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
 
@@ -205,10 +226,10 @@ public class SelectSpecWithJoin {
     public SelectSpecWithJoin withSort(final Sort sort) {
 
         if (sort.isSorted()) {
-            return new SelectSpecWithJoin(this.table, this.joinSpecs, this.projectedFields, this.criteria, sort, this.page);
+            return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, sort, this.page);
         }
 
-        return new SelectSpecWithJoin(this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -223,11 +244,15 @@ public class SelectSpecWithJoin {
 
             final Sort sort = page.getSort();
 
-            return new SelectSpecWithJoin(this.table, this.joinSpecs, this.projectedFields, this.criteria, sort.isSorted() ? sort : this.sort,
+            return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, sort.isSorted() ? sort : this.sort,
                     page);
         }
 
-        return new SelectSpecWithJoin(this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, page);
+    }
+
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public String getTable() {

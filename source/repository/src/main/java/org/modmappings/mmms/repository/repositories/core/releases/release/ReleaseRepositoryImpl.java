@@ -9,10 +9,8 @@ import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
@@ -50,7 +48,7 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
         final SelectSpecWithJoin specWithJoin = mapper.createSelectWithJoin(this.getEntity().getTableName())
                 .withProjectionFromColumnName(columns)
                 .join(() -> join("mapping_type", "mt")
-                                .on(() -> on(reference("mapping_type_id")).is(reference("mt", "id"))))
+                        .on(() -> on(reference("mapping_type_id")).is(reference("mt", "id"))))
                 .where(() -> {
                     ColumnBasedCriteria criteria = nonNullAndEqualsCheckForWhere(
                             null,
@@ -59,8 +57,7 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
                             idColumnName
                     );
 
-                    if (externallyVisibleOnly)
-                    {
+                    if (externallyVisibleOnly) {
                         criteria = nonNullAndEqualsCheckForWhere(
                                 criteria,
                                 true,
@@ -85,14 +82,14 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
      * Finds all releases which match the search criteria if they are supplied.
      * Supply null to anyone of them to ignore the search.
      *
-     * @param nameRegex     The regex to filter the name on-
-     * @param gameVersionId The id of the game version to filter releases on.
-     * @param mappingTypeId The id of the mapping type to filter releases on.
-     * @param isSnapshot    Indicate if snapshots should be included or not.
-     * @param mappingId     The id of the mapping to filter releases on.
-     * @param userId        The id of the creating user to filter releases on.
+     * @param nameRegex             The regex to filter the name on-
+     * @param gameVersionId         The id of the game version to filter releases on.
+     * @param mappingTypeId         The id of the mapping type to filter releases on.
+     * @param isSnapshot            Indicate if snapshots should be included or not.
+     * @param mappingId             The id of the mapping to filter releases on.
+     * @param userId                The id of the creating user to filter releases on.
      * @param externallyVisibleOnly Indicates if only externally visible releases (releases for mapping types which are externally visible) should be returned.
-     * @param pageable      The paging information for the query.
+     * @param pageable              The paging information for the query.
      * @return All releases which match the given criteria.
      */
     @Override
@@ -106,12 +103,14 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
             @NonNull final boolean externallyVisibleOnly,
             @NonNull final Pageable pageable) {
         return createPagedStarRequest(
-                selectSpec -> selectSpec.withJoin(
-                        join("release_component", "rc")
-                                .on(() -> on(reference("id")).is(reference("rc", "release_id"))),
-                        join("mapping_type", "mt")
-                                .on(() -> on(reference("mapping_type_id")).is(reference("mt", "id")))
-                )
+                selectSpec -> selectSpec
+                        .distinct()
+                        .withJoin(
+                                join("release_component", "rc")
+                                        .on(() -> on(reference("id")).is(reference("rc", "release_id"))),
+                                join("mapping_type", "mt")
+                                        .on(() -> on(reference("mapping_type_id")).is(reference("mt", "id")))
+                        )
                         .where(() -> {
                             ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
                                     null,
