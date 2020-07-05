@@ -191,11 +191,7 @@ public class VersionedMappableController {
                     @SecurityRequirement(
                             name = Constants.MOD_MAPPINGS_OFFICIAL_AUTH,
                             scopes = {Constants.SCOPE_ROLES_NAME}
-                    ),
-                    @SecurityRequirement(
-                            name = Constants.MOD_MAPPINGS_DEV_AUTH,
-                            scopes = {Constants.SCOPE_ROLES_NAME}
-                    ),
+                    )
             }
     )
     @ApiResponses(value = {
