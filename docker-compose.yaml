@@ -51,9 +51,9 @@ services:
       SPRING_DATA_POSTGRES_DATABASE: mmms
       SPRING_DATA_POSTGRES_USERNAME: mmms
       SPRING_DATA_POSTGRES_PASSWORD: mmms
-      SPRING_SECURITY_TARGET_HOST: http://keycloak:8080
+      SPRING_SECURITY_TARGET_HOST: https://auth.modmappings.org/
       SPRING_SECURITY_TARGET_REALM: ModMappings
-      SPRING_URL: http://mmms:8080
+      SPRING_URL: https://api.modmappings.org/
       SPRINGDOC.SHOW-ACTUATOR: 'true'
     labels:
       traefik.enable: 'true'

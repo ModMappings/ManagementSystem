@@ -28,20 +28,18 @@ pipeline {
                     archiveArtifacts artifacts: 'source/*/build/libs/*.jar', fingerprint: true
                 }
             }
-
         }
-        post {
-            success {
-                unstash 'app'
-                script {
-                    def img = docker.image('tmaier/docker-compose:1.12')
-                    img.inside('-v /var/run/docker.sock:/var/run/docker.sock')
-                    {
-                        sh '/usr/bin/docker-compose up -d --force-recreate --remove-orphans'
-                    }
+    }
+    post {
+        success {
+            unstash 'app'
+            script {
+                def img = docker.image('tmaier/docker-compose:1.12')
+                img.inside('-v /var/run/docker.sock:/var/run/docker.sock')
+                {
+                    sh '/usr/bin/docker-compose up -d --force-recreate --remove-orphans'
                 }
             }
         }
     }
-
 }
