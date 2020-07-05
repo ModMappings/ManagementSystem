@@ -1,0 +1,68 @@
+version: '2'
+
+services:
+  postgres:
+    container_name: 'mmms-db'
+    image: postgres:12
+    restart: unless-stopped
+    volumes:
+      - postgresdb:/var/lib/postgresql/data
+      - ./dbinitscripts:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_PASSWORD=
+  keycloak:
+    container_name: 'mmms-auth'
+    image: jboss/keycloak:8.0.1
+    restart: unless-stopped
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: 
+    depends_on:
+      - postgres
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.mmmsapi.entrypoints: 'websecure'
+      traefik.http.routers.mmmsapi.rule: 'Host(`auth.modmappings.org`)'
+      traefik.http.routers.mmmsapi.tls.certresolver: 'forge'
+  mmms:
+    container_name: 'mmms-api'
+    build:
+      context: .
+      dockerfile: Dockerfile-mmms
+    image: mmmsapi
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - keycloak
+    environment:
+      SPRING_R2DBC_NAME: mmms
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/mmms
+      SPRING_R2DBC_USERNAME: mmms
+      SPRING_R2DBC_PASSWORD: mmms
+      SPRING_R2DBC_INITIALIZATIONMODE: ALWAYS
+      SPRING_R2DBC_POOL_MAX-SIZE: 20
+      SPRING_R2DBC_POOL_INITIAL-SIZE: 20
+      SPRING_DATA_POSTGRES_HOST: postgres
+      SPRING_DATA_POSTGRES_PORT: 5432
+      SPRING_DATA_POSTGRES_DATABASE: mmms
+      SPRING_DATA_POSTGRES_USERNAME: mmms
+      SPRING_DATA_POSTGRES_PASSWORD: mmms
+      SPRING_SECURITY_TARGET_HOST: http://keycloak:8080
+      SPRING_SECURITY_TARGET_REALM: ModMappings
+      SPRING_URL: http://mmms:8080
+      SPRINGDOC.SHOW-ACTUATOR: 'true'
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.mmmsapi.entrypoints: 'websecure'
+      traefik.http.routers.mmmsapi.rule: 'Host(`api.modmappings.org`)'
+      traefik.http.routers.mmmsapi.tls.certresolver: 'forge'
+
+  
+volumes: 
+  postgresdb:
+    driver: local
+    
