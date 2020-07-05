@@ -31,9 +31,9 @@ pipeline {
             node(null)
             {
                 script {
-                    docker.image('tmaier/docker-compose:1.12').inside('-v /var/run/docker.sock:/var/run/docker.sock')
+                    docker.image('tmaier/docker-compose:latest').inside('-v /var/run/docker.sock:/var/run/docker.sock')
                     {
-                        sh '/usr/bin/docker-compose up -d --force-recreate --remove-orphans'
+                        sh '/usr/bin/docker-compose up -d --build --force-recreate --remove-orphans --project-name mmms'
                     }
                 }
             }

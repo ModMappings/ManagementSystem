@@ -2,7 +2,6 @@ version: '2'
 
 services:
   postgres:
-    container_name: 'mmms-db'
     image: postgres:12
     restart: unless-stopped
     volumes:
@@ -11,12 +10,11 @@ services:
     environment:
       - POSTGRES_PASSWORD=
   keycloak:
-    container_name: 'mmms-auth'
     image: jboss/keycloak:8.0.1
     restart: unless-stopped
     environment:
       DB_VENDOR: POSTGRES
-      DB_ADDR: mmms-db
+      DB_ADDR: postgres
       DB_DATABASE: keycloak
       DB_USER: keycloak
       DB_SCHEMA: public
@@ -29,7 +27,6 @@ services:
       traefik.http.routers.mmmsapi.rule: 'Host(`auth.modmappings.org`)'
       traefik.http.routers.mmmsapi.tls.certresolver: 'forge'
   mmms:
-    container_name: 'mmms-api'
     build:
       context: .
       dockerfile: Dockerfile-mmms
@@ -40,7 +37,7 @@ services:
       - keycloak
     environment:
       SPRING_R2DBC_NAME: mmms
-      SPRING_R2DBC_URL: r2dbc:postgresql://mmms-db:5432/mmms
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/mmms
       SPRING_R2DBC_USERNAME: mmms
       SPRING_R2DBC_PASSWORD: mmms
       SPRING_R2DBC_INITIALIZATIONMODE: ALWAYS
