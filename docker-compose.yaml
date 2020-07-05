@@ -9,7 +9,12 @@ services:
       - ./dbinitscripts:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_PASSWORD: postgres
-  keycloak:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    keycloak:
     image: jboss/keycloak:8.0.1
     restart: unless-stopped
     environment:
@@ -20,7 +25,8 @@ services:
       DB_SCHEMA: public
       DB_PASSWORD: keycloak
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     labels:
       traefik.enable: 'true'
       traefik.http.routers.mmmsapi.entrypoints: 'websecure'
@@ -33,8 +39,10 @@ services:
     image: mmmsapi
     restart: unless-stopped
     depends_on:
-      - postgres
-      - keycloak
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
     environment:
       SPRING_R2DBC_NAME: mmms
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/mmms
