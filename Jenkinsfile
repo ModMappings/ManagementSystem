@@ -30,9 +30,11 @@ pipeline {
         success {
             node(null)
             {
-                docker.image('tmaier/docker-compose:1.12').inside('-v /var/run/docker.sock:/var/run/docker.sock')
-                {
-                    sh '/usr/bin/docker-compose up -d --force-recreate --remove-orphans'
+                script {
+                    docker.image('tmaier/docker-compose:1.12').inside('-v /var/run/docker.sock:/var/run/docker.sock')
+                    {
+                        sh '/usr/bin/docker-compose up -d --force-recreate --remove-orphans'
+                    }
                 }
             }
         }
