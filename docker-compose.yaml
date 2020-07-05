@@ -1,4 +1,4 @@
-version: '2'
+version: '2.4'
 
 services:
   postgres:
@@ -12,7 +12,9 @@ services:
   keycloak:
     image: jboss/keycloak:8.0.1
     restart: unless-stopped
-    network_mode: bridge
+    networks: 
+      - bridge
+      - default
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -21,8 +23,6 @@ services:
       DB_SCHEMA: public
       DB_PASSWORD: 
     depends_on:
-      - postgres
-    links:
       - postgres
     labels:
       traefik.enable: 'true'
@@ -35,12 +35,12 @@ services:
       dockerfile: Dockerfile-mmms
     image: mmmsapi
     restart: unless-stopped
-    network_mode: bridge
+    networks: 
+      - bridge
+      - default
     depends_on:
       - postgres
       - keycloak
-    links:
-      - postgres
     environment:
       SPRING_R2DBC_NAME: mmms
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/mmms
@@ -68,4 +68,7 @@ services:
 volumes: 
   postgresdb:
     driver: local
-  
+
+networks:
+  bridge:
+    external: true
