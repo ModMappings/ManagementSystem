@@ -1667,7 +1667,7 @@ b7f0ad00-37c4-4e69-a0a9-ce0920c034c3	t	f	account	0	f	9e384267-731d-42b0-9ac9-b89
 f9564792-f154-4177-ac4c-0d47d2f4c026	t	f	broker	0	f	de770411-d5bc-4325-a40a-03fb6f48a196	\N	f	\N	f	ModMappings	openid-connect	0	f	f	${client_broker}	f	client-secret	\N	\N	\N	t	f	f
 d8945854-74b3-460b-9089-00fbc8c14672	t	f	security-admin-console	0	t	2ad2f875-3e2f-42f9-9185-ad52a6045463	/admin/ModMappings/console/	f	\N	f	ModMappings	openid-connect	0	f	f	${client_security-admin-console}	f	client-secret	${authAdminUrl}	\N	\N	t	f	f
 e9f267a6-0ae2-4756-b8f3-7bf926e1db94	t	f	admin-cli	0	t	1fd4db99-b5e4-47ee-a004-371d357c650d	\N	f	\N	f	ModMappings	openid-connect	0	f	f	${client_admin-cli}	f	client-secret	\N	\N	\N	f	f	t
-aed69ab6-ca48-4b7f-a94d-629361b04bb8	t	t	api	0	f	cf178ffa-3bf8-4879-a2ad-b01e3006dc4a	\N	f	http://localhost:8080	f	ModMappings	openid-connect	-1	f	f	\N	t	client-secret	http://localhost:8080	\N	\N	t	t	t
+aed69ab6-ca48-4b7f-a94d-629361b04bb8	t	t	api	0	f	cf178ffa-3bf8-4879-a2ad-b01e3006dc4a	/swagger-ui.html	f		f	ModMappings	openid-connect	-1	f	f	\N	t	client-secret	http://localhost:8080	\N	\N	t	t	t
 \.
 
 
@@ -2164,8 +2164,7 @@ b0bc8ff0-764b-4347-b08a-e227401183df	5b33f0b7-bc80-483f-a102-6be01ae64c30
 
 COPY public.credential (id, salt, type, user_id, created_date, user_label, secret_data, credential_data, priority) FROM stdin;
 f36bbcb6-3963-440f-8145-ae2ef773694d	\N	password	5cb3ca77-47ab-4721-a1ad-7b1868559aa5	1579205750998	\N	{"value":"JPTsTjqDIfBnXLWI2R+aH8E+PRFOgsnDPXXY9WpPlrfQ/Xnz/KKrEy8V0Hd6a70MpB6rKkyDXVMI+HDSd6UoSw==","salt":"o3yv4oo1OksZW9pSKrMtjg=="}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256"}	10
-74fdad1c-3104-4dde-a12e-16191824d849	\N	password	5c150731-d9e2-41c0-8091-836e67699cf1	1579420828436	\N	{"value":"UQbMZszeK5sXBUnotE3k04eh6SlxGPyonqLRt23KxFCuH2kBiutOzvjrGa3VtV2QCP6xD/6G7DnOFb5HB9H4IQ==","salt":"N5xXgTv7vapr/oZYho+lgQ=="}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256"}	10
-988fd5b9-85f2-415f-82f5-455f331ee644	\N	password	b4928d27-0eee-4932-855b-4e7f39a5d225	1579423024814	\N	{"value":"88mxXsTUfeqN9z1A2vkZ1Bn+X6m4beqpws/5kZRbDnAEWewSMAFyWMBWqj246VUa21Bu90Nv6isKTT3w/GF18w==","salt":"jYySEmUsNn5U+saNr/898w=="}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256"}	10
+8df83a6a-fcb6-4dc8-bae6-105d20925bc8	\N	password	5c150731-d9e2-41c0-8091-836e67699cf1	1593975894615	\N	{"value":"Ct7MSo1BeZn11IKWxLQT4nKMAthltyPjM92SMYQufmFsxx5v6KmfliItAQdzXNJixZTB/wbUueiqWUG3s6pqug==","salt":"fBH0GyzLaRhWI/RNz8rFjA=="}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256"}	10
 \.
 
 
@@ -2383,12 +2382,6 @@ COPY public.group_attribute (id, name, value, group_id) FROM stdin;
 --
 
 COPY public.group_role_mapping (role_id, group_id) FROM stdin;
-2c64b65e-2569-4677-ad04-19096d1509ef	67274e53-7db3-4398-abe2-4ceb180e5fa0
-995d2c3b-658a-4457-8e46-63d98459a01f	67274e53-7db3-4398-abe2-4ceb180e5fa0
-714e4709-a114-43f6-8b09-9f44fd244d4b	67274e53-7db3-4398-abe2-4ceb180e5fa0
-fcd72160-791e-4937-a44f-53eb84dd2e5d	e1e9e9be-ad84-4ad7-93e0-856915556d2d
-7f10c5b6-7a48-4bb1-bc81-66a276733991	e1e9e9be-ad84-4ad7-93e0-856915556d2d
-88b0f131-3aba-41bf-acfc-4b654f15f0d6	e1e9e9be-ad84-4ad7-93e0-856915556d2d
 \.
 
 
@@ -2429,8 +2422,6 @@ COPY public.idp_mapper_config (idp_mapper_id, value, name) FROM stdin;
 --
 
 COPY public.keycloak_group (id, name, parent_group, realm_id) FROM stdin;
-67274e53-7db3-4398-abe2-4ceb180e5fa0	Gameversion managers	\N	ModMappings
-e1e9e9be-ad84-4ad7-93e0-856915556d2d	Mappingtype managers	\N	ModMappings
 \.
 
 
@@ -2510,12 +2501,7 @@ d19fa9aa-0321-4c47-86db-2a4c3913bc29	d96a45e8-8ab2-4b5e-98ee-4a20403a11f8	t	${ro
 c82225bf-240c-444a-b715-57bb9229718f	ModMappings	f	${role_uma_authorization}	uma_authorization	ModMappings	\N	ModMappings
 6603554d-5faf-4593-ba06-8375360ff166	aed69ab6-ca48-4b7f-a94d-629361b04bb8	t	\N	uma_protection	ModMappings	aed69ab6-ca48-4b7f-a94d-629361b04bb8	\N
 3256738e-6f4c-4a0f-bc37-01655a34978b	aed69ab6-ca48-4b7f-a94d-629361b04bb8	t	\N	USER	ModMappings	aed69ab6-ca48-4b7f-a94d-629361b04bb8	\N
-2c64b65e-2569-4677-ad04-19096d1509ef	ModMappings	f	Allows for the creation of game versions.	GAMEVERSIONS_CREATE	ModMappings	\N	ModMappings
-995d2c3b-658a-4457-8e46-63d98459a01f	ModMappings	f	Allows for the deletion of game versions.	GAMEVERSIONS_DELETE	ModMappings	\N	ModMappings
-714e4709-a114-43f6-8b09-9f44fd244d4b	ModMappings	f	Allows for the updating of properties on game versions.	GAMEVERSIONS_UPDATE	ModMappings	\N	ModMappings
-fcd72160-791e-4937-a44f-53eb84dd2e5d	ModMappings	f	Allows for the creation of mapping types.	MAPPINGTYPES_CREATE	ModMappings	\N	ModMappings
-7f10c5b6-7a48-4bb1-bc81-66a276733991	ModMappings	f	Allows for the deletion of mapping types.	MAPPINGTYPES_DELETE	ModMappings	\N	ModMappings
-88b0f131-3aba-41bf-acfc-4b654f15f0d6	ModMappings	f	Allows for the updating of properties on mapping types.	MAPPINGTYPES_UPDATE	ModMappings	\N	ModMappings
+d69ffc6d-4e3f-4adf-a233-ee8f55fab822	ModMappings	f	\N	USER	ModMappings	\N	ModMappings
 \.
 
 
@@ -3240,8 +3226,7 @@ COPY public.user_consent_client_scope (user_consent_id, scope_id) FROM stdin;
 COPY public.user_entity (id, email, email_constraint, email_verified, enabled, federation_link, first_name, last_name, realm_id, username, created_timestamp, service_account_client_link, not_before) FROM stdin;
 5cb3ca77-47ab-4721-a1ad-7b1868559aa5	\N	2d944765-debc-48ea-b11e-3f59092bc912	f	t	\N	\N	\N	master	admin	1579205750747	\N	0
 9df4d504-9378-433e-b4e9-3e5a6600f0f1	\N	48ac4d15-57ff-4827-84a1-8257b9d1a247	f	t	\N	\N	\N	ModMappings	service-account-api	1579206009912	aed69ab6-ca48-4b7f-a94d-629361b04bb8	0
-5c150731-d9e2-41c0-8091-836e67699cf1	bob@modmappings.com	bob@modmappings.com	t	t	\N	Bob	Bob's last name	ModMappings	bob	1579206077013	\N	0
-b4928d27-0eee-4932-855b-4e7f39a5d225	alice@modmappings.org	alice@modmappings.org	t	t	\N	alice	Alice's last name	ModMappings	alice	1579423011712	\N	0
+5c150731-d9e2-41c0-8091-836e67699cf1	bob@modmappings.com	bob@modmappings.com	t	t	\N	Bob	Password: Password1!	ModMappings	bob	1579206077013	\N	0
 \.
 
 
@@ -3282,8 +3267,6 @@ COPY public.user_federation_provider (id, changed_sync_period, display_name, ful
 --
 
 COPY public.user_group_membership (group_id, user_id) FROM stdin;
-67274e53-7db3-4398-abe2-4ceb180e5fa0	5c150731-d9e2-41c0-8091-836e67699cf1
-e1e9e9be-ad84-4ad7-93e0-856915556d2d	5c150731-d9e2-41c0-8091-836e67699cf1
 \.
 
 
@@ -3315,10 +3298,6 @@ c82225bf-240c-444a-b715-57bb9229718f	9df4d504-9378-433e-b4e9-3e5a6600f0f1
 770e4d48-d5a7-4795-8818-af03c8cf2d14	5c150731-d9e2-41c0-8091-836e67699cf1
 c82225bf-240c-444a-b715-57bb9229718f	5c150731-d9e2-41c0-8091-836e67699cf1
 3256738e-6f4c-4a0f-bc37-01655a34978b	5c150731-d9e2-41c0-8091-836e67699cf1
-9e9c4679-a175-4a04-b72b-234686a133b6	b4928d27-0eee-4932-855b-4e7f39a5d225
-625aa352-faf9-4bfe-99f1-5f270200eb75	b4928d27-0eee-4932-855b-4e7f39a5d225
-770e4d48-d5a7-4795-8818-af03c8cf2d14	b4928d27-0eee-4932-855b-4e7f39a5d225
-c82225bf-240c-444a-b715-57bb9229718f	b4928d27-0eee-4932-855b-4e7f39a5d225
 \.
 
 
