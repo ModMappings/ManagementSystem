@@ -97,7 +97,7 @@ public class MappingController {
                             name = "mappableType",
                             in = ParameterIn.QUERY,
                             description = "The mappable type to filter on.",
-                            example = "PACKAGE"
+                            example = "CLASS"
                     ),
                     @Parameter(
                             name = "inputRegex",
