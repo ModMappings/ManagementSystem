@@ -22,12 +22,14 @@ services:
       DB_PASSWORD: 
     depends_on:
       - postgres
+    links:
+      - postgres
     labels:
       traefik.enable: 'true'
       traefik.http.routers.mmmsapi.entrypoints: 'websecure'
       traefik.http.routers.mmmsapi.rule: 'Host(`auth.modmappings.org`)'
       traefik.http.routers.mmmsapi.tls.certresolver: 'forge'
-  mmms:
+  apiserver:
     build:
       context: .
       dockerfile: Dockerfile-mmms
@@ -37,6 +39,8 @@ services:
     depends_on:
       - postgres
       - keycloak
+    links:
+      - postgres
     environment:
       SPRING_R2DBC_NAME: mmms
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/mmms
