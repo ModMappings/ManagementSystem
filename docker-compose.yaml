@@ -12,6 +12,7 @@ services:
   keycloak:
     image: jboss/keycloak:8.0.1
     restart: unless-stopped
+    network_mode: bridge
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -32,6 +33,7 @@ services:
       dockerfile: Dockerfile-mmms
     image: mmmsapi
     restart: unless-stopped
+    network_mode: bridge
     depends_on:
       - postgres
       - keycloak
@@ -62,4 +64,4 @@ services:
 volumes: 
   postgresdb:
     driver: local
-    
+  
