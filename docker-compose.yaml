@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     environment:
       DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
+      DB_ADDR: mmms-db
       DB_DATABASE: keycloak
       DB_USER: keycloak
       DB_SCHEMA: public
@@ -40,7 +40,7 @@ services:
       - keycloak
     environment:
       SPRING_R2DBC_NAME: mmms
-      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/mmms
+      SPRING_R2DBC_URL: r2dbc:postgresql://mmms-db:5432/mmms
       SPRING_R2DBC_USERNAME: mmms
       SPRING_R2DBC_PASSWORD: mmms
       SPRING_R2DBC_INITIALIZATIONMODE: ALWAYS
