@@ -33,6 +33,7 @@ pipeline {
                 script {
                     docker.image('tmaier/docker-compose:latest').inside('-v /var/run/docker.sock:/var/run/docker.sock')
                     {
+                        sh 'ls -l dbinitscripts/'
                         sh '/usr/bin/docker-compose --project-name mmms up -d --build --force-recreate --remove-orphans'
                     }
                 }
