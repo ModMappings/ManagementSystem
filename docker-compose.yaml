@@ -19,6 +19,8 @@ services:
       DB_SCHEMA: public
       DB_PASSWORD: keycloak
     network_mode: bridge
+    links:
+      - postgres
     depends_on:
       - postgres
     labels:
@@ -39,6 +41,8 @@ services:
     depends_on:
       - postgres
       - keycloak
+    links:
+      - postgres
     environment:
       SPRING_R2DBC_NAME: mmms
       SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/mmms
