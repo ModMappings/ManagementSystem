@@ -23,6 +23,7 @@ services:
       - postgres
     labels:
       traefik.enable: 'true'
+      traefik.http.services.mmmskeycloak.loadbalancer.server.port: 8080
       traefik.http.routers.mmmskeycloak.entrypoints: 'websecure'
       traefik.http.routers.mmmskeycloak.rule: 'Host(`auth.modmappings.org`)'
       traefik.http.routers.mmmskeycloak.tls.certresolver: 'forge'
@@ -54,6 +55,7 @@ services:
       SPRINGDOC.SHOW-ACTUATOR: 'true'
     labels:
       traefik.enable: 'true'
+      traefik.http.services.mmmsapi.loadbalancer.server.port: 8080
       traefik.http.routers.mmmsapi.entrypoints: 'websecure'
       traefik.http.routers.mmmsapi.rule: 'Host(`api.modmappings.org`)'
       traefik.http.routers.mmmsapi.tls.certresolver: 'forge'
