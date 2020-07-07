@@ -42,7 +42,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
  * @param <T> The type stored in the repository.
  */
 @NoRepositoryBean
-public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcRepository<T, UUID> implements ModMappingRepository<T> {
+public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcRepository<T, UUID> implements ModMappingRepository<T>, IModMappingQuerySupport {
 
     private final RelationalEntityInformation<T, UUID> entity;
     private final DatabaseClient databaseClient;
@@ -61,16 +61,26 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         return entity;
     }
 
-    protected DatabaseClient getDatabaseClient() {
+    public DatabaseClient getDatabaseClient() {
         return databaseClient;
     }
 
-    protected R2dbcConverter getConverter() {
+    public R2dbcConverter getConverter() {
         return converter;
     }
 
-    protected ExtendedDataAccessStrategy getAccessStrategy() {
+    public ExtendedDataAccessStrategy getAccessStrategy() {
         return accessStrategy;
+    }
+
+    public String getTableName()
+    {
+        return this.getEntity().getTableName();
+    }
+
+    public Class<T> getEntityType()
+    {
+        return this.getEntity().getJavaType();
     }
 
     /**
@@ -84,152 +94,63 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
     public Mono<Page<T>> findAll(
             final Pageable pageable
     ) {
-        return createPagedStarRequest(
-                UnaryOperator.identity(),
+        return this.findAll(
+                getTableName(),
+                getEntityType(),
                 pageable
         );
     }
 
-    protected Flux<T> createFindStarRequest(final SelectSpecWithJoin selectSpec, final Pageable pageable)
+    public Flux<T> createFindStarRequest(final SelectSpecWithJoin selectSpec, final Pageable pageable)
     {
-        Assert.notNull(selectSpec, "SelectSpec must not be null");
-        Assert.notNull(pageable, "Pageable most not be null!");
-
-        final List<String> columns = this.getAccessStrategy().getAllColumns(this.getEntity().getJavaType());
-
-        final SelectSpecWithJoin selectSpecWithProj = selectSpec
-                .withProjectionFromColumnName(columns);
-
-        return createFindRequest(selectSpecWithProj, this.getEntity().getJavaType(), pageable);
+        return this.createFindStarRequest(
+                selectSpec,
+                getEntityType(),
+                pageable
+        );
     }
 
-    protected <R> Flux<R> createFindRequest(final SelectSpecWithJoin selectSpec, final Class<R> resultType, final Pageable pageable)
+    public Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec)
     {
-        Assert.notNull(selectSpec, "SelectSpec must not be null");
-        Assert.notNull(pageable, "Pageable most not be null!");
-
-        final SelectSpecWithJoin selectSpecWithPagination = selectSpec
-                .withPage(pageable);
-
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithPagination);
-
-        return this.getDatabaseClient().execute(operation) //
-                .as(resultType) //
-                .fetch()
-                .all();
-    }
-
-    protected Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec)
-    {
-        Assert.notNull(selectSpec, "SelectSpec must not be null");
-
-        final Table table = Table.create(this.entity.getTableName());
-        final Column column = table.column(getIdColumnName());
-        final SelectSpecWithJoin selectSpecWithProj =
-                selectSpec.isDistinct() ? selectSpec
-                        .notDistinct()
-                        .setProjection(spring(Functions.count(Expressions.just(String.format("DISTINCT %s", column))))) :
-                selectSpec
-                .setProjection(spring(Functions.count(column)));
-
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
-
-        return this.getDatabaseClient().execute(operation) //
-                .map((r, md) -> r.get(0, Long.class)) //
-                .first() //
-                .defaultIfEmpty(0L);
-    }
-
-    protected <R> Mono<Page<R>> createPagedRequest(final SelectSpecWithJoin selectSpecWithJoin, final Class<R> resultType, final Pageable pageable)
-    {
-        return createFindRequest(selectSpecWithJoin, resultType, pageable)
-                .collectList()
-                .flatMap(results -> createCountRequest(selectSpecWithJoin)
-                        .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
-    }
-
-    protected <R> Mono<Page<R>> createPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final Class<R> resultType, final Pageable pageable)
-    {
-        Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
-        Assert.notNull(pageable, "Pageable most not be null!");
-
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
-
-        selectSpec = selectSpecBuilder.apply(selectSpec);
-
-        return createPagedRequest(selectSpec, resultType, pageable);
+        return this.createCountRequest(
+                selectSpec,
+                getTableName(),
+                getEntityType()
+        );
     }
 
     protected Mono<Page<T>> createPagedStarRequest(final SelectSpecWithJoin selectSpecWithJoin, final Pageable pageable)
     {
-        return createFindStarRequest(selectSpecWithJoin, pageable)
-                .collectList()
-                .flatMap(results -> createCountRequest(selectSpecWithJoin)
-                        .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
+        return this.createPagedStarRequest(
+                selectSpecWithJoin,
+                getTableName(),
+                getEntityType(),
+                pageable
+        );
     }
 
-    protected Mono<Page<T>> createPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final Pageable pageable)
+    public Mono<Page<T>> createPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final Pageable pageable)
     {
-        Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
-        Assert.notNull(pageable, "Pageable most not be null!");
-
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
-
-        selectSpec = selectSpecBuilder.apply(selectSpec);
-
-        return createPagedStarRequest(selectSpec, pageable);
+        return this.createPagedStarRequest(
+            selectSpecBuilder,
+            getTableName(),
+            getEntityType(),
+            pageable
+        );
     }
 
-    protected Mono<Page<T>> createPagedStarSingleWhereRequest(final String parameterName, final Object value, final Pageable pageable)
+    public Mono<Page<T>> createPagedStarSingleWhereRequest(final String parameterName, final Object value, final Pageable pageable)
     {
-        Assert.notNull(parameterName, "ParameterName must not be null!");
-        Assert.notNull(value, "Value must not be null");
-        Assert.notNull(pageable, "Pageable most not be null!");
-
-        return createPagedStarRequest(
-                selectSpec -> selectSpec.withCriteria(where(reference(parameterName)).is(parameter(value))),
-                pageable);
+        return this.createPagedStarSingleWhereRequest(
+                parameterName,
+                value,
+                getTableName(),
+                getEntityType(),
+                pageable
+        );
     }
-
-    protected ColumnBasedCriteria nonNullAndMatchesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable final Object parameter, @NonNull final String tableName, @NonNull final String columnName) {
-        if (parameter != null) {
-            if (criteria == null) {
-                return where(reference(tableName, columnName)).matches(parameter(parameter));
-            }
-            else
-            {
-                return criteria.and(reference(tableName, columnName)).matches(parameter(parameter));
-            }
-        }
-
-        return criteria;
-    }
-
-    protected ColumnBasedCriteria nonNullAndEqualsCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable final Object parameter, @NonNull final String tableName, @NonNull final String columnName) {
-        if (parameter != null) {
-            if (criteria == null) {
-                return where(reference(tableName, columnName)).is(parameter(parameter));
-            }
-            else
-            {
-                return criteria.and(reference(tableName, columnName)).is(parameter(parameter));
-            }
-        }
-
-        return criteria;
-    }
-
-    protected String getIdColumnName()
-    {
-
-        return this.converter //
-                .getMappingContext() //
-                .getRequiredPersistentEntity(this.entity.getJavaType()) //
-                .getRequiredIdProperty() //
-                .getColumnName();
+    
+    protected String getIdColumnName() {
+        return this.getIdColumnName(this.getEntityType());
     }
 }

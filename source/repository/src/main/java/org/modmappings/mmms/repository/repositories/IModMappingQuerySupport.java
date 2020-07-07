@@ -28,9 +28,11 @@ import java.util.function.UnaryOperator;
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.parameter;
 
-public interface IModMappingQuerySupport<T> {
+public interface IModMappingQuerySupport {
 
     DatabaseClient getDatabaseClient();
+
+    R2dbcConverter getConverter();
 
     ExtendedDataAccessStrategy getAccessStrategy();
     
@@ -40,26 +42,30 @@ public interface IModMappingQuerySupport<T> {
      * @param pageable The page and sorting information.
      * @return The page that is requested.
      */
-    default Mono<Page<T>> findAll(
+    default <T> Mono<Page<T>> findAll(
+            final String tableName,
+            final Class<T> resultType,
             final Pageable pageable
     ) {
         return createPagedStarRequest(
                 UnaryOperator.identity(),
+                tableName,
+                resultType,
                 pageable
         );
     }
 
-    default Flux<T> createFindStarRequest(final SelectSpecWithJoin selectSpec, final Pageable pageable, final Class<T> entityType)
+    default <T> Flux<T> createFindStarRequest(final SelectSpecWithJoin selectSpec, final Class<T> resultType, final Pageable pageable)
     {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        final List<String> columns = this.getAccessStrategy().getAllColumns(entityType);
+        final List<String> columns = this.getAccessStrategy().getAllColumns(resultType);
 
         final SelectSpecWithJoin selectSpecWithProj = selectSpec
                 .withProjectionFromColumnName(columns);
 
-        return createFindRequest(selectSpecWithProj, entityType, pageable);
+        return createFindRequest(selectSpecWithProj, resultType, pageable);
     }
 
     default <R> Flux<R> createFindRequest(final SelectSpecWithJoin selectSpec, final Class<R> resultType, final Pageable pageable)
@@ -79,12 +85,12 @@ public interface IModMappingQuerySupport<T> {
                 .all();
     }
 
-    default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName)
+    default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> entityType)
     {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
 
         final Table table = Table.create(tableName);
-        final Column column = table.column(getIdColumnName());
+        final Column column = table.column(getIdColumnName(entityType));
         final SelectSpecWithJoin selectSpecWithProj =
                 selectSpec.isDistinct() ? selectSpec
                         .notDistinct()
@@ -92,7 +98,7 @@ public interface IModMappingQuerySupport<T> {
                         selectSpec
                                 .setProjection(spring(Functions.count(column)));
 
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(entityType);
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
 
         return this.getDatabaseClient().execute(operation) //
@@ -101,49 +107,49 @@ public interface IModMappingQuerySupport<T> {
                 .defaultIfEmpty(0L);
     }
 
-    default <R> Mono<Page<R>> createPagedRequest(final SelectSpecWithJoin selectSpecWithJoin, final Class<R> resultType, final Pageable pageable)
+    default <R> Mono<Page<R>> createPagedRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, final Pageable pageable)
     {
         return createFindRequest(selectSpecWithJoin, resultType, pageable)
                 .collectList()
-                .flatMap(results -> createCountRequest(selectSpecWithJoin)
+                .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, resultType)
                         .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
     }
 
-    default <R> Mono<Page<R>> createPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final Class<R> resultType, final Pageable pageable)
+    default <R> Mono<Page<R>> createPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<R> resultType, final Pageable pageable)
     {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(resultType);
+        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(tableName);
 
         selectSpec = selectSpecBuilder.apply(selectSpec);
 
-        return createPagedRequest(selectSpec, resultType, pageable);
+        return createPagedRequest(selectSpec, tableName, resultType, pageable);
     }
 
-    default Mono<Page<T>> createPagedStarRequest(final SelectSpecWithJoin selectSpecWithJoin, final Pageable pageable)
+    default <T> Mono<Page<T>> createPagedStarRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<T> resultType, final Pageable pageable)
     {
-        return createFindStarRequest(selectSpecWithJoin, pageable)
+        return createFindStarRequest(selectSpecWithJoin, resultType, pageable)
                 .collectList()
-                .flatMap(results -> createCountRequest(selectSpecWithJoin)
+                .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, resultType)
                         .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
     }
 
-    default Mono<Page<T>> createPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final Pageable pageable)
+    default <T> Mono<Page<T>> createPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<T> resultType, final Pageable pageable)
     {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(this.getEntity().getJavaType());
-        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(this.getEntity().getTableName());
+        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(resultType);
+        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(tableName);
 
         selectSpec = selectSpecBuilder.apply(selectSpec);
 
-        return createPagedStarRequest(selectSpec, pageable);
+        return createPagedStarRequest(selectSpec, tableName, resultType, pageable);
     }
 
-    default Mono<Page<T>> createPagedStarSingleWhereRequest(final String parameterName, final Object value, final Pageable pageable)
+    default <T> Mono<Page<T>> createPagedStarSingleWhereRequest(final String parameterName, final Object value, final String tableName, final Class<T> resultType, final Pageable pageable)
     {
         Assert.notNull(parameterName, "ParameterName must not be null!");
         Assert.notNull(value, "Value must not be null");
@@ -151,6 +157,8 @@ public interface IModMappingQuerySupport<T> {
 
         return createPagedStarRequest(
                 selectSpec -> selectSpec.withCriteria(where(reference(parameterName)).is(parameter(value))),
+                tableName,
+                resultType,
                 pageable);
     }
 
@@ -182,12 +190,12 @@ public interface IModMappingQuerySupport<T> {
         return criteria;
     }
 
-    default String getIdColumnName()
+    default String getIdColumnName(final Class<?> entityType)
     {
 
-        return this.converter //
+        return this.getConverter() //
                 .getMappingContext() //
-                .getRequiredPersistentEntity(this.entity.getJavaType()) //
+                .getRequiredPersistentEntity(entityType) //
                 .getRequiredIdProperty() //
                 .getColumnName();
     }
