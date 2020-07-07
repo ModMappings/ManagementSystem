@@ -23,6 +23,7 @@ services:
       - postgres
     labels:
       traefik.enable: 'true'
+      traefik.docker.network: mmms_default
       traefik.http.services.mmmskeycloaksrv.loadbalancer.server.port: 8080
       traefik.http.services.mmmskeycloaksrv.loadbalancer.server.scheme: http
       traefik.http.routers.mmmskeycloak.entrypoints: 'websecure'
@@ -56,6 +57,7 @@ services:
       SPRINGDOC.SHOW-ACTUATOR: 'true'
     labels:
       traefik.enable: 'true'
+      traefik.docker.network: mmms_default
       traefik.http.services.mmmsapisrv.loadbalancer.server.port: 8080
       traefik.http.services.mmmsapisrv.loadbalancer.server.scheme: http
       traefik.http.routers.mmmsapi.entrypoints: 'websecure'
