@@ -19,6 +19,7 @@ services:
       DB_SCHEMA: public
       DB_PASSWORD: keycloak
       KEYCLOAK_FRONTEND_URL: https://auth.modmappings.org/auth
+      PROXY_ADDRESS_FORWARDING: 'true'
     network_mode: bridge
     links:
       - postgres
