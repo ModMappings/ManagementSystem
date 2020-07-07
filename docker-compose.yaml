@@ -7,8 +7,7 @@ services:
     volumes:
       - postgresdb:/var/lib/postgresql/data
       - ./dbinitscripts/:/docker-entrypoint-initdb.d/
-    environment:
-      POSTGRES_PASSWORD: postgres
+    network_mode: bridge
   keycloak:
     image: jboss/keycloak:8.0.1
     restart: unless-stopped
@@ -19,6 +18,7 @@ services:
       DB_USER: keycloak
       DB_SCHEMA: public
       DB_PASSWORD: keycloak
+    network_mode: bridge
     depends_on:
       - postgres
     labels:
@@ -35,6 +35,7 @@ services:
       dockerfile: Dockerfile-mmms
     image: mmmsapi
     restart: unless-stopped
+    network_mode: bridge
     depends_on:
       - postgres
       - keycloak
