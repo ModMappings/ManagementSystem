@@ -1,4 +1,4 @@
-version: '2.4'
+version: '2'
 
 services:
   postgres:
@@ -23,9 +23,9 @@ services:
       - postgres
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.mmmsapi.entrypoints: 'websecure'
-      traefik.http.routers.mmmsapi.rule: 'Host(`auth.modmappings.org`)'
-      traefik.http.routers.mmmsapi.tls.certresolver: 'forge'
+      traefik.http.routers.mmmskeycloak.entrypoints: 'websecure'
+      traefik.http.routers.mmmskeycloak.rule: 'Host(`auth.modmappings.org`)'
+      traefik.http.routers.mmmskeycloak.tls.certresolver: 'forge'
   apiserver:
     build:
       context: .
