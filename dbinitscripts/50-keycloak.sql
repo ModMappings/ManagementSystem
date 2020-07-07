@@ -1,4 +1,10 @@
 \connect keycloak
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.1 (Debian 12.1-1.pgdg100+1)
+-- Dumped by pg_dump version 12.1 (Debian 12.1-1.pgdg100+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1667,7 +1673,7 @@ b7f0ad00-37c4-4e69-a0a9-ce0920c034c3	t	f	account	0	f	9e384267-731d-42b0-9ac9-b89
 f9564792-f154-4177-ac4c-0d47d2f4c026	t	f	broker	0	f	de770411-d5bc-4325-a40a-03fb6f48a196	\N	f	\N	f	ModMappings	openid-connect	0	f	f	${client_broker}	f	client-secret	\N	\N	\N	t	f	f
 d8945854-74b3-460b-9089-00fbc8c14672	t	f	security-admin-console	0	t	2ad2f875-3e2f-42f9-9185-ad52a6045463	/admin/ModMappings/console/	f	\N	f	ModMappings	openid-connect	0	f	f	${client_security-admin-console}	f	client-secret	${authAdminUrl}	\N	\N	t	f	f
 e9f267a6-0ae2-4756-b8f3-7bf926e1db94	t	f	admin-cli	0	t	1fd4db99-b5e4-47ee-a004-371d357c650d	\N	f	\N	f	ModMappings	openid-connect	0	f	f	${client_admin-cli}	f	client-secret	\N	\N	\N	f	f	t
-aed69ab6-ca48-4b7f-a94d-629361b04bb8	t	t	api	0	f	cf178ffa-3bf8-4879-a2ad-b01e3006dc4a	/swagger-ui.html	f		f	ModMappings	openid-connect	-1	f	f	\N	t	client-secret	http://localhost:8080	\N	\N	t	t	t
+aed69ab6-ca48-4b7f-a94d-629361b04bb8	t	t	api	0	f	cf178ffa-3bf8-4879-a2ad-b01e3006dc4a	/swagger-ui.html	f		f	ModMappings	openid-connect	-1	f	f	\N	t	client-secret	https://api.modmappings.org	\N	\N	t	t	t
 \.
 
 
@@ -2163,8 +2169,8 @@ b0bc8ff0-764b-4347-b08a-e227401183df	5b33f0b7-bc80-483f-a102-6be01ae64c30
 --
 
 COPY public.credential (id, salt, type, user_id, created_date, user_label, secret_data, credential_data, priority) FROM stdin;
-f36bbcb6-3963-440f-8145-ae2ef773694d	\N	password	5cb3ca77-47ab-4721-a1ad-7b1868559aa5	1579205750998	\N	{"value":"JPTsTjqDIfBnXLWI2R+aH8E+PRFOgsnDPXXY9WpPlrfQ/Xnz/KKrEy8V0Hd6a70MpB6rKkyDXVMI+HDSd6UoSw==","salt":"o3yv4oo1OksZW9pSKrMtjg=="}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256"}	10
 8df83a6a-fcb6-4dc8-bae6-105d20925bc8	\N	password	5c150731-d9e2-41c0-8091-836e67699cf1	1593975894615	\N	{"value":"Ct7MSo1BeZn11IKWxLQT4nKMAthltyPjM92SMYQufmFsxx5v6KmfliItAQdzXNJixZTB/wbUueiqWUG3s6pqug==","salt":"fBH0GyzLaRhWI/RNz8rFjA=="}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256"}	10
+1ecc8e6f-28c7-49d0-8093-44b08a6fbae8	\N	password	5cb3ca77-47ab-4721-a1ad-7b1868559aa5	1593981942967	\N	{"value":"H/XKBBxpw41bsLKJKQYEdYnSSBv2hhMdJHqx4dioMrLN+5dkcGPc2RSfFM3DM/+Gqi+BGyUft32gAS3waEY53A==","salt":"62H/gRZycdUN/LFQ1Xz2vw=="}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256"}	10
 \.
 
 
@@ -3064,7 +3070,7 @@ c5f82688-a1d0-4d07-96f3-6dd303a5bd61	/realms/master/account/*
 24463fff-1058-4fc9-8c1e-9ecbcf7fa2e9	/admin/master/console/*
 b7f0ad00-37c4-4e69-a0a9-ce0920c034c3	/realms/ModMappings/account/*
 d8945854-74b3-460b-9089-00fbc8c14672	/admin/ModMappings/console/*
-aed69ab6-ca48-4b7f-a94d-629361b04bb8	http://localhost:8080/*
+aed69ab6-ca48-4b7f-a94d-629361b04bb8	https://api.modmappings.org/*
 \.
 
 
@@ -3332,7 +3338,7 @@ COPY public.username_login_failure (realm_id, username, failed_login_not_before,
 COPY public.web_origins (client_id, value) FROM stdin;
 24463fff-1058-4fc9-8c1e-9ecbcf7fa2e9	+
 d8945854-74b3-460b-9089-00fbc8c14672	+
-aed69ab6-ca48-4b7f-a94d-629361b04bb8	http://localhost:8080
+aed69ab6-ca48-4b7f-a94d-629361b04bb8	https://api.modmappings.org
 \.
 
 
@@ -5447,65 +5453,5 @@ ALTER TABLE ONLY public.identity_provider_config
 
 --
 -- PostgreSQL database dump complete
---
-
---
--- Database "postgres" dump
---
-
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 12.1 (Debian 12.1-1.pgdg100+1)
--- Dumped by pg_dump version 12.1 (Debian 12.1-1.pgdg100+1)
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
-DROP DATABASE postgres;
---
--- Name: postgres; Type: DATABASE; Schema: -; Owner: keycloak
---
-
-CREATE DATABASE postgres WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';
-
-
-ALTER DATABASE postgres OWNER TO keycloak;
-
-\connect postgres
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- Name: DATABASE postgres; Type: COMMENT; Schema: -; Owner: keycloak
---
-
-COMMENT ON DATABASE postgres IS 'default administrative connection database';
-
-
---
--- PostgreSQL database dump complete
---
-
---
--- PostgreSQL database cluster dump complete
 --
 

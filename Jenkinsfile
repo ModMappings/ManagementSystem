@@ -8,50 +8,35 @@ pipeline {
             agent {
                 docker {
                     image 'gradle:jdk11'
-                    args '-v modmappingapigradlecache:/home/gradle/.gradle/'
+                    args '-v mmmsgc:/home/gradle/.gradle/'
                 }
             }
+            environment {
+                MMMS_MAVEN = credentials('nexus-mmms')
+            }
             steps {
-                sh './gradlew ${GRADLE_ARGS} build'
-                script {
-                    env.MYVERSION = sh(returnStdout: true, script: './gradlew ${GRADLE_ARGS} properties -q | grep "version:" | cut -d\' \' -f 2').trim()
-                }
-                stash includes: 'source/api/build/distributions/api-boot.tar', name: 'app'
+                sh './gradlew ${GRADLE_ARGS} --continue clean test build'
             }
             post {
                 success {
                     archiveArtifacts artifacts: 'source/api/build/distributions/api-boot.tar', fingerprint: true
-                }
-            }
-
-        }
-        stage('docker') {
-            agent {
-                docker {
-                    image 'docker:latest'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
-            steps {
-                unstash 'app'
-                script {
-                    site=docker.build("modmappingapi:${env.BUILD_ID}", ".")
-                    site.tag("v${env.MYVERSION}")
-                    site.tag("latest")
+                    archiveArtifacts artifacts: 'source/*/build/libs/*.jar', fingerprint: true
+                    sh './gradlew ${GRADLE_ARGS} -PmmmsMavenUser=${MMMS_MAVEN_USR} -PmmmsMavenPassword=${MMMS_MAVEN_PSW} publish'
                 }
             }
         }
-//         post {
-//             success {
-//                 script {
-//                     def img = docker.image('tmaier/docker-compose:1.12')
-//                     img.inside('-v /var/run/docker.sock:/var/run/docker.sock')
-//                     {
-//                         sh '/usr/bin/docker-compose up -d --force-recreate --remove-orphans'
-//                     }
-//                 }
-//             }
-//         }
     }
-
+    post {
+        success {
+            node(null)
+            {
+                script {
+                    docker.image('tmaier/docker-compose:latest').inside('-v /var/run/docker.sock:/var/run/docker.sock')
+                    {
+                        sh '/usr/bin/docker-compose --no-ansi --project-name mmms -f ./docker-compose.yaml up -d --build --force-recreate --remove-orphans'
+                    }
+                }
+            }
+        }
+    }
 }

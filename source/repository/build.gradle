@@ -78,4 +78,13 @@ publishing {
             }
         }
     }
+    repositories {
+        maven {
+            credentials {
+                username project.properties.mmmsMavenUser?:'fake'
+                password project.properties.mmmsMavenPassword?:'news'
+            }
+            url 'https://nexus.minecraftforge.net/repository/modmappings/'
+        }
+    }
 }
