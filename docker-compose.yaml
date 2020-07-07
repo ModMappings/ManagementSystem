@@ -18,6 +18,7 @@ services:
       DB_USER: keycloak
       DB_SCHEMA: public
       DB_PASSWORD: keycloak
+      KEYCLOAK_FRONTEND_URL: https://auth.modmappings.org/
     network_mode: bridge
     links:
       - postgres
