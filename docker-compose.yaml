@@ -9,7 +9,7 @@ services:
       - ./dbinitscripts/:/docker-entrypoint-initdb.d/
     network_mode: bridge
   keycloak:
-    image: jboss/keycloak:8.0.1
+    image: jboss/keycloak:10.0.2
     restart: unless-stopped
     environment:
       DB_VENDOR: POSTGRES
