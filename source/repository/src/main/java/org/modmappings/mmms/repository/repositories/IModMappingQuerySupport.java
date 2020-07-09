@@ -76,7 +76,11 @@ public interface IModMappingQuerySupport {
         final SelectSpecWithJoin selectSpecWithPagination = selectSpec
                 .withPage(pageable);
 
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(resultType);
+        
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithPagination);
 
         return this.getDatabaseClient().execute(operation) //
@@ -85,12 +89,12 @@ public interface IModMappingQuerySupport {
                 .all();
     }
 
-    default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> entityType)
+    default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType)
     {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
 
         final Table table = Table.create(tableName);
-        final Column column = table.column(getIdColumnName(entityType));
+        final Column column = table.column(getIdColumnName(resultType));
         final SelectSpecWithJoin selectSpecWithProj =
                 selectSpec.isDistinct() ? selectSpec
                         .notDistinct()
@@ -98,7 +102,11 @@ public interface IModMappingQuerySupport {
                         selectSpec
                                 .setProjection(spring(Functions.count(column)));
 
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(entityType);
+        
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
 
         return this.getDatabaseClient().execute(operation) //
@@ -120,7 +128,10 @@ public interface IModMappingQuerySupport {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(resultType);
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
         SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(tableName);
 
         selectSpec = selectSpecBuilder.apply(selectSpec);
@@ -141,7 +152,11 @@ public interface IModMappingQuerySupport {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        final ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper().forType(resultType);
+        
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
         SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(tableName);
 
         selectSpec = selectSpecBuilder.apply(selectSpec);

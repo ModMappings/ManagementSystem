@@ -244,7 +244,7 @@ public class SelectSpecWithJoin {
 
             final Sort sort = page.getSort();
 
-            return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, sort.isSorted() ? sort : this.sort,
+            return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort.isSorted() || sort.isUnsorted() ? this.sort : sort,
                     page);
         }
 

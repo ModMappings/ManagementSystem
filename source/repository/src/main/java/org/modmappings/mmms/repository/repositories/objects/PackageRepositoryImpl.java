@@ -67,7 +67,7 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
         if (maxAdditionalPackageDepth == null)
             maxAdditionalPackageDepth = Integer.MAX_VALUE;
 
-        final String subStringTrimSelection = String.format("trim(both '/' from substring(m.output, '(\\A%s([a-zA-Z]+/){%d,%d})'))", packagePrefix, minAdditionalPackageDepth, maxAdditionalPackageDepth);
+        final String subStringTrimSelection = String.format("trim(both '/' from substring(mapping.output, '(\\A%s([a-zA-Z]+/){%d,%d})'))", packagePrefix, minAdditionalPackageDepth, maxAdditionalPackageDepth);
 
         return this.createPagedRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
@@ -84,7 +84,7 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
                         .withSort(Sort.by(subStringTrimSelection))
                 ,
                 "mapping",
-                null,
+                String.class,
                 pageable
         );
     }
