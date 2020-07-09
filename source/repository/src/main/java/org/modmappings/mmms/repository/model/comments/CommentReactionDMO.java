@@ -10,11 +10,11 @@ import java.util.UUID;
 
 /**
  * Represents a single mini reaction on a comment via a small set of integrated and supported emoji.
- *
+ * <p>
  * To delete a comment reaction, delete its DB entry.
  * A comment reaction can not be edited, or better yet should not be edited.
  * If a user wants to apply a different comment reaction, he or she can delete the first one, and add a new one.
- *
+ * <p>
  * A user can have more then one comment reaction on a given comment.
  * The business layer wil need to decide how to deal with that situation and which combinations are allowed if any.
  */
@@ -22,11 +22,11 @@ import java.util.UUID;
 public class CommentReactionDMO {
 
     @Id
-    private UUID      id;
-    private UUID      createdBy;
-    private Timestamp              createdOn;
+    private UUID id;
+    private UUID createdBy;
+    private Timestamp createdOn;
     private CommentReactionTypeDMO type;
-    private UUID                   commentId;
+    private UUID commentId;
 
     @PersistenceConstructor
     CommentReactionDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final CommentReactionTypeDMO type, final UUID commentId) {

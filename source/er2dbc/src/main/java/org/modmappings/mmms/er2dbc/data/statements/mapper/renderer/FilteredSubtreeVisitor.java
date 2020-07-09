@@ -17,8 +17,8 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      * Creates a new {@link FilteredSubtreeVisitor} given the filter {@link Predicate}.
      *
      * @param filter filter predicate to identify when to {@link #enterMatched(Visitable)
-     *          enter}/{@link #leaveMatched(Visitable) leave} the {@link Visitable segment} that this visitor is
-     *          responsible for.
+     *               enter}/{@link #leaveMatched(Visitable) leave} the {@link Visitable segment} that this visitor is
+     *               responsible for.
      */
     FilteredSubtreeVisitor(final Predicate<Visitable> filter) {
         this.filter = filter;
@@ -30,7 +30,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      *
      * @param segment the segment, must not be {@literal null}.
      * @return delegation options. Can be either {@link Delegation#retain()} or
-     *         {@link Delegation#delegateTo(DelegatingVisitor)}.
+     * {@link Delegation#delegateTo(DelegatingVisitor)}.
      * @see Delegation#retain()
      */
     Delegation enterMatched(final Visitable segment) {
@@ -43,7 +43,7 @@ public class FilteredSubtreeVisitor extends DelegatingVisitor {
      *
      * @param segment the segment, must not be {@literal null}.
      * @return delegation options. Can be either {@link Delegation#retain()} or
-     *         {@link Delegation#delegateTo(DelegatingVisitor)}.
+     * {@link Delegation#delegateTo(DelegatingVisitor)}.
      * @see Delegation#retain()
      */
     Delegation enterNested(final Visitable segment) {

@@ -1,68 +1,68 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.4.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'java'
-	id 'application'
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'application'
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_11
-	targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 configurations {
-	developmentOnly
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
 }
 
-repositories { 
+repositories {
     mavenLocal()
-	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
-	implementation project(':source:er2dbc')
+    implementation project(':source:er2dbc')
     implementation project(':source:repository')
 
-	implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot.experimental:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot.experimental:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.2.26'
-	implementation 'org.springdoc:springdoc-openapi-security:1.2.26'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.2.26'
+    implementation 'org.springdoc:springdoc-openapi-security:1.2.26'
     implementation 'org.flywaydb:flyway-core:6.1.4'
-	implementation 'io.r2dbc:r2dbc-postgresql'
-	implementation 'org.postgresql:postgresql'
+    implementation 'io.r2dbc:r2dbc-postgresql'
+    implementation 'org.postgresql:postgresql'
 
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
-	testImplementation 'org.springframework.boot.experimental:spring-boot-test-autoconfigure-r2dbc'
-	testImplementation 'io.projectreactor:reactor-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.boot.experimental:spring-boot-test-autoconfigure-r2dbc'
+    testImplementation 'io.projectreactor:reactor-test'
 
     annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
 }
 
 dependencyManagement {
-	imports {
-		mavenBom 'org.springframework.boot.experimental:spring-boot-bom-r2dbc:0.1.0.M3'
-	}
+    imports {
+        mavenBom 'org.springframework.boot.experimental:spring-boot-bom-r2dbc:0.1.0.M3'
+    }
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 application {
-	mainClassName = 'org.modmappings.mmms.api.MMMSApplication'
+    mainClassName = 'org.modmappings.mmms.api.MMMSApplication'
 }
 
 bootDistTar {
-	archiveVersion = ''
+    archiveVersion = ''
 }

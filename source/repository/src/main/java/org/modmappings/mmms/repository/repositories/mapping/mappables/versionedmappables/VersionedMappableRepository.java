@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Represents a repository that gives access to the versioned mappables that can be remapped for a given game version.
- *
+ * <p>
  * This repository provides both custom access to the versioned mappables as well as the standard crud access methods.
  */
 @Repository

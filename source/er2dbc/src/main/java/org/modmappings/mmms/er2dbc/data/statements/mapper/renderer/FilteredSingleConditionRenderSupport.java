@@ -19,9 +19,9 @@ public class FilteredSingleConditionRenderSupport extends FilteredSubtreeVisitor
      * Creates a new {@link FilteredSingleConditionRenderSupport} given the filter {@link Predicate}.
      *
      * @param context
-     * @param filter filter predicate to identify when to {@link #enterMatched(Visitable)
-     *          enter}/{@link #leaveMatched(Visitable) leave} the {@link Visitable segment} that this visitor is
-     *          responsible for.
+     * @param filter  filter predicate to identify when to {@link #enterMatched(Visitable)
+     *                enter}/{@link #leaveMatched(Visitable) leave} the {@link Visitable segment} that this visitor is
+     *                responsible for.
      */
     FilteredSingleConditionRenderSupport(final RenderContext context, final Predicate<Visitable> filter) {
         super(filter);

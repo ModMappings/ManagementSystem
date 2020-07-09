@@ -1,12 +1,11 @@
 package org.modmappings.mmms.api.springdoc;
 
 
-import java.util.List;
-import java.util.Objects;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Objects;
 
 @NotNull
 public class Pageable {

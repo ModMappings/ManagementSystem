@@ -17,28 +17,23 @@ public final class Expressions {
         return new ValueExpression(value);
     }
 
-    public static Expression parameter(final Object... values)
-    {
+    public static Expression parameter(final Object... values) {
         return parameter(Arrays.asList(values));
     }
 
-    public static Expression parameter(final Collection<?> values)
-    {
+    public static Expression parameter(final Collection<?> values) {
         return new CollectionExpression(values.stream().map(Expressions::parameter).collect(Collectors.toSet()));
     }
 
-    public static Expression reference(final String columnName)
-    {
+    public static Expression reference(final String columnName) {
         return new ReferenceExpression("", columnName);
     }
 
-    public static Expression reference(final String tableName, final String columnName)
-    {
+    public static Expression reference(final String tableName, final String columnName) {
         return new ReferenceExpression(tableName, columnName);
     }
 
-    public static Expression spring(final org.springframework.data.relational.core.sql.Expression sqlExpression)
-    {
+    public static Expression spring(final org.springframework.data.relational.core.sql.Expression sqlExpression) {
         return new NativeExpression(sqlExpression);
     }
 
@@ -54,8 +49,7 @@ public final class Expressions {
         return new FunctionExpression(name, args);
     }
 
-    public static Expression NULL()
-    {
+    public static Expression NULL() {
         return Expression.NULL;
     }
 }

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 /**
  * Defines a custom repository for protection information on mappables.
- *
+ * <p>
  * Allows quick and custom lookups of all protection information for a given versioned mappable or mapping type.
  */
 public interface ProtectedMappableInformationRepositoryCustom {
@@ -18,7 +18,7 @@ public interface ProtectedMappableInformationRepositoryCustom {
      * for mapping types.
      *
      * @param versionedMappableId The id of the versioned mappable for which protected mappable information is being looked up.
-     * @param pageable The pageable information for request.
+     * @param pageable            The pageable information for request.
      * @return Protected mappable information that indicates that the versioned mappable is locked for a given mapping type.
      */
     Mono<Page<ProtectedMappableInformationDMO>> findAllByVersionedMappable(
@@ -31,7 +31,7 @@ public interface ProtectedMappableInformationRepositoryCustom {
      * for versioned mappables.
      *
      * @param mappingTypeId The id of the mapping type for which protected mappable information is being looked up.
-     * @param pageable The paging and sorting information.
+     * @param pageable      The paging and sorting information.
      * @return Protected mappable information that indicates that the mapping type is locked for a given versioned mappable.
      */
     Mono<Page<ProtectedMappableInformationDMO>> findAllByMappingType(

@@ -58,8 +58,8 @@ public class OpenApiConfiguration {
                         )
                 )
                 .addServersItem(new Server()
-                    .url(URL)
-                    .description("The current server.")
+                        .url(URL)
+                        .description("The current server.")
                 );
     }
 
@@ -68,18 +68,15 @@ public class OpenApiConfiguration {
         return new PageableSupportConverter();
     }
 
-    private String buildOpenIdConfigUrl(final String url, final String realm)
-    {
+    private String buildOpenIdConfigUrl(final String url, final String realm) {
         return String.format("%s/auth/realms/%s/.well-known/openid-configuration", url, realm);
     }
 
-    private String buildOpenIdAuthUrl(final String url, final String realm)
-    {
+    private String buildOpenIdAuthUrl(final String url, final String realm) {
         return String.format("%s/auth/realms/%s/protocol/openid-connect/auth", url, realm);
     }
 
-    private String buildOpenIdTokenUrl(final String url, final String realm)
-    {
+    private String buildOpenIdTokenUrl(final String url, final String realm) {
         return String.format("%s/auth/realms/%s/protocol/openid-connect/token", url, realm);
     }
 }

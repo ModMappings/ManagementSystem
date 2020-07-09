@@ -21,5 +21,5 @@ public interface PackageRepository extends org.springframework.data.repository.R
             final String inputMatchingRegex,
             final String outputMatchingRegex,
             final Pageable pageable
-            );
+    );
 }

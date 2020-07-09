@@ -70,23 +70,23 @@ public class VotingRecordDMO {
      * Rescinds this vote.
      * When a vote gets rescinded this indicates that the users opinion on the matter
      * is back to neutral.
-     *
+     * <p>
      * The business layer will need to make sure that for every proposal user combination there is only
      * one none rescinded vote in the database.
      * However it is free to leave as many rescinded votes behind until the vote is closed.
-     *
+     * <p>
      * This allows for tracking of the votes.
      *
      * @return A rescinded version of this voting record.
      */
     public VotingRecordDMO rescind() {
         return new VotingRecordDMO(
-                        id,
-                        createdBy,
-                        createdOn,
-                        proposedMappingId,
-                        isForVote,
-                        true
+                id,
+                createdBy,
+                createdOn,
+                proposedMappingId,
+                isForVote,
+                true
         );
     }
 }

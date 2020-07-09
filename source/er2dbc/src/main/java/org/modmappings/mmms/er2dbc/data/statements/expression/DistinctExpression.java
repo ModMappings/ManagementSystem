@@ -1,7 +1,5 @@
 package org.modmappings.mmms.er2dbc.data.statements.expression;
 
-import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
-
 public class DistinctExpression implements Expression {
     private final Expression source;
 

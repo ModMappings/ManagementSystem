@@ -20,7 +20,8 @@ import javax.annotation.Priority;
 import java.util.List;
 import java.util.UUID;
 
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.where;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.leftOuterJoin;
 
@@ -168,19 +169,18 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
     /**
      * Finds all versioned mappables who match the given search criteria.
      *
-     * @param gameVersionId The id of the game version. Null to ignore.
-     * @param mappableTypeDMO The type of the mappable to look up. Null to ignore.
-     * @param classId           The id of the class to find versioned mappables in. Null to ignore.
-     * @param methodId          The id of the method to find versioned mappables in. Null to ignore.
-     * @param mappingId         The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
+     * @param gameVersionId         The id of the game version. Null to ignore.
+     * @param mappableTypeDMO       The type of the mappable to look up. Null to ignore.
+     * @param classId               The id of the class to find versioned mappables in. Null to ignore.
+     * @param methodId              The id of the method to find versioned mappables in. Null to ignore.
+     * @param mappingId             The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
      * @param mappingTypeId         The id of the mapping type to find the versioned mappables for. Null to ignore. Use full in combination with a input and output regex.
-     * @param mappingInputRegex A regex that is mapped against the input of the mapping. Null to ignore
-     * @param mappingOutputRegex A regex that is mapped against the output of the mapping. Null to ignore
-     * @param superTypeTargetId The id of the class to find the super types for. Null to ignore.
-     * @param subTypeTargetId   The id of the class to find the sub types for. Null to ignore.
+     * @param mappingInputRegex     A regex that is mapped against the input of the mapping. Null to ignore
+     * @param mappingOutputRegex    A regex that is mapped against the output of the mapping. Null to ignore
+     * @param superTypeTargetId     The id of the class to find the super types for. Null to ignore.
+     * @param subTypeTargetId       The id of the class to find the sub types for. Null to ignore.
      * @param externallyVisibleOnly Indicate if externally visible classes only
-     * @param pageable          The pagination and sorting information for the request.
-     *
+     * @param pageable              The pagination and sorting information for the request.
      * @return The page that returns the requested versioned mappables.
      */
     @Override
@@ -230,8 +230,7 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                             criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "m", "mapping_type_id");
                             criteria = nonNullAndMatchesCheckForWhere(criteria, mappingInputRegex, "m", "input");
                             criteria = nonNullAndMatchesCheckForWhere(criteria, mappingOutputRegex, "m", "output");
-                            if  (externallyVisibleOnly)
-                            {
+                            if (externallyVisibleOnly) {
                                 criteria = nonNullAndEqualsCheckForWhere(criteria, true, "mt", "visible");
                             }
 

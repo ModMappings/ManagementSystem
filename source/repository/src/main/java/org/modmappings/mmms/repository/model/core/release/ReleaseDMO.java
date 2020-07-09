@@ -5,12 +5,11 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.UUID;
 
 /**
  * Represents a single release of data from the MCMS or from an external system from which data has been imported.
- *
+ * <p>
  * A release always targets a given game version as well as a given mapping type.
  */
 @Table("release")

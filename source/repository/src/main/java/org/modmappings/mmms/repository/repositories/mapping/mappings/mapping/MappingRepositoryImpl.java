@@ -20,7 +20,8 @@ import javax.annotation.Priority;
 import java.util.List;
 import java.util.UUID;
 
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.where;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.leftOuterJoin;
 
@@ -74,8 +75,7 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, gameVersionId, "vm", "game_version_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, userId, "", "created_by");
 
-                                    if (externallyVisibleOnly)
-                                    {
+                                    if (externallyVisibleOnly) {
                                         criteria = nonNullAndEqualsCheckForWhere(criteria, true, "mt", "visible");
                                     }
 
@@ -107,8 +107,7 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
                             idColumnName
                     );
 
-                    if (externallyVisibleOnly)
-                    {
+                    if (externallyVisibleOnly) {
                         criteria = nonNullAndEqualsCheckForWhere(
                                 criteria,
                                 true,

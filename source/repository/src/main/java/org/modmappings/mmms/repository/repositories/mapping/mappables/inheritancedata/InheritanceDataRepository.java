@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Represents a repository that gives access to the inheritance data of classes.
- *
+ * <p>
  * This repository provides both custom access to inheritance data as well as the standard crud access methods.
  */
 @Repository

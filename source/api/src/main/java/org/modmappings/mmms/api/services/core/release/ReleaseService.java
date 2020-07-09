@@ -48,7 +48,7 @@ public class ReleaseService {
     private final MappingRepository mappingRepository;
     private final MappingTypeRepository mappingTypeRepository;
     private final CommentRepository commentRepository;
-    
+
     private final UserLoggingService userLoggingService;
 
     public ReleaseService(final ReleaseRepository repository, final ReleaseComponentRepository releaseComponentRepository, final MappingRepository mappingRepository, final MappingTypeRepository mappingTypeRepository, final CommentRepository commentRepository, final UserLoggingService userLoggingService) {
@@ -63,7 +63,7 @@ public class ReleaseService {
     /**
      * Looks up a release with a given id.
      *
-     * @param id The id to look the release up for.
+     * @param id                    The id to look the release up for.
      * @param externallyVisibleOnly Indicator if only externally visible releases should be taken into account.
      * @return A {@link Mono} containing the requested release or a errored {@link Mono} that indicates a failure.
      */
@@ -84,31 +84,31 @@ public class ReleaseService {
      * Looks up multiple releases, that match the search criteria.
      * The returned order is newest to oldest.
      *
-     * @param nameRegex The regex to filter the name on-
-     * @param gameVersionId The id of the game version to filter releases on.
-     * @param mappingTypeId The id of the mapping type to filter releases on.
-     * @param isSnapshot Indicate if snapshots should be included or not.
-     * @param mappingId The id of the mapping to filter releases on.
-     * @param userId The id of the creating user to filter releases on.
+     * @param nameRegex             The regex to filter the name on-
+     * @param gameVersionId         The id of the game version to filter releases on.
+     * @param mappingTypeId         The id of the mapping type to filter releases on.
+     * @param isSnapshot            Indicate if snapshots should be included or not.
+     * @param mappingId             The id of the mapping to filter releases on.
+     * @param userId                The id of the creating user to filter releases on.
      * @param externallyVisibleOnly Indicates if only externally visible releases (those for visible mapping types) should be returned.
      *                              This value should be true for any call coming from an api endpoint.
-     * @param pageable The paging and sorting information for the request.
+     * @param pageable              The paging and sorting information for the request.
      * @return A {@link Flux} with the releases, or an errored {@link Flux} that indicates a failure.
      */
     public Mono<Page<ReleaseDTO>> getAllBy(final String nameRegex,
-                               final UUID gameVersionId,
-                               final UUID mappingTypeId,
-                               final Boolean isSnapshot,
-                               final UUID mappingId,
-                               final UUID userId,
-                               final boolean externallyVisibleOnly,
-                               final Pageable pageable) {
+                                           final UUID gameVersionId,
+                                           final UUID mappingTypeId,
+                                           final Boolean isSnapshot,
+                                           final UUID mappingId,
+                                           final UUID userId,
+                                           final boolean externallyVisibleOnly,
+                                           final Pageable pageable) {
         return repository.findAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable)
                 .doFirst(() -> logger.debug("Looking up releases: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
                 .flatMap(page -> Flux.fromIterable(page)
-                    .flatMap(this::toDTO)
-                    .collectList()
-                    .map(releases -> (Page<ReleaseDTO>) new PageImpl<>(releases, page.getPageable(), page.getTotalElements())))
+                        .flatMap(this::toDTO)
+                        .collectList()
+                        .map(releases -> (Page<ReleaseDTO>) new PageImpl<>(releases, page.getPageable(), page.getTotalElements())))
                 .doOnNext(page -> logger.debug("Found releases: {}", page))
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("Release")));
     }
@@ -116,9 +116,9 @@ public class ReleaseService {
     /**
      * Deletes a given release if it exists.
      *
-     * @param id The id of the release that should be deleted.
+     * @param id                    The id of the release that should be deleted.
      * @param externallyVisibleOnly Indicator if only externally visible releases should be taken into account.
-     * @param userIdSupplier A provider that gives access to the id of the current user.
+     * @param userIdSupplier        A provider that gives access to the id of the current user.
      * @return A {@link Mono} indicating success or failure.
      */
     public Mono<Void> deleteBy(
@@ -136,9 +136,9 @@ public class ReleaseService {
     /**
      * Creates a new release from a DTO and saves it in the repository.
      *
-     * @param gameVersionId The id of the game version to create a new release for.
-     * @param mappingTypeId The id of the mapping type to create a new release for.
-     * @param newRelease The dto to create a new release from.
+     * @param gameVersionId  The id of the game version to create a new release for.
+     * @param mappingTypeId  The id of the mapping type to create a new release for.
+     * @param newRelease     The dto to create a new release from.
      * @param userIdSupplier The provider that gives access to the user id of the current interacting user or system.
      * @return A {@link Mono} that indicates success or failure.
      */
@@ -169,10 +169,10 @@ public class ReleaseService {
     /**
      * Updates an existing release with the data in the dto and saves it in the repo.
      *
-     * @param newRelease The dto to update the data in the dmo with.
-     * @param idToUpdate The id of the dmo to update with the data from the dto.
+     * @param newRelease            The dto to update the data in the dmo with.
+     * @param idToUpdate            The id of the dmo to update with the data from the dto.
      * @param externallyVisibleOnly Indicates if updates are only allowed to happen on externally visible releases.
-     * @param userIdSupplier The supplier for the user id of the current interacting user or system.
+     * @param userIdSupplier        The supplier for the user id of the current interacting user or system.
      * @return A {@link Mono} that indicates success or failure.
      */
     public Mono<ReleaseDTO> update(
@@ -217,18 +217,18 @@ public class ReleaseService {
                                                 .collect(Collectors.toSet())
                                                 .map(comments -> comments.stream().map(CommentDMO::getId).collect(Collectors.toSet()))
                                                 .map(comments -> new ReleaseDTO(
-                                                            dmo.getId(),
-                                                            dmo.getCreatedBy(),
-                                                            dmo.getCreatedOn(),
-                                                            dmo.getName(),
-                                                            dmo.getGameVersionId(),
-                                                            dmo.getMappingTypeId(),
-                                                            dmo.isSnapshot(),
-                                                            classComponents,
-                                                            methodComponents,
-                                                            fieldComponents,
-                                                            parameterComponents,
-                                                            comments,
+                                                        dmo.getId(),
+                                                        dmo.getCreatedBy(),
+                                                        dmo.getCreatedOn(),
+                                                        dmo.getName(),
+                                                        dmo.getGameVersionId(),
+                                                        dmo.getMappingTypeId(),
+                                                        dmo.isSnapshot(),
+                                                        classComponents,
+                                                        methodComponents,
+                                                        fieldComponents,
+                                                        parameterComponents,
+                                                        comments,
                                                         dmo.getState()))))));
     }
 
@@ -237,20 +237,20 @@ public class ReleaseService {
      * Pulls the name and snapshot state from the DTO passed in,
      * additionally pulls the creating user id from the supplier.
      *
-     * @param gameVersionId The id of the game version to create a release for.
-     * @param mappingTypeId The id of the mapping type to create a release for.
-     * @param dto The DTO to pull name and snapshot state from.
+     * @param gameVersionId  The id of the game version to create a release for.
+     * @param mappingTypeId  The id of the mapping type to create a release for.
+     * @param dto            The DTO to pull name and snapshot state from.
      * @param userIdSupplier The supplier for the ID of the creating user.
      * @return The initial DMO with the data.
      */
     private ReleaseDMO toNewDMO(final UUID gameVersionId, final UUID mappingTypeId, final ReleaseDTO dto, final Supplier<UUID> userIdSupplier) {
         return new ReleaseDMO(
-            userIdSupplier.get(),
-            dto.getName(),
-            gameVersionId,
-            mappingTypeId,
-            dto.isSnapshot(),
-            dto.getState()
+                userIdSupplier.get(),
+                dto.getName(),
+                gameVersionId,
+                mappingTypeId,
+                dto.isSnapshot(),
+                dto.getState()
         );
     }
 

@@ -17,9 +17,9 @@ public class MappingTypeDMO {
 
     @Id
     private UUID id;
-    private UUID      createdBy;
+    private UUID createdBy;
     private Timestamp createdOn;
-    private String    name;
+    private String name;
     private boolean visible;
     private boolean editable;
     private String stateIn;
@@ -93,8 +93,6 @@ public class MappingTypeDMO {
     public void setEditable(final boolean editable) {
         this.editable = editable;
     }
-
-
 
 
 }

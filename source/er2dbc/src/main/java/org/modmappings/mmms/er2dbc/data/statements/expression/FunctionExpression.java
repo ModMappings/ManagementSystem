@@ -7,8 +7,7 @@ public class FunctionExpression implements Expression {
     private final String functionName;
     private final Collection<Expression> args;
 
-    public FunctionExpression(final String functionName, final Expression... args)
-    {
+    public FunctionExpression(final String functionName, final Expression... args) {
         this(functionName, Arrays.asList(args));
     }
 

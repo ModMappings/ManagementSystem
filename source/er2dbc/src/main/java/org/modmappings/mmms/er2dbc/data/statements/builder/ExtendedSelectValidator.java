@@ -140,7 +140,6 @@ public class ExtendedSelectValidator implements Visitor {
     public void leave(final Visitable segment) {
 
 
-
         if (segment instanceof Select) {
             selects.remove(segment);
         }
@@ -156,7 +155,8 @@ public class ExtendedSelectValidator implements Visitor {
      */
     class SubselectFilteringWhereVisitor implements Visitor {
 
-        private @Nullable Select selectFilter;
+        private @Nullable
+        Select selectFilter;
 
         /*
          * (non-Javadoc)

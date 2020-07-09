@@ -12,14 +12,14 @@ import java.util.UUID;
 public class ProposedMappingDMO {
 
     @Id
-    private UUID            id;
-    private UUID            createdBy;
-    private Timestamp       createdOn;
-    private UUID            versionedMappableId;
+    private UUID id;
+    private UUID createdBy;
+    private Timestamp createdOn;
+    private UUID versionedMappableId;
     private UUID mappingTypeId;
     private String input;
     private String output;
-    private String          documentation;
+    private String documentation;
     private DistributionDMO distribution;
     private boolean isPublic;
     private UUID closedBy;
@@ -143,25 +143,23 @@ public class ProposedMappingDMO {
      * Creates a proposed mapping that is identical to this one in the closed none merged state.
      *
      * @param closedBy The user who closed the proposal.
-     *
      * @return This proposed mapping in a closed none merged state.
      */
-    public ProposedMappingDMO close(final UUID closedBy)
-    {
+    public ProposedMappingDMO close(final UUID closedBy) {
         return new ProposedMappingDMO(
-                        id,
-                        createdBy,
-                        createdOn,
-                        versionedMappableId,
-                        mappingTypeId,
-                        input,
-                        output,
-                        documentation,
-                        distribution,
-                        isPublic,
-                        closedBy,
-                        Timestamp.from(Instant.now()),
-                        null
+                id,
+                createdBy,
+                createdOn,
+                versionedMappableId,
+                mappingTypeId,
+                input,
+                output,
+                documentation,
+                distribution,
+                isPublic,
+                closedBy,
+                Timestamp.from(Instant.now()),
+                null
         );
     }
 
@@ -170,25 +168,23 @@ public class ProposedMappingDMO {
      * Creates a proposed mapping that is identical to this one in the closed merged state.
      *
      * @param closedBy The user who closed the proposal.
-     *
      * @return This proposed mapping in a closed merged state.
      */
-    public ProposedMappingDMO merge(final UUID closedBy, final UUID mappingId)
-    {
+    public ProposedMappingDMO merge(final UUID closedBy, final UUID mappingId) {
         return new ProposedMappingDMO(
-                        id,
-                        createdBy,
-                        createdOn,
-                        versionedMappableId,
-                        mappingTypeId,
-                        input,
-                        output,
-                        documentation,
-                        distribution,
-                        isPublic,
-                        closedBy,
-                        Timestamp.from(Instant.now()),
-                        mappingId
+                id,
+                createdBy,
+                createdOn,
+                versionedMappableId,
+                mappingTypeId,
+                input,
+                output,
+                documentation,
+                distribution,
+                isPublic,
+                closedBy,
+                Timestamp.from(Instant.now()),
+                mappingId
         );
     }
 }

@@ -147,77 +147,66 @@ public class SelectSpecWithJoin {
 
     public SelectSpecWithJoin where(final Supplier<ColumnBasedCriteria> criteriaSupplier) {
         final ColumnBasedCriteria criteria = criteriaSupplier.get();
-        if (criteria != null)
-        {
+        if (criteria != null) {
             return withCriteria(criteria);
         }
 
         return this;
     }
 
-    public SelectSpecWithJoin withJoin(final JoinSpec join)
-    {
+    public SelectSpecWithJoin withJoin(final JoinSpec join) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.add(join);
 
         return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
-    public SelectSpecWithJoin withJoin(final JoinSpec... joins)
-    {
+    public SelectSpecWithJoin withJoin(final JoinSpec... joins) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.addAll(Arrays.asList(joins));
 
         return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
-    public SelectSpecWithJoin withJoin(final Collection<JoinSpec> joins)
-    {
+    public SelectSpecWithJoin withJoin(final Collection<JoinSpec> joins) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.addAll(joins);
 
         return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
-    public SelectSpecWithJoin join(final Supplier<JoinSpec> join)
-    {
+    public SelectSpecWithJoin join(final Supplier<JoinSpec> join) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.add(join.get());
 
         return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
-    public SelectSpecWithJoin join(final Supplier<JoinSpec>... joins)
-    {
+    public SelectSpecWithJoin join(final Supplier<JoinSpec>... joins) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.addAll(Arrays.stream(joins).map(Supplier::get).collect(Collectors.toList()));
 
         return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
-    public SelectSpecWithJoin join(final Collection<Supplier<JoinSpec>> joins)
-    {
+    public SelectSpecWithJoin join(final Collection<Supplier<JoinSpec>> joins) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.addAll(joins.stream().map(Supplier::get).collect(Collectors.toList()));
 
         return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
-    public SelectSpecWithJoin distinct()
-    {
+    public SelectSpecWithJoin distinct() {
         return withDistinct(true);
     }
 
-    public SelectSpecWithJoin notDistinct()
-    {
+    public SelectSpecWithJoin notDistinct() {
         return withDistinct(false);
     }
 
-    public SelectSpecWithJoin withDistinct(final boolean distinct)
-    {
+    public SelectSpecWithJoin withDistinct(final boolean distinct) {
         return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
     }
-
 
 
     /**

@@ -55,9 +55,7 @@ public class DefaultCriteriaStep implements CriteriaStep {
         Assert.notNull(rights, "rights must not be null!");
         if (rights.length == 1 && rights[1].isCollection()) {
             right = rights[1];
-        }
-        else
-        {
+        } else {
             right = new CollectionExpression(rights);
         }
         return createCriteria(ColumnBasedCriteria.Comparator.IN, right);
@@ -87,9 +85,7 @@ public class DefaultCriteriaStep implements CriteriaStep {
         Assert.notNull(rights, "rights must not be null!");
         if (rights.length == 1 && rights[1].isCollection()) {
             right = rights[1];
-        }
-        else
-        {
+        } else {
             right = new CollectionExpression(rights);
         }
 

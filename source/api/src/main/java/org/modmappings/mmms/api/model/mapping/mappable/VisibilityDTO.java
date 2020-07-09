@@ -2,7 +2,7 @@ package org.modmappings.mmms.api.model.mapping.mappable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(name = "Visibility", description="Indicates which visibility a given versioned mappable has (if applicable).", enumAsRef = true)
+@Schema(name = "Visibility", description = "Indicates which visibility a given versioned mappable has (if applicable).", enumAsRef = true)
 public enum VisibilityDTO {
     @Schema(description = "Indicates that the versioned mappable has a public accessor.")
     PUBLIC,

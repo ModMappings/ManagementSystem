@@ -9,10 +9,8 @@ import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
@@ -52,8 +50,7 @@ class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingType
                             idColumnName
                     );
 
-                    if (externallyVisibleOnly)
-                    {
+                    if (externallyVisibleOnly) {
                         criteria = nonNullAndEqualsCheckForWhere(
                                 criteria,
                                 true,
@@ -79,10 +76,10 @@ class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingType
      * Finds all mapping types which match the given name regex.
      * and which are editable if that parameter is supplied.
      *
-     * @param nameRegex The regular expression used to lookup mapping types for.
-     * @param editable Indicates if filtering on editables is needed, and if editables should be included or not. Pass null as do not care indicator.
+     * @param nameRegex             The regular expression used to lookup mapping types for.
+     * @param editable              Indicates if filtering on editables is needed, and if editables should be included or not. Pass null as do not care indicator.
      * @param externallyVisibleOnly Indicator if only externally visible mapping types should be returned.
-     * @param pageable The paging and sorting information.
+     * @param pageable              The paging and sorting information.
      * @return The mapping types of which the name match the regex.
      */
     @Override

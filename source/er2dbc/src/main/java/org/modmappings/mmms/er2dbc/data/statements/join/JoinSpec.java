@@ -41,8 +41,7 @@ public class JoinSpec {
         return new JoinSpec(JoinType.FULL_OUTER_JOIN, tableName, tableAlias);
     }
 
-    public JoinSpec withOn(final ColumnBasedCriteria columnBasedCriteria)
-    {
+    public JoinSpec withOn(final ColumnBasedCriteria columnBasedCriteria) {
         Assert.isTrue(columnBasedCriteria.getType() == ColumnBasedCriteria.Type.ON, "On statement criteria needs to be of on type! use columnBasedCriteria.on() to create one!");
         this.onCriteria = columnBasedCriteria;
 

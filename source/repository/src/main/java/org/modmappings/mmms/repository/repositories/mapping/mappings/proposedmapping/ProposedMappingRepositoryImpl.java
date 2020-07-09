@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Priority;
 import java.util.UUID;
 
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.where;
 
 /**
  * Represents a repository that can store and provide {@link ProposedMappingDMO} objects.
@@ -31,12 +31,11 @@ class ProposedMappingRepositoryImpl extends AbstractModMappingRepository<Propose
      * Finds all proposed mappings for a given versioned mappable id.
      *
      * @param versionedMappableId The id of the versioned mappable to get the proposed mappings for.
-     * @param pageable The paging and sorting information.
+     * @param pageable            The paging and sorting information.
      * @return The proposed mappings for the given versioned mappable.
      */
     @Override
-    public Mono<Page<ProposedMappingDMO>> findAllForVersionedMappableAndStateAndMerged(final UUID versionedMappableId, final Boolean state, final Boolean merged, final Pageable pageable)
-    {
+    public Mono<Page<ProposedMappingDMO>> findAllForVersionedMappableAndStateAndMerged(final UUID versionedMappableId, final Boolean state, final Boolean merged, final Pageable pageable) {
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
                         .where(() -> {
@@ -44,9 +43,7 @@ class ProposedMappingRepositoryImpl extends AbstractModMappingRepository<Propose
                             if (state != null) {
                                 if (!state) {
                                     criteria = criteria.and(Expressions.reference("closed_by")).isNull().and(Expressions.reference("closed_on")).isNull();
-                                }
-                                else
-                                {
+                                } else {
                                     criteria = criteria.and(Expressions.reference("closed_by")).isNotNull().and(Expressions.reference("closed_on")).isNotNull();
                                 }
                             }
@@ -54,9 +51,7 @@ class ProposedMappingRepositoryImpl extends AbstractModMappingRepository<Propose
                             if (merged != null) {
                                 if (!merged) {
                                     criteria = criteria.and(Expressions.reference("mapping_id")).isNull();
-                                }
-                                else
-                                {
+                                } else {
                                     criteria = criteria.and(Expressions.reference("mapping_id")).isNotNull();
                                 }
                             }

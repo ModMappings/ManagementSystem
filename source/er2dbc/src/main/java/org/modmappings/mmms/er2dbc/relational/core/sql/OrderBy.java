@@ -26,7 +26,7 @@ public class OrderBy extends AbstractSegment implements Expression {
         public static Direction fromJPA(final Sort.Direction direction) {
             if (direction.isAscending())
                 return ASC;
-            
+
             return DESC;
         }
 
@@ -36,7 +36,7 @@ public class OrderBy extends AbstractSegment implements Expression {
 
             return DESC;
         }
-        
+
         @Override
         public String toString() {
             return this.name();

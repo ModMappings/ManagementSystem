@@ -266,9 +266,12 @@ public class ExtendedSelectBuilder implements SelectBuilder, SelectBuilder.Selec
         private final Table table;
         private final ExtendedSelectBuilder selectBuilder;
         private final org.springframework.data.relational.core.sql.Join.JoinType joinType;
-        private @Nullable Expression from;
-        private @Nullable Expression to;
-        private @Nullable Condition condition;
+        private @Nullable
+        Expression from;
+        private @Nullable
+        Expression to;
+        private @Nullable
+        Condition condition;
 
 
         JoinBuilder(final Table table, final ExtendedSelectBuilder selectBuilder, final org.springframework.data.relational.core.sql.Join.JoinType joinType) {

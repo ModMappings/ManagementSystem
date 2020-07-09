@@ -2,7 +2,6 @@ package org.modmappings.mmms.api.services.core;
 
 import org.modmappings.mmms.api.model.core.MappingTypeDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
-import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
@@ -17,7 +16,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * Business layer service which handles the interactions of the API with the DataLayer.
@@ -45,7 +43,7 @@ public class MappingTypeService {
     /**
      * Looks up a mapping type with a given id.
      *
-     * @param id The id to look the mapping type up for.
+     * @param id                    The id to look the mapping type up for.
      * @param externallyVisibleOnly Indicates if only externally visible mapping types should be returned.
      * @return A {@link Mono} containing the requested mapping type or a errored {@link Mono} that indicates a failure.
      */
@@ -64,10 +62,10 @@ public class MappingTypeService {
      * Looks up multiple mapping types, that match the search criteria.
      * The returned order is newest to oldest.
      *
-     * @param nameRegex The regular expression against which the name of the mapping type is matched.
-     * @param editable Indicates if editable mapping types need to be included, null indicates do not care.
+     * @param nameRegex             The regular expression against which the name of the mapping type is matched.
+     * @param editable              Indicates if editable mapping types need to be included, null indicates do not care.
      * @param externallyVisibleOnly Indicator if only externally visible mapping types should be returned.
-     * @param pageable The paging and sorting information.
+     * @param pageable              The paging and sorting information.
      * @return A {@link Flux} with the mapping types, or an errored {@link Flux} that indicates a failure.
      */
     public Mono<Page<MappingTypeDTO>> getAll(

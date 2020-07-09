@@ -32,8 +32,7 @@ public class SortSpec {
         return new SortSpec(Collections.singletonList(order));
     }
 
-    public static SortSpec sort(final Order.Direction direction, final Expression expression)
-    {
+    public static SortSpec sort(final Order.Direction direction, final Expression expression) {
         return sort(new Order(direction, expression));
     }
 
@@ -65,13 +64,11 @@ public class SortSpec {
             this.expression = expression;
         }
 
-        public static Order desc(final Expression expression)
-        {
+        public static Order desc(final Expression expression) {
             return new Order(Direction.DESC, expression);
         }
 
-        public static Order asc(final Expression expression)
-        {
+        public static Order asc(final Expression expression) {
             return new Order(Direction.ASC, expression);
         }
 

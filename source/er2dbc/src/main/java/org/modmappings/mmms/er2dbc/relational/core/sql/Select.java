@@ -20,7 +20,8 @@ public class Select implements org.springframework.data.relational.core.sql.Sele
     private final long offset;
     private final List<Join> joins;
     @Nullable
-    private final Where where;;
+    private final Where where;
+    ;
     private final ExpressionList orderByList;
 
     public Select(final boolean distinct, final List<Expression> selectList, final List<Table> from, final long limit, final long offset,

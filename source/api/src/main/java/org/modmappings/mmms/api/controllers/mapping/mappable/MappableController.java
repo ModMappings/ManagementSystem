@@ -7,26 +7,19 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.services.mapping.mappable.MappableService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
-import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
-import org.modmappings.mmms.api.util.Constants;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -86,10 +79,10 @@ public class MappableController {
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no mappable exists in the database.",
                     content = {
-                        @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                            schema = @Schema()),
-                        @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema())
+                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                                    schema = @Schema()),
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema())
                     })
     })
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})

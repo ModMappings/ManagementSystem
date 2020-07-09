@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@Schema(name="Mappable", description = "Represents a single piece of the sourcecode whose name can be remapped.")
+@Schema(name = "Mappable", description = "Represents a single piece of the sourcecode whose name can be remapped.")
 public class MappableDTO {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the mappable.")

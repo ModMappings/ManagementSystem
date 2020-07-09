@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.where;
 import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.parameter;
 
 public interface IModMappingQuerySupport {
@@ -31,7 +31,7 @@ public interface IModMappingQuerySupport {
     R2dbcConverter getConverter();
 
     ExtendedDataAccessStrategy getAccessStrategy();
-    
+
     /**
      * Gets all entries in the repository.
      *
@@ -51,8 +51,7 @@ public interface IModMappingQuerySupport {
         );
     }
 
-    default <T> Flux<T> createFindStarRequest(final SelectSpecWithJoin selectSpec, final Class<T> resultType, final Pageable pageable)
-    {
+    default <T> Flux<T> createFindStarRequest(final SelectSpecWithJoin selectSpec, final Class<T> resultType, final Pageable pageable) {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
         Assert.notNull(pageable, "Pageable most not be null!");
 
@@ -64,8 +63,7 @@ public interface IModMappingQuerySupport {
         return createFindRequest(selectSpecWithProj, resultType, pageable);
     }
 
-    default <R> Flux<R> createFindRequest(final SelectSpecWithJoin selectSpec, final Class<R> resultType, final Pageable pageable)
-    {
+    default <R> Flux<R> createFindRequest(final SelectSpecWithJoin selectSpec, final Class<R> resultType, final Pageable pageable) {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
         Assert.notNull(pageable, "Pageable most not be null!");
 
@@ -84,8 +82,7 @@ public interface IModMappingQuerySupport {
                 .all();
     }
 
-    default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType)
-    {
+    default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType) {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
 
         final Expression countingExpression = selectSpec.getProjectedFields().size() == 1 ? selectSpec.getProjectedFields().get(0).dealias() : Expressions.reference(tableName, getIdColumnName(resultType));
@@ -108,16 +105,14 @@ public interface IModMappingQuerySupport {
                 .defaultIfEmpty(0L);
     }
 
-    default <R> Mono<Page<R>> createPagedRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, final Pageable pageable)
-    {
+    default <R> Mono<Page<R>> createPagedRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, final Pageable pageable) {
         return createFindRequest(selectSpecWithJoin, resultType, pageable)
                 .collectList()
                 .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, resultType)
                         .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
     }
 
-    default <R> Mono<Page<R>> createPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<R> resultType, final Pageable pageable)
-    {
+    default <R> Mono<Page<R>> createPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<R> resultType, final Pageable pageable) {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
@@ -132,16 +127,14 @@ public interface IModMappingQuerySupport {
         return createPagedRequest(selectSpec, tableName, resultType, pageable);
     }
 
-    default <T> Mono<Page<T>> createPagedStarRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<T> resultType, final Pageable pageable)
-    {
+    default <T> Mono<Page<T>> createPagedStarRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<T> resultType, final Pageable pageable) {
         return createFindStarRequest(selectSpecWithJoin, resultType, pageable)
                 .collectList()
                 .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, resultType)
                         .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
     }
 
-    default <T> Mono<Page<T>> createPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<T> resultType, final Pageable pageable)
-    {
+    default <T> Mono<Page<T>> createPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<T> resultType, final Pageable pageable) {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
@@ -157,8 +150,7 @@ public interface IModMappingQuerySupport {
         return createPagedStarRequest(selectSpec, tableName, resultType, pageable);
     }
 
-    default <T> Mono<Page<T>> createPagedStarSingleWhereRequest(final String parameterName, final Object value, final String tableName, final Class<T> resultType, final Pageable pageable)
-    {
+    default <T> Mono<Page<T>> createPagedStarSingleWhereRequest(final String parameterName, final Object value, final String tableName, final Class<T> resultType, final Pageable pageable) {
         Assert.notNull(parameterName, "ParameterName must not be null!");
         Assert.notNull(value, "Value must not be null");
         Assert.notNull(pageable, "Pageable most not be null!");
@@ -174,9 +166,7 @@ public interface IModMappingQuerySupport {
         if (parameter != null) {
             if (criteria == null) {
                 return where(Expressions.reference(tableName, columnName)).matches(parameter(parameter));
-            }
-            else
-            {
+            } else {
                 return criteria.and(Expressions.reference(tableName, columnName)).matches(parameter(parameter));
             }
         }
@@ -188,9 +178,7 @@ public interface IModMappingQuerySupport {
         if (parameter != null) {
             if (criteria == null) {
                 return where(Expressions.reference(tableName, columnName)).is(parameter(parameter));
-            }
-            else
-            {
+            } else {
                 return criteria.and(Expressions.reference(tableName, columnName)).is(parameter(parameter));
             }
         }
@@ -198,8 +186,7 @@ public interface IModMappingQuerySupport {
         return criteria;
     }
 
-    default String getIdColumnName(final Class<?> entityType)
-    {
+    default String getIdColumnName(final Class<?> entityType) {
 
         return this.getConverter() //
                 .getMappingContext() //

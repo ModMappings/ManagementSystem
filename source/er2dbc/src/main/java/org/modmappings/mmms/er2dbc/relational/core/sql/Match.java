@@ -23,8 +23,8 @@ public class Match extends AbstractSegment implements Condition {
     /**
      * Creates a new {@link Like} {@link Condition} given two {@link Expression}s.
      *
-     * @param target the right {@link Expression}.
-     * @param pattern the left {@link Expression}.
+     * @param target    the right {@link Expression}.
+     * @param pattern   the left {@link Expression}.
      * @param formatter The match statement formatter to use.
      * @return the {@link Like} condition.
      */

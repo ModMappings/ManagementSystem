@@ -2,25 +2,21 @@ package org.modmappings.mmms.api.model.mapping.mappings;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.modmappings.mmms.repository.model.mapping.mappings.DistributionDMO;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.UUID;
 
 @Schema(name = "ProposedMapping", description = "Represents a proposal to change a mapping.")
 public class ProposedMappingDTO {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the proposed mapping.")
-    private UUID            id;
+    private UUID id;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the user who created the mapping.")
-    private UUID            createdBy;
+    private UUID createdBy;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The moment a proposal was created.")
-    private Timestamp       createdOn;
+    private Timestamp createdOn;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the versioned mappable this proposal was created for.")
-    private UUID            versionedMappableId;
+    private UUID versionedMappableId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the mapping type this proposal was created for.")
     private UUID mappingTypeId;
     @Schema(description = "The input of the proposal. Might be equal to the input of the current mapping if no change is required.")
@@ -28,7 +24,7 @@ public class ProposedMappingDTO {
     @Schema(description = "The output of the proposal. Might be equal to the output of the current mapping if no change is required.")
     private String output;
     @Schema(description = "The documentation of the proposal. Might be equal to the documentation of the current mapping if no change is required.")
-    private String          documentation;
+    private String documentation;
     @Schema(description = "The distribution of the proposal. Might be equal to the distribution of the current mapping if no change is required.")
     private DistributionDMO distribution;
     @Schema(description = "Indicates if this proposal is public. None public proposals can only be seen by users or systems who have the role PROPOSALS_NONE_PUBLIC.")

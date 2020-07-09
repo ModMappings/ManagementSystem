@@ -23,7 +23,6 @@ public class ExpressionListVisitor extends TypedSubtreeVisitor<ExpressionList> i
     }
 
 
-
     /*
      * (non-Javadoc)
      * @see TypedSubtreeVisitor#enterNested(org.springframework.data.relational.core.sql.Visitable)

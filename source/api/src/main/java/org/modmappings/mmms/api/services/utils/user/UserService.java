@@ -15,7 +15,6 @@ import java.util.UUID;
 public class UserService {
 
 
-
     /**
      * Looks up the current id of the user.
      * Validates the current principle and then attempts to parse the UUID of the current user from the
@@ -39,9 +38,7 @@ public class UserService {
 
         try {
             return UUID.fromString(idString);
-        }
-        catch (final IllegalArgumentException ex)
-        {
+        } catch (final IllegalArgumentException ex) {
             throw new IllegalStateException("Subject id does not contain UUID", ex);
         }
     }

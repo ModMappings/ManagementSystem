@@ -16,9 +16,9 @@ import java.util.UUID;
 public class MappingDMO {
     @Id
     private UUID id;
-    private UUID      createdBy;
+    private UUID createdBy;
     private Timestamp createdOn;
-    private UUID      versionedMappableId;
+    private UUID versionedMappableId;
     private UUID mappingTypeId;
     private String input;
     private String output;

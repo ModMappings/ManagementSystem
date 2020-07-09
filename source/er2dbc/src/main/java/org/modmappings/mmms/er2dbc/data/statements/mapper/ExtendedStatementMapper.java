@@ -125,18 +125,16 @@ public class ExtendedStatementMapper implements StatementMapper {
         }
         final ExtendedSelectBuilder selectBuilder = new ExtendedSelectBuilder().select(projectExpressions).from(table);
 
-        if (selectSpecWithJoin.isDistinct())
-        {
+        if (selectSpecWithJoin.isDistinct()) {
             selectBuilder.distinct();
         }
 
-        if (selectSpecWithJoin.getJoinSpecs()!= null && !selectSpecWithJoin.getJoinSpecs().isEmpty()) {
+        if (selectSpecWithJoin.getJoinSpecs() != null && !selectSpecWithJoin.getJoinSpecs().isEmpty()) {
             for (final JoinSpec joinSpec : selectSpecWithJoin.getJoinSpecs()) {
                 final Table tableToJoin = joinSpec.isAliased() ? Table.aliased(joinSpec.getTableName(), joinSpec.getTableAlias()) :
                         Table.create(joinSpec.getTableName());
 
-                if (joinSpec.isAliased())
-                {
+                if (joinSpec.isAliased()) {
                     aliasing.put(joinSpec.getTableAlias(), joinSpec.getTableName());
                 }
 
@@ -181,7 +179,7 @@ public class ExtendedStatementMapper implements StatementMapper {
      * @param sort must not be {@literal null}.
      * @return
      */
-    public BoundSortSpec getMappedObject(final SortSpec sort, final BindMarkers bindMarkers, final Map<String, String> aliasing, final Table table  ) {
+    public BoundSortSpec getMappedObject(final SortSpec sort, final BindMarkers bindMarkers, final Map<String, String> aliasing, final Table table) {
         final List<OrderBy> mappedOrder = new ArrayList<>();
 
         Bindings bindings = Bindings.empty();
@@ -373,8 +371,7 @@ public class ExtendedStatementMapper implements StatementMapper {
             final SqlRenderer sqlRenderer = SqlRenderer.create(this.renderContext);
 
             if (this.source instanceof Select) {
-                if (this.source instanceof org.modmappings.mmms.er2dbc.relational.core.sql.Select)
-                {
+                if (this.source instanceof org.modmappings.mmms.er2dbc.relational.core.sql.Select) {
                     final SqlWithJoinSpecificSqlRenderer specificSqlRenderer = new SqlWithJoinSpecificSqlRenderer(renderContext);
                     return specificSqlRenderer.render((Select) this.source);
                 }

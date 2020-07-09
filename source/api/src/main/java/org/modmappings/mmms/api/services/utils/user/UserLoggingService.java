@@ -18,10 +18,10 @@ public class UserLoggingService {
     /**
      * Create a new log entry in the given logger,
      * prefixed with the id of the current logged in user.
-     *
+     * <p>
      * The log level is information.
      *
-     * @param logger The logger that logs the message.
+     * @param logger  The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
     public void info(final Logger logger, final Supplier<UUID> principalSupplier, final String message) {
@@ -31,10 +31,10 @@ public class UserLoggingService {
     /**
      * Create a new log entry in the given logger,
      * prefixed with the id of the current logged in user.
-     *
+     * <p>
      * The log level is warning.
      *
-     * @param logger The logger that logs the message.
+     * @param logger  The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
     public void warn(final Logger logger, final Supplier<UUID> principalSupplier, final String message) {
@@ -44,10 +44,10 @@ public class UserLoggingService {
     /**
      * Create a new log entry in the given logger,
      * prefixed with the id of the current logged in user.
-     *
+     * <p>
      * The log level is error.
      *
-     * @param logger The logger that logs the message.
+     * @param logger  The logger that logs the message.
      * @param message The message to log in the name of the current user.
      */
     public void error(final Logger logger, final Supplier<UUID> principalSupplier, final String message) {
