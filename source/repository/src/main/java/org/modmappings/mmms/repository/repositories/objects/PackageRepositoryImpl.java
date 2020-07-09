@@ -3,6 +3,7 @@ package org.modmappings.mmms.repository.repositories.objects;
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
 import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
+import org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.repositories.IModMappingQuerySupport;
 import org.springframework.context.annotation.Primary;
@@ -18,6 +19,9 @@ import java.util.UUID;
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
 import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.*;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
+import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.Order.asc;
+import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.Order.desc;
+import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.sort;
 
 @Primary
 @Priority(Integer.MAX_VALUE)
@@ -67,10 +71,11 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
         }
 
         final String side = outputMatchingRegex != null ? "output" : "input";
+        final String matchingRegex = outputMatchingRegex != null ? outputMatchingRegex : inputMatchingRegex;
 
         return this.createPagedRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
-                        .withProjection(distinct(aliased(invoke("substring", reference("mapping", side), Expressions.parameter(outputMatchingRegex)), "package")))
+                        .withProjection(distinct(aliased(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex)), "package")))
                         .withJoin(join("versioned_mappable", "vm").withOn(on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
                         .withJoin(join("mappable", "mp").withOn(on(reference("vm", "mappable_id")).is(reference("mp", "id"))))
                         .withJoin(join("release_component", "rc").withOn(on(reference("id")).is(reference("rc", "mapping_id"))))
@@ -81,6 +86,8 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
                             criteria = nonNullAndEqualsCheckForWhere(criteria, MappableTypeDMO.CLASS, "mp", "type");
                             return criteria;
                         })
+                        .withSort(sort(asc(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex)))))
+
                 ,
                 "mapping",
                 String.class,

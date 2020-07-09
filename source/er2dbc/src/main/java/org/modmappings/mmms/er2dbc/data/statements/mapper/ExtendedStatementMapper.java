@@ -113,7 +113,7 @@ public class ExtendedStatementMapper implements StatementMapper {
 
         final Map<String, String> aliasing = new HashMap<>();
 
-        final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
+        final BindMarkers bindMarkers = new NamedIndexEquivalentBindMarkers(this.dialect.getBindMarkersFactory().create());
         Bindings bindings = Bindings.empty();
 
         final Table table = Table.create(selectSpecWithJoin.getTable());

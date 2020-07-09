@@ -1,36 +1,36 @@
 create table "comment"
 (
-    "id"                  uuid      not null
-        constraint "PK_comment"
+	"id" uuid not null
+		constraint "PK_comment"
             primary key
-        default uuid_generate_v4(),
-    "created_by"          uuid      not null,
-    "created_on"          timestamp not null,
-    "content"             text      not null,
-    "deleted_by"          uuid,
-    "deleted_on"          timestamp,
-    "last_edit_by"        uuid,
-    "last_edit_on"        timestamp,
-    "proposed_mapping_id" uuid
-        constraint "FK_comment_proposed_mapping_proposedMappingId"
-            references "proposed_mapping"
-            on delete cascade,
-    "release_id"          uuid
-        constraint "FK_comment_releases_releaseId"
-            references "release"
-            on delete cascade,
-    "parent_comment_id"   uuid
-        constraint "FK_comment_comment_parentCommentId"
-            references "comment"
-            on delete cascade
+                default uuid_generate_v4(),
+	"created_by" uuid not null,
+	"created_on" timestamp not null,
+	"content" text not null,
+    "deleted_by" uuid,
+    "deleted_on" timestamp,
+    "last_edit_by" uuid,
+    "last_edit_on" timestamp,
+	"proposed_mapping_id" uuid
+		constraint "FK_comment_proposed_mapping_proposedMappingId"
+			references "proposed_mapping"
+				on delete cascade ,
+	"release_id" uuid
+		constraint "FK_comment_releases_releaseId"
+			references "release"
+				on delete cascade,
+	"parent_comment_id" uuid
+		constraint "FK_comment_comment_parentCommentId"
+			references "comment"
+				on delete cascade
 );
 
 create index "IX_comment_parentCommentId"
-    on "comment" ("parent_comment_id");
+	on "comment" ("parent_comment_id");
 
 create index "IX_comment_proposedMappingId"
-    on "comment" ("proposed_mapping_id");
+	on "comment" ("proposed_mapping_id");
 
 create index "IX_comment_releaseId"
-    on "comment" ("release_id");
+	on "comment" ("release_id");
 

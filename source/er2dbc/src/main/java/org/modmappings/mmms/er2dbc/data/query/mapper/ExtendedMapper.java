@@ -248,7 +248,7 @@ public class ExtendedMapper extends UpdateMapper {
                 }
             }
 
-            final BindMarker bindMarker = bindings.nextMarker("");
+            final BindMarker bindMarker = bindings.nextMarker(valueExpression.getName());
             return bind(mappedValue, typeHint, bindings, bindMarker);
         }
 

@@ -25,6 +25,17 @@ public final class Expressions {
         return new CollectionExpression(values.stream().map(Expressions::parameter).collect(Collectors.toSet()));
     }
 
+    public static Expression parameter(final String name, final Object value) {
+        if (value == null)
+            return Expression.NULL;
+
+        return new ValueExpression(value, name);
+    }
+
+    public static Expression parameter(final String name, final Object... values) {
+        return parameter(name, Arrays.asList(values));
+    }
+
     public static Expression reference(final String columnName) {
         return new ReferenceExpression("", columnName);
     }
