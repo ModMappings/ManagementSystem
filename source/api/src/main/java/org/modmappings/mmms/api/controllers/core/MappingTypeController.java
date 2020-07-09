@@ -103,7 +103,7 @@ public class MappingTypeController {
     public Mono<Page<MappingTypeDTO>> getAll(
             final @RequestParam(name = "name", required = false) String nameRegex,
             final @RequestParam(name = "editable", required = false) Boolean editable,
-            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
+            final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return mappingTypeService.getAll(nameRegex, editable, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

@@ -3,18 +3,19 @@ package org.modmappings.mmms.er2dbc.data.statements.mapper;
 import org.modmappings.mmms.er2dbc.data.query.mapper.ExtendedMapper;
 import org.modmappings.mmms.er2dbc.data.statements.builder.ExtendedSelectBuilder;
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
+import org.modmappings.mmms.er2dbc.data.statements.mapper.bound.BoundExpression;
+import org.modmappings.mmms.er2dbc.data.statements.mapper.bound.BoundSortSpec;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.renderer.SqlWithJoinSpecificSqlRenderer;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
+import org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec;
 import org.modmappings.mmms.er2dbc.relational.core.sql.Join;
+import org.modmappings.mmms.er2dbc.relational.core.sql.OrderBy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.r2dbc.core.PreparedOperation;
 import org.springframework.data.r2dbc.core.StatementMapper;
-import org.springframework.data.r2dbc.dialect.BindMarkers;
-import org.springframework.data.r2dbc.dialect.BindTarget;
-import org.springframework.data.r2dbc.dialect.Bindings;
-import org.springframework.data.r2dbc.dialect.R2dbcDialect;
+import org.springframework.data.r2dbc.dialect.*;
 import org.springframework.data.r2dbc.query.BoundAssignments;
 import org.springframework.data.r2dbc.query.BoundCondition;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
@@ -26,7 +27,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This custom implementation of the {@link StatementMapper} adds support for
@@ -111,19 +111,24 @@ public class ExtendedStatementMapper implements StatementMapper {
     private PreparedOperation<Select> getMappedObject(final SelectSpecWithJoin selectSpecWithJoin,
                                                       @Nullable final RelationalPersistentEntity<?> entity) {
 
+        final Map<String, String> aliasing = new HashMap<>();
+
+        final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
+        Bindings bindings = Bindings.empty();
+
         final Table table = Table.create(selectSpecWithJoin.getTable());
-        final List<Expression> projectExpressions = selectSpecWithJoin.getProjectedFields().stream().map(e -> extendedMapper.getMappedObject(e, table)).collect(Collectors.toList());
+        final List<Expression> projectExpressions = new ArrayList<>();
+        for (final org.modmappings.mmms.er2dbc.data.statements.expression.Expression e : selectSpecWithJoin.getProjectedFields()) {
+            final BoundExpression boundExpression = extendedMapper.getMappedObject(e, table, new MutableBindings(bindMarkers), aliasing);
+            bindings = bindings.and(boundExpression.getBindings());
+            projectExpressions.add(boundExpression.getExpression());
+        }
         final ExtendedSelectBuilder selectBuilder = new ExtendedSelectBuilder().select(projectExpressions).from(table);
 
         if (selectSpecWithJoin.isDistinct())
         {
             selectBuilder.distinct();
         }
-
-        final Map<String, String> aliasing = new HashMap<>();
-
-        final BindMarkers bindMarkers = this.dialect.getBindMarkersFactory().create();
-        Bindings bindings = Bindings.empty();
 
         if (selectSpecWithJoin.getJoinSpecs()!= null && !selectSpecWithJoin.getJoinSpecs().isEmpty()) {
             for (final JoinSpec joinSpec : selectSpecWithJoin.getJoinSpecs()) {
@@ -152,10 +157,11 @@ public class ExtendedStatementMapper implements StatementMapper {
             selectBuilder.where(mappedObject.getCondition());
         }
 
-        if (selectSpecWithJoin.getSort().isSorted()) {
+        if (!selectSpecWithJoin.getSort().isUnsorted()) {
+            final BoundSortSpec boundSortSpec = this.getMappedObject(selectSpecWithJoin.getSort(), bindMarkers, aliasing, table);
+            selectBuilder.orderBy(boundSortSpec.getOrderBys());
 
-            final Sort mappedSort = this.extendedMapper.getMappedObject(selectSpecWithJoin.getSort(), entity);
-            selectBuilder.orderBy(createOrderByFields(table, mappedSort));
+            bindings = bindings.and(boundSortSpec.getBindings());
         }
 
         if (selectSpecWithJoin.getPage().isPaged()) {
@@ -169,6 +175,25 @@ public class ExtendedStatementMapper implements StatementMapper {
         return new ExtendedStatementMapper.ExtendedPreparedOperation<>(select, this.renderContext, bindings);
     }
 
+    /**
+     * Map the {@link Sort} object to apply field name mapping using {@link Class the type to read}.
+     *
+     * @param sort must not be {@literal null}.
+     * @return
+     */
+    public BoundSortSpec getMappedObject(final SortSpec sort, final BindMarkers bindMarkers, final Map<String, String> aliasing, final Table table  ) {
+        final List<OrderBy> mappedOrder = new ArrayList<>();
+
+        Bindings bindings = Bindings.empty();
+
+        for (final SortSpec.Order order : sort.getComponents()) {
+            final BoundExpression boundExpression = this.extendedMapper.getMappedObject(order.getExpression(), table, new MutableBindings(bindMarkers), aliasing);
+            bindings = bindings.and(boundExpression.getBindings());
+            mappedOrder.add(new OrderBy(boundExpression.getExpression(), OrderBy.Direction.fromSpec(order.getDirection())));
+        }
+
+        return new BoundSortSpec(bindings, mappedOrder);
+    }
 
     private Collection<? extends OrderByField> createOrderByFields(final Table table, final Sort sortToUse) {
 
@@ -350,7 +375,7 @@ public class ExtendedStatementMapper implements StatementMapper {
             if (this.source instanceof Select) {
                 if (this.source instanceof org.modmappings.mmms.er2dbc.relational.core.sql.Select)
                 {
-                    final SqlWithJoinSpecificSqlRenderer specificSqlRenderer = new SqlWithJoinSpecificSqlRenderer();
+                    final SqlWithJoinSpecificSqlRenderer specificSqlRenderer = new SqlWithJoinSpecificSqlRenderer(renderContext);
                     return specificSqlRenderer.render((Select) this.source);
                 }
 

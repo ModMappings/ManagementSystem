@@ -2,10 +2,9 @@ package org.modmappings.mmms.repository.repositories.mapping.mappables.versioned
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
-import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
+import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
-import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.VersionedMappableDMO;
 import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
@@ -107,9 +106,9 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                 .withProjectionFromColumnName(columns)
                 .withJoin(
                         join("mapping", "m")
-                                .withOn(on(reference("id")).is(reference("m", "versioned_mappable_id")))
+                                .withOn(on(Expressions.reference("id")).is(Expressions.reference("m", "versioned_mappable_id")))
                 )
-                .withCriteria(where(reference("m", "id")).is(parameter(mappingId)))
+                .withCriteria(where(Expressions.reference("m", "id")).is(Expressions.parameter(mappingId)))
                 .withPage(PageRequest.of(0, 1));
 
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpec);
@@ -136,9 +135,9 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                         .distinct()
                         .withJoin(
                                 join("inheritance_data", "mid")
-                                        .withOn(on(reference("id")).is(reference("mid", "super_type_versioned_mappable_id")))
+                                        .withOn(on(Expressions.reference("id")).is(Expressions.reference("mid", "super_type_versioned_mappable_id")))
                         )
-                        .withCriteria(where(reference("mid", "sub_type_versioned_mappable_id")).is(parameter(classVersionedMappableId))),
+                        .withCriteria(where(Expressions.reference("mid", "sub_type_versioned_mappable_id")).is(Expressions.parameter(classVersionedMappableId))),
                 pageable
         );
     }
@@ -159,9 +158,9 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                         .distinct()
                         .withJoin(
                                 join("inheritance_data", "mid")
-                                        .withOn(on(reference("id")).is(reference("mid", "sub_type_versioned_mappable_id")))
+                                        .withOn(on(Expressions.reference("id")).is(Expressions.reference("mid", "sub_type_versioned_mappable_id")))
                         )
-                        .withCriteria(where(reference("mid", "super_type_versioned_mappable_id")).is(parameter(classVersionedMappableId))),
+                        .withCriteria(where(Expressions.reference("mid", "super_type_versioned_mappable_id")).is(Expressions.parameter(classVersionedMappableId))),
                 pageable
         );
     }
@@ -202,22 +201,22 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
                         .join(() -> join("mappable", "mp").on(
-                                () -> on(reference("mappable_id")).is(reference("mp", "id"))
+                                () -> on(Expressions.reference("mappable_id")).is(Expressions.reference("mp", "id"))
                                 )
                         )
                         .join(() -> leftOuterJoin("mapping", "m").on(
-                                () -> on(reference("id")).is(reference("m", "versioned_mappable_id"))
+                                () -> on(Expressions.reference("id")).is(Expressions.reference("m", "versioned_mappable_id"))
                                 )
                         )
                         .join(() -> leftOuterJoin("mapping_type", "mt").on(
-                                () -> on(reference("m", "mapping_type_id")).is(reference("mt", "id"))
+                                () -> on(Expressions.reference("m", "mapping_type_id")).is(Expressions.reference("mt", "id"))
                         ))
                         .join(() -> leftOuterJoin("inheritance_data", "super_mid").on(
-                                () -> on(reference("id")).is(reference("super_mid", "super_type_versioned_mappable_id"))
+                                () -> on(Expressions.reference("id")).is(Expressions.reference("super_mid", "super_type_versioned_mappable_id"))
                                 )
                         )
                         .join(() -> leftOuterJoin("inheritance_data", "sub_mid").on(
-                                () -> on(reference("id")).is(reference("sub_mid", "sub_type_versioned_mappable_id"))
+                                () -> on(Expressions.reference("id")).is(Expressions.reference("sub_mid", "sub_type_versioned_mappable_id"))
                                 )
                         )
                         .where(() -> {

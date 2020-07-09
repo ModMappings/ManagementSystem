@@ -2,14 +2,13 @@ package org.modmappings.mmms.repository.repositories.mapping.mappings.votingreco
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
+import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.repository.model.mapping.mappings.voting.VotingRecordDMO;
 import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
@@ -49,7 +48,7 @@ class VotingRecordRepositoryImpl extends AbstractModMappingRepository<VotingReco
                 selectSpecWithJoin ->
                     selectSpecWithJoin
                         .where(() -> {
-                            ColumnBasedCriteria criteria = where(reference("proposed_mapping_id")).is(parameter(proposedMappingId));
+                            ColumnBasedCriteria criteria = where(Expressions.reference("proposed_mapping_id")).is(Expressions.parameter(proposedMappingId));
                             criteria = nonNullAndEqualsCheckForWhere(
                                     criteria,
                                     indication,

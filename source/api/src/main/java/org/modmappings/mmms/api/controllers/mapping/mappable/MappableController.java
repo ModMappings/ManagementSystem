@@ -96,7 +96,7 @@ public class MappableController {
     @PageableAsQueryParam
     public Mono<Page<MappableDTO>> getAll(
             final @RequestParam(value = "type", required = false) MappableTypeDTO type,
-            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
+            final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return mappableService.getAll(type, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

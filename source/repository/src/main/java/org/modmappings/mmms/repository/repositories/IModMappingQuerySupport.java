@@ -2,6 +2,8 @@ package org.modmappings.mmms.repository.repositories;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
+import org.modmappings.mmms.er2dbc.data.statements.expression.Expression;
+import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.springframework.data.domain.Page;
@@ -10,11 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
-import org.springframework.data.relational.core.sql.Column;
-import org.springframework.data.relational.core.sql.Expressions;
-import org.springframework.data.relational.core.sql.Functions;
-import org.springframework.data.relational.core.sql.Table;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -22,11 +19,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.UnaryOperator;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.*;
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.parameter;
+import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.parameter;
 
 public interface IModMappingQuerySupport {
 
@@ -76,7 +72,6 @@ public interface IModMappingQuerySupport {
         final SelectSpecWithJoin selectSpecWithPagination = selectSpec
                 .withPage(pageable);
 
-        
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
         if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
             mapper = mapper.forType(resultType);
@@ -93,16 +88,14 @@ public interface IModMappingQuerySupport {
     {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
 
-        final Table table = Table.create(tableName);
-        final Column column = table.column(getIdColumnName(resultType));
-        final SelectSpecWithJoin selectSpecWithProj =
-                selectSpec.isDistinct() ? selectSpec
-                        .notDistinct()
-                        .setProjection(spring(Functions.count(Expressions.just(String.format("DISTINCT %s", column))))) :
-                        selectSpec
-                                .setProjection(spring(Functions.count(column)));
+        final Expression countingExpression = selectSpec.getProjectedFields().size() == 1 ? selectSpec.getProjectedFields().get(0).dealias() : Expressions.reference(tableName, getIdColumnName(resultType));
+        final Expression countingDistinctExpression = selectSpec.isDistinct() ? Expressions.distinct(countingExpression) : countingExpression;
+        final Expression projectionExpression = Expressions.invoke("count", countingDistinctExpression);
 
-        
+        final SelectSpecWithJoin selectSpecWithProj =
+                selectSpec.notDistinct().clearSortAndPage().setProjection(projectionExpression);
+
+
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
         if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
             mapper = mapper.forType(resultType);
@@ -152,7 +145,7 @@ public interface IModMappingQuerySupport {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
 
-        
+
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
         if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
             mapper = mapper.forType(resultType);
@@ -171,7 +164,7 @@ public interface IModMappingQuerySupport {
         Assert.notNull(pageable, "Pageable most not be null!");
 
         return createPagedStarRequest(
-                selectSpec -> selectSpec.withCriteria(where(reference(parameterName)).is(parameter(value))),
+                selectSpec -> selectSpec.withCriteria(where(Expressions.reference(parameterName)).is(parameter(value))),
                 tableName,
                 resultType,
                 pageable);
@@ -180,11 +173,11 @@ public interface IModMappingQuerySupport {
     default ColumnBasedCriteria nonNullAndMatchesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable final Object parameter, @NonNull final String tableName, @NonNull final String columnName) {
         if (parameter != null) {
             if (criteria == null) {
-                return where(reference(tableName, columnName)).matches(parameter(parameter));
+                return where(Expressions.reference(tableName, columnName)).matches(parameter(parameter));
             }
             else
             {
-                return criteria.and(reference(tableName, columnName)).matches(parameter(parameter));
+                return criteria.and(Expressions.reference(tableName, columnName)).matches(parameter(parameter));
             }
         }
 
@@ -194,11 +187,11 @@ public interface IModMappingQuerySupport {
     default ColumnBasedCriteria nonNullAndEqualsCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable final Object parameter, @NonNull final String tableName, @NonNull final String columnName) {
         if (parameter != null) {
             if (criteria == null) {
-                return where(reference(tableName, columnName)).is(parameter(parameter));
+                return where(Expressions.reference(tableName, columnName)).is(parameter(parameter));
             }
             else
             {
-                return criteria.and(reference(tableName, columnName)).is(parameter(parameter));
+                return criteria.and(Expressions.reference(tableName, columnName)).is(parameter(parameter));
             }
         }
 

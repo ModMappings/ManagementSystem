@@ -2,14 +2,13 @@ package org.modmappings.mmms.repository.repositories.mapping.mappings.proposedma
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
+import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.repository.model.mapping.mappings.ProposedMappingDMO;
 import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
@@ -41,24 +40,24 @@ class ProposedMappingRepositoryImpl extends AbstractModMappingRepository<Propose
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
                         .where(() -> {
-                            ColumnBasedCriteria criteria = where(reference("versioned_mappable_id")).is(parameter(versionedMappableId));
+                            ColumnBasedCriteria criteria = where(Expressions.reference("versioned_mappable_id")).is(Expressions.parameter(versionedMappableId));
                             if (state != null) {
                                 if (!state) {
-                                    criteria = criteria.and(reference("closed_by")).isNull().and(reference("closed_on")).isNull();
+                                    criteria = criteria.and(Expressions.reference("closed_by")).isNull().and(Expressions.reference("closed_on")).isNull();
                                 }
                                 else
                                 {
-                                    criteria = criteria.and(reference("closed_by")).isNotNull().and(reference("closed_on")).isNotNull();
+                                    criteria = criteria.and(Expressions.reference("closed_by")).isNotNull().and(Expressions.reference("closed_on")).isNotNull();
                                 }
                             }
 
                             if (merged != null) {
                                 if (!merged) {
-                                    criteria = criteria.and(reference("mapping_id")).isNull();
+                                    criteria = criteria.and(Expressions.reference("mapping_id")).isNull();
                                 }
                                 else
                                 {
-                                    criteria = criteria.and(reference("mapping_id")).isNotNull();
+                                    criteria = criteria.and(Expressions.reference("mapping_id")).isNotNull();
                                 }
                             }
 

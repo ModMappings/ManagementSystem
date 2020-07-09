@@ -1,6 +1,7 @@
 package org.modmappings.mmms.repository.repositories.core.releases.components;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
+import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
 import org.modmappings.mmms.repository.model.core.release.ReleaseComponentDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
@@ -8,9 +9,7 @@ import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
@@ -111,18 +110,18 @@ class ReleaseComponentRepositoryImpl extends AbstractModMappingRepository<Releas
         return createPagedRequest(
                 selectSpec -> selectSpec
                         .distinct()
-                        .withProjection(reference("mp", "id")) //
+                        .withProjection(Expressions.reference("mp", "id")) //
                         .withJoin(
                                 JoinSpec.join("mapping", "mp")
-                                        .withOn(on(reference("mapping_id")).is(reference("mp", "id"))),
+                                        .withOn(on(Expressions.reference("mapping_id")).is(Expressions.reference("mp", "id"))),
                                 JoinSpec.join("versioned_mappable", "vm")
-                                        .withOn(on(reference("mp","versioned_mappable_id")).is(reference("vm", "id"))),
+                                        .withOn(on(Expressions.reference("mp","versioned_mappable_id")).is(Expressions.reference("vm", "id"))),
                                 JoinSpec.join("mappable", "m")
-                                        .withOn(on(reference("vm", "mappable_id")).is(reference("m", "id")))
+                                        .withOn(on(Expressions.reference("vm", "mappable_id")).is(Expressions.reference("m", "id")))
                         )
                         .withCriteria(
-                                where(reference("release_id")).is(parameter(releaseId))
-                                        .and(reference("m", "type")).is(parameter(mappableType.ordinal()))),
+                                where(Expressions.reference("release_id")).is(Expressions.parameter(releaseId))
+                                        .and(Expressions.reference("m", "type")).is(Expressions.parameter(mappableType.ordinal()))),
                 getTableName(),
                 UUID.class,
                 pageable

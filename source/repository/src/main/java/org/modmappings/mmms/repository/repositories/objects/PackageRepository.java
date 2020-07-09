@@ -18,9 +18,8 @@ public interface PackageRepository extends org.springframework.data.repository.R
             final UUID gameVersion,
             final UUID releaseId,
             final UUID mappingTypeId,
-            String packagePrefix,
-            Integer minAdditionalPackageDepth,
-            Integer maxAdditionalPackageDepth,
+            final String inputMatchingRegex,
+            final String outputMatchingRegex,
             final Pageable pageable
             );
 }

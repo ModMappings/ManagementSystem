@@ -113,7 +113,7 @@ public class GameVersionController {
             final @RequestParam(name = "name", required = false) String nameRegex,
             final @RequestParam(name = "preRelease", required = false) Boolean isPreRelease,
             final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
-            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
+            final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return gameVersionService.getAll(nameRegex, isPreRelease, isSnapshot, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

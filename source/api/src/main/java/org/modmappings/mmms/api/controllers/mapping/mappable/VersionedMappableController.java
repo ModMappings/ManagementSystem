@@ -163,7 +163,7 @@ public class VersionedMappableController {
             final @RequestParam(value = "mappingOutputRegex", required = false) String mappingOutputRegex,
             final @RequestParam(value = "superTypeTargetId", required = false) UUID superTypeTargetId,
             final @RequestParam(value = "subTypeTargetId", required = false) UUID subTypeTargetId,
-            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
+            final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return versionedMappableService.getAll(
                 gameVersionId, mappableTypeDTO, classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, pageable

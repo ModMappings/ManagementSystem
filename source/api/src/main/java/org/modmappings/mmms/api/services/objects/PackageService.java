@@ -1,7 +1,6 @@
 package org.modmappings.mmms.api.services.objects;
 
-import org.modmappings.mmms.api.services.mapping.mappable.MappableService;
-import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
+import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.repository.repositories.objects.PackageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +36,12 @@ public class PackageService {
             final UUID gameVersion,
             final UUID releaseId,
             final UUID mappingTypeId,
-            final String packagePrefix,
-            final Integer minAdditionalPackageDepth,
-            final Integer maxAdditionalPackageDepth,
+            final String inputMatchingRegex,
+            final String outputMatchingRegex,
             final Pageable pageable
     ) {
-        return repository.findAllBy(gameVersion, releaseId, mappingTypeId, packagePrefix, minAdditionalPackageDepth, maxAdditionalPackageDepth, pageable)
-                .doFirst(() -> logger.debug("Looking up a packages by: {}, {}, {}, {}, {}, {}.", gameVersion, releaseId, mappingTypeId, packagePrefix, minAdditionalPackageDepth, maxAdditionalPackageDepth));
+        return repository.findAllBy(gameVersion, releaseId, mappingTypeId, inputMatchingRegex, outputMatchingRegex, pageable)
+                .doFirst(() -> logger.debug("Looking up a packages by: {}, {}, {}, {}, {}.", gameVersion, releaseId, mappingTypeId, inputMatchingRegex, outputMatchingRegex))
+                .switchIfEmpty(Mono.error(new NoEntriesFoundException("Packages")));
     }
 }

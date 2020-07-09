@@ -14,9 +14,10 @@ public class SelectWithJoinStatementVisitor extends DelegatingVisitor implements
     private StringBuilder from = new StringBuilder();
     private StringBuilder join = new StringBuilder();
     private StringBuilder where = new StringBuilder();
+    private StringBuilder orderBy = new StringBuilder();
 
-    private SelectListVisitor selectListVisitor;
-    private OrderByClauseVisitor orderByClauseVisitor;
+    private ExpressionListVisitor selectListVisitor;
+    private ExpressionListVisitor orderByClauseVisitor;
     private FromClauseVisitor fromClauseVisitor;
     private WhereClauseVisitor whereClauseVisitor;
 
@@ -24,8 +25,8 @@ public class SelectWithJoinStatementVisitor extends DelegatingVisitor implements
 
         this.context = context;
         this.selectRenderContext = context.getSelect();
-        this.selectListVisitor = new SelectListVisitor(context, selectList::append);
-        this.orderByClauseVisitor = new OrderByClauseVisitor(context);
+        this.selectListVisitor = new ExpressionListVisitor(context, selectList::append);
+        this.orderByClauseVisitor = new ExpressionListVisitor(context, orderBy::append);
         this.fromClauseVisitor = new FromClauseVisitor(context, it -> {
 
             if (from.length() != 0) {
@@ -45,8 +46,12 @@ public class SelectWithJoinStatementVisitor extends DelegatingVisitor implements
     @Override
     public DelegatingVisitor.Delegation doEnter(final Visitable segment) {
 
-        if (segment instanceof SelectList) {
-            return DelegatingVisitor.Delegation.delegateTo(selectListVisitor);
+        if (segment instanceof ExpressionList) {
+            final ExpressionList expressionList = (ExpressionList) segment;
+            if (expressionList.getMode() == ExpressionList.Mode.SELECT)
+                return DelegatingVisitor.Delegation.delegateTo(selectListVisitor);
+            else
+                return Delegation.delegateTo(orderByClauseVisitor);
         }
 
         if (segment instanceof OrderByField) {

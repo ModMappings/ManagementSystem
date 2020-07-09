@@ -133,7 +133,7 @@ public class ReleaseController {
             final @RequestParam(name = "snapshot", required = false) boolean isSnapshot,
             final @RequestParam(name = "mapping", required = false) UUID mappingId,
             final @RequestParam(name = "user", required = false) UUID userId,
-            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
+            final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return releaseService.getAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

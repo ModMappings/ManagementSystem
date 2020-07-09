@@ -1,10 +1,13 @@
 package org.modmappings.mmms.er2dbc.data.statements.mapper.renderer;
 
-import org.modmappings.mmms.er2dbc.relational.core.sql.SelectList;
+import org.modmappings.mmms.er2dbc.relational.core.sql.AliasedExpression;
+import org.modmappings.mmms.er2dbc.relational.core.sql.DistinctExpression;
+import org.modmappings.mmms.er2dbc.relational.core.sql.ExpressionList;
+import org.modmappings.mmms.er2dbc.relational.core.sql.OrderBy;
 import org.springframework.data.relational.core.sql.*;
 import org.springframework.data.relational.core.sql.render.RenderContext;
 
-public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implements PartRenderer {
+public class ExpressionListVisitor extends TypedSubtreeVisitor<ExpressionList> implements PartRenderer {
 
     private final RenderContext context;
     private final StringBuilder builder = new StringBuilder();
@@ -14,10 +17,12 @@ public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implement
     // subelements.
 
 
-    SelectListVisitor(final RenderContext context, final RenderTarget target) {
+    ExpressionListVisitor(final RenderContext context, final RenderTarget target) {
         this.context = context;
         this.target = target;
     }
+
+
 
     /*
      * (non-Javadoc)
@@ -34,6 +39,9 @@ public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implement
             builder.append(((SimpleFunction) segment).getFunctionName()).append("(");
             insideFunction = true;
         }
+        if (segment instanceof DistinctExpression) {
+            builder.append("DISTINCT ");
+        }
 
         return super.enterNested(segment);
     }
@@ -43,7 +51,7 @@ public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implement
      * @see TypedSubtreeVisitor#leaveMatched(org.springframework.data.relational.core.sql.Visitable)
      */
     @Override
-    Delegation leaveMatched(final SelectList segment) {
+    Delegation leaveMatched(final ExpressionList segment) {
 
         target.onRendered(builder);
         return super.leaveMatched(segment);
@@ -79,9 +87,19 @@ public class SelectListVisitor extends TypedSubtreeVisitor<SelectList> implement
                 builder.append(" AS ").append(((Aliased) segment).getAlias());
             }
             requiresComma = true;
-        } else if (segment instanceof AsteriskFromTable) {
-            // the toString of AsteriskFromTable includes the table name, which would cause it to appear twice.
-            builder.append("*");
+        } else if (segment instanceof AliasedExpression) {
+            builder.append(" AS ").append(((AliasedExpression) segment).getAlias());
+        } else if (segment instanceof DistinctExpression) {
+            //NOOP;
+        } else if (segment instanceof BindMarker) {
+
+            if (segment instanceof Named) {
+                builder.append(((Named) segment).getName());
+            } else {
+                builder.append(segment.toString());
+            }
+        } else if (segment instanceof OrderBy) {
+            builder.append(" ").append(((OrderBy) segment).getDirection());
         } else if (segment instanceof Expression) {
             builder.append(segment.toString());
         }

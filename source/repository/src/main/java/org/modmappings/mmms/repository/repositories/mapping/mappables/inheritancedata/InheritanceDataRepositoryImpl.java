@@ -1,14 +1,13 @@
 package org.modmappings.mmms.repository.repositories.mapping.mappables.inheritancedata;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
+import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.repository.model.mapping.mappable.InheritanceDataDMO;
 import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
@@ -41,7 +40,7 @@ class InheritanceDataRepositoryImpl extends AbstractModMappingRepository<Inherit
             final Pageable pageable)
     {
        return createPagedStarRequest(
-               selectSpecWithJoin -> selectSpecWithJoin.withCriteria(where(reference("super_type_versioned_mappable_id")).is(parameter(superTypeVersionedMappableId))),
+               selectSpecWithJoin -> selectSpecWithJoin.withCriteria(where(Expressions.reference("super_type_versioned_mappable_id")).is(Expressions.parameter(superTypeVersionedMappableId))),
                pageable
        );
     }
@@ -60,7 +59,7 @@ class InheritanceDataRepositoryImpl extends AbstractModMappingRepository<Inherit
             final Pageable pageable
     ) {
         return createPagedStarRequest(
-                selectSpecWithJoin -> selectSpecWithJoin.withCriteria(where(reference("sub_type_versioned_mappable_id")).is(parameter(subTypeVersionedMappableId))),
+                selectSpecWithJoin -> selectSpecWithJoin.withCriteria(where(Expressions.reference("sub_type_versioned_mappable_id")).is(Expressions.parameter(subTypeVersionedMappableId))),
                 pageable
         );
     }
