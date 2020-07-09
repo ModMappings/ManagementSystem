@@ -1,14 +1,13 @@
 package org.modmappings.mmms.er2dbc.data.statements.builder;
 
 import org.modmappings.mmms.er2dbc.relational.core.sql.Join;
+import org.modmappings.mmms.er2dbc.relational.core.sql.OrderBy;
 import org.modmappings.mmms.er2dbc.relational.core.sql.Select;
 import org.springframework.data.relational.core.sql.*;
 import org.springframework.lang.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ExtendedSelectBuilder implements SelectBuilder, SelectBuilder.SelectAndFrom, SelectBuilder.SelectFromAndJoin, SelectBuilder.SelectWhereAndOr {
 
@@ -20,7 +19,7 @@ public class ExtendedSelectBuilder implements SelectBuilder, SelectBuilder.Selec
     private List<Join> joins = new ArrayList<>();
     private @Nullable
     Condition where;
-    private List<OrderByField> orderBy = new ArrayList<>();
+    private List<Expression> orderBy = new ArrayList<>();
 
     /*
      * (non-Javadoc)
@@ -145,7 +144,10 @@ public class ExtendedSelectBuilder implements SelectBuilder, SelectBuilder.Selec
      */
     @Override
     public ExtendedSelectBuilder orderBy(final OrderByField... orderByFields) {
+        return this.orderBy(Arrays.asList(orderByFields));
+    }
 
+    public ExtendedSelectBuilder orderBy(final Expression... orderByFields) {
         this.orderBy.addAll(Arrays.asList(orderByFields));
 
         return this;
@@ -157,9 +159,11 @@ public class ExtendedSelectBuilder implements SelectBuilder, SelectBuilder.Selec
      */
     @Override
     public ExtendedSelectBuilder orderBy(final Collection<? extends OrderByField> orderByFields) {
+        return this.orderBy(orderByFields.stream().map(o -> new OrderBy(o.getExpression(), OrderBy.Direction.fromJPA(Objects.requireNonNull(o.getDirection())))).collect(Collectors.toList()));
+    }
 
+    public ExtendedSelectBuilder orderBy(final List<? extends Expression> orderByFields) {
         this.orderBy.addAll(orderByFields);
-
         return this;
     }
 
@@ -171,7 +175,7 @@ public class ExtendedSelectBuilder implements SelectBuilder, SelectBuilder.Selec
     public ExtendedSelectBuilder orderBy(final Column... columns) {
 
         for (final Column column : columns) {
-            this.orderBy.add(OrderByField.from(column));
+            this.orderBy.add(new OrderBy(column, OrderBy.Direction.DESC));
         }
 
         return this;
@@ -262,9 +266,12 @@ public class ExtendedSelectBuilder implements SelectBuilder, SelectBuilder.Selec
         private final Table table;
         private final ExtendedSelectBuilder selectBuilder;
         private final org.springframework.data.relational.core.sql.Join.JoinType joinType;
-        private @Nullable Expression from;
-        private @Nullable Expression to;
-        private @Nullable Condition condition;
+        private @Nullable
+        Expression from;
+        private @Nullable
+        Expression to;
+        private @Nullable
+        Condition condition;
 
 
         JoinBuilder(final Table table, final ExtendedSelectBuilder selectBuilder, final org.springframework.data.relational.core.sql.Join.JoinType joinType) {

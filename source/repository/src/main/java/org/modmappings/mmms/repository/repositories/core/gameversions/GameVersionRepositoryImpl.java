@@ -26,10 +26,10 @@ class GameVersionRepositoryImpl extends AbstractModMappingRepository<GameVersion
     /**
      * Finds all game versions which match the given search criteria.
      *
-     * @param nameRegex The regular expression used to lookup game versions for.
+     * @param nameRegex  The regular expression used to lookup game versions for.
      * @param preRelease Indicates if prerelease are supposed to be filtered out or included, null indicates do not care.
-     * @param snapshot Indicates if snapshots are supposed to be filtered out or included, null indicates do not care.
-     * @param pageable The paging information for the request.s
+     * @param snapshot   Indicates if snapshots are supposed to be filtered out or included, null indicates do not care.
+     * @param pageable   The paging information for the request.s
      * @return The game versions which match the given search criteria.
      */
     @Override
@@ -38,8 +38,7 @@ class GameVersionRepositoryImpl extends AbstractModMappingRepository<GameVersion
             final Boolean preRelease,
             final Boolean snapshot,
             final Pageable pageable
-    )
-    {
+    ) {
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
                         .where(() -> {

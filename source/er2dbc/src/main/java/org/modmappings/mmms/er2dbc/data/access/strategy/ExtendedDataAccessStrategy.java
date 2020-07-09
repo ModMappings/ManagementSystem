@@ -21,7 +21,7 @@ public class ExtendedDataAccessStrategy extends DefaultReactiveDataAccessStrateg
      * Creates a new {@link DefaultReactiveDataAccessStrategy} given {@link R2dbcDialect} and optional
      * {@link org.springframework.core.convert.converter.Converter}s.
      *
-     * @param dialect the {@link R2dbcDialect} to use.
+     * @param dialect        the {@link R2dbcDialect} to use.
      * @param matchFormatter
      */
     public ExtendedDataAccessStrategy(final R2dbcDialect dialect, final IMatchFormatter matchFormatter) {
@@ -32,8 +32,8 @@ public class ExtendedDataAccessStrategy extends DefaultReactiveDataAccessStrateg
      * Creates a new {@link DefaultReactiveDataAccessStrategy} given {@link R2dbcDialect} and optional
      * {@link org.springframework.core.convert.converter.Converter}s.
      *
-     * @param dialect the {@link R2dbcDialect} to use.
-     * @param converters custom converters to register, must not be {@literal null}.
+     * @param dialect        the {@link R2dbcDialect} to use.
+     * @param converters     custom converters to register, must not be {@literal null}.
      * @param matchFormatter
      * @see R2dbcCustomConversions
      * @see org.springframework.core.convert.converter.Converter
@@ -45,8 +45,9 @@ public class ExtendedDataAccessStrategy extends DefaultReactiveDataAccessStrateg
 
     /**
      * Creates a new {@link DefaultReactiveDataAccessStrategy} given {@link R2dbcDialect} and {@link R2dbcConverter}.
-     *  @param dialect the {@link R2dbcDialect} to use.
-     * @param converter must not be {@literal null}.
+     *
+     * @param dialect        the {@link R2dbcDialect} to use.
+     * @param converter      must not be {@literal null}.
      * @param matchFormatter
      */
     public ExtendedDataAccessStrategy(final R2dbcDialect dialect, final R2dbcConverter converter, final IMatchFormatter matchFormatter) {
@@ -55,9 +56,10 @@ public class ExtendedDataAccessStrategy extends DefaultReactiveDataAccessStrateg
 
     /**
      * Creates a new {@link DefaultReactiveDataAccessStrategy} given {@link R2dbcDialect} and {@link R2dbcConverter}.
-     *  @param dialect the {@link R2dbcDialect} to use.
-     * @param converter must not be {@literal null}.
-     * @param expander must not be {@literal null}.
+     *
+     * @param dialect        the {@link R2dbcDialect} to use.
+     * @param converter      must not be {@literal null}.
+     * @param expander       must not be {@literal null}.
      * @param matchFormatter
      */
     @SuppressWarnings("unchecked")

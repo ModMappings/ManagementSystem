@@ -56,14 +56,14 @@ public class MappableService {
     /**
      * Looks up multiple mappables.
      *
-     * @param type The type of mappables to lookup.
+     * @param type     The type of mappables to lookup.
      * @param pageable The pagination and sorting info for the request.
      * @return A {@link Flux} with the mappables, or an errored {@link Flux} that indicates a failure.
      */
     public Mono<Page<MappableDTO>> getAll(
             final MappableTypeDTO type,
             final Pageable pageable
-            ) {
+    ) {
         return repository.findAllBy(
                 toTypeDMO(type),
                 pageable

@@ -10,11 +10,11 @@ public class MappingDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the mapping.")
     private UUID id;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the user or system who created the mapping.")
-    private UUID      createdBy;
+    private UUID createdBy;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The moment this mapping was created.")
     private Timestamp createdOn;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the versioned mappable this mapping exists for.")
-    private UUID      versionedMappableId;
+    private UUID versionedMappableId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the mapping type this mapping exists for.")
     private UUID mappingTypeId;
     @Schema(description = "The input of the mapping.")

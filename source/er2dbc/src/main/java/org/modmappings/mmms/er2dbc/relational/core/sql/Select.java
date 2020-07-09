@@ -14,25 +14,26 @@ import java.util.OptionalLong;
  */
 public class Select implements org.springframework.data.relational.core.sql.Select {
     private final boolean distinct;
-    private final SelectList selectList;
+    private final ExpressionList selectList;
     private final From from;
     private final long limit;
     private final long offset;
     private final List<Join> joins;
     @Nullable
     private final Where where;
-    private final List<OrderByField> orderBy;
+    ;
+    private final ExpressionList orderByList;
 
     public Select(final boolean distinct, final List<Expression> selectList, final List<Table> from, final long limit, final long offset,
-                  final List<Join> joins, @Nullable final Condition where, final List<OrderByField> orderBy) {
+                  final List<Join> joins, @Nullable final Condition where, final List<Expression> orderByList) {
 
         this.distinct = distinct;
-        this.selectList = new SelectList(new ArrayList<>(selectList));
+        this.selectList = new ExpressionList(ExpressionList.Mode.SELECT, new ArrayList<>(selectList));
         this.from = new From(new ArrayList<>(from));
         this.limit = limit;
         this.offset = offset;
         this.joins = new ArrayList<>(joins);
-        this.orderBy = Collections.unmodifiableList(new ArrayList<>(orderBy));
+        this.orderByList = new ExpressionList(ExpressionList.Mode.ORDER_BY, orderByList);
         this.where = where != null ? new Where(where) : null;
     }
 
@@ -42,7 +43,7 @@ public class Select implements org.springframework.data.relational.core.sql.Sele
      */
     @Override
     public List<OrderByField> getOrderBy() {
-        return this.orderBy;
+        return Collections.emptyList();
     }
 
     /*
@@ -85,7 +86,7 @@ public class Select implements org.springframework.data.relational.core.sql.Sele
 
         visitIfNotNull(where, visitor);
 
-        orderBy.forEach(it -> it.visit(visitor));
+        orderByList.visit(visitor);
 
         visitor.leave(this);
     }

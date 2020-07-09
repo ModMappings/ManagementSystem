@@ -16,10 +16,8 @@ import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseEx
 import org.modmappings.mmms.api.services.utils.user.UserService;
 import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
 import org.modmappings.mmms.api.util.Constants;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -144,10 +142,10 @@ public class VersionedMappableController {
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no versioned mappables exists in the database.",
                     content = {
-                        @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                            schema = @Schema()),
-                        @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema())
+                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                                    schema = @Schema()),
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema())
                     })
     })
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -163,15 +161,15 @@ public class VersionedMappableController {
             final @RequestParam(value = "mappingOutputRegex", required = false) String mappingOutputRegex,
             final @RequestParam(value = "superTypeTargetId", required = false) UUID superTypeTargetId,
             final @RequestParam(value = "subTypeTargetId", required = false) UUID subTypeTargetId,
-            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
+            final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return versionedMappableService.getAll(
                 gameVersionId, mappableTypeDTO, classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, pageable
         )
-            .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
-                response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
-                return Mono.empty();
-            });
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
     }
 
     @Operation(

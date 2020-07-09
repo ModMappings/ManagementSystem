@@ -1,7 +1,10 @@
 package org.modmappings.mmms.er2dbc.data.query.mapper;
 
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
+import org.modmappings.mmms.er2dbc.data.statements.expression.*;
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
+import org.modmappings.mmms.er2dbc.data.statements.mapper.bound.BoundExpression;
+import org.modmappings.mmms.er2dbc.relational.core.sql.DistinctExpression;
 import org.modmappings.mmms.er2dbc.relational.core.sql.IMatchFormatter;
 import org.modmappings.mmms.er2dbc.relational.core.sql.Match;
 import org.springframework.data.mapping.context.MappingContext;
@@ -16,7 +19,9 @@ import org.springframework.data.r2dbc.query.BoundCondition;
 import org.springframework.data.r2dbc.query.UpdateMapper;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
+import org.springframework.data.relational.core.sql.Expression;
 import org.springframework.data.relational.core.sql.*;
+import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -32,7 +37,7 @@ public class ExtendedMapper extends UpdateMapper {
     /**
      * Creates a new {@link ExtendedMapper} with the given {@link R2dbcConverter}.
      *
-     * @param converter must not be {@literal null}.
+     * @param converter      must not be {@literal null}.
      * @param matchFormatter
      */
     public ExtendedMapper(final R2dbcConverter converter, final IMatchFormatter matchFormatter) {
@@ -45,10 +50,10 @@ public class ExtendedMapper extends UpdateMapper {
     /**
      * Map a {@link ColumnBasedCriteria} object to {@link BoundCondition} and consider value/{@code NULL} {@link Bindings}.
      *
-     * @param markers bind markers object, must not be {@literal null}.
+     * @param markers  bind markers object, must not be {@literal null}.
      * @param criteria on definition to map, must not be {@literal null}.
-     * @param table must not be {@literal null}.
-     * @param entity related {@link RelationalPersistentEntity}, can be {@literal null}.
+     * @param table    must not be {@literal null}.
+     * @param entity   related {@link RelationalPersistentEntity}, can be {@literal null}.
      * @return the mapped {@link BoundAssignments}.
      */
     public BoundCondition getMappedObject(final BindMarkers markers, final ColumnBasedCriteria criteria, final Table table,
@@ -92,6 +97,7 @@ public class ExtendedMapper extends UpdateMapper {
 
     /**
      * Remaps a ER2DBC DSL join type to a R2DBC DSL join type
+     *
      * @param type The ER2DBC join type.
      * @return The remapped join type.
      */
@@ -99,19 +105,51 @@ public class ExtendedMapper extends UpdateMapper {
         return Join.JoinType.valueOf(type.name());
     }
 
-    public Expression getMappedObject(final ColumnBasedCriteria.Expression expression, final Table defaultTable)
-    {
+    public BoundExpression getMappedObject(final org.modmappings.mmms.er2dbc.data.statements.expression.Expression expression,
+                                           final Table defaultTable,
+                                           final MutableBindings bindings,
+                                           final Map<String, String> aliasing) {
         if (expression.isNative())
-            return ((ColumnBasedCriteria.NativeExpression) expression).getSqlExpression();
+            return new BoundExpression(Bindings.empty(), ((NativeExpression) expression).getSqlExpression());
+
+        if (expression.isValue())
+            return new BoundExpression(bindings, convertNoneCollectiveExpression(expression, null, defaultTable, bindings, aliasing));
+
+        if (expression.isAliased()) {
+            final org.modmappings.mmms.er2dbc.data.statements.expression.AliasedExpression aliasedExpression = (org.modmappings.mmms.er2dbc.data.statements.expression.AliasedExpression) expression;
+            final BoundExpression boundExpression = this.getMappedObject(aliasedExpression.getOther(), defaultTable, bindings, aliasing);
+            return new BoundExpression(boundExpression.getBindings(), new org.modmappings.mmms.er2dbc.relational.core.sql.AliasedExpression(boundExpression.getExpression(), aliasedExpression.getAlias()));
+        }
+
+        if (expression.isDistinct()) {
+            final org.modmappings.mmms.er2dbc.data.statements.expression.DistinctExpression distinctExpression = (org.modmappings.mmms.er2dbc.data.statements.expression.DistinctExpression) expression;
+            final BoundExpression boundExpression = getMappedObject(distinctExpression.getSource(), defaultTable, bindings, aliasing);
+            return new BoundExpression(boundExpression.getBindings(), new DistinctExpression(boundExpression.getExpression()));
+        }
+
+        if (expression.isFunction()) {
+            final FunctionExpression functionExpression = (FunctionExpression) expression;
+            final List<Expression> expressions = new ArrayList<>();
+            Bindings internalBindings = Bindings.empty();
+
+            for (org.modmappings.mmms.er2dbc.data.statements.expression.Expression arg : functionExpression.getArgs()) {
+                BoundExpression boundExpression = this.getMappedObject(arg, defaultTable, bindings, aliasing);
+                internalBindings = internalBindings.and(boundExpression.getBindings());
+                expressions.add(boundExpression.getExpression());
+            }
+            return new BoundExpression(internalBindings, SimpleFunction.create(functionExpression.getFunctionName(), expressions));
+        }
 
         if (!expression.isReference())
             throw new IllegalArgumentException("Can not map none reference expression to column");
 
-        final ColumnBasedCriteria.ReferenceExpression referenceExpression = (ColumnBasedCriteria.ReferenceExpression) expression;
-        return Column.create(referenceExpression.getColumnName(), StringUtils.isEmpty(referenceExpression.getTableName()) ? defaultTable : Table.create(referenceExpression.getTableName()));
+        final ReferenceExpression referenceExpression = (ReferenceExpression) expression;
+        return new BoundExpression(Bindings.empty(), Column.create(referenceExpression.getColumnName(), StringUtils.isEmpty(referenceExpression.getTableName()) ? defaultTable : Table.create(referenceExpression.getTableName())));
     }
 
-    public Condition getCondition(final ColumnBasedCriteria criteria, final MutableBindings bindings, final Table table,
+    public Condition getCondition(final ColumnBasedCriteria criteria,
+                                  final MutableBindings bindings,
+                                  final Table table,
                                   @Nullable final RelationalPersistentEntity<?> entity,
                                   final Map<String, String> aliasing) {
 
@@ -165,27 +203,24 @@ public class ExtendedMapper extends UpdateMapper {
         }
     }
 
-    private Expression convertNoneCollectiveExpression(final ColumnBasedCriteria.Expression expression, final ColumnBasedCriteria.Expression otherExpression, final Table defaultTable, final MutableBindings bindings,
-                                                       final Map<String, String> aliasing)
-    {
+    private Expression convertNoneCollectiveExpression(final org.modmappings.mmms.er2dbc.data.statements.expression.Expression expression,
+                                                       final org.modmappings.mmms.er2dbc.data.statements.expression.Expression otherExpression,
+                                                       final Table defaultTable,
+                                                       final MutableBindings bindings,
+                                                       final Map<String, String> aliasing) {
         if (expression.isNative())
-            return ((ColumnBasedCriteria.NativeExpression) expression).getSqlExpression();
+            return ((NativeExpression) expression).getSqlExpression();
 
         if (expression.isNull())
             return SQL.nullLiteral();
 
-        if (expression.isReference())
-        {
-            final ColumnBasedCriteria.ReferenceExpression referenceExpression = (ColumnBasedCriteria.ReferenceExpression) expression;
+        if (expression.isReference()) {
+            final ReferenceExpression referenceExpression = (ReferenceExpression) expression;
             Table table = defaultTable;
-            if (!StringUtils.isEmpty(referenceExpression.getTableName()))
-            {
-                if (aliasing.containsKey(referenceExpression.getTableName()))
-                {
+            if (!StringUtils.isEmpty(referenceExpression.getTableName())) {
+                if (aliasing.containsKey(referenceExpression.getTableName())) {
                     table = Table.aliased(aliasing.get(referenceExpression.getTableName()), referenceExpression.getTableName());
-                }
-                else
-                {
+                } else {
                     table = Table.create(referenceExpression.getTableName());
                 }
             }
@@ -193,46 +228,40 @@ public class ExtendedMapper extends UpdateMapper {
             return Column.create(referenceExpression.getColumnName(), table);
         }
 
-        if (expression.isValue())
-        {
+        if (expression.isValue()) {
 
-            if (otherExpression.isReference())
-            {
-                Object mappedValue = null;
-                final Class<?> typeHint;
+            final ValueExpression valueExpression = (ValueExpression) expression;
+            TypeInformation<?> actualType = ClassTypeInformation.OBJECT;
+            Class<?> typeHint = actualType.getType();
+            Object mappedValue = convertValue(valueExpression.getValue(), actualType);
 
-                final ColumnBasedCriteria.ReferenceExpression referenceExpression = (ColumnBasedCriteria.ReferenceExpression) otherExpression;
+            if (otherExpression != null && otherExpression.isReference()) {
+                final ReferenceExpression referenceExpression = (ReferenceExpression) otherExpression;
 
                 final Field propertyField = createPropertyField(referenceExpression.getTableName(), referenceExpression.getColumnName(), this.mappingContext, aliasing);
-                final TypeInformation<?> actualType = propertyField.getTypeHint().getRequiredActualType();
+                actualType = propertyField.getTypeHint().getRequiredActualType();
 
-                final ColumnBasedCriteria.ValueExpression valueExpression = (ColumnBasedCriteria.ValueExpression) expression;
                 if (valueExpression.getValue() instanceof SettableValue) {
                     final SettableValue settableValue = (SettableValue) valueExpression.getValue();
                     mappedValue = convertValue(settableValue.getValue(), propertyField.getTypeHint());
                     typeHint = getTypeHint(mappedValue, actualType.getType(), settableValue);
-
-                } else {
-                    mappedValue = convertValue(valueExpression.getValue(), propertyField.getTypeHint());
-                    typeHint = actualType.getType();
                 }
-
-                final BindMarker bindMarker = bindings.nextMarker("");
-                return bind(mappedValue, typeHint, bindings, bindMarker);
             }
+
+            final BindMarker bindMarker = bindings.nextMarker(valueExpression.getName());
+            return bind(mappedValue, typeHint, bindings, bindMarker);
         }
 
         return null;
     }
 
-    private Collection<Expression> convertCollectiveExpression(final ColumnBasedCriteria.Expression expression, final ColumnBasedCriteria.Expression otherExpression, final Table defaultTable, final MutableBindings bindings,
+    private Collection<Expression> convertCollectiveExpression(final org.modmappings.mmms.er2dbc.data.statements.expression.Expression expression, final org.modmappings.mmms.er2dbc.data.statements.expression.Expression otherExpression, final Table defaultTable, final MutableBindings bindings,
                                                                final Map<String, String> aliasing) {
-        if (expression.isCollection())
-        {
-            final ColumnBasedCriteria.CollectionExpression collectionExpression = (ColumnBasedCriteria.CollectionExpression) expression;
+        if (expression.isCollection()) {
+            final CollectionExpression collectionExpression = (CollectionExpression) expression;
             final List<Expression> expressions = new ArrayList<>(collectionExpression.getExpressions().size());
 
-            for (final ColumnBasedCriteria.Expression collectionExpressionExpression : collectionExpression.getExpressions()) {
+            for (final org.modmappings.mmms.er2dbc.data.statements.expression.Expression collectionExpressionExpression : collectionExpression.getExpressions()) {
                 if (collectionExpressionExpression.isCollection())
                     return null;
 
@@ -260,8 +289,7 @@ public class ExtendedMapper extends UpdateMapper {
                 return persistentEntity;
         }
 
-        if (aliasing.containsKey(table))
-        {
+        if (aliasing.containsKey(table)) {
             return findEntityFromTableName(aliasing.get(table), aliasing);
         }
 

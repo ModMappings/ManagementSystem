@@ -11,6 +11,7 @@ import java.util.UUID;
 
 /**
  * Defines a repository used inside the mod mappings systems.
+ *
  * @param <T> The type of entity that this repository provides.
  */
 @NoRepositoryBean

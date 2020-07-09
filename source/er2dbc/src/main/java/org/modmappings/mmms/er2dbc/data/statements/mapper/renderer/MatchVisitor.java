@@ -3,7 +3,6 @@ package org.modmappings.mmms.er2dbc.data.statements.mapper.renderer;
 import org.modmappings.mmms.er2dbc.relational.core.sql.Match;
 import org.springframework.data.relational.core.sql.Condition;
 import org.springframework.data.relational.core.sql.Expression;
-import org.springframework.data.relational.core.sql.Like;
 import org.springframework.data.relational.core.sql.Visitable;
 import org.springframework.data.relational.core.sql.render.RenderContext;
 import org.springframework.lang.Nullable;

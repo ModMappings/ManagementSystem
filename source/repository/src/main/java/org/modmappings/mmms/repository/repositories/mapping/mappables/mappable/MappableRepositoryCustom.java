@@ -9,15 +9,16 @@ import reactor.core.publisher.Mono;
 /**
  * Defines a custom repository for mappables.
  * Allows access to its data via custom accessor methods.
- *
+ * <p>
  * Takes pagination and the type of a mappable into account.
  */
 public interface MappableRepositoryCustom {
     /**
      * Finds all mappables which are of a given type.
-     *
+     * <p>
      * The order returned can not be guaranteed.
-     * @param type The type of mappable to look up.
+     *
+     * @param type     The type of mappable to look up.
      * @param pageable The paging and sorting information.
      * @return The mappables of the given type.
      */

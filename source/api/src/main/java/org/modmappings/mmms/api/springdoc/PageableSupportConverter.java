@@ -23,8 +23,7 @@ public class PageableSupportConverter implements ModelConverter {
         }
         if (chain.hasNext()) {
             return chain.next().resolve(type, context, chain);
-        }
-        else {
+        } else {
             return null;
         }
     }

@@ -11,10 +11,10 @@ import java.util.UUID;
 /**
  * This represents a single mappable in a given version of the game.
  * This table contains also all metadata related to a given type of mappable.
- *
+ * <p>
  * This means that not all fields will be populated with data, regardless of mappable type.
  * EG, a package has no visibility, so it will be populated with NOT_APPLICABLE, however it also has no type as such that field will be null.
- *
+ * <p>
  * See the static factory methods in this class for the fields that are populated depending on what type of mappable this represents.
  */
 @Table("versioned_mappable")

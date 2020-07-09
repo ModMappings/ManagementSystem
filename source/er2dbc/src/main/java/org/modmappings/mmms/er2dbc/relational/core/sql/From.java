@@ -16,7 +16,7 @@ public class From extends AbstractSegment {
 
     public From(final List<Table> tables) {
 
-        super(tables.toArray(new Table[] {}));
+        super(tables.toArray(new Table[]{}));
 
         this.tables = tables;
     }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Represents a repository that gives access to the protection information of mappables.
- *
+ * <p>
  * This repository provides both custom access to the protection information as well as the standard crud access methods.
  */
 @Repository

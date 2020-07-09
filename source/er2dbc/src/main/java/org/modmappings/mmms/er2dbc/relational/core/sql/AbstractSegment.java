@@ -28,6 +28,10 @@ public class AbstractSegment implements Segment {
         visitor.leave(this);
     }
 
+    public Segment[] getChildren() {
+        return children;
+    }
+
     /*
      * (non-Javadoc)
      * @see java.lang.Object#hashCode()

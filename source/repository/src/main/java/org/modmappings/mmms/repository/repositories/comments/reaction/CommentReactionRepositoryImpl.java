@@ -6,9 +6,7 @@ import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
@@ -29,7 +27,7 @@ class CommentReactionRepositoryImpl extends AbstractModMappingRepository<Comment
      * Finds all comment reactions which where directly made on the comment with the given id.
      *
      * @param commentId The id of the comment to look up comment reactions for.
-     * @param pageable The paging and sorting information.
+     * @param pageable  The paging and sorting information.
      * @return The comment reactions on the given comment.
      * @throws IllegalArgumentException in case the given {@literal commentId} is {@literal null}.
      */
@@ -40,7 +38,7 @@ class CommentReactionRepositoryImpl extends AbstractModMappingRepository<Comment
 
     /**
      * Finds all comment reactions which where directly made by the user with the given id.
-     *
+     * <p>
      * The comment reactions are sorted newest to oldest.
      *
      * @param userId The id of the user to look up comment reactions for.
@@ -48,8 +46,7 @@ class CommentReactionRepositoryImpl extends AbstractModMappingRepository<Comment
      * @throws IllegalArgumentException in case the given {@literal userId} is {@literal null}.
      */
     @Override
-    public Mono<Page<CommentReactionDMO>> findAllForUser(final UUID userId, final Pageable pageable)
-    {
+    public Mono<Page<CommentReactionDMO>> findAllForUser(final UUID userId, final Pageable pageable) {
         return createPagedStarSingleWhereRequest("created_by", userId, pageable);
     }
 }

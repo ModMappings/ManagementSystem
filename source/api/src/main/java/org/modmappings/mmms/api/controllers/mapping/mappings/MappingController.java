@@ -18,7 +18,6 @@ import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
 import org.modmappings.mmms.api.util.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -97,7 +96,7 @@ public class MappingController {
                             name = "mappableType",
                             in = ParameterIn.QUERY,
                             description = "The mappable type to filter on.",
-                            example = "PACKAGE"
+                            example = "CLASS"
                     ),
                     @Parameter(
                             name = "inputRegex",
@@ -155,7 +154,7 @@ public class MappingController {
             final @RequestParam(value = "mappingTypeId", required = false) UUID mappingTypeId,
             final @RequestParam(value = "gameVersionId", required = false) UUID gameVersionId,
             final @RequestParam(value = "createdBy", required = false) UUID userId,
-            final @PageableDefault(size = 25, sort="created_on", direction = Sort.Direction.DESC) Pageable pageable,
+            final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {

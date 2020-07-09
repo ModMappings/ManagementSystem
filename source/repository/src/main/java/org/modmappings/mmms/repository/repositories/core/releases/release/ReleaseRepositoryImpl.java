@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.reference;
+import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.reference;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
 
 /**

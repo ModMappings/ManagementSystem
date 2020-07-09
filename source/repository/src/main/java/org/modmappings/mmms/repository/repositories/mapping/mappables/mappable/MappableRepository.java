@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Represents a repository that gives access to the mappables that can be remapped.
- *
+ * <p>
  * This repository provides both custom access to the mappables as well as the standard crud access methods.
  */
 @Repository

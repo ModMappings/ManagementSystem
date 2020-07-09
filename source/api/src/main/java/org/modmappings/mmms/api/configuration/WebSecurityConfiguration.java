@@ -37,17 +37,17 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http) {
         http
-            .authorizeExchange(exchanges ->
-                   exchanges.anyExchange().permitAll()
-            )
-            .oauth2ResourceServer(oAuth2ResourceServerSpec -> {
-                oAuth2ResourceServerSpec.jwt(jwtSpec -> {
-                    final JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-                    converter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleExtractingGrantedAuthoritiesConverter());
+                .authorizeExchange(exchanges ->
+                        exchanges.anyExchange().permitAll()
+                )
+                .oauth2ResourceServer(oAuth2ResourceServerSpec -> {
+                    oAuth2ResourceServerSpec.jwt(jwtSpec -> {
+                        final JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+                        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleExtractingGrantedAuthoritiesConverter());
 
-                    jwtSpec.jwtAuthenticationConverter(new ReactiveJwtAuthenticationConverterAdapter(converter));
-                });
-            })
+                        jwtSpec.jwtAuthenticationConverter(new ReactiveJwtAuthenticationConverterAdapter(converter));
+                    });
+                })
                 .cors(spec -> {
                     spec.configurationSource(corsConfigurationSource());
                 });

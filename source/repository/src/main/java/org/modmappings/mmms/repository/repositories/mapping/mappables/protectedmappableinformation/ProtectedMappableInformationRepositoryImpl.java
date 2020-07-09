@@ -6,9 +6,7 @@ import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
@@ -30,7 +28,7 @@ class ProtectedMappableInformationRepositoryImpl extends AbstractModMappingRepos
      * for mapping types.
      *
      * @param versionedMappableId The id of the versioned mappable for which protected mappable information is being looked up.
-     * @param pageable The pageable information for request.
+     * @param pageable            The pageable information for request.
      * @return Protected mappable information that indicates that the versioned mappable is locked for a given mapping type.
      */
     @Override
@@ -46,7 +44,7 @@ class ProtectedMappableInformationRepositoryImpl extends AbstractModMappingRepos
      * for versioned mappables.
      *
      * @param mappingTypeId The id of the mapping type for which protected mappable information is being looked up.
-     * @param pageable The paging and sorting information.
+     * @param pageable      The paging and sorting information.
      * @return Protected mappable information that indicates that the mapping type is locked for a given versioned mappable.
      */
     @Override
@@ -54,6 +52,6 @@ class ProtectedMappableInformationRepositoryImpl extends AbstractModMappingRepos
             final UUID mappingTypeId,
             final Pageable pageable
     ) {
-      return createPagedStarSingleWhereRequest("mapping_type_id", mappingTypeId, pageable);
+        return createPagedStarSingleWhereRequest("mapping_type_id", mappingTypeId, pageable);
     }
 }

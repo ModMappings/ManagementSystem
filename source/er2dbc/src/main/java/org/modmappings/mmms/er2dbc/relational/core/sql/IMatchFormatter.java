@@ -9,7 +9,7 @@ public interface IMatchFormatter {
     /**
      * Formats the match expression using the pattern and the target.
      *
-     * @param target The target to match against the pattern.
+     * @param target  The target to match against the pattern.
      * @param pattern The pattern to match the target against.
      * @return The formatted match sql statement.
      */

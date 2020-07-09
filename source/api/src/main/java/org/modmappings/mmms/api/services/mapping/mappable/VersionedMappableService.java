@@ -76,17 +76,17 @@ public class VersionedMappableService {
     /**
      * Look up all versioned mappables who match the given search criteria.
      *
-     * @param gameVersionId     The id of the game version. Null to ignore.
-     * @param mappableTypeDTO   The type of the mappable to look up. Null to ignore.
-     * @param classId           The id of the class to find versioned mappables in. Null to ignore.
-     * @param methodId          The id of the method to find versioned mappables in. Null to ignore.
-     * @param mappingId         The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
-     * @param mappingTypeId         The id of the mapping type to find the versioned mappables for. Null to ignore. Use full in combination with a input and output regex.
-     * @param mappingInputRegex A regex that is mapped against the input of the mapping. Null to ignore
+     * @param gameVersionId      The id of the game version. Null to ignore.
+     * @param mappableTypeDTO    The type of the mappable to look up. Null to ignore.
+     * @param classId            The id of the class to find versioned mappables in. Null to ignore.
+     * @param methodId           The id of the method to find versioned mappables in. Null to ignore.
+     * @param mappingId          The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
+     * @param mappingTypeId      The id of the mapping type to find the versioned mappables for. Null to ignore. Use full in combination with a input and output regex.
+     * @param mappingInputRegex  A regex that is mapped against the input of the mapping. Null to ignore
      * @param mappingOutputRegex A regex that is mapped against the output of the mapping. Null to ignore
-     * @param superTypeTargetId The id of the class to find the super types for. Null to ignore.
-     * @param subTypeTargetId   The id of the class to find the sub types for. Null to ignore.
-     * @param pageable          The pagination and sorting information for the request.
+     * @param superTypeTargetId  The id of the class to find the super types for. Null to ignore.
+     * @param subTypeTargetId    The id of the class to find the sub types for. Null to ignore.
+     * @param pageable           The pagination and sorting information for the request.
      * @return The page that returns the requested versioned mappables.
      */
     public Mono<Page<VersionedMappableDTO>> getAll(
@@ -117,9 +117,9 @@ public class VersionedMappableService {
     /**
      * Updates the versioned mappable DMO that has a given id, with the data passed in the DTO.
      *
-     * @param id The id of the dmo to update.
+     * @param id                        The id of the dmo to update.
      * @param versionedMappableToUpdate The data to update the dmo with.
-     * @param userIdSupplier The user id supplier that can be used to determine which user is updating the dmo.
+     * @param userIdSupplier            The user id supplier that can be used to determine which user is updating the dmo.
      * @return The updated versioned mappable in a Mono.
      */
     public Mono<VersionedMappableDTO> update(
@@ -134,13 +134,13 @@ public class VersionedMappableService {
                         .flatMap(currentlyProtectedTypes -> Flux.fromIterable(currentlyProtectedTypes)
                                 .filter(currentlyProtectedType -> !versionedMappableToUpdate.getLockedIn().contains(currentlyProtectedType.getMappingTypeId()))
                                 .flatMap(currentlyProtectedTypeToDelete -> protectedMappableInformationRepository.deleteById(currentlyProtectedTypeToDelete.getId())
-                                    .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Deleting protection information for: %s with mapping type: %s", currentlyProtectedTypeToDelete.getVersionedMappableId(), currentlyProtectedTypeToDelete.getMappingTypeId()))))
+                                        .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Deleting protection information for: %s with mapping type: %s", currentlyProtectedTypeToDelete.getVersionedMappableId(), currentlyProtectedTypeToDelete.getMappingTypeId()))))
                                 .then(Flux.fromIterable(versionedMappableToUpdate.getLockedIn())
                                         .filterWhen(newLockInId -> mappingTypeRepository.findById(newLockInId).filter(MappingTypeDMO::isVisible).filter(MappingTypeDMO::isEditable).hasElement())
                                         .filter(validNewLockInId -> currentlyProtectedTypes.stream().noneMatch(pmi -> pmi.getId() == validNewLockInId))
                                         .map(validNewLockInId -> new ProtectedMappableInformationDMO(id, validNewLockInId))
                                         .flatMap(newProtectionInformation -> protectedMappableInformationRepository.save(newProtectionInformation)
-                                            .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Creating new protection information for: %s with mapping type: %s", newProtectionInformation.getVersionedMappableId(), newProtectionInformation.getMappingTypeId()))))
+                                                .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Creating new protection information for: %s with mapping type: %s", newProtectionInformation.getVersionedMappableId(), newProtectionInformation.getMappingTypeId()))))
                                         .collectList()
                                 )
                         )
@@ -192,8 +192,7 @@ public class VersionedMappableService {
                 );
     }
 
-    private MappableTypeDMO toTypeDMO(final MappableTypeDTO dto)
-    {
+    private MappableTypeDMO toTypeDMO(final MappableTypeDTO dto) {
         if (dto == null)
             return null;
 

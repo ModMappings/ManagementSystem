@@ -2,7 +2,6 @@ package org.modmappings.mmms.api.services.core;
 
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
-import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.core.GameVersionDMO;
@@ -17,7 +16,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * Business layer service which handles the interactions of the API with the DataLayer.
@@ -60,10 +58,10 @@ public class GameVersionService {
      * Looks up multiple game versions, that match the search criteria.
      * The returned order is newest to oldest.
      *
-     * @param nameRegex The regular expression against which the name of the game version is matched.
+     * @param nameRegex  The regular expression against which the name of the game version is matched.
      * @param preRelease Indicates if preReleases need to be included, null indicates do not care.
-     * @param snapshot Indicates if snapshots need to be included, null indicates do not care.
-     * @param pageable The pagination and sorting logic for the request.
+     * @param snapshot   Indicates if snapshots need to be included, null indicates do not care.
+     * @param pageable   The pagination and sorting logic for the request.
      * @return A {@link Flux} with the game versions, or an errored {@link Flux} that indicates a failure.
      */
     public Mono<Page<GameVersionDTO>> getAll(final String nameRegex, final Boolean preRelease, final Boolean snapshot, final Pageable pageable) {

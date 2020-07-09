@@ -80,13 +80,13 @@ public class GameVersionDMO {
     @Override
     public String toString() {
         return "GameVersionDMO{" +
-                               "id=" + id +
-                               ", createdBy=" + createdBy +
-                               ", createdOn=" + createdOn +
-                               ", name='" + name + '\'' +
-                               ", isPreRelease=" + isPreRelease +
-                               ", isSnapshot=" + isSnapshot +
-                               '}';
+                "id=" + id +
+                ", createdBy=" + createdBy +
+                ", createdOn=" + createdOn +
+                ", name='" + name + '\'' +
+                ", isPreRelease=" + isPreRelease +
+                ", isSnapshot=" + isSnapshot +
+                '}';
     }
 
     @Override
