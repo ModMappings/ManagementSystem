@@ -25,8 +25,11 @@ public class OpenApiConfiguration {
     @Value("${spring.security.target.realm}")
     private String REALM_SEC;
 
+    @Value("${build.version:0.0.0-Dev}")
+    private String VERSION;
+
     @Bean
-    public OpenAPI buildModMappingsOpenAPISpecification(@Value("${springdoc.version:0.0.0-Dev}") final String appVersion) {
+    public OpenAPI buildModMappingsOpenAPISpecification() {
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes(Constants.MOD_MAPPINGS_OFFICIAL_AUTH, new SecurityScheme()
@@ -50,7 +53,7 @@ public class OpenApiConfiguration {
                 )
                 .info(new Info()
                         .title("ModMappings API")
-                        .version(appVersion)
+                        .version(VERSION)
                         .description("This is the api for ModMappings. It is currently in development and in an alpha stage.")
                         .license(new License()
                                 .name("GNU LESSER GENERAL PUBLIC LICENSE v3")

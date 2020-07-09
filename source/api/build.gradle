@@ -63,6 +63,12 @@ application {
     mainClassName = 'org.modmappings.mmms.api.MMMSApplication'
 }
 
+springBoot {
+    buildInfo()  // create  META-INF/build-info.properties
+}
+
+bootRun.dependsOn = [assemble]
+
 bootDistTar {
     archiveVersion = ''
 }
