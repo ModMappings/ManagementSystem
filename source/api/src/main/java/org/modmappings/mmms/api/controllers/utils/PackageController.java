@@ -81,9 +81,9 @@ public class PackageController {
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<String>> getAll(
-            final @RequestParam(value = "gameVersion") UUID gameVersion,
+            final @RequestParam(value = "gameVersion", required = false) UUID gameVersion,
             final @RequestParam(value = "release", required = false) UUID release,
-            final @RequestParam(value = "mappingType") UUID mappingType,
+            final @RequestParam(value = "mappingType", required = false) UUID mappingType,
             final @RequestParam(value = "packagePrefix", required = false) String packagePrefix,
             final @RequestParam(value = "minAdditionalPackageDepth", required = false) Integer minAdditionalPackageDepth,
             final @RequestParam(value = "maxAdditionalPackageDepth", required = false) Integer maxAdditionalPackageDepth,
