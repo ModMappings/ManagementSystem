@@ -28,6 +28,9 @@ pipeline {
     }
     post {
         success {
+            when {
+                branch 'master'
+            }
             node(null)
             {
                 script {
