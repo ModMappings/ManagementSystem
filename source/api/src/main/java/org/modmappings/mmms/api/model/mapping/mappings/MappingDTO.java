@@ -17,10 +17,6 @@ public class MappingDTO {
     private UUID versionedMappableId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the mapping type this mapping exists for.")
     private UUID mappingTypeId;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of parent class type if this is not a class type mapping.")
-    private UUID parentClassId;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of parent method type if this is a parameter type.")
-    private UUID parentMethodId;
     @Schema(description = "The input of the mapping.")
     private String input;
     @Schema(description = "The output of the mapping.")
@@ -30,14 +26,12 @@ public class MappingDTO {
     @Schema(description = "The distribution that the versioned mappable that is targeted by this mapping is in.")
     private DistributionDTO distribution;
 
-    public MappingDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID versionedMappableId, final UUID mappingTypeId, final UUID parentClassId, final UUID parentMethodId, final String input, final String output, final String documentation, final DistributionDTO distribution) {
+    public MappingDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID versionedMappableId, final UUID mappingTypeId, final String input, final String output, final String documentation, final DistributionDTO distribution) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
         this.versionedMappableId = versionedMappableId;
         this.mappingTypeId = mappingTypeId;
-        this.parentClassId = parentClassId;
-        this.parentMethodId = parentMethodId;
         this.input = input;
         this.output = output;
         this.documentation = documentation;
@@ -65,14 +59,6 @@ public class MappingDTO {
 
     public UUID getMappingTypeId() {
         return mappingTypeId;
-    }
-
-    public UUID getParentClassId() {
-        return parentClassId;
-    }
-
-    public UUID getParentMethodId() {
-        return parentMethodId;
     }
 
     public String getInput() {

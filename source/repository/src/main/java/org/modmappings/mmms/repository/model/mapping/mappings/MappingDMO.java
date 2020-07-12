@@ -20,8 +20,6 @@ public class MappingDMO {
     private Timestamp createdOn;
     private UUID versionedMappableId;
     private UUID mappingTypeId;
-    private UUID parentClassId;
-    private UUID parentMethodId;
     private String input;
     private String output;
     private String documentation;
@@ -34,8 +32,6 @@ public class MappingDMO {
             final Timestamp createdOn,
             final UUID versionedMappableId,
             final UUID mappingTypeId,
-            final UUID parentClassId,
-            final UUID parentMethodId,
             final String input,
             final String output,
             final String documentation,
@@ -45,8 +41,6 @@ public class MappingDMO {
         this.createdOn = createdOn;
         this.versionedMappableId = versionedMappableId;
         this.mappingTypeId = mappingTypeId;
-        this.parentClassId = parentClassId;
-        this.parentMethodId = parentMethodId;
         this.input = input;
         this.output = output;
         this.documentation = documentation;
@@ -57,8 +51,6 @@ public class MappingDMO {
             final UUID createdBy,
             final UUID versionedMappableId,
             final UUID mappingTypeId,
-            final UUID parentClassId,
-            final UUID parentMethodId,
             final String input,
             final String output,
             final String documentation,
@@ -68,8 +60,6 @@ public class MappingDMO {
         this.createdOn = Timestamp.from(Instant.now());
         this.versionedMappableId = versionedMappableId;
         this.mappingTypeId = mappingTypeId;
-        this.parentClassId = parentClassId;
-        this.parentMethodId = parentMethodId;
         this.input = input;
         this.output = output;
         this.documentation = documentation;
@@ -94,14 +84,6 @@ public class MappingDMO {
 
     public UUID getMappingTypeId() {
         return mappingTypeId;
-    }
-
-    public UUID getParentClassId() {
-        return parentClassId;
-    }
-
-    public UUID getParentMethodId() {
-        return parentMethodId;
     }
 
     public String getInput() {
