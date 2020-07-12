@@ -1,9 +1,9 @@
 package org.modmappings.mmms.api.services.core;
 
+import org.modmappings.mmms.api.converters.MappingTypeConverter;
 import org.modmappings.mmms.api.model.core.MappingTypeDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
-import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
 import org.slf4j.Logger;
@@ -33,11 +33,11 @@ public class MappingTypeService {
 
     private final Logger logger = LoggerFactory.getLogger(MappingTypeService.class);
     private final MappingTypeRepository repository;
-    private final UserLoggingService userLoggingService;
+    private final MappingTypeConverter mappingTypeConverter;
 
-    public MappingTypeService(final MappingTypeRepository repository, final UserLoggingService userLoggingService) {
+    public MappingTypeService(final MappingTypeRepository repository, final MappingTypeConverter mappingTypeConverter) {
         this.repository = repository;
-        this.userLoggingService = userLoggingService;
+        this.mappingTypeConverter = mappingTypeConverter;
     }
 
     /**
@@ -53,7 +53,7 @@ public class MappingTypeService {
     ) {
         return repository.findById(id, externallyVisibleOnly)
                 .doFirst(() -> logger.debug("Looking up a mapping type by id: {}", id))
-                .map(this::toDTO)
+                .map(this.mappingTypeConverter::toDTO)
                 .doOnNext(dto -> logger.debug("Found mapping type: {} with id: {}", dto.getName(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "MappingType")));
     }
@@ -81,20 +81,10 @@ public class MappingTypeService {
                 pageable)
                 .doFirst(() -> logger.debug("Looking up mapping types in search mode. Using parameters: {}, {}", nameRegex, editable))
                 .flatMap(page -> Flux.fromIterable(page)
-                        .map(this::toDTO)
+                        .map(this.mappingTypeConverter::toDTO)
                         .collectList()
                         .map(mappingTypes -> (Page<MappingTypeDTO>) new PageImpl<>(mappingTypes, page.getPageable(), page.getTotalElements())))
                 .doOnNext(page -> logger.debug("Found mapping types: {}", page))
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("MappingType")));
-    }
-
-    private MappingTypeDTO toDTO(final MappingTypeDMO dmo) {
-        return new MappingTypeDTO(
-                dmo.getId(),
-                dmo.getCreatedBy(),
-                dmo.getCreatedOn(),
-                dmo.getName(),
-                dmo.isEditable()
-        );
     }
 }

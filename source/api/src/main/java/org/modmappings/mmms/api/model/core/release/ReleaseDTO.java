@@ -33,30 +33,10 @@ public class ReleaseDTO {
     private boolean isSnapshot;
 
     @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap classes that are part of this release")
-    private Set<UUID> classMappings;
-
-    @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap methods that are part of this release")
-    private Set<UUID> methodMappings;
-
-    @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap fields that are part of this release")
-    private Set<UUID> fieldMappings;
-
-    @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the mappings which remap parameters that are part of this release")
-    private Set<UUID> parameterMappings;
-
-    @NotNull
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The ids of the comments which were made on this release.")
-    private Set<UUID> commentsMappings;
-
-    @NotNull
     @Schema(description = "The state of the release. Indicates how much of the release has been imported. Most releases have FIELD as final state. However PARAMETER is also possible.")
     private String state;
 
-    public ReleaseDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, @NotBlank final String name, @NotNull final UUID gameVersionId, @NotNull final UUID mappingType, final boolean isSnapshot, @NotNull final Set<UUID> classMappings, @NotNull final Set<UUID> methodMappings, @NotNull final Set<UUID> fieldMappings, @NotNull final Set<UUID> parameterMappings, @NotNull final Set<UUID> commentsMappings, final String state) {
+    public ReleaseDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, @NotBlank final String name, @NotNull final UUID gameVersionId, @NotNull final UUID mappingType, final boolean isSnapshot, final String state) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -64,11 +44,6 @@ public class ReleaseDTO {
         this.gameVersionId = gameVersionId;
         this.mappingType = mappingType;
         this.isSnapshot = isSnapshot;
-        this.classMappings = classMappings;
-        this.methodMappings = methodMappings;
-        this.fieldMappings = fieldMappings;
-        this.parameterMappings = parameterMappings;
-        this.commentsMappings = commentsMappings;
         this.state = state;
     }
 
@@ -129,46 +104,6 @@ public class ReleaseDTO {
 
     public void setSnapshot(final boolean snapshot) {
         isSnapshot = snapshot;
-    }
-
-    public Set<UUID> getClassMappings() {
-        return classMappings;
-    }
-
-    public void setClassMappings(final Set<UUID> classMappings) {
-        this.classMappings = classMappings;
-    }
-
-    public Set<UUID> getMethodMappings() {
-        return methodMappings;
-    }
-
-    public void setMethodMappings(final Set<UUID> methodMappings) {
-        this.methodMappings = methodMappings;
-    }
-
-    public Set<UUID> getFieldMappings() {
-        return fieldMappings;
-    }
-
-    public void setFieldMappings(final Set<UUID> fieldMappings) {
-        this.fieldMappings = fieldMappings;
-    }
-
-    public Set<UUID> getParameterMappings() {
-        return parameterMappings;
-    }
-
-    public void setParameterMappings(final Set<UUID> parameterMappings) {
-        this.parameterMappings = parameterMappings;
-    }
-
-    public Set<UUID> getCommentsMappings() {
-        return commentsMappings;
-    }
-
-    public void setCommentsMappings(final Set<UUID> commentsMappings) {
-        this.commentsMappings = commentsMappings;
     }
 
     public String getState() {

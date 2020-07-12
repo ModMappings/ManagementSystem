@@ -1,11 +1,11 @@
 package org.modmappings.mmms.api.services.mapping.mappable;
 
+import org.modmappings.mmms.api.converters.mapping.mappable.MappableConverter;
+import org.modmappings.mmms.api.converters.mapping.mappable.MappableTypeConverter;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableDMO;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.repositories.mapping.mappables.mappable.MappableRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,13 @@ public class MappableService {
 
     private final Logger logger = LoggerFactory.getLogger(MappableService.class);
     private final MappableRepository repository;
+    private final MappableConverter mappableConverter;
+    private final MappableTypeConverter mappableTypeConverter;
 
-    public MappableService(final MappableRepository repository) {
+    public MappableService(final MappableRepository repository, final MappableConverter mappableConverter, final MappableTypeConverter mappableTypeConverter) {
         this.repository = repository;
+        this.mappableConverter = mappableConverter;
+        this.mappableTypeConverter = mappableTypeConverter;
     }
 
     /**
@@ -48,7 +52,7 @@ public class MappableService {
     public Mono<MappableDTO> getBy(final UUID id) {
         return repository.findById(id)
                 .doFirst(() -> logger.debug("Looking up a mappable by id: {}", id))
-                .map(this::toDTO)
+                .map(this.mappableConverter::toDTO)
                 .doOnNext(dto -> logger.debug("Found mappable: {} with id: {}", dto.getType(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mappable")));
     }
@@ -65,38 +69,15 @@ public class MappableService {
             final Pageable pageable
     ) {
         return repository.findAllBy(
-                toTypeDMO(type),
+                this.mappableTypeConverter.toDMO(type),
                 pageable
         )
                 .doFirst(() -> logger.debug("Looking up mappables."))
                 .flatMap(page -> Flux.fromIterable(page)
-                        .map(this::toDTO)
+                        .map(this.mappableConverter::toDTO)
                         .collectList()
                         .map(mappables -> (Page<MappableDTO>) new PageImpl<>(mappables, page.getPageable(), page.getTotalElements())))
                 .doOnNext(page -> logger.debug("Found mappables: {}", page))
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mappable")));
-    }
-
-    private MappableDTO toDTO(final MappableDMO dmo) {
-        return new MappableDTO(
-                dmo.getId(),
-                dmo.getCreatedBy(),
-                dmo.getCreatedOn(),
-                this.toTypeDTO(dmo.getType())
-        );
-    }
-
-    private MappableTypeDTO toTypeDTO(final MappableTypeDMO dmo) {
-        if (dmo == null)
-            return null;
-
-        return MappableTypeDTO.valueOf(MappableTypeDTO.class, dmo.name());
-    }
-
-    private MappableTypeDMO toTypeDMO(final MappableTypeDTO dto) {
-        if (dto == null)
-            return null;
-
-        return MappableTypeDMO.valueOf(MappableTypeDMO.class, dto.name());
     }
 }

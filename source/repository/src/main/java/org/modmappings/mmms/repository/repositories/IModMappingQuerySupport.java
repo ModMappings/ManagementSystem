@@ -9,20 +9,29 @@ import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.data.r2dbc.core.PreparedOperation;
+import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
+import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.where;
-import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.parameter;
+import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.*;
 
 public interface IModMappingQuerySupport {
 
@@ -112,6 +121,13 @@ public interface IModMappingQuerySupport {
                         .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
     }
 
+    default <R> Mono<Page<R>> createPagedRequestWithCountType(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, Class<?> countType, final Pageable pageable) {
+        return createFindRequest(selectSpecWithJoin, resultType, pageable)
+                .collectList()
+                .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, countType)
+                        .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
+    }
+
     default <R> Mono<Page<R>> createPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<R> resultType, final Pageable pageable) {
         Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
         Assert.notNull(pageable, "Pageable most not be null!");
@@ -125,6 +141,21 @@ public interface IModMappingQuerySupport {
         selectSpec = selectSpecBuilder.apply(selectSpec);
 
         return createPagedRequest(selectSpec, tableName, resultType, pageable);
+    }
+
+    default <R> Mono<Page<R>> createPagedRequestWithCountType(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<R> resultType, final Class<?> countType, final Pageable pageable) {
+        Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
+        Assert.notNull(pageable, "Pageable most not be null!");
+
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
+        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(tableName);
+
+        selectSpec = selectSpecBuilder.apply(selectSpec);
+
+        return createPagedRequestWithCountType(selectSpec, tableName, resultType, countType, pageable);
     }
 
     default <T> Mono<Page<T>> createPagedStarRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<T> resultType, final Pageable pageable) {
@@ -184,6 +215,19 @@ public interface IModMappingQuerySupport {
         }
 
         return criteria;
+    }
+
+    default Collection<Expression> createSelectStatementsForCompoundEntity(final Class<?> compoundEntity) {
+        return StreamSupport.stream(getAccessStrategy().getConverter().getMappingContext().getRequiredPersistentEntity(compoundEntity).spliterator(), false)
+                .filter(PersistentProperty::isEntity)
+                .flatMap(this::createSelectStatementsForRelationalProperty)
+                .collect(Collectors.toList());
+    }
+
+    private Stream<Expression> createSelectStatementsForRelationalProperty(final RelationalPersistentProperty property) {
+        return StreamSupport.stream(getAccessStrategy().getConverter().getMappingContext().getRequiredPersistentEntity(property.getActualType()).spliterator(), false)
+                .map(persistentProperty -> aliased(reference(persistentProperty.getOwner().getTableName(), persistentProperty.getColumnName()),
+                        String.format("%s_%s", property.getName(), persistentProperty.getColumnName())));
     }
 
     default String getIdColumnName(final Class<?> entityType) {

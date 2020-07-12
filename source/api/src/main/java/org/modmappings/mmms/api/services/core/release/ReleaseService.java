@@ -1,5 +1,6 @@
 package org.modmappings.mmms.api.services.core.release;
 
+import org.modmappings.mmms.api.converters.release.ReleaseConverter;
 import org.modmappings.mmms.api.model.core.release.ReleaseDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
@@ -47,16 +48,16 @@ public class ReleaseService {
     private final ReleaseComponentRepository releaseComponentRepository;
     private final MappingRepository mappingRepository;
     private final MappingTypeRepository mappingTypeRepository;
-    private final CommentRepository commentRepository;
+    private final ReleaseConverter releaseConverter;
 
     private final UserLoggingService userLoggingService;
 
-    public ReleaseService(final ReleaseRepository repository, final ReleaseComponentRepository releaseComponentRepository, final MappingRepository mappingRepository, final MappingTypeRepository mappingTypeRepository, final CommentRepository commentRepository, final UserLoggingService userLoggingService) {
+    public ReleaseService(final ReleaseRepository repository, final ReleaseComponentRepository releaseComponentRepository, final MappingRepository mappingRepository, final MappingTypeRepository mappingTypeRepository, final ReleaseConverter releaseConverter, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.releaseComponentRepository = releaseComponentRepository;
         this.mappingRepository = mappingRepository;
         this.mappingTypeRepository = mappingTypeRepository;
-        this.commentRepository = commentRepository;
+        this.releaseConverter = releaseConverter;
         this.userLoggingService = userLoggingService;
     }
 
@@ -75,7 +76,7 @@ public class ReleaseService {
                 .doFirst(() -> logger.debug("Looking up a release by id: {}", id))
                 .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
                         .map(MappingTypeDMO::isVisible)) //Only return a release when it is supposed to be visible.
-                .flatMap(this::toDTO)
+                .map(this.releaseConverter::toDTO)
                 .doOnNext(dto -> logger.debug("Found release: {} with id: {}", dto.getName(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Release")));
     }
@@ -106,7 +107,7 @@ public class ReleaseService {
         return repository.findAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable)
                 .doFirst(() -> logger.debug("Looking up releases: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
                 .flatMap(page -> Flux.fromIterable(page)
-                        .flatMap(this::toDTO)
+                        .map(this.releaseConverter::toDTO)
                         .collectList()
                         .map(releases -> (Page<ReleaseDTO>) new PageImpl<>(releases, page.getPageable(), page.getTotalElements())))
                 .doOnNext(page -> logger.debug("Found releases: {}", page))
@@ -152,7 +153,7 @@ public class ReleaseService {
                 .filter(MappingTypeDMO::isVisible)
                 .flatMap(mdto -> Mono.just(newRelease)
                         .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new release: %s", newRelease.getName())))
-                        .map(dto -> this.toNewDMO(gameVersionId, mappingTypeId, dto, userIdSupplier))
+                        .map(dto -> this.releaseConverter.toNewDMO(gameVersionId, mappingTypeId, dto, userIdSupplier))
                         .flatMap(repository::save) //Creates the release object in the database
                         .flatMap(dmo -> mappingRepository.findAllOrLatestFor(true, null, null, null, null, null, mappingTypeId, gameVersionId, null, true, Pageable.unpaged()) // Gets all latest mappings of the mapping type and game version.
                                 .flatMapIterable(Function.identity()) //Unwrap the page.
@@ -161,7 +162,7 @@ public class ReleaseService {
                                 .map(releaseComponentRepository::saveAll) //Saves them all in one go in the DB.
                                 .then()
                                 .map(aVoid -> dmo)) //Return the original DMO again so we can continue with with construction of a DTO from it.
-                        .flatMap(this::toDTO) //Create the DTO from it.
+                        .map(this.releaseConverter::toDTO) //Create the DTO from it.
                         .doOnNext(dto -> userLoggingService.warn(logger, userIdSupplier, String.format("Created new release: %s with id: %s", dto.getName(), dto.getId())))
                         .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_release_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("Release", "Name"))));
     }
@@ -184,85 +185,11 @@ public class ReleaseService {
                 .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating release: %s", idToUpdate)))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(newRelease.getId(), "Release")))
                 .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating db release: %s with id: %s, and data: %s", dmo.getName(), dmo.getId(), newRelease)))
-                .doOnNext(dmo -> this.updateDMO(newRelease, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
+                .doOnNext(dmo -> this.releaseConverter.updateDMO(newRelease, dmo)) //We use doOnNext here since this maps straight into the existing dmo that we just pulled from the DB to update.
                 .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updated db release to: %s", dmo)))
                 .flatMap(dmo -> repository.save(dmo)
                         .onErrorResume(throwable -> throwable.getMessage().contains("duplicate key value violates unique constraint \"IX_release_name\""), dive -> Mono.error(new InsertionFailureDueToDuplicationException("Release", "Name"))))
-                .flatMap(this::toDTO)
+                .map(this.releaseConverter::toDTO)
                 .doOnNext(dto -> userLoggingService.warn(logger, userIdSupplier, String.format("Updated release: %s with id: %s, to data: %s", dto.getName(), dto.getId(), dto)));
-    }
-
-    /**
-     * Creates a new release DTO from the DMO.
-     * Looks up the relevant components of the release in the db.
-     *
-     * @param dmo The DMO to turn into a DTO.
-     * @return The release DMO in a Mono.
-     */
-    private Mono<ReleaseDTO> toDTO(final ReleaseDMO dmo) {
-        return releaseComponentRepository.findAllMappingIdsByReleaseIdForClass(dmo.getId(), Pageable.unpaged())
-                .flatMapIterable(Function.identity())
-                .collect(Collectors.toSet())
-                .flatMap(classComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForMethod(dmo.getId(), Pageable.unpaged())
-                        .flatMapIterable(Function.identity())
-                        .collect(Collectors.toSet())
-                        .flatMap(methodComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForField(dmo.getId(), Pageable.unpaged())
-                                .flatMapIterable(Function.identity())
-                                .collect(Collectors.toSet())
-                                .flatMap(fieldComponents -> releaseComponentRepository.findAllMappingIdsByReleaseIdForParameter(dmo.getId(), Pageable.unpaged())
-                                        .flatMapIterable(Function.identity())
-                                        .collect(Collectors.toSet())
-                                        .flatMap(parameterComponents -> commentRepository.findAllForRelease(dmo.getId(), Pageable.unpaged())
-                                                .flatMapIterable(Function.identity())
-                                                .collect(Collectors.toSet())
-                                                .map(comments -> comments.stream().map(CommentDMO::getId).collect(Collectors.toSet()))
-                                                .map(comments -> new ReleaseDTO(
-                                                        dmo.getId(),
-                                                        dmo.getCreatedBy(),
-                                                        dmo.getCreatedOn(),
-                                                        dmo.getName(),
-                                                        dmo.getGameVersionId(),
-                                                        dmo.getMappingTypeId(),
-                                                        dmo.isSnapshot(),
-                                                        classComponents,
-                                                        methodComponents,
-                                                        fieldComponents,
-                                                        parameterComponents,
-                                                        comments,
-                                                        dmo.getState()))))));
-    }
-
-    /**
-     * Creates a new initial DMO from the given parameters.
-     * Pulls the name and snapshot state from the DTO passed in,
-     * additionally pulls the creating user id from the supplier.
-     *
-     * @param gameVersionId  The id of the game version to create a release for.
-     * @param mappingTypeId  The id of the mapping type to create a release for.
-     * @param dto            The DTO to pull name and snapshot state from.
-     * @param userIdSupplier The supplier for the ID of the creating user.
-     * @return The initial DMO with the data.
-     */
-    private ReleaseDMO toNewDMO(final UUID gameVersionId, final UUID mappingTypeId, final ReleaseDTO dto, final Supplier<UUID> userIdSupplier) {
-        return new ReleaseDMO(
-                userIdSupplier.get(),
-                dto.getName(),
-                gameVersionId,
-                mappingTypeId,
-                dto.isSnapshot(),
-                dto.getState()
-        );
-    }
-
-    /**
-     * Updates an existing DMO with information from the DTO.
-     *
-     * @param dto The DTO to pull information from.
-     * @param dmo The DMO to write information into.
-     */
-    private void updateDMO(final ReleaseDTO dto, final ReleaseDMO dmo) {
-        dmo.setName(dto.getName());
-        dmo.setSnapshot(dto.isSnapshot());
-        dmo.setState(dto.getState());
     }
 }

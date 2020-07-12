@@ -79,7 +79,10 @@ public class VersionedMappableDMO {
             final String type,
             final UUID parentClassId,
             final String descriptor,
-            final UUID parentMethodId, final String signature, final boolean external, final int index) {
+            final UUID parentMethodId,
+            final String signature,
+            final boolean external,
+            final int index) {
         this.signature = signature;
         this.external = external;
         this.id = null;

@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.modmappings.mmms.api.model.mapping.mappable.DetailedMappingDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.model.mapping.mappings.MappingDTO;
+import org.modmappings.mmms.api.services.mapping.mappings.DetailedMappingService;
 import org.modmappings.mmms.api.services.mapping.mappings.MappingService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.services.utils.user.UserService;
@@ -35,10 +37,12 @@ import java.util.UUID;
 public class MappingController {
 
     private final MappingService mappingService;
+    private final DetailedMappingService detailedMappingService;
     private final UserService userService;
 
-    public MappingController(final MappingService mappingService, final UserService userService) {
+    public MappingController(final MappingService mappingService, final DetailedMappingService detailedMappingService, final UserService userService) {
         this.mappingService = mappingService;
+        this.detailedMappingService = detailedMappingService;
         this.userService = userService;
     }
 
@@ -157,6 +161,99 @@ public class MappingController {
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, true, pageable)
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
+    }
+
+    @Operation(
+            operationId = "getDetailedMappingsBySearchCriteria",
+            summary = "Gets all known mappings, and their metadata, and finds the ones that match the given parameters.",
+            parameters = {
+                    @Parameter(
+                            name = "latestOnly",
+                            in = ParameterIn.QUERY,
+                            description = "Indicates if only latest mappings for a given versioned mappable should be taken into account. Defaults to true if not supplied.",
+                            example = "true"
+                    ),
+                    @Parameter(
+                            name = "versionedMappableId",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the versioned mappable to filter on.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "releaseId",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the release to filter on.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "mappableType",
+                            in = ParameterIn.QUERY,
+                            description = "The mappable type to filter on.",
+                            example = "CLASS"
+                    ),
+                    @Parameter(
+                            name = "inputRegex",
+                            in = ParameterIn.QUERY,
+                            description = "The regular expression to match the input of the mapping against.",
+                            example = ".*"
+                    ),
+                    @Parameter(
+                            name = "outputRegex",
+                            in = ParameterIn.QUERY,
+                            description = "The regular expression to match the output of the mapping against.",
+                            example = ".*"
+                    ),
+                    @Parameter(
+                            name = "mappingTypeId",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the mapping type to filter on.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "gameVersionId",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the game version to filter on.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "createdBy",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the user who created a mapping to filter on.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Returns all mappings, and their metadata, in the database, that match the search criteria."),
+            @ApiResponse(responseCode = "404",
+                    description = "Indicates that no mapping exists in the database.",
+                    content = {
+                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
+                                    schema = @Schema()),
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema())
+                    })
+    })
+    @GetMapping(value = "detailed", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PageableAsQueryParam
+    public Mono<Page<DetailedMappingDTO>> getAllInstanced(
+            final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") boolean latestOnly,
+            final @RequestParam(value = "versionedMappableId", required = false) UUID versionedMappableId,
+            final @RequestParam(value = "releaseId", required = false) UUID releaseId,
+            final @RequestParam(value = "mappableType", required = false) MappableTypeDTO mappableType,
+            final @RequestParam(value = "inputRegex", required = false) String inputRegex,
+            final @RequestParam(value = "outputRegex", required = false) String outputRegex,
+            final @RequestParam(value = "mappingTypeId", required = false) UUID mappingTypeId,
+            final @RequestParam(value = "gameVersionId", required = false) UUID gameVersionId,
+            final @RequestParam(value = "createdBy", required = false) UUID userId,
+            final @PageableDefault(size = 25) Pageable pageable,
+            final ServerHttpResponse response) {
+        return detailedMappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

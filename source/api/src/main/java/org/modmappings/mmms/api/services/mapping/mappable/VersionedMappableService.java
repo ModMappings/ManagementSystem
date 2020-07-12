@@ -1,8 +1,9 @@
 package org.modmappings.mmms.api.services.mapping.mappable;
 
+import org.modmappings.mmms.api.converters.mapping.mappable.MappableTypeConverter;
+import org.modmappings.mmms.api.converters.mapping.mappable.VersionedMappableConverter;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.VersionedMappableDTO;
-import org.modmappings.mmms.api.model.mapping.mappable.VisibilityDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
@@ -48,14 +49,19 @@ public class VersionedMappableService {
     private final ProtectedMappableInformationRepository protectedMappableInformationRepository;
     private final MappingTypeRepository mappingTypeRepository;
 
+    private final VersionedMappableConverter versionedMappableConverter;
+    private final MappableTypeConverter mappableTypeConverter;
+
     private final UserLoggingService userLoggingService;
 
-    public VersionedMappableService(final VersionedMappableRepository repository, final InheritanceDataRepository inheritanceDataRepository, final MappableRepository mappableRepository, final ProtectedMappableInformationRepository protectedMappableInformationRepository, final MappingTypeRepository mappingTypeRepository, final UserLoggingService userLoggingService) {
+    public VersionedMappableService(final VersionedMappableRepository repository, final InheritanceDataRepository inheritanceDataRepository, final MappableRepository mappableRepository, final ProtectedMappableInformationRepository protectedMappableInformationRepository, final MappingTypeRepository mappingTypeRepository, final VersionedMappableConverter versionedMappableConverter, final MappableTypeConverter mappableTypeConverter, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.inheritanceDataRepository = inheritanceDataRepository;
         this.mappableRepository = mappableRepository;
         this.protectedMappableInformationRepository = protectedMappableInformationRepository;
         this.mappingTypeRepository = mappingTypeRepository;
+        this.versionedMappableConverter = versionedMappableConverter;
+        this.mappableTypeConverter = mappableTypeConverter;
         this.userLoggingService = userLoggingService;
     }
 
@@ -103,7 +109,7 @@ public class VersionedMappableService {
             final Pageable pageable
     ) {
         return repository.findAllFor(
-                gameVersionId, toTypeDMO(mappableTypeDTO), classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, true, pageable
+                gameVersionId, this.mappableTypeConverter.toDMO(mappableTypeDTO), classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, true, pageable
         )
                 .doFirst(() -> logger.debug("Looking up mappables."))
                 .flatMap(page -> Flux.fromIterable(page)
@@ -150,59 +156,22 @@ public class VersionedMappableService {
     }
 
     private Mono<VersionedMappableDTO> toDTO(final VersionedMappableDMO dmo) {
-        return mappableRepository.findById(dmo.getMappableId())
-                .flatMap(mappableDMO -> inheritanceDataRepository.findAllForSuperType(dmo.getId(), Pageable.unpaged())
+        return this.versionedMappableConverter.toDTO(
+                dmo,
+                mappableRepository.findById(dmo.getMappableId()),
+                inheritanceDataRepository.findAllForSuperType(dmo.getId(), Pageable.unpaged())
                         .flatMapIterable(Function.identity())
-                        .map(InheritanceDataDMO::getSubTypeVersionedMappableId)
-                        .collectList()
-                        .flatMap(superTypeIds -> inheritanceDataRepository.findAllForSubType(dmo.getId(), Pageable.unpaged())
-                                .flatMapIterable(Function.identity())
-                                .map(InheritanceDataDMO::getSuperTypeVersionedMappableId)
-                                .collectList()
-                                .flatMap(subTypeIds -> protectedMappableInformationRepository.findAllByVersionedMappable(dmo.getId(), Pageable.unpaged())
-                                        .flatMapIterable(Function.identity())
-                                        .map(ProtectedMappableInformationDMO::getMappingTypeId)
-                                        .filterWhen(mappingTypeId -> mappingTypeRepository.findById(mappingTypeId)
-                                                .filter(MappingTypeDMO::isVisible)
-                                                .hasElement()
-                                        )
-                                        .collectList()
-                                        .map(lockedIds -> new VersionedMappableDTO(
-                                                dmo.getId(),
-                                                dmo.getCreatedBy(),
-                                                dmo.getCreatedOn(),
-                                                dmo.getGameVersionId(),
-                                                dmo.getMappableId(),
-                                                dmo.getParentClassId(),
-                                                dmo.getParentMethodId(),
-                                                toVisibilityDTO(dmo.getVisibility()),
-                                                dmo.isStatic(),
-                                                dmo.getType(),
-                                                dmo.getDescriptor(),
-                                                dmo.getSignature(),
-                                                dmo.getIndex(),
-                                                lockedIds,
-                                                mappableDMO.getType() == MappableTypeDMO.CLASS ? superTypeIds : null,
-                                                mappableDMO.getType() == MappableTypeDMO.CLASS ? subTypeIds : null,
-                                                mappableDMO.getType() == MappableTypeDMO.METHOD ? superTypeIds : null,
-                                                mappableDMO.getType() == MappableTypeDMO.METHOD ? subTypeIds : null))
-                                )
+                        .map(InheritanceDataDMO::getSubTypeVersionedMappableId),
+                inheritanceDataRepository.findAllForSubType(dmo.getId(), Pageable.unpaged())
+                        .flatMapIterable(Function.identity())
+                        .map(InheritanceDataDMO::getSuperTypeVersionedMappableId),
+                protectedMappableInformationRepository.findAllByVersionedMappable(dmo.getId(), Pageable.unpaged())
+                        .flatMapIterable(Function.identity())
+                        .map(ProtectedMappableInformationDMO::getMappingTypeId)
+                        .filterWhen(mappingTypeId -> mappingTypeRepository.findById(mappingTypeId)
+                                .filter(MappingTypeDMO::isVisible)
+                                .hasElement()
                         )
-
-                );
-    }
-
-    private MappableTypeDMO toTypeDMO(final MappableTypeDTO dto) {
-        if (dto == null)
-            return null;
-
-        return MappableTypeDMO.valueOf(dto.name());
-    }
-
-    private VisibilityDTO toVisibilityDTO(final VisibilityDMO dmo) {
-        if (dmo == null)
-            return null;
-
-        return VisibilityDTO.valueOf(VisibilityDTO.class, dmo.name());
+        );
     }
 }

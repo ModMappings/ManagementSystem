@@ -1,5 +1,6 @@
 package org.modmappings.mmms.api.services.core;
 
+import org.modmappings.mmms.api.converters.GameVersionConverter;
 import org.modmappings.mmms.api.model.core.GameVersionDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
@@ -33,11 +34,11 @@ public class GameVersionService {
 
     private final Logger logger = LoggerFactory.getLogger(GameVersionService.class);
     private final GameVersionRepository repository;
-    private final UserLoggingService userLoggingService;
+    private final GameVersionConverter gameVersionConverter;
 
-    public GameVersionService(final GameVersionRepository repository, final UserLoggingService userLoggingService) {
+    public GameVersionService(final GameVersionRepository repository, final GameVersionConverter gameVersionConverter) {
         this.repository = repository;
-        this.userLoggingService = userLoggingService;
+        this.gameVersionConverter = gameVersionConverter;
     }
 
     /**
@@ -49,7 +50,7 @@ public class GameVersionService {
     public Mono<GameVersionDTO> getBy(final UUID id) {
         return repository.findById(id)
                 .doFirst(() -> logger.debug("Looking up a game version by id: {}", id))
-                .map(this::toDTO)
+                .map(this.gameVersionConverter::toDTO)
                 .doOnNext(dto -> logger.debug("Found game version: {} with id: {}", dto.getName(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "GameVersion")));
     }
@@ -72,21 +73,10 @@ public class GameVersionService {
                 pageable)
                 .doFirst(() -> logger.debug("Looking up game versions in search mode. Using parameters: {}, {}, {}", nameRegex, preRelease, snapshot))
                 .flatMap(page -> Flux.fromIterable(page)
-                        .map(this::toDTO)
+                        .map(this.gameVersionConverter::toDTO)
                         .collectList()
                         .map(gameVersions -> (Page<GameVersionDTO>) new PageImpl<>(gameVersions, page.getPageable(), page.getTotalElements())))
                 .doOnNext(page -> logger.debug("Found game version: {}", page))
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("GameVersion")));
-    }
-
-    private GameVersionDTO toDTO(final GameVersionDMO dmo) {
-        return new GameVersionDTO(
-                dmo.getId(),
-                dmo.getCreatedBy(),
-                dmo.getCreatedOn(),
-                dmo.getName(),
-                dmo.isPreRelease(),
-                dmo.isSnapshot()
-        );
     }
 }

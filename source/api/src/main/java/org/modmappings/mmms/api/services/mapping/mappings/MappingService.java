@@ -1,15 +1,13 @@
 package org.modmappings.mmms.api.services.mapping.mappings;
 
+import org.modmappings.mmms.api.converters.mapping.mappable.MappableTypeConverter;
+import org.modmappings.mmms.api.converters.mapping.mappings.MappingConverter;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
-import org.modmappings.mmms.api.model.mapping.mappings.DistributionDTO;
 import org.modmappings.mmms.api.model.mapping.mappings.MappingDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
-import org.modmappings.mmms.repository.model.mapping.mappings.DistributionDMO;
-import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
 import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
 import org.modmappings.mmms.repository.repositories.mapping.mappings.mapping.MappingRepository;
 import org.slf4j.Logger;
@@ -42,11 +40,16 @@ public class MappingService {
     private final MappingRepository repository;
     private final MappingTypeRepository mappingTypeRepository;
 
+    private final MappingConverter mappingConverter;
+    private final MappableTypeConverter mappableTypeConverter;
+
     private final UserLoggingService userLoggingService;
 
-    public MappingService(final MappingRepository repository, final MappingTypeRepository mappingTypeRepository, final UserLoggingService userLoggingService) {
+    public MappingService(final MappingRepository repository, final MappingTypeRepository mappingTypeRepository, final MappingConverter mappingConverter, final MappableTypeConverter mappableTypeConverter, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.mappingTypeRepository = mappingTypeRepository;
+        this.mappingConverter = mappingConverter;
+        this.mappableTypeConverter = mappableTypeConverter;
         this.userLoggingService = userLoggingService;
     }
 
@@ -66,7 +69,7 @@ public class MappingService {
                 .doFirst(() -> logger.debug("Looking up a mapping by id: {}", id))
                 .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
                         .map(MappingTypeDMO::isVisible)) //Only return a mapping when it is supposed to be visible.
-                .map(this::toDTO)
+                .map(this.mappingConverter::toDTO)
                 .doOnNext(dto -> logger.debug("Found mapping: {}-{} with id: {}", dto.getInput(), dto.getOutput(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mapping")));
     }
@@ -98,10 +101,10 @@ public class MappingService {
                                            final UUID userId,
                                            final boolean externallyVisibleOnly,
                                            final Pageable pageable) {
-        return repository.findAllOrLatestFor(latestOnly, versionedMappableId, releaseId, toMappableTypeDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, externallyVisibleOnly, pageable)
+        return repository.findAllOrLatestFor(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, externallyVisibleOnly, pageable)
                 .doFirst(() -> logger.debug("Looking up mappings: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, externallyVisibleOnly, pageable))
                 .flatMap(page -> Flux.fromIterable(page)
-                        .map(this::toDTO)
+                        .map(this.mappingConverter::toDTO)
                         .collectList()
                         .map(mappings -> (Page<MappingDTO>) new PageImpl<>(mappings, page.getPageable(), page.getTotalElements())))
                 .doOnNext(page -> logger.debug("Found mappings: {}", page))
@@ -127,95 +130,9 @@ public class MappingService {
                 .filter(MappingTypeDMO::isVisible)
                 .flatMap(mdto -> Mono.just(newMappingDto)
                         .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new mapping: %s-%s", newMappingDto.getInput(), newMappingDto.getOutput())))
-                        .map(dto -> this.toNewDMO(versionedMappableId, mappingTypeId, dto, userIdSupplier))
+                        .map(dto -> this.mappingConverter.toNewDMO(versionedMappableId, mappingTypeId, dto, userIdSupplier))
                         .flatMap(repository::save) //Creates the mapping object in the database
-                        .map(this::toDTO) //Create the DTO from it.
+                        .map(this.mappingConverter::toDTO) //Create the DTO from it.
                         .doOnNext(dto -> userLoggingService.warn(logger, userIdSupplier, String.format("Created new mapping: %s-%s with id: %s", dto.getInput(), dto.getOutput(), dto.getId()))));
-    }
-
-    /**
-     * Creates a new mapping DTO from the DMO.
-     * Looks up the relevant components of the mapping in the db.
-     *
-     * @param dmo The DMO to turn into a DTO.
-     * @return The mapping DMO in a Mono.
-     */
-    private MappingDTO toDTO(final MappingDMO dmo) {
-        return new MappingDTO(
-                dmo.getId(),
-                dmo.getCreatedBy(),
-                dmo.getCreatedOn(),
-                dmo.getVersionedMappableId(),
-                dmo.getMappingTypeId(),
-                dmo.getInput(),
-                dmo.getOutput(),
-                dmo.getDocumentation(),
-                toDistributionDTO(dmo.getDistribution())
-        );
-    }
-
-    /**
-     * Converts a given distributions dmo value into a valid dto.
-     *
-     * @param dmo The dmo to convert.
-     * @return Returns the dto value of the given dmo. If null is passed in then {@link DistributionDTO#UNKNOWN} is returned.
-     */
-    private DistributionDTO toDistributionDTO(final DistributionDMO dmo) {
-        if (dmo == null)
-            return DistributionDTO.UNKNOWN;
-
-        return DistributionDTO.valueOf(dmo.name());
-    }
-
-    /**
-     * Creates a new initial DMO from the given parameters.
-     * Pulls the mapping data from the DTO passed in,
-     * additionally pulls the creating user id from the supplier.
-     *
-     * @param versionedMappableId The id of the versioned mappable to create a mapping for.
-     * @param mappingTypeId       The id of the mapping type to create a mapping for.
-     * @param dto                 The DTO to pull mapping data from.
-     * @param userIdSupplier      The supplier for the ID of the creating user.
-     * @return The initial DMO with the data.
-     */
-    private MappingDMO toNewDMO(final UUID versionedMappableId,
-                                final UUID mappingTypeId,
-                                final MappingDTO dto,
-                                final Supplier<UUID> userIdSupplier) {
-        return new MappingDMO(
-                userIdSupplier.get(),
-                versionedMappableId,
-                mappingTypeId,
-                dto.getInput(),
-                dto.getOutput(),
-                dto.getDocumentation(),
-                toDistributionDMO(dto.getDistribution())
-        );
-    }
-
-    /**
-     * Converts a given mappable type dto value into a valid dmo.
-     *
-     * @param dto The dto to convert.
-     * @return Returns the dmo value of the given dto. If null is passed in then null is returned.
-     */
-    private MappableTypeDMO toMappableTypeDMO(final MappableTypeDTO dto) {
-        if (dto == null)
-            return null;
-
-        return MappableTypeDMO.valueOf(dto.name());
-    }
-
-    /**
-     * Converts a given distributions dto value into a valid dmo.
-     *
-     * @param dto The dto to convert.
-     * @return Returns the dmo value of the given dto. If null is passed in then {@link DistributionDMO#UNKNOWN} is returned.
-     */
-    private DistributionDMO toDistributionDMO(final DistributionDTO dto) {
-        if (dto == null)
-            return DistributionDMO.UNKNOWN;
-
-        return DistributionDMO.valueOf(dto.name());
     }
 }

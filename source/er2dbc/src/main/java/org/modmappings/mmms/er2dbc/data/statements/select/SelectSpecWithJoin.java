@@ -91,6 +91,54 @@ public class SelectSpecWithJoin {
     }
 
     /**
+     * Associate {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin select(final Expression... projectedFields) {
+        final List<Expression> expressions = Arrays.asList(projectedFields);
+        Assert.noNullElements(expressions, "Expressions is not allowed to contain null elements!");
+        Assert.isTrue(expressions.stream().allMatch(ex -> ex.isReference() || ex.isNative() || ex.isFunction() || ex.isDistinct() || ex.isAliased()), "All expressions need to be references!");
+
+        return this.withProjection(expressions);
+    }
+
+    /**
+     * Associate {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin selectColumns(final Collection<String> projectedFields) {
+        Assert.notNull(projectedFields, "ProjectedFields can not be null!");
+        Assert.noNullElements(projectedFields, "ProjectedFields is not allowed to contain null elements!");
+
+        final List<Expression> fields = new ArrayList<>(this.projectedFields);
+        fields.addAll(projectedFields.stream().map(Expressions::reference).collect(Collectors.toList()));
+
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+    }
+
+    /**
+     * Associate {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin select(final Collection<Expression> projectedFields) {
+        Assert.notNull(projectedFields, "ProjectedFields can not be null!");
+        Assert.noNullElements(projectedFields, "ProjectedFields is not allowed to contain null elements!");
+        Assert.isTrue(projectedFields.stream().allMatch(ex -> ex.isReference() || ex.isNative() || ex.isFunction() || ex.isDistinct() || ex.isAliased()), "All ProjectedFields need to be references!");
+
+        final List<Expression> fields = new ArrayList<>(this.projectedFields);
+        fields.addAll(projectedFields);
+
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+    }
+
+
+    /**
      * Override {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
      *
      * @param projectedFields
