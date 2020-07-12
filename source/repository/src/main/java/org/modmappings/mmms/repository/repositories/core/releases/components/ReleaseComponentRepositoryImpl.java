@@ -116,7 +116,7 @@ class ReleaseComponentRepositoryImpl extends AbstractModMappingRepository<Releas
                         )
                         .withCriteria(
                                 where(Expressions.reference("release_id")).is(Expressions.parameter(releaseId))
-                                        .and(Expressions.reference("m", "type")).is(Expressions.parameter(mappableType.ordinal()))),
+                                        .and(Expressions.reference("m", "type")).is(Expressions.parameter(mappableType.name()))),
                 getTableName(),
                 UUID.class,
                 pageable
