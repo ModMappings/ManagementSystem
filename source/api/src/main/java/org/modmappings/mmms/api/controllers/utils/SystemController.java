@@ -215,6 +215,9 @@ public class SystemController
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Returns all mappings, and their metadata, in the database, that match the search criteria."),
+            @ApiResponse(responseCode = "403", description = "The user is not authorized to perform this action.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema())),
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no mapping exists in the database.",
                     content = {
@@ -225,6 +228,7 @@ public class SystemController
                     })
     })
     @GetMapping(value = "mappings/detailed", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasRole('SYSTEM_ACCOUNT')")
     @PageableAsQueryParam
     public Mono<Page<DetailedMappingDTO>> getAllInstanced(
             final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") boolean latestOnly,
