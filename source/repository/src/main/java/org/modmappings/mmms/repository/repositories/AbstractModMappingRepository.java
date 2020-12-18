@@ -2,6 +2,8 @@ package org.modmappings.mmms.repository.repositories;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
@@ -17,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 import java.util.function.UnaryOperator;
+import java.util.logging.LogManager;
 
 /**
  * An extended variant of the {@link R2dbcRepository} that adds support
@@ -30,6 +33,7 @@ import java.util.function.UnaryOperator;
 @NoRepositoryBean
 public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcRepository<T, UUID> implements ModMappingRepository<T>, IModMappingQuerySupport {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final RelationalEntityInformation<T, UUID> entity;
     private final DatabaseClient databaseClient;
     private final R2dbcConverter converter;
@@ -41,6 +45,11 @@ public abstract class AbstractModMappingRepository<T> extends SimpleR2dbcReposit
         this.databaseClient = databaseClient;
         this.converter = accessStrategy.getConverter();
         this.accessStrategy = accessStrategy;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
     }
 
     protected RelationalEntityInformation<T, UUID> getEntity() {

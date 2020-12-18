@@ -6,6 +6,8 @@ import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.repositories.IModMappingQuerySupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import javax.annotation.Priority;
 import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
+import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.where;
 import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.*;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
 import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.Order.asc;
@@ -27,6 +30,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.sort;
 @Priority(Integer.MAX_VALUE)
 public class PackageRepositoryImpl implements PackageRepository, IModMappingQuerySupport {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final DatabaseClient databaseClient;
     private final R2dbcConverter converter;
     private final ExtendedDataAccessStrategy accessStrategy;
@@ -35,6 +39,11 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
         this.databaseClient = databaseClient;
         this.converter = accessStrategy.getConverter();
         this.accessStrategy = accessStrategy;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
     }
 
     @Override
@@ -84,7 +93,11 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
                             criteria = nonNullAndEqualsCheckForWhere(criteria, releaseId, "rc", "release_id");
                             criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "mapping", "mapping_type_id");
                             criteria = nonNullAndEqualsCheckForWhere(criteria, MappableTypeDMO.CLASS, "mp", "type");
-                            return criteria;
+
+                            if (criteria == null)
+                                return where(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex))).isNotNull();
+
+                            return criteria.and(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex))).isNotNull();
                         })
                         .withSort(sort(asc(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex)))))
 

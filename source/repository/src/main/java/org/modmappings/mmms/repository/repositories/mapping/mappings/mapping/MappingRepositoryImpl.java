@@ -37,7 +37,7 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
     }
 
     @Override
-    public Mono<Page<MappingDMO>> findAllOrLatestFor(final boolean latestOnly,
+    public Mono<Page<MappingDMO>> findAllOrLatestFor(final Boolean latestOnly,
                                                      final UUID versionedMappableId,
                                                      final UUID releaseId,
                                                      final MappableTypeDMO mappableType,

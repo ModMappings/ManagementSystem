@@ -6,6 +6,7 @@ import org.modmappings.mmms.er2dbc.data.statements.expression.Expression;
 import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
+import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -34,6 +36,8 @@ import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCr
 import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.*;
 
 public interface IModMappingQuerySupport {
+
+    Logger getLogger();
 
     DatabaseClient getDatabaseClient();
 
@@ -85,6 +89,8 @@ public interface IModMappingQuerySupport {
         }
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithPagination);
 
+        getLogger().debug("Executing find operation: " + operation.toString());
+
         return this.getDatabaseClient().execute(operation) //
                 .as(resultType) //
                 .fetch()
@@ -107,6 +113,8 @@ public interface IModMappingQuerySupport {
             mapper = mapper.forType(resultType);
         }
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
+
+        getLogger().debug("Executing count operation: " + operation.toString());
 
         return this.getDatabaseClient().execute(operation) //
                 .map((r, md) -> r.get(0, Long.class)) //

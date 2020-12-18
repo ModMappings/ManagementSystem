@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 @Primary
 @Priority(Integer.MAX_VALUE)
-class CommentRepositoryImpl extends AbstractModMappingRepository<CommentDMO> implements CommentRepository {
+public class CommentRepositoryImpl extends AbstractModMappingRepository<CommentDMO> implements CommentRepository {
 
     public CommentRepositoryImpl(final DatabaseClient databaseClient, final ExtendedDataAccessStrategy accessStrategy) {
         super(databaseClient, accessStrategy, CommentDMO.class);

@@ -27,6 +27,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This custom implementation of the {@link StatementMapper} adds support for
@@ -397,6 +398,14 @@ public class ExtendedStatementMapper implements StatementMapper {
         @Override
         public void bindTo(final BindTarget to) {
             this.bindings.apply(to);
+        }
+
+        @Override
+        public String toString() {
+            return "ExtendedPreparedOperation{" +
+                    "query=" + get() + "," +
+                    "bindings=" + bindings.stream().map(binding -> binding.getBindMarker().getPlaceholder() + ":" + (binding.hasValue() ? binding.getValue() : "<NO VALUE>")).collect(Collectors.joining(", ")) +
+                    '}';
         }
     }
 

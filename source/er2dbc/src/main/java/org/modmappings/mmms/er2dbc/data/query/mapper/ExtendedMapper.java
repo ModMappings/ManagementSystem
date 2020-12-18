@@ -252,6 +252,17 @@ public class ExtendedMapper extends UpdateMapper {
             return bind(mappedValue, typeHint, bindings, bindMarker);
         }
 
+        if (expression.isFunction()) {
+            final FunctionExpression functionExpression = (FunctionExpression) expression;
+            final List<Expression> expressions = new ArrayList<>();
+
+            for (final org.modmappings.mmms.er2dbc.data.statements.expression.Expression arg : functionExpression.getArgs()) {
+                final BoundExpression boundExpression = this.getMappedObject(arg, defaultTable, bindings, aliasing);
+                expressions.add(boundExpression.getExpression());
+            }
+            return SimpleFunction.create(functionExpression.getFunctionName(), expressions);
+        }
+
         return null;
     }
 

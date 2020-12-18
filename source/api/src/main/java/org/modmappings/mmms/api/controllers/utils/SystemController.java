@@ -133,7 +133,7 @@ public class SystemController
     @PreAuthorize("hasRole('SYSTEM_ACCOUNT')")
     @PageableAsQueryParam
     public Mono<Page<MappingDTO>> getAll(
-      final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") boolean latestOnly,
+      final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") Boolean latestOnly,
       final @RequestParam(value = "versionedMappableId", required = false) UUID versionedMappableId,
       final @RequestParam(value = "releaseId", required = false) UUID releaseId,
       final @RequestParam(value = "mappableType", required = false) MappableTypeDTO mappableType,
@@ -231,7 +231,7 @@ public class SystemController
     @PreAuthorize("hasRole('SYSTEM_ACCOUNT')")
     @PageableAsQueryParam
     public Mono<Page<DetailedMappingDTO>> getAllInstanced(
-            final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") boolean latestOnly,
+            final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") Boolean latestOnly,
             final @RequestParam(value = "versionedMappableId", required = false) UUID versionedMappableId,
             final @RequestParam(value = "releaseId", required = false) UUID releaseId,
             final @RequestParam(value = "mappableType", required = false) MappableTypeDTO mappableType,

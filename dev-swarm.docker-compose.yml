@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  db_data:
+    image: postgres:12
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=mmms
+      - POSTGRES_USER=mmms
+      - POSTGRES_PASSWORD=mmms
+    volumes:
+      - /var/docker/data:/var/lib/postgresql/data
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type==worker
+          - node.labels.system==production
+          - node.labels.usecase==modmappings
+
+  db_auth:
+    image: postgres:12
+    restart: unless-stopped
+    volumes:
+      - /var/docker/auth:/var/lib/postgresql/data
+      - /var/docker/dbinitscripts/:/docker-entrypoint-initdb.d/
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type==worker
+          - node.labels.system==production
+          - node.labels.usecase==modmappings
+
+  auth:
+    image: jboss/keycloak:10.0.2
+    restart: unless-stopped
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: tasks.db_auth
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: keycloak
+      KEYCLOAK_FRONTEND_URL: https://dev.auth.modmappings.org/auth
+      PROXY_ADDRESS_FORWARDING: 'true'
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type==worker
+          - node.labels.system==production
+          - node.labels.usecase==modmappings
+      labels:
+        - traefik.enable=true
+        - traefik.constraint-label=traefik-public
+        - traefik.docker.network=traefik-public
+        - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+        - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+        - traefik.http.routers.modmappings-auth-http.rule=Host(`dev.auth.modmappings.org`)
+        - traefik.http.routers.modmappings-auth-http.entrypoints=http
+        - traefik.http.routers.modmappings-auth-http.middlewares=https-redirect
+        - traefik.http.routers.modmappings-auth-https.rule=Host(`dev.auth.modmappings.org`)
+        - traefik.http.routers.modmappings-auth-https.entrypoints=https
+        - traefik.http.routers.modmappings-auth-https.tls=true
+        - traefik.http.routers.modmappings-auth-https.service=modmappings-auth
+        - traefik.http.routers.modmappings-auth-https.tls.certresolver=le
+        - traefik.http.services.modmappings-auth.loadbalancer.server.port=8080
+      
+  apiserver:
+    image: container.ldtteam.com/modmappings/api:dev
+    restart: unless-stopped
+    environment:
+      SPRING_R2DBC_NAME: mmms
+      SPRING_R2DBC_URL: r2dbc:postgresql://tasks.db_data:5432/mmms
+      SPRING_R2DBC_USERNAME: mmms
+      SPRING_R2DBC_PASSWORD: mmms
+      SPRING_R2DBC_INITIALIZATIONMODE: ALWAYS
+      SPRING_R2DBC_POOL_MAX-SIZE: 20
+      SPRING_R2DBC_POOL_INITIAL-SIZE: 20
+      SPRING_DATA_POSTGRES_HOST: tasks.db_data
+      SPRING_DATA_POSTGRES_PORT: 5432
+      SPRING_DATA_POSTGRES_DATABASE: mmms
+      SPRING_DATA_POSTGRES_USERNAME: mmms
+      SPRING_DATA_POSTGRES_PASSWORD: mmms
+      SPRING_SECURITY_TARGET_HOST: https://dev.auth.modmappings.org
+      SPRING_SECURITY_TARGET_REALM: ModMappings
+      SPRING_URL: https://dev.api.modmappings.org/
+      SPRINGDOC.SHOW-ACTUATOR: 'true'
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type==worker
+          - node.labels.system==production
+          - node.labels.usecase==modmappings
+      labels:
+        - traefik.enable=true
+        - traefik.constraint-label=traefik-public
+        - traefik.docker.network=traefik-public
+        - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+        - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+        - traefik.http.routers.modmappings-api-http.rule=Host(`dev.api.modmappings.org`)
+        - traefik.http.routers.modmappings-api-http.entrypoints=http
+        - traefik.http.routers.modmappings-api-http.middlewares=https-redirect
+        - traefik.http.routers.modmappings-api-https.rule=Host(`dev.api.modmappings.org`)
+        - traefik.http.routers.modmappings-api-https.entrypoints=https
+        - traefik.http.routers.modmappings-api-https.tls=true
+        - traefik.http.routers.modmappings-api-https.service=modmappings-api
+        - traefik.http.routers.modmappings-api-https.tls.certresolver=le
+        - traefik.http.services.modmappings-api.loadbalancer.server.port=80
+
+networks:
+  traefik-public:
+    external: true

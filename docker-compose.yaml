@@ -71,7 +71,6 @@ services:
       traefik.http.routers.mmmsapi.rule: 'Host(`api.modmappings.org`)'
       traefik.http.routers.mmmsapi.tls.certresolver: 'forge'
 
-  
 volumes: 
   postgresdb:
     driver: local

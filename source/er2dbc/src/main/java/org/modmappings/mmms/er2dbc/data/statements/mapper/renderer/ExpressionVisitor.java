@@ -46,6 +46,10 @@ public class ExpressionVisitor extends TypedSubtreeVisitor<Expression> implement
             }
         } else if (segment instanceof Literal) {
             value = segment.toString();
+        } else if (segment instanceof SimpleFunction) {
+            final FunctionVisitor visitor = new FunctionVisitor(context);
+            partRenderer = visitor;
+            return Delegation.delegateTo(visitor);
         }
 
         return Delegation.retain();

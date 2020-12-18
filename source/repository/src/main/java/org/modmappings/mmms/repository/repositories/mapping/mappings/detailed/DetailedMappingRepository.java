@@ -22,7 +22,7 @@ public interface DetailedMappingRepository extends org.springframework.data.repo
      * The mapping also has to be for a versioned mappable who targets the game version with
      * the given id.
      *
-     * This method, compared to {@link org.modmappings.mmms.repository.repositories.mapping.mappings.mapping.MappingRepositoryCustom#findAllOrLatestFor(boolean, UUID, UUID, MappableTypeDMO, String, String, UUID, UUID, UUID, boolean, Pageable)}
+     * This method, compared to {@link org.modmappings.mmms.repository.repositories.mapping.mappings.mapping.MappingRepositoryCustom#findAllOrLatestFor(Boolean, UUID, UUID, MappableTypeDMO, String, String, UUID, UUID, UUID, boolean, Pageable)}
      * also returns all metadata information.
      *
      * @param latestOnly            Indicator if only the latest mappings or all mappings should be returned.
@@ -39,7 +39,7 @@ public interface DetailedMappingRepository extends org.springframework.data.repo
      * @return All latest mappings, and their metadata, who' matches the given regexes and are part of the mapping type and game version if those are specified.
      */
     Mono<Page<DetailedMappingDMO>> findAllBy(
-            final boolean latestOnly,
+            final Boolean latestOnly,
             final UUID versionedMappableId,
             final UUID releaseId,
             final MappableTypeDMO mappableType,

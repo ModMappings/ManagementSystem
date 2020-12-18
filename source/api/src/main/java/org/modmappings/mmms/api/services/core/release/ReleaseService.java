@@ -105,7 +105,7 @@ public class ReleaseService {
                                            final boolean externallyVisibleOnly,
                                            final Pageable pageable) {
         return repository.findAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable)
-                .doFirst(() -> logger.debug("Looking up releases: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
+                .doFirst(() -> logger.debug("Looking up releases: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
                 .flatMap(page -> Flux.fromIterable(page)
                         .map(this.releaseConverter::toDTO)
                         .collectList()

@@ -3,12 +3,12 @@ package org.modmappings.mmms.repository.repositories.mapping.mappings.detailed;
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
 import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
-import org.modmappings.mmms.repository.model.mapping.mappable.VersionedMappableDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.DetailedMappingDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
 import org.modmappings.mmms.repository.repositories.IModMappingQuerySupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +29,7 @@ import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.sort;
 @Priority(Integer.MAX_VALUE)
 public class DetailedMappingRepositoryImpl implements DetailedMappingRepository, IModMappingQuerySupport {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final DatabaseClient databaseClient;
     private final R2dbcConverter converter;
     private final ExtendedDataAccessStrategy accessStrategy;
@@ -37,6 +38,11 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
         this.databaseClient = databaseClient;
         this.converter = accessStrategy.getConverter();
         this.accessStrategy = accessStrategy;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
     }
 
     @Override
@@ -56,7 +62,7 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
 
     @Override
     public Mono<Page<DetailedMappingDMO>> findAllBy(
-            final boolean latestOnly,
+            final Boolean latestOnly,
             final UUID versionedMappableId,
             final UUID releaseId,
             final MappableTypeDMO mappableType,

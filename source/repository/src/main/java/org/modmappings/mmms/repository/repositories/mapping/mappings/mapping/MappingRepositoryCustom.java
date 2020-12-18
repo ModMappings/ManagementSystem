@@ -36,7 +36,7 @@ public interface MappingRepositoryCustom {
      * @param pageable              The paging and sorting information.
      * @return All latest mappings who' matches the given regexes and are part of the mapping type and game version if those are specified.
      */
-    Mono<Page<MappingDMO>> findAllOrLatestFor(final boolean latestOnly,
+    Mono<Page<MappingDMO>> findAllOrLatestFor(final Boolean latestOnly,
                                               final UUID versionedMappableId,
                                               final UUID releaseId,
                                               final MappableTypeDMO mappableType,

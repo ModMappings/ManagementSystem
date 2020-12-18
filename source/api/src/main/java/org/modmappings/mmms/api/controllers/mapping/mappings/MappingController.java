@@ -149,7 +149,7 @@ public class MappingController {
     @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<MappingDTO>> getAll(
-            final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") boolean latestOnly,
+            final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") Boolean latestOnly,
             final @RequestParam(value = "versionedMappableId", required = false) UUID versionedMappableId,
             final @RequestParam(value = "releaseId", required = false) UUID releaseId,
             final @RequestParam(value = "mappableType", required = false) MappableTypeDTO mappableType,
@@ -242,7 +242,7 @@ public class MappingController {
     @GetMapping(value = "detailed", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<DetailedMappingDTO>> getAllInstanced(
-            final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") boolean latestOnly,
+            final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") Boolean latestOnly,
             final @RequestParam(value = "versionedMappableId", required = false) UUID versionedMappableId,
             final @RequestParam(value = "releaseId", required = false) UUID releaseId,
             final @RequestParam(value = "mappableType", required = false) MappableTypeDTO mappableType,

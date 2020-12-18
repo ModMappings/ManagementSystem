@@ -90,7 +90,7 @@ public class MappingService {
      * @param pageable              The paging and sorting information.
      * @return A {@link Mono} with the mappings, or an errored {@link Mono} that indicates a failure.
      */
-    public Mono<Page<MappingDTO>> getAllBy(final boolean latestOnly,
+    public Mono<Page<MappingDTO>> getAllBy(final Boolean latestOnly,
                                            final UUID versionedMappableId,
                                            final UUID releaseId,
                                            final MappableTypeDTO mappableType,

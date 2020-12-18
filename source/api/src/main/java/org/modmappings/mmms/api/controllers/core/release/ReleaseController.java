@@ -98,7 +98,7 @@ public class ReleaseController {
                             example = "false"
                     ),
                     @Parameter(
-                            name = "mapping",
+                            name = "mappingId",
                             in = ParameterIn.QUERY,
                             description = "The id of the mapping to filter releases on.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
@@ -129,8 +129,8 @@ public class ReleaseController {
             final @RequestParam(name = "name", required = false) String nameRegex,
             final @RequestParam(name = "gameVersion", required = false) UUID gameVersionId,
             final @RequestParam(name = "mappingType", required = false) UUID mappingTypeId,
-            final @RequestParam(name = "snapshot", required = false) boolean isSnapshot,
-            final @RequestParam(name = "mapping", required = false) UUID mappingId,
+            final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
+            final @RequestParam(name = "mappingId", required = false) UUID mappingId,
             final @RequestParam(name = "user", required = false) UUID userId,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
