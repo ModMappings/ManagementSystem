@@ -117,13 +117,11 @@ public class ReleaseController {
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no release exists in the database.",
                     content = {
-                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                                    schema = @Schema()),
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema())
                     })
     })
-    @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<ReleaseDTO>> getAll(
             final @RequestParam(name = "name", required = false) String nameRegex,

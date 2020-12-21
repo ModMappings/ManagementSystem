@@ -155,7 +155,7 @@ public class ReleaseService {
                         .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Creating new release: %s", newRelease.getName())))
                         .map(dto -> this.releaseConverter.toNewDMO(gameVersionId, mappingTypeId, dto, userIdSupplier))
                         .flatMap(repository::save) //Creates the release object in the database
-                        .flatMap(dmo -> mappingRepository.findAllOrLatestFor(true, null, null, null, null, null, mappingTypeId, gameVersionId, null, true, Pageable.unpaged()) // Gets all latest mappings of the mapping type and game version.
+                        .flatMap(dmo -> mappingRepository.findAllOrLatestFor(true, null, null, null, null, null, mappingTypeId, gameVersionId, null, null, null, true, Pageable.unpaged()) // Gets all latest mappings of the mapping type and game version.
                                 .flatMapIterable(Function.identity()) //Unwrap the page.
                                 .map(mdmo -> new ReleaseComponentDMO(dmo.getId(), mdmo.getId())) //Turns them into release components.
                                 .collect(Collectors.toList()) //Collects them

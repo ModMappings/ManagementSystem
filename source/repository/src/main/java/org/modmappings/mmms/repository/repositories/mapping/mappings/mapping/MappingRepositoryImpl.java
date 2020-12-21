@@ -46,6 +46,8 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
                                                      final UUID mappingTypeId,
                                                      final UUID gameVersionId,
                                                      final UUID userId,
+                                                     final UUID parentClassId,
+                                                     final UUID parentMethodId,
                                                      final boolean externallyVisibleOnly,
                                                      final Pageable pageable) {
         return createPagedStarRequest(
@@ -73,6 +75,8 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
                                     criteria = nonNullAndMatchesCheckForWhere(criteria, outputRegex, "", "output");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "", "mapping_type_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, gameVersionId, "vm", "game_version_id");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, parentClassId, "vm", "parent_class_id");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, parentMethodId, "vm", "parent_method_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, userId, "", "created_by");
 
                                     if (externallyVisibleOnly) {

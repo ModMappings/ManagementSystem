@@ -3,6 +3,8 @@ package org.modmappings.mmms.repository.repositories.mapping.mappings.detailed;
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
 import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
+import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
+import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.DetailedMappingDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
@@ -14,9 +16,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.DatabaseClient;
+import org.springframework.data.r2dbc.core.PreparedOperation;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
+import java.util.List;
 import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
@@ -71,6 +76,8 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
             final UUID mappingTypeId,
             final UUID gameVersionId,
             final UUID userId,
+            final UUID parentClassId,
+            final UUID parentMethodId,
             final boolean externallyVisibleOnly,
             final Pageable pageable
     ) {
@@ -100,6 +107,8 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
                                     criteria = nonNullAndMatchesCheckForWhere(criteria, outputRegex, "", "output");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "", "mapping_type_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, gameVersionId, "versioned_mappable", "game_version_id");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, parentClassId, "versioned_mappable", "parent_class_id");
+                                    criteria = nonNullAndEqualsCheckForWhere(criteria, parentMethodId, "versioned_mappable", "parent_method_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, userId, "", "created_by");
 
                                     if (externallyVisibleOnly) {
@@ -115,5 +124,52 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
                 MappingDMO.class,
                 pageable
         );
+    }
+
+    @Override
+    public Mono<DetailedMappingDMO> findById(final UUID id, final boolean externallyVisibleOnly) {
+        Assert.notNull(id, "Id must not be null!");
+
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(DetailedMappingDMO.class)) {
+            mapper = mapper.forType(DetailedMappingDMO.class);
+        }
+        final SelectSpecWithJoin specWithJoin = mapper.createSelectWithJoin("mapping")
+                .select(createSelectStatementsForCompoundEntity(DetailedMappingDMO.class))
+                .join(() -> join("release_component", "rc")
+                        .on(() -> on(Expressions.reference("id")).is(Expressions.reference("rc", "mapping_id"))))
+                .join(() -> join("versioned_mappable", "versioned_mappable")
+                        .on(() -> on(Expressions.reference("versioned_mappable_id")).is(Expressions.reference("versioned_mappable", "id"))))
+                .join(() -> join("mappable", "mappable")
+                        .on(() -> on(Expressions.reference("versioned_mappable", "mappable_id")).is(Expressions.reference("mappable", "id"))))
+                .join(() -> join("mapping_type", "mt")
+                        .on(() -> on(Expressions.reference("mapping_type_id")).is(Expressions.reference("mt", "id"))))
+                .where(() -> {
+                    ColumnBasedCriteria criteria = nonNullAndEqualsCheckForWhere(
+                            null,
+                            id,
+                            "mapping",
+                            "id"
+                    );
+
+                    if (externallyVisibleOnly) {
+                        criteria = nonNullAndEqualsCheckForWhere(
+                                criteria,
+                                true,
+                                "mt",
+                                "visible"
+                        );
+                    }
+
+                    return criteria;
+                });
+
+
+        final PreparedOperation<?> operation = mapper.getMappedObject(specWithJoin);
+
+        return this.getDatabaseClient().execute(operation) //
+                .as(DetailedMappingDMO.class) //
+                .fetch() //
+                .one();
     }
 }

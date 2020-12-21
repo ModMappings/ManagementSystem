@@ -4,7 +4,10 @@ import org.modmappings.mmms.api.converters.mapping.mappable.MappableTypeConverte
 import org.modmappings.mmms.api.converters.mapping.mappings.DetailedMappingConverter;
 import org.modmappings.mmms.api.model.mapping.mappable.DetailedMappingDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
+import org.modmappings.mmms.api.model.mapping.mappings.MappingDTO;
+import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
+import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.repositories.mapping.mappings.detailed.DetailedMappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +57,9 @@ public class DetailedMappingService {
      * @param inputRegex            The regex against which the input of the mappings is matched to be included in the result.
      * @param outputRegex           The regex against which the output of the mappings is matched to be included in the result.
      * @param mappingTypeId         The id of the mapping type that a mapping needs to be for. Use an empty optional for any mapping type.
-     * @param gameVersionId         The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
+     * @param gameVersionId         The id of the game version that the mapping needs to be for. Use an empty optional for any game version.* @param parentClassId         The id of the class of which the targeted mappings versioned mappable resides in.
+     * @param parentClassId         The id of the class of which the targeted mappings versioned mappable resides in.
+     * @param parentMethodId        The id of the method of which the targeted mappings versioned mappable resides in.
      * @param externallyVisibleOnly Indicates if only mappings for externally visible mapping types should be included.
      * @param pageable              The paging and sorting information.
      * @return A {@link Mono} with the mappings, or an errored {@link Mono} that indicates a failure.
@@ -68,15 +73,35 @@ public class DetailedMappingService {
                                                    final UUID mappingTypeId,
                                                    final UUID gameVersionId,
                                                    final UUID userId,
+                                                   final UUID parentClassId,
+                                                   final UUID parentMethodId,
                                                    final boolean externallyVisibleOnly,
                                                    final Pageable pageable) {
-        return repository.findAllBy(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, externallyVisibleOnly, pageable)
-                .doFirst(() -> logger.debug("Looking up mappings: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, externallyVisibleOnly, pageable))
+        return repository.findAllBy(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable)
+                .doFirst(() -> logger.debug("Looking up mappings: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
                 .flatMap(page -> Flux.fromIterable(page)
                         .map(this.instancedMappingConverter::toDTO)
                         .collectList()
                         .map(mappings -> (Page<DetailedMappingDTO>) new PageImpl<>(mappings, page.getPageable(), page.getTotalElements())))
                 .doOnNext(page -> logger.debug("Found mappings: {}", page))
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("DetailedMapping")));
+    }
+
+    /**
+     * Looks up a detailed mapping with a given id.
+     *
+     * @param id                    The id to look the mapping up for.
+     * @param externallyVisibleOnly Indicator if only externally visible mappings should be taken into account.
+     * @return A {@link Mono} containing the requested mapping or a errored {@link Mono} that indicates a failure.
+     */
+    public Mono<DetailedMappingDTO> getBy(
+            final UUID id,
+            final boolean externallyVisibleOnly
+    ) {
+        return repository.findById(id, externallyVisibleOnly)
+                .doFirst(() -> logger.debug("Looking up a detailed mapping by id: {}", id))
+                .map(this.instancedMappingConverter::toDTO)
+                .doOnNext(dto -> logger.debug("Found detailed mapping: {}-{} with id: {}", dto.getMappingDTO().getInput(), dto.getMappingDTO().getOutput(), dto.getMappingDTO().getId()))
+                .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mapping")));
     }
 }

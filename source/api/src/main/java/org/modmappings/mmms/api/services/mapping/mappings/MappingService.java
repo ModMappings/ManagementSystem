@@ -67,8 +67,6 @@ public class MappingService {
     ) {
         return repository.findById(id, externallyVisibleOnly)
                 .doFirst(() -> logger.debug("Looking up a mapping by id: {}", id))
-                .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
-                        .map(MappingTypeDMO::isVisible)) //Only return a mapping when it is supposed to be visible.
                 .map(this.mappingConverter::toDTO)
                 .doOnNext(dto -> logger.debug("Found mapping: {}-{} with id: {}", dto.getInput(), dto.getOutput(), dto.getId()))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mapping")));
@@ -86,6 +84,8 @@ public class MappingService {
      * @param outputRegex           The regex against which the output of the mappings is matched to be included in the result.
      * @param mappingTypeId         The id of the mapping type that a mapping needs to be for. Use an empty optional for any mapping type.
      * @param gameVersionId         The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
+     * @param parentClassId         The id of the class of which the targeted mappings versioned mappable resides in.
+     * @param parentMethodId        The id of the method of which the targeted mappings versioned mappable resides in.
      * @param externallyVisibleOnly Indicates if only mappings for externally visible mapping types should be included.
      * @param pageable              The paging and sorting information.
      * @return A {@link Mono} with the mappings, or an errored {@link Mono} that indicates a failure.
@@ -99,10 +99,12 @@ public class MappingService {
                                            final UUID mappingTypeId,
                                            final UUID gameVersionId,
                                            final UUID userId,
+                                           final UUID parentClassId,
+                                           final UUID parentMethodId,
                                            final boolean externallyVisibleOnly,
                                            final Pageable pageable) {
-        return repository.findAllOrLatestFor(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, externallyVisibleOnly, pageable)
-                .doFirst(() -> logger.debug("Looking up mappings: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, externallyVisibleOnly, pageable))
+        return repository.findAllOrLatestFor(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable)
+                .doFirst(() -> logger.debug("Looking up mappings: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
                 .flatMap(page -> Flux.fromIterable(page)
                         .map(this.mappingConverter::toDTO)
                         .collectList()

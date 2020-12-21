@@ -123,13 +123,11 @@ public class SystemController
       @ApiResponse(responseCode = "404",
         description = "Indicates that no mapping exists in the database.",
         content = {
-          @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-            schema = @Schema()),
           @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = @Schema())
         })
     })
-    @GetMapping(value = "mappings", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "mappings", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('SYSTEM_ACCOUNT')")
     @PageableAsQueryParam
     public Mono<Page<MappingDTO>> getAll(
@@ -145,7 +143,7 @@ public class SystemController
       final @PageableDefault(size = 2000) Pageable pageable,
       final ServerHttpResponse response)
     {
-        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, true, pageable)
+        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, null,null, true, pageable)
                  .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                      response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                      return Mono.empty();
@@ -221,13 +219,11 @@ public class SystemController
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no mapping exists in the database.",
                     content = {
-                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                                    schema = @Schema()),
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema())
                     })
     })
-    @GetMapping(value = "mappings/detailed", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "mappings/detailed", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasRole('SYSTEM_ACCOUNT')")
     @PageableAsQueryParam
     public Mono<Page<DetailedMappingDTO>> getAllInstanced(
@@ -242,7 +238,7 @@ public class SystemController
             final @RequestParam(value = "createdBy", required = false) UUID userId,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return detailedMappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, true, pageable)
+        return detailedMappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, null, null, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

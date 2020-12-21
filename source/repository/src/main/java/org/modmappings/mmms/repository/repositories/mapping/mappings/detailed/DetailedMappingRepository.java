@@ -2,6 +2,7 @@ package org.modmappings.mmms.repository.repositories.mapping.mappings.detailed;
 
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.DetailedMappingDMO;
+import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -34,6 +35,8 @@ public interface DetailedMappingRepository extends org.springframework.data.repo
      * @param mappingTypeId         The id of the mapping type that a mapping needs to be for. Use an empty optional for any mapping type.
      * @param gameVersionId         The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
      * @param userId                The id of the user who created the mapping.
+     * @param parentClassId         The id of the class of which the targeted mappings versioned mappable resides in.
+     * @param parentMethodId        The id of the method of which the targeted mappings versioned mappable resides in.
      * @param externallyVisibleOnly Indicates if only mappings for externally visible mapping types should be included.
      * @param pageable              The paging and sorting information.
      * @return All latest mappings, and their metadata, who' matches the given regexes and are part of the mapping type and game version if those are specified.
@@ -47,8 +50,20 @@ public interface DetailedMappingRepository extends org.springframework.data.repo
             final String outputRegex,
             final UUID mappingTypeId,
             final UUID gameVersionId,
+            final UUID parentClassId,
+            final UUID parentMethodId,
             final UUID userId,
             final boolean externallyVisibleOnly,
             final Pageable pageable
     );
+
+    /**
+     * Finds a detailed mapping with the given id, respecting the fact that only mappings for externally visible mapping types should be considered.
+     *
+     * @param id                    The id of the mapping.
+     * @param externallyVisibleOnly Indicator if only externally visible mappings should be considered.
+     * @return The detailed mapping in a mono.
+     */
+    Mono<DetailedMappingDMO> findById(final UUID id,
+                                     final boolean externallyVisibleOnly);
 }

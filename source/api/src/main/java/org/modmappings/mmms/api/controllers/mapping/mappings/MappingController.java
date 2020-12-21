@@ -75,6 +75,34 @@ public class MappingController {
     }
 
     @Operation(
+            operationId = "getDetailedMappingById",
+            summary = "Looks up a detailed mapping using a given id.",
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            in = ParameterIn.PATH,
+                            required = true,
+                            description = "The id of the mapping to look up.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns the detailed mapping with the given id."),
+            @ApiResponse(responseCode = "404", description = "Indicates that no mapping with the given id could be found",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema()))
+    })
+    @GetMapping(value = "detailed/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<DetailedMappingDTO> getInstancedBy(@PathVariable final UUID id, final ServerHttpResponse response) {
+        return detailedMappingService.getBy(id, true)
+                .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
+                    response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
+                    return Mono.empty();
+                });
+    }
+
+    @Operation(
             operationId = "getMappingsBySearchCriteria",
             summary = "Gets all known mappings and finds the ones that match the given parameters.",
             parameters = {
@@ -131,6 +159,18 @@ public class MappingController {
                             in = ParameterIn.QUERY,
                             description = "The id of the user who created a mapping to filter on.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "parentClassId",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the class of which the targeted mappings versioned mappable resides in.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "parentMethodId",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the method of which the targeted mappings versioned mappable resides in.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     )
             }
     )
@@ -140,13 +180,11 @@ public class MappingController {
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no mapping exists in the database.",
                     content = {
-                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                                    schema = @Schema()),
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema())
                     })
     })
-    @GetMapping(value = "", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<MappingDTO>> getAll(
             final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") Boolean latestOnly,
@@ -158,9 +196,11 @@ public class MappingController {
             final @RequestParam(value = "mappingTypeId", required = false) UUID mappingTypeId,
             final @RequestParam(value = "gameVersionId", required = false) UUID gameVersionId,
             final @RequestParam(value = "createdBy", required = false) UUID userId,
+            final @RequestParam(value = "parentClassId", required = false) UUID parentClassId,
+            final @RequestParam(value = "parentMethodId", required = false) UUID parentMethodId,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, true, pageable)
+        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -224,6 +264,18 @@ public class MappingController {
                             in = ParameterIn.QUERY,
                             description = "The id of the user who created a mapping to filter on.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "parentClassId",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the class of which the targeted mappings versioned mappable resides in.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "parentMethodId",
+                            in = ParameterIn.QUERY,
+                            description = "The id of the method of which the targeted mappings versioned mappable resides in.",
+                            example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     )
             }
     )
@@ -233,13 +285,11 @@ public class MappingController {
             @ApiResponse(responseCode = "404",
                     description = "Indicates that no mapping exists in the database.",
                     content = {
-                            @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE,
-                                    schema = @Schema()),
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema())
                     })
     })
-    @GetMapping(value = "detailed", produces = {MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "detailed", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<DetailedMappingDTO>> getAllInstanced(
             final @RequestParam(value = "latestOnly", required = false, defaultValue = "true") Boolean latestOnly,
@@ -250,10 +300,12 @@ public class MappingController {
             final @RequestParam(value = "outputRegex", required = false) String outputRegex,
             final @RequestParam(value = "mappingTypeId", required = false) UUID mappingTypeId,
             final @RequestParam(value = "gameVersionId", required = false) UUID gameVersionId,
+            final @RequestParam(value = "parentClassId", required = false) UUID parentClassId,
+            final @RequestParam(value = "parentMethodId", required = false) UUID parentMethodId,
             final @RequestParam(value = "createdBy", required = false) UUID userId,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return detailedMappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, true, pageable)
+        return detailedMappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
