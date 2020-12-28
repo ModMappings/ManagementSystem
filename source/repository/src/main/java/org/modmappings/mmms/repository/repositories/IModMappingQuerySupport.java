@@ -129,7 +129,7 @@ public interface IModMappingQuerySupport {
                         .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
     }
 
-    default <R> Mono<Page<R>> createPagedRequestWithCountType(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, Class<?> countType, final Pageable pageable) {
+    default <R> Mono<Page<R>> createPagedRequestWithCountType(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, final Class<?> countType, final Pageable pageable) {
         return createFindRequest(selectSpecWithJoin, resultType, pageable)
                 .collectList()
                 .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, countType)
@@ -201,12 +201,12 @@ public interface IModMappingQuerySupport {
                 pageable);
     }
 
-    default ColumnBasedCriteria nonNullAndMatchesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable final Object parameter, @NonNull final String tableName, @NonNull final String columnName) {
+    default ColumnBasedCriteria nonNullAndLikesCheckForWhere(@Nullable final ColumnBasedCriteria criteria, @Nullable final Object parameter, @NonNull final String tableName, @NonNull final String columnName) {
         if (parameter != null) {
             if (criteria == null) {
-                return where(Expressions.reference(tableName, columnName)).matches(parameter(parameter));
+                return where(Expressions.reference(tableName, columnName)).like(parameter(parameter));
             } else {
-                return criteria.and(Expressions.reference(tableName, columnName)).matches(parameter(parameter));
+                return criteria.and(Expressions.reference(tableName, columnName)).like(parameter(parameter));
             }
         }
 

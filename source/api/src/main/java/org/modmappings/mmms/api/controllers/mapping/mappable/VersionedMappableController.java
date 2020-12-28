@@ -111,16 +111,16 @@ public class VersionedMappableController {
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
                     ),
                     @Parameter(
-                            name = "mappingInputRegex",
+                            name = "mappingInputExpression",
                             in = ParameterIn.QUERY,
-                            description = "A regex that is mapped against the input of the mapping. Null to ignore",
-                            example = ".*"
+                            description = "A like expression that is mapped against the input of the mapping. Null to ignore",
+                            example = "%"
                     ),
                     @Parameter(
-                            name = "mappingOutputRegex",
+                            name = "mappingOutputExpression",
                             in = ParameterIn.QUERY,
-                            description = "A regex that is mapped against the output of the mapping. Null to ignore",
-                            example = ".*"
+                            description = "A like expression that is mapped against the output of the mapping. Null to ignore",
+                            example = "%"
                     ),
                     @Parameter(
                             name = "superTypeTargetId",
@@ -155,14 +155,14 @@ public class VersionedMappableController {
             final @RequestParam(value = "methodId", required = false) UUID methodId,
             final @RequestParam(value = "mappingId", required = false) UUID mappingId,
             final @RequestParam(value = "mappingTypeId", required = false) UUID mappingTypeId,
-            final @RequestParam(value = "mappingInputRegex", required = false) String mappingInputRegex,
-            final @RequestParam(value = "mappingOutputRegex", required = false) String mappingOutputRegex,
+            final @RequestParam(value = "mappingInputExpression", required = false) String mappingInputExpression,
+            final @RequestParam(value = "mappingOutputExpression", required = false) String mappingOutputExpression,
             final @RequestParam(value = "superTypeTargetId", required = false) UUID superTypeTargetId,
             final @RequestParam(value = "subTypeTargetId", required = false) UUID subTypeTargetId,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
         return versionedMappableService.getAll(
-                gameVersionId, mappableTypeDTO, classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, pageable
+                gameVersionId, mappableTypeDTO, classId, methodId, mappingId, mappingTypeId, mappingInputExpression, mappingOutputExpression, superTypeTargetId, subTypeTargetId, pageable
         )
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));

@@ -14,23 +14,23 @@ import java.util.UUID;
  * These repositories take the external visibility of mapping types into account.
  */
 public interface MappingTypeRepositoryCustom {
-    Mono<MappingTypeDMO> findById(
+    Mono<MappingTypeDMO> findBy(
             UUID id,
             boolean externallyVisibleOnly
     );
 
     /**
-     * Finds all mapping types which match the given name regex.
+     * Finds all mapping types which match the given name expression.
      * and which are editable if that parameter is supplied.
      *
-     * @param nameRegex             The regular expression used to lookup mapping types for.
+     * @param nameExpression        The like expression used to lookup mapping types for.
      * @param editable              Indicates if filtering on editables is needed, and if editables should be included or not. Pass null as do not care indicator.
      * @param externallyVisibleOnly Indicator if only externally visible mapping types should be returned.
      * @param pageable              The paging and sorting information.
-     * @return The mapping types of which the name match the regex.
+     * @return The mapping types of which the name match the expression.
      */
     Mono<Page<MappingTypeDMO>> findAllBy(
-            String nameRegex,
+            String nameExpression,
             Boolean editable,
             boolean externallyVisibleOnly,
             Pageable pageable);

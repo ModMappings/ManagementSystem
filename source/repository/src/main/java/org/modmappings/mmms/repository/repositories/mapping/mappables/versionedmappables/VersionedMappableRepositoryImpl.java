@@ -174,9 +174,9 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
      * @param classId               The id of the class to find versioned mappables in. Null to ignore.
      * @param methodId              The id of the method to find versioned mappables in. Null to ignore.
      * @param mappingId             The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
-     * @param mappingTypeId         The id of the mapping type to find the versioned mappables for. Null to ignore. Use full in combination with a input and output regex.
-     * @param mappingInputRegex     A regex that is mapped against the input of the mapping. Null to ignore
-     * @param mappingOutputRegex    A regex that is mapped against the output of the mapping. Null to ignore
+     * @param mappingTypeId         The id of the mapping type to find the versioned mappables for. Null to ignore. Use full in combination with a input and output expression.
+     * @param mappingInputExpression     A expression that is mapped against the input of the mapping. Null to ignore
+     * @param mappingOutputExpression    A expression that is mapped against the output of the mapping. Null to ignore
      * @param superTypeTargetId     The id of the class to find the super types for. Null to ignore.
      * @param subTypeTargetId       The id of the class to find the sub types for. Null to ignore.
      * @param externallyVisibleOnly Indicate if externally visible classes only
@@ -191,8 +191,8 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
             final UUID methodId,
             final UUID mappingId,
             final UUID mappingTypeId,
-            final String mappingInputRegex,
-            final String mappingOutputRegex,
+            final String mappingInputExpression,
+            final String mappingOutputExpression,
             final UUID superTypeTargetId,
             final UUID subTypeTargetId,
             final boolean externallyVisibleOnly,
@@ -228,8 +228,8 @@ public class VersionedMappableRepositoryImpl extends AbstractModMappingRepositor
                             criteria = nonNullAndEqualsCheckForWhere(criteria, superTypeTargetId, "super_mid", "sub_type_versioned_mappable_id");
                             criteria = nonNullAndEqualsCheckForWhere(criteria, subTypeTargetId, "sub_mid", "super_type_versioned_mappable_id");
                             criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "m", "mapping_type_id");
-                            criteria = nonNullAndMatchesCheckForWhere(criteria, mappingInputRegex, "m", "input");
-                            criteria = nonNullAndMatchesCheckForWhere(criteria, mappingOutputRegex, "m", "output");
+                            criteria = nonNullAndLikesCheckForWhere(criteria, mappingInputExpression, "m", "input");
+                            criteria = nonNullAndLikesCheckForWhere(criteria, mappingOutputExpression, "m", "output");
                             if (externallyVisibleOnly) {
                                 criteria = nonNullAndEqualsCheckForWhere(criteria, true, "mt", "visible");
                             }

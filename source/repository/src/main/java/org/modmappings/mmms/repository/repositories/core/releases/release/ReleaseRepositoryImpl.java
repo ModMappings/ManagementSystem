@@ -35,7 +35,7 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
     }
 
     @Override
-    public Mono<ReleaseDMO> findById(
+    public Mono<ReleaseDMO> findBy(
             final UUID id,
             final boolean externallyVisibleOnly
     ) {
@@ -82,7 +82,7 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
      * Finds all releases which match the search criteria if they are supplied.
      * Supply null to anyone of them to ignore the search.
      *
-     * @param nameRegex             The regex to filter the name on-
+     * @param nameExpression             The expression to filter the name on-
      * @param gameVersionId         The id of the game version to filter releases on.
      * @param mappingTypeId         The id of the mapping type to filter releases on.
      * @param isSnapshot            Indicate if snapshots should be included or not.
@@ -94,7 +94,7 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
      */
     @Override
     public Mono<Page<ReleaseDMO>> findAllBy(
-            final String nameRegex,
+            final String nameExpression,
             final UUID gameVersionId,
             final UUID mappingTypeId,
             final Boolean isSnapshot,
@@ -112,9 +112,9 @@ class ReleaseRepositoryImpl extends AbstractModMappingRepository<ReleaseDMO> imp
                                         .on(() -> on(reference("mapping_type_id")).is(reference("mt", "id")))
                         )
                         .where(() -> {
-                            ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
+                            ColumnBasedCriteria criteria = nonNullAndLikesCheckForWhere(
                                     null,
-                                    nameRegex,
+                                    nameExpression,
                                     "",
                                     "name"
                             );

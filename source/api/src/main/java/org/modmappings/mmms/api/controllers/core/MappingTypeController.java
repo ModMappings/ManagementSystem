@@ -69,8 +69,8 @@ public class MappingTypeController {
                     @Parameter(
                             name = "name",
                             in = ParameterIn.QUERY,
-                            description = "The regular expression to match the name of the mapping type against.",
-                            example = ".*"
+                            description = "The like expression to match the name of the mapping type against.",
+                            example = "%"
                     ),
                     @Parameter(
                             name = "editable",
@@ -93,11 +93,11 @@ public class MappingTypeController {
     @GetMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<MappingTypeDTO>> getAll(
-            final @RequestParam(name = "name", required = false) String nameRegex,
+            final @RequestParam(name = "nameExpression", required = false) String nameExpression,
             final @RequestParam(name = "editable", required = false) Boolean editable,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return mappingTypeService.getAll(nameRegex, editable, true, pageable)
+        return mappingTypeService.getAll(nameExpression, editable, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

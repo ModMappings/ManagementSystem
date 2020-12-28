@@ -36,12 +36,12 @@ public class PackageService {
             final UUID gameVersion,
             final UUID releaseId,
             final UUID mappingTypeId,
-            final String inputMatchingRegex,
-            final String outputMatchingRegex,
+            final String inputMatchingExpression,
+            final String outputMatchingExpression,
             final Pageable pageable
     ) {
-        return repository.findAllBy(gameVersion, releaseId, mappingTypeId, inputMatchingRegex, outputMatchingRegex, pageable)
-                .doFirst(() -> logger.debug("Looking up a packages by: {}, {}, {}, {}, {}.", gameVersion, releaseId, mappingTypeId, inputMatchingRegex, outputMatchingRegex))
+        return repository.findAllBy(gameVersion, releaseId, mappingTypeId, inputMatchingExpression, outputMatchingExpression, pageable)
+                .doFirst(() -> logger.debug("Looking up a packages by: {}, {}, {}, {}, {}.", gameVersion, releaseId, mappingTypeId, inputMatchingExpression, outputMatchingExpression))
                 .switchIfEmpty(Mono.error(new NoEntriesFoundException("Packages")));
     }
 }

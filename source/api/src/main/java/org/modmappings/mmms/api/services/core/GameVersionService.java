@@ -59,19 +59,19 @@ public class GameVersionService {
      * Looks up multiple game versions, that match the search criteria.
      * The returned order is newest to oldest.
      *
-     * @param nameRegex  The regular expression against which the name of the game version is matched.
+     * @param nameExpression  The like expression against which the name of the game version is matched.
      * @param preRelease Indicates if preReleases need to be included, null indicates do not care.
      * @param snapshot   Indicates if snapshots need to be included, null indicates do not care.
      * @param pageable   The pagination and sorting logic for the request.
      * @return A {@link Flux} with the game versions, or an errored {@link Flux} that indicates a failure.
      */
-    public Mono<Page<GameVersionDTO>> getAll(final String nameRegex, final Boolean preRelease, final Boolean snapshot, final Pageable pageable) {
+    public Mono<Page<GameVersionDTO>> getAll(final String nameExpression, final Boolean preRelease, final Boolean snapshot, final Pageable pageable) {
         return repository.findAllBy(
-                nameRegex,
+                nameExpression,
                 preRelease,
                 snapshot,
                 pageable)
-                .doFirst(() -> logger.debug("Looking up game versions in search mode. Using parameters: {}, {}, {}", nameRegex, preRelease, snapshot))
+                .doFirst(() -> logger.debug("Looking up game versions in search mode. Using parameters: {}, {}, {}", nameExpression, preRelease, snapshot))
                 .flatMap(page -> Flux.fromIterable(page)
                         .map(this.gameVersionConverter::toDTO)
                         .collectList()
