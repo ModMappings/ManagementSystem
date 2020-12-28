@@ -72,8 +72,8 @@ public class GameVersionController {
                     @Parameter(
                             name = "name",
                             in = ParameterIn.QUERY,
-                            description = "The like expression to match the name of the version against.",
-                            example = "%"
+                            description = "The regular expression to match the name of the version against.",
+                            example = ".*"
                     ),
                     @Parameter(
                             name = "preRelease",
@@ -102,12 +102,12 @@ public class GameVersionController {
     @GetMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<GameVersionDTO>> getAll(
-            final @RequestParam(name = "nameExpression", required = false) String nameExpression,
+            final @RequestParam(name = "name", required = false) String nameRegex,
             final @RequestParam(name = "preRelease", required = false) Boolean isPreRelease,
             final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return gameVersionService.getAll(nameExpression, isPreRelease, isSnapshot, pageable)
+        return gameVersionService.getAll(nameRegex, isPreRelease, isSnapshot, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

@@ -30,7 +30,7 @@ class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingType
     }
 
     @Override
-    public Mono<MappingTypeDMO> findBy(
+    public Mono<MappingTypeDMO> findById(
             final UUID id,
             final boolean externallyVisibleOnly
     ) {
@@ -73,27 +73,27 @@ class MappingTypeRepositoryImpl extends AbstractModMappingRepository<MappingType
 
 
     /**
-     * Finds all mapping types which match the given name expression.
+     * Finds all mapping types which match the given name regex.
      * and which are editable if that parameter is supplied.
      *
-     * @param nameExpression             The like expression used to lookup mapping types for.
+     * @param nameRegex             The regular expression used to lookup mapping types for.
      * @param editable              Indicates if filtering on editables is needed, and if editables should be included or not. Pass null as do not care indicator.
      * @param externallyVisibleOnly Indicator if only externally visible mapping types should be returned.
      * @param pageable              The paging and sorting information.
-     * @return The mapping types of which the name match the expression.
+     * @return The mapping types of which the name match the regex.
      */
     @Override
     public Mono<Page<MappingTypeDMO>> findAllBy(
-            final String nameExpression,
+            final String nameRegex,
             final Boolean editable,
             final boolean externallyVisibleOnly,
             final Pageable pageable) {
         return createPagedStarRequest(
                 selectSpec -> selectSpec
                         .where(() -> {
-                            ColumnBasedCriteria criteria = nonNullAndLikesCheckForWhere(
+                            ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
                                     null,
-                                    nameExpression,
+                                    nameRegex,
                                     "",
                                     "name"
                             );

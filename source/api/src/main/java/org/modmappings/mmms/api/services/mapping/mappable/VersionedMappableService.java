@@ -87,9 +87,9 @@ public class VersionedMappableService {
      * @param classId            The id of the class to find versioned mappables in. Null to ignore.
      * @param methodId           The id of the method to find versioned mappables in. Null to ignore.
      * @param mappingId          The id of the mapping to find the versioned mappables for. Null to ignore. If parameter is passed, either a single result is returned or none. Since each mapping can only target a single versioned mappable.
-     * @param mappingTypeId      The id of the mapping type to find the versioned mappables for. Null to ignore. Use full in combination with a input and output expression.
-     * @param mappingInputExpression  A expression that is mapped against the input of the mapping. Null to ignore
-     * @param mappingOutputExpression A expression that is mapped against the output of the mapping. Null to ignore
+     * @param mappingTypeId      The id of the mapping type to find the versioned mappables for. Null to ignore. Use full in combination with a input and output regex.
+     * @param mappingInputRegex  A regex that is mapped against the input of the mapping. Null to ignore
+     * @param mappingOutputRegex A regex that is mapped against the output of the mapping. Null to ignore
      * @param superTypeTargetId  The id of the class to find the super types for. Null to ignore.
      * @param subTypeTargetId    The id of the class to find the sub types for. Null to ignore.
      * @param pageable           The pagination and sorting information for the request.
@@ -102,14 +102,14 @@ public class VersionedMappableService {
             final UUID methodId,
             final UUID mappingId,
             final UUID mappingTypeId,
-            final String mappingInputExpression,
-            final String mappingOutputExpression,
+            final String mappingInputRegex,
+            final String mappingOutputRegex,
             final UUID superTypeTargetId,
             final UUID subTypeTargetId,
             final Pageable pageable
     ) {
         return repository.findAllFor(
-                gameVersionId, this.mappableTypeConverter.toDMO(mappableTypeDTO), classId, methodId, mappingId, mappingTypeId, mappingInputExpression, mappingOutputExpression, superTypeTargetId, subTypeTargetId, true, pageable
+                gameVersionId, this.mappableTypeConverter.toDMO(mappableTypeDTO), classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, true, pageable
         )
                 .doFirst(() -> logger.debug("Looking up mappables."))
                 .flatMap(page -> Flux.fromIterable(page)

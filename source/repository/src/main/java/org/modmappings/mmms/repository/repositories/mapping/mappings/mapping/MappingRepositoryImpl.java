@@ -41,8 +41,8 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
                                                      final UUID versionedMappableId,
                                                      final UUID releaseId,
                                                      final MappableTypeDMO mappableType,
-                                                     final String inputExpression,
-                                                     final String outputExpression,
+                                                     final String inputRegex,
+                                                     final String outputRegex,
                                                      final UUID mappingTypeId,
                                                      final UUID gameVersionId,
                                                      final UUID userId,
@@ -71,8 +71,8 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, versionedMappableId, "", "versioned_mappable_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, releaseId, "rc", "release_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, mappableType, "mp", "type");
-                                    criteria = nonNullAndLikesCheckForWhere(criteria, inputExpression, "", "input");
-                                    criteria = nonNullAndLikesCheckForWhere(criteria, outputExpression, "", "output");
+                                    criteria = nonNullAndMatchesCheckForWhere(criteria, inputRegex, "", "input");
+                                    criteria = nonNullAndMatchesCheckForWhere(criteria, outputRegex, "", "output");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "", "mapping_type_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, gameVersionId, "vm", "game_version_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, parentClassId, "vm", "parent_class_id");
@@ -92,8 +92,8 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
     }
 
     @Override
-    public Mono<MappingDMO> findBy(final UUID id,
-                                   final boolean externallyVisibleOnly) {
+    public Mono<MappingDMO> findById(final UUID id,
+                                     final boolean externallyVisibleOnly) {
         Assert.notNull(id, "Id must not be null!");
 
         final List<String> columns = getAccessStrategy().getAllColumns(this.getEntity().getJavaType());

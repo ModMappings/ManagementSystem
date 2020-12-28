@@ -28,7 +28,7 @@ public interface ReleaseRepositoryCustom {
      * @param externallyVisibleOnly Indicator used if only releases that target externally visible mapping types should be included.
      * @return The release or an errored mono.
      */
-    Mono<ReleaseDMO> findBy(
+    Mono<ReleaseDMO> findById(
             UUID id,
             boolean externallyVisibleOnly
     );
@@ -37,7 +37,7 @@ public interface ReleaseRepositoryCustom {
      * Finds all releases which match the search criteria if they are supplied.
      * Supply null to anyone of them to ignore the search.
      *
-     * @param nameExpression             The expression to filter the name on-
+     * @param nameRegex             The regex to filter the name on-
      * @param gameVersionId         The id of the game version to filter releases on.
      * @param mappingTypeId         The id of the mapping type to filter releases on.
      * @param isSnapshot            Indicate if snapshots should be included or not.
@@ -48,7 +48,7 @@ public interface ReleaseRepositoryCustom {
      * @return All releases which match the given criteria.
      */
     Mono<Page<ReleaseDMO>> findAllBy(
-            String nameExpression,
+            String nameRegex,
             UUID gameVersionId,
             UUID mappingTypeId,
             Boolean isSnapshot,

@@ -66,25 +66,25 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
             final UUID gameVersion,
             final UUID releaseId,
             final UUID mappingTypeId,
-            final String inputMatchingExpression,
-            final String outputMatchingExpression,
+            final String inputMatchingRegex,
+            final String outputMatchingRegex,
             final Pageable pageable
     ) {
 
-        if (inputMatchingExpression != null && outputMatchingExpression != null) {
-            return Mono.error(new IllegalArgumentException("Both input and output matching expression are supplied. Package lookup only supports either output mode or input mode."));
+        if (inputMatchingRegex != null && outputMatchingRegex != null) {
+            return Mono.error(new IllegalArgumentException("Both input and output matching regex are supplied. Package lookup only supports either output mode or input mode."));
         }
 
-        if (inputMatchingExpression == null && outputMatchingExpression == null) {
-            return Mono.error(new IllegalArgumentException("Neither input and output matching expression are supplied. Package lookup requires at least one of the two to be supplied."));
+        if (inputMatchingRegex == null && outputMatchingRegex == null) {
+            return Mono.error(new IllegalArgumentException("Neither input and output matching regex are supplied. Package lookup requires at least one of the two to be supplied."));
         }
 
-        final String side = outputMatchingExpression != null ? "output" : "input";
-        final String matchingExpression = outputMatchingExpression != null ? outputMatchingExpression : inputMatchingExpression;
+        final String side = outputMatchingRegex != null ? "output" : "input";
+        final String matchingRegex = outputMatchingRegex != null ? outputMatchingRegex : inputMatchingRegex;
 
         return this.createPagedRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
-                        .withProjection(distinct(aliased(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_expression", matchingExpression)), "package")))
+                        .withProjection(distinct(aliased(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex)), "package")))
                         .withJoin(join("versioned_mappable", "vm").withOn(on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
                         .withJoin(join("mappable", "mp").withOn(on(reference("vm", "mappable_id")).is(reference("mp", "id"))))
                         .withJoin(join("release_component", "rc").withOn(on(reference("id")).is(reference("rc", "mapping_id"))))
@@ -95,11 +95,11 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
                             criteria = nonNullAndEqualsCheckForWhere(criteria, MappableTypeDMO.CLASS, "mp", "type");
 
                             if (criteria == null)
-                                return where(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_expression", matchingExpression))).isNotNull();
+                                return where(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex))).isNotNull();
 
-                            return criteria.and(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_expression", matchingExpression))).isNotNull();
+                            return criteria.and(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex))).isNotNull();
                         })
-                        .withSort(sort(asc(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_expression", matchingExpression)))))
+                        .withSort(sort(asc(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex)))))
 
                 ,
                 "mapping",

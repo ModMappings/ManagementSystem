@@ -6,8 +6,11 @@ import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException
 import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
+import org.modmappings.mmms.repository.model.comments.CommentDMO;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.model.core.release.ReleaseComponentDMO;
+import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;
+import org.modmappings.mmms.repository.repositories.comments.comment.CommentRepository;
 import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
 import org.modmappings.mmms.repository.repositories.core.releases.components.ReleaseComponentRepository;
 import org.modmappings.mmms.repository.repositories.core.releases.release.ReleaseRepository;
@@ -69,7 +72,7 @@ public class ReleaseService {
             final UUID id,
             final boolean externallyVisibleOnly
     ) {
-        return repository.findBy(id, externallyVisibleOnly)
+        return repository.findById(id, externallyVisibleOnly)
                 .doFirst(() -> logger.debug("Looking up a release by id: {}", id))
                 .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
                         .map(MappingTypeDMO::isVisible)) //Only return a release when it is supposed to be visible.
@@ -82,7 +85,7 @@ public class ReleaseService {
      * Looks up multiple releases, that match the search criteria.
      * The returned order is newest to oldest.
      *
-     * @param nameExpression        The like expression to filter the name on
+     * @param nameRegex             The regex to filter the name on-
      * @param gameVersionId         The id of the game version to filter releases on.
      * @param mappingTypeId         The id of the mapping type to filter releases on.
      * @param isSnapshot            Indicate if snapshots should be included or not.
@@ -93,7 +96,7 @@ public class ReleaseService {
      * @param pageable              The paging and sorting information for the request.
      * @return A {@link Flux} with the releases, or an errored {@link Flux} that indicates a failure.
      */
-    public Mono<Page<ReleaseDTO>> getAllBy(final String nameExpression,
+    public Mono<Page<ReleaseDTO>> getAllBy(final String nameRegex,
                                            final UUID gameVersionId,
                                            final UUID mappingTypeId,
                                            final Boolean isSnapshot,
@@ -101,8 +104,8 @@ public class ReleaseService {
                                            final UUID userId,
                                            final boolean externallyVisibleOnly,
                                            final Pageable pageable) {
-        return repository.findAllBy(nameExpression, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable)
-                .doFirst(() -> logger.debug("Looking up releases: {}, {}, {}, {}, {}, {}, {}, {}", nameExpression, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
+        return repository.findAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable)
+                .doFirst(() -> logger.debug("Looking up releases: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
                 .flatMap(page -> Flux.fromIterable(page)
                         .map(this.releaseConverter::toDTO)
                         .collectList()
@@ -124,7 +127,7 @@ public class ReleaseService {
             final boolean externallyVisibleOnly,
             final Supplier<UUID> userIdSupplier) {
         return repository
-                .findBy(id, externallyVisibleOnly)
+                .findById(id, externallyVisibleOnly)
                 .flatMap(dmo -> repository.deleteById(id)
                         .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleting release with id: %s", id)))
                         .doOnNext(aVoid -> userLoggingService.warn(logger, userIdSupplier, String.format("Deleted release with id: %s", id))));
@@ -178,7 +181,7 @@ public class ReleaseService {
             final ReleaseDTO newRelease,
             final boolean externallyVisibleOnly,
             final Supplier<UUID> userIdSupplier) {
-        return repository.findBy(idToUpdate, externallyVisibleOnly)
+        return repository.findById(idToUpdate, externallyVisibleOnly)
                 .doFirst(() -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating release: %s", idToUpdate)))
                 .switchIfEmpty(Mono.error(new EntryNotFoundException(newRelease.getId(), "Release")))
                 .doOnNext(dmo -> userLoggingService.warn(logger, userIdSupplier, String.format("Updating db release: %s with id: %s, and data: %s", dmo.getName(), dmo.getId(), newRelease)))

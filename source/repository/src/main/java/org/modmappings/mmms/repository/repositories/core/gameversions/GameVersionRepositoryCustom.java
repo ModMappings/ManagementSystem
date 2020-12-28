@@ -17,14 +17,14 @@ public interface GameVersionRepositoryCustom {
     /**
      * Finds all game versions which match the given search criteria.
      *
-     * @param nameExpression  The like expression used to lookup game versions for.
+     * @param nameRegex  The regular expression used to lookup game versions for.
      * @param preRelease Indicates if prerelease are supposed to be filtered out or included, null indicates do not care.
      * @param snapshot   Indicates if snapshots are supposed to be filtered out or included, null indicates do not care.
      * @param pageable   The paging information for the request.s
      * @return The game versions which match the given search criteria.
      */
     Mono<Page<GameVersionDMO>> findAllBy(
-            String nameExpression,
+            String nameRegex,
             Boolean preRelease,
             Boolean snapshot,
             Pageable pageable

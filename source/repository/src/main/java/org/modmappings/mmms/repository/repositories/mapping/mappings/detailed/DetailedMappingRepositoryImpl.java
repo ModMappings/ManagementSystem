@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Priority;
+import java.util.List;
 import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
@@ -70,8 +71,8 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
             final UUID versionedMappableId,
             final UUID releaseId,
             final MappableTypeDMO mappableType,
-            final String inputExpression,
-            final String outputExpression,
+            final String inputRegex,
+            final String outputRegex,
             final UUID mappingTypeId,
             final UUID gameVersionId,
             final UUID userId,
@@ -102,8 +103,8 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, versionedMappableId, "", "versioned_mappable_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, releaseId, "rc", "release_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, mappableType, "mappable", "type");
-                                    criteria = nonNullAndLikesCheckForWhere(criteria, inputExpression, "", "input");
-                                    criteria = nonNullAndLikesCheckForWhere(criteria, outputExpression, "", "output");
+                                    criteria = nonNullAndMatchesCheckForWhere(criteria, inputRegex, "", "input");
+                                    criteria = nonNullAndMatchesCheckForWhere(criteria, outputRegex, "", "output");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "", "mapping_type_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, gameVersionId, "versioned_mappable", "game_version_id");
                                     criteria = nonNullAndEqualsCheckForWhere(criteria, parentClassId, "versioned_mappable", "parent_class_id");
@@ -126,7 +127,7 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
     }
 
     @Override
-    public Mono<DetailedMappingDMO> findBy(final UUID id, final boolean externallyVisibleOnly) {
+    public Mono<DetailedMappingDMO> findById(final UUID id, final boolean externallyVisibleOnly) {
         Assert.notNull(id, "Id must not be null!");
 
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();

@@ -4,6 +4,7 @@ import org.modmappings.mmms.api.converters.MappingTypeConverter;
 import org.modmappings.mmms.api.model.core.MappingTypeDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
+import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class MappingTypeService {
             final UUID id,
             final boolean externallyVisibleOnly
     ) {
-        return repository.findBy(id, externallyVisibleOnly)
+        return repository.findById(id, externallyVisibleOnly)
                 .doFirst(() -> logger.debug("Looking up a mapping type by id: {}", id))
                 .map(this.mappingTypeConverter::toDTO)
                 .doOnNext(dto -> logger.debug("Found mapping type: {} with id: {}", dto.getName(), dto.getId()))
@@ -61,24 +62,24 @@ public class MappingTypeService {
      * Looks up multiple mapping types, that match the search criteria.
      * The returned order is newest to oldest.
      *
-     * @param nameExpression             The like expression against which the name of the mapping type is matched.
+     * @param nameRegex             The regular expression against which the name of the mapping type is matched.
      * @param editable              Indicates if editable mapping types need to be included, null indicates do not care.
      * @param externallyVisibleOnly Indicator if only externally visible mapping types should be returned.
      * @param pageable              The paging and sorting information.
      * @return A {@link Flux} with the mapping types, or an errored {@link Flux} that indicates a failure.
      */
     public Mono<Page<MappingTypeDTO>> getAll(
-            final String nameExpression,
+            final String nameRegex,
             final Boolean editable,
             final boolean externallyVisibleOnly,
             final Pageable pageable
     ) {
         return repository.findAllBy(
-                nameExpression,
+                nameRegex,
                 editable,
                 externallyVisibleOnly,
                 pageable)
-                .doFirst(() -> logger.debug("Looking up mapping types in search mode. Using parameters: {}, {}", nameExpression, editable))
+                .doFirst(() -> logger.debug("Looking up mapping types in search mode. Using parameters: {}, {}", nameRegex, editable))
                 .flatMap(page -> Flux.fromIterable(page)
                         .map(this.mappingTypeConverter::toDTO)
                         .collectList()

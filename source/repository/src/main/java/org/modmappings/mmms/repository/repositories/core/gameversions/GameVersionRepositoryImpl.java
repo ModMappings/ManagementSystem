@@ -26,7 +26,7 @@ class GameVersionRepositoryImpl extends AbstractModMappingRepository<GameVersion
     /**
      * Finds all game versions which match the given search criteria.
      *
-     * @param nameExpression  The like expression used to lookup game versions for.
+     * @param nameRegex  The regular expression used to lookup game versions for.
      * @param preRelease Indicates if prerelease are supposed to be filtered out or included, null indicates do not care.
      * @param snapshot   Indicates if snapshots are supposed to be filtered out or included, null indicates do not care.
      * @param pageable   The paging information for the request.s
@@ -34,7 +34,7 @@ class GameVersionRepositoryImpl extends AbstractModMappingRepository<GameVersion
      */
     @Override
     public Mono<Page<GameVersionDMO>> findAllBy(
-            final String nameExpression,
+            final String nameRegex,
             final Boolean preRelease,
             final Boolean snapshot,
             final Pageable pageable
@@ -42,9 +42,9 @@ class GameVersionRepositoryImpl extends AbstractModMappingRepository<GameVersion
         return createPagedStarRequest(
                 selectSpecWithJoin -> selectSpecWithJoin
                         .where(() -> {
-                                    ColumnBasedCriteria criteria = nonNullAndLikesCheckForWhere(
+                                    ColumnBasedCriteria criteria = nonNullAndMatchesCheckForWhere(
                                             null,
-                                            nameExpression,
+                                            nameRegex,
                                             "",
                                             "name"
                                     );

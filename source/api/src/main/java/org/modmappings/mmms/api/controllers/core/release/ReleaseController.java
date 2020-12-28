@@ -76,8 +76,8 @@ public class ReleaseController {
                     @Parameter(
                             name = "name",
                             in = ParameterIn.QUERY,
-                            description = "The like expression to match the name of the release against.",
-                            example = "%"
+                            description = "The regular expression to match the name of the release against.",
+                            example = ".*"
                     ),
                     @Parameter(
                             name = "gameVersion",
@@ -124,7 +124,7 @@ public class ReleaseController {
     @GetMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
     public Mono<Page<ReleaseDTO>> getAll(
-            final @RequestParam(name = "nameExpression", required = false) String nameExpression,
+            final @RequestParam(name = "name", required = false) String nameRegex,
             final @RequestParam(name = "gameVersion", required = false) UUID gameVersionId,
             final @RequestParam(name = "mappingType", required = false) UUID mappingTypeId,
             final @RequestParam(name = "snapshot", required = false) Boolean isSnapshot,
@@ -132,7 +132,7 @@ public class ReleaseController {
             final @RequestParam(name = "user", required = false) UUID userId,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return releaseService.getAllBy(nameExpression, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, true, pageable)
+        return releaseService.getAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

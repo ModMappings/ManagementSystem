@@ -52,12 +52,12 @@ public class PackageController {
                             description = "The id of the mapping type to get the package for."
                     ),
                     @Parameter(
-                            name = "inputExpression",
-                            description = "The like expression to match the input mapping of the packages against. Either this or the output variant needs to be specified."
+                            name = "inputMatchingRegex",
+                            description = "The regex to match the input mapping of the packages against. Either this or the output variant needs to be specified."
                     ),
                     @Parameter(
-                            name = "outputExpression",
-                            description = "The like expression to match the output mapping of the packages against. Either this or the input variant needs to be specified."
+                            name = "outputMatchingRegex",
+                            description = "The regex to match the output mapping of the packages against. Either this or the input variant needs to be specified."
                     )
             }
     )
@@ -77,11 +77,11 @@ public class PackageController {
             final @RequestParam(value = "gameVersion", required = false) UUID gameVersion,
             final @RequestParam(value = "release", required = false) UUID release,
             final @RequestParam(value = "mappingType", required = false) UUID mappingType,
-            final @RequestParam(value = "inputExpression", required = false) String inputExpression,
-            final @RequestParam(value = "outputExpression", required = false) String outputExpression,
+            final @RequestParam(value = "inputMatchingRegex", required = false) String inputMatchingRegex,
+            final @RequestParam(value = "outputMatchingRegex", required = false) String outputMatchingRegex,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return packageService.findAllBy(gameVersion, release, mappingType, inputExpression, outputExpression, pageable)
+        return packageService.findAllBy(gameVersion, release, mappingType, inputMatchingRegex, outputMatchingRegex, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

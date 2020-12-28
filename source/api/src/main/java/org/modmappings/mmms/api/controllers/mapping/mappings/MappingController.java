@@ -131,16 +131,16 @@ public class MappingController {
                             example = "CLASS"
                     ),
                     @Parameter(
-                            name = "inputExpression",
+                            name = "inputRegex",
                             in = ParameterIn.QUERY,
-                            description = "The like expression to match the input of the mapping against.",
-                            example = "%"
+                            description = "The regular expression to match the input of the mapping against.",
+                            example = ".*"
                     ),
                     @Parameter(
-                            name = "outputExpression",
+                            name = "outputRegex",
                             in = ParameterIn.QUERY,
-                            description = "The like expression to match the output of the mapping against.",
-                            example = "%"
+                            description = "The regular expression to match the output of the mapping against.",
+                            example = ".*"
                     ),
                     @Parameter(
                             name = "mappingTypeId",
@@ -191,8 +191,8 @@ public class MappingController {
             final @RequestParam(value = "versionedMappableId", required = false) UUID versionedMappableId,
             final @RequestParam(value = "releaseId", required = false) UUID releaseId,
             final @RequestParam(value = "mappableType", required = false) MappableTypeDTO mappableType,
-            final @RequestParam(value = "inputExpression", required = false) String inputExpression,
-            final @RequestParam(value = "outputExpression", required = false) String outputExpression,
+            final @RequestParam(value = "inputRegex", required = false) String inputRegex,
+            final @RequestParam(value = "outputRegex", required = false) String outputRegex,
             final @RequestParam(value = "mappingTypeId", required = false) UUID mappingTypeId,
             final @RequestParam(value = "gameVersionId", required = false) UUID gameVersionId,
             final @RequestParam(value = "createdBy", required = false) UUID userId,
@@ -200,7 +200,7 @@ public class MappingController {
             final @RequestParam(value = "parentMethodId", required = false) UUID parentMethodId,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputExpression, outputExpression, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, true, pageable)
+        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();
@@ -236,16 +236,16 @@ public class MappingController {
                             example = "CLASS"
                     ),
                     @Parameter(
-                            name = "inputExpression",
+                            name = "inputRegex",
                             in = ParameterIn.QUERY,
-                            description = "The like expression to match the input of the mapping against.",
-                            example = "%"
+                            description = "The regular expression to match the input of the mapping against.",
+                            example = ".*"
                     ),
                     @Parameter(
-                            name = "outputExpression",
+                            name = "outputRegex",
                             in = ParameterIn.QUERY,
-                            description = "The like expression to match the output of the mapping against.",
-                            example = "%"
+                            description = "The regular expression to match the output of the mapping against.",
+                            example = ".*"
                     ),
                     @Parameter(
                             name = "mappingTypeId",
@@ -296,8 +296,8 @@ public class MappingController {
             final @RequestParam(value = "versionedMappableId", required = false) UUID versionedMappableId,
             final @RequestParam(value = "releaseId", required = false) UUID releaseId,
             final @RequestParam(value = "mappableType", required = false) MappableTypeDTO mappableType,
-            final @RequestParam(value = "inputExpression", required = false) String inputExpression,
-            final @RequestParam(value = "outputExpression", required = false) String outputExpression,
+            final @RequestParam(value = "inputRegex", required = false) String inputRegex,
+            final @RequestParam(value = "outputRegex", required = false) String outputRegex,
             final @RequestParam(value = "mappingTypeId", required = false) UUID mappingTypeId,
             final @RequestParam(value = "gameVersionId", required = false) UUID gameVersionId,
             final @RequestParam(value = "parentClassId", required = false) UUID parentClassId,
@@ -305,7 +305,7 @@ public class MappingController {
             final @RequestParam(value = "createdBy", required = false) UUID userId,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return detailedMappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputExpression, outputExpression, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, true, pageable)
+        return detailedMappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

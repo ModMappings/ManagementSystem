@@ -4,8 +4,10 @@ import org.modmappings.mmms.api.converters.mapping.mappable.MappableTypeConverte
 import org.modmappings.mmms.api.converters.mapping.mappings.DetailedMappingConverter;
 import org.modmappings.mmms.api.model.mapping.mappable.DetailedMappingDTO;
 import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
+import org.modmappings.mmms.api.model.mapping.mappings.MappingDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
+import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.repositories.mapping.mappings.detailed.DetailedMappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +54,8 @@ public class DetailedMappingService {
      * @param versionedMappableId   The id of the versioned mappable to filter on.
      * @param releaseId             The id of the release to filter on.
      * @param mappableType          The type of the mappable to filter the mappings on.
-     * @param inputExpression            The expression against which the input of the mappings is matched to be included in the result.
-     * @param outputExpression           The expression against which the output of the mappings is matched to be included in the result.
+     * @param inputRegex            The regex against which the input of the mappings is matched to be included in the result.
+     * @param outputRegex           The regex against which the output of the mappings is matched to be included in the result.
      * @param mappingTypeId         The id of the mapping type that a mapping needs to be for. Use an empty optional for any mapping type.
      * @param gameVersionId         The id of the game version that the mapping needs to be for. Use an empty optional for any game version.* @param parentClassId         The id of the class of which the targeted mappings versioned mappable resides in.
      * @param parentClassId         The id of the class of which the targeted mappings versioned mappable resides in.
@@ -66,8 +68,8 @@ public class DetailedMappingService {
                                                    final UUID versionedMappableId,
                                                    final UUID releaseId,
                                                    final MappableTypeDTO mappableType,
-                                                   final String inputExpression,
-                                                   final String outputExpression,
+                                                   final String inputRegex,
+                                                   final String outputRegex,
                                                    final UUID mappingTypeId,
                                                    final UUID gameVersionId,
                                                    final UUID userId,
@@ -75,8 +77,8 @@ public class DetailedMappingService {
                                                    final UUID parentMethodId,
                                                    final boolean externallyVisibleOnly,
                                                    final Pageable pageable) {
-        return repository.findAllBy(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputExpression, outputExpression, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable)
-                .doFirst(() -> logger.debug("Looking up mappings: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputExpression, outputExpression, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
+        return repository.findAllBy(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable)
+                .doFirst(() -> logger.debug("Looking up mappings: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
                 .flatMap(page -> Flux.fromIterable(page)
                         .map(this.instancedMappingConverter::toDTO)
                         .collectList()
@@ -96,7 +98,7 @@ public class DetailedMappingService {
             final UUID id,
             final boolean externallyVisibleOnly
     ) {
-        return repository.findBy(id, externallyVisibleOnly)
+        return repository.findById(id, externallyVisibleOnly)
                 .doFirst(() -> logger.debug("Looking up a detailed mapping by id: {}", id))
                 .map(this.instancedMappingConverter::toDTO)
                 .doOnNext(dto -> logger.debug("Found detailed mapping: {}-{} with id: {}", dto.getMappingDTO().getInput(), dto.getMappingDTO().getOutput(), dto.getMappingDTO().getId()))
