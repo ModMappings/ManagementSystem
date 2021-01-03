@@ -44,6 +44,10 @@ public final class Expressions {
         return new ReferenceExpression(tableName, columnName);
     }
 
+    public static Expression just(final String sql) {
+        return spring(NativeExpressionsBridge.just(sql));
+    }
+
     public static Expression spring(final org.springframework.data.relational.core.sql.Expression sqlExpression) {
         return new NativeExpression(sqlExpression);
     }

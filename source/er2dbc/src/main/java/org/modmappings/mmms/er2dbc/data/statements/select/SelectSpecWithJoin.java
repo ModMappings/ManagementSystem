@@ -1,6 +1,7 @@
 package org.modmappings.mmms.er2dbc.data.statements.select;
 
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
+import org.modmappings.mmms.er2dbc.data.statements.expression.DistinctOnExpression;
 import org.modmappings.mmms.er2dbc.data.statements.expression.Expression;
 import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
@@ -19,16 +20,18 @@ public class SelectSpecWithJoin {
     private final boolean distinct;
     private final String table;
     private final Collection<JoinSpec> joinSpecs;
+    private final DistinctOnExpression distinctOnExpression;
     private final List<Expression> projectedFields;
     @Nullable
     private final ColumnBasedCriteria criteria;
     private final SortSpec sort;
     private final Pageable page;
 
-    public SelectSpecWithJoin(final boolean distinct, final String table, final Collection<JoinSpec> joinSpecs, final List<Expression> projectedFields, @Nullable final ColumnBasedCriteria criteria, final SortSpec sort, final Pageable page) {
+    public SelectSpecWithJoin(final boolean distinct, final String table, final Collection<JoinSpec> joinSpecs, final DistinctOnExpression distinctOnExpression, final List<Expression> projectedFields, @Nullable final ColumnBasedCriteria criteria, final SortSpec sort, final Pageable page) {
         this.distinct = distinct;
         this.table = table;
         this.joinSpecs = joinSpecs;
+        this.distinctOnExpression = distinctOnExpression;
         this.projectedFields = projectedFields;
         this.criteria = criteria;
         this.sort = sort;
@@ -36,11 +39,62 @@ public class SelectSpecWithJoin {
     }
 
     public static SelectSpecWithJoin create(final String table) {
-        return new SelectSpecWithJoin(false, table, Collections.emptyList(), Collections.emptyList(), null, SortSpec.UNSORTED, Pageable.unpaged());
+        return new SelectSpecWithJoin(false, table, Collections.emptyList(), null, Collections.emptyList(), null, SortSpec.UNSORTED, Pageable.unpaged());
     }
 
     public static SelectSpecWithJoin createDistinct(final String table) {
-        return new SelectSpecWithJoin(true, table, Collections.emptyList(), Collections.emptyList(), null, SortSpec.UNSORTED, Pageable.unpaged());
+        return new SelectSpecWithJoin(true, table, Collections.emptyList(), null, Collections.emptyList(), null, SortSpec.UNSORTED, Pageable.unpaged());
+    }
+
+    /**
+     * Associate {@code projectedFields} with the select as distinct on call and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin withDistinctOn(final Expression... projectedFields) {
+        final List<Expression> expressions = Arrays.asList(projectedFields);
+        Assert.noNullElements(expressions, "Expressions is not allowed to contain null elements!");
+        Assert.isTrue(expressions.stream().allMatch(ex -> ex.isReference() || ex.isNative() || ex.isFunction() || ex.isDistinct() || ex.isAliased()), "All expressions need to be references!");
+
+        return this.withDistinctOn(expressions);
+    }
+
+    /**
+     * Associate {@code projectedFields} with the select as distinct on call and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin withDistinctOnFromColumnNames(final Collection<String> projectedFields) {
+        Assert.notNull(projectedFields, "ProjectedFields can not be null!");
+        Assert.noNullElements(projectedFields, "ProjectedFields is not allowed to contain null elements!");
+
+        final List<Expression> fields = new ArrayList<>();
+        if (this.distinctOnExpression != null)
+            fields.addAll(this.distinctOnExpression.getSource());
+        fields.addAll(projectedFields.stream().map(Expressions::reference).collect(Collectors.toList()));
+
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, new DistinctOnExpression(fields), fields, this.criteria, this.sort, this.page);
+    }
+
+    /**
+     * Associate {@code projectedFields} with the select and create a new {@link SelectSpecWithJoin}.
+     *
+     * @param projectedFields
+     * @return the {@link SelectSpecWithJoin}.
+     */
+    public SelectSpecWithJoin withDistinctOn(final Collection<Expression> projectedFields) {
+        Assert.notNull(projectedFields, "ProjectedFields can not be null!");
+        Assert.noNullElements(projectedFields, "ProjectedFields is not allowed to contain null elements!");
+        Assert.isTrue(projectedFields.stream().allMatch(ex -> ex.isReference() || ex.isNative() || ex.isFunction() || ex.isDistinct() || ex.isAliased()), "All ProjectedFields need to be references!");
+
+        final List<Expression> fields = new ArrayList<>();
+        if (this.distinctOnExpression != null)
+            fields.addAll(this.distinctOnExpression.getSource());
+        fields.addAll(projectedFields);
+
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, new DistinctOnExpression(fields), fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -70,7 +124,7 @@ public class SelectSpecWithJoin {
         final List<Expression> fields = new ArrayList<>(this.projectedFields);
         fields.addAll(projectedFields.stream().map(Expressions::reference).collect(Collectors.toList()));
 
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -87,7 +141,7 @@ public class SelectSpecWithJoin {
         final List<Expression> fields = new ArrayList<>(this.projectedFields);
         fields.addAll(projectedFields);
 
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -117,7 +171,7 @@ public class SelectSpecWithJoin {
         final List<Expression> fields = new ArrayList<>(this.projectedFields);
         fields.addAll(projectedFields.stream().map(Expressions::reference).collect(Collectors.toList()));
 
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -134,7 +188,7 @@ public class SelectSpecWithJoin {
         final List<Expression> fields = new ArrayList<>(this.projectedFields);
         fields.addAll(projectedFields);
 
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, fields, this.criteria, this.sort, this.page);
     }
 
 
@@ -164,7 +218,7 @@ public class SelectSpecWithJoin {
 
         final List<Expression> fields = projectedFields.stream().map(Expressions::reference).collect(Collectors.toList());
 
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -180,7 +234,7 @@ public class SelectSpecWithJoin {
 
         final List<Expression> fields = new ArrayList<>(expressions);
 
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, fields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, fields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -190,7 +244,7 @@ public class SelectSpecWithJoin {
      * @return the {@link SelectSpecWithJoin}.
      */
     public SelectSpecWithJoin withCriteria(final ColumnBasedCriteria criteria) {
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, this.projectedFields, criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin where(final Supplier<ColumnBasedCriteria> criteriaSupplier) {
@@ -203,45 +257,45 @@ public class SelectSpecWithJoin {
     }
 
     public SelectSpecWithJoin withJoin(final JoinSpec join) {
+        if (join instanceof JoinSpec.NoopJoinSpec)
+            return this;
+
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
         joinSpecs.add(join);
 
-        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin withJoin(final JoinSpec... joins) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
-        joinSpecs.addAll(Arrays.asList(joins));
+        joinSpecs.addAll(Arrays.stream(joins).filter(s -> !(s instanceof JoinSpec.NoopJoinSpec)).collect(Collectors.toSet()));
 
-        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin withJoin(final Collection<JoinSpec> joins) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
-        joinSpecs.addAll(joins);
+        joinSpecs.addAll(joins.stream().filter(s -> !(s instanceof JoinSpec.NoopJoinSpec)).collect(Collectors.toSet()));
 
-        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin join(final Supplier<JoinSpec> join) {
-        final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
-        joinSpecs.add(join.get());
-
-        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return this.withJoin(join.get());
     }
 
     public SelectSpecWithJoin join(final Supplier<JoinSpec>... joins) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
-        joinSpecs.addAll(Arrays.stream(joins).map(Supplier::get).collect(Collectors.toList()));
+        joinSpecs.addAll(Arrays.stream(joins).map(Supplier::get).filter(s -> !(s instanceof JoinSpec.NoopJoinSpec)).collect(Collectors.toList()));
 
-        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin join(final Collection<Supplier<JoinSpec>> joins) {
         final Collection<JoinSpec> joinSpecs = new ArrayList<>(this.joinSpecs);
-        joinSpecs.addAll(joins.stream().map(Supplier::get).collect(Collectors.toList()));
+        joinSpecs.addAll(joins.stream().map(Supplier::get).filter(s -> !(s instanceof JoinSpec.NoopJoinSpec)).collect(Collectors.toList()));
 
-        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     public SelectSpecWithJoin distinct() {
@@ -253,7 +307,7 @@ public class SelectSpecWithJoin {
     }
 
     public SelectSpecWithJoin withDistinct(final boolean distinct) {
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
 
@@ -266,10 +320,10 @@ public class SelectSpecWithJoin {
     public SelectSpecWithJoin withSort(final SortSpec sort) {
 
         if (!sort.isUnsorted()) {
-            return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, sort, this.page);
+            return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, sort, this.page);
         }
 
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, this.page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, this.sort, this.page);
     }
 
     /**
@@ -285,15 +339,15 @@ public class SelectSpecWithJoin {
             final Sort sort = page.getSort();
             final SortSpec sortSpec = SortSpec.sort(sort);
 
-            return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, !this.sort.isUnsorted() || sort.isUnsorted() ? this.sort : sortSpec,
+            return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, !this.sort.isUnsorted() || sort.isUnsorted() ? this.sort : sortSpec,
                     page);
         }
 
-        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, this.sort, page);
+        return new SelectSpecWithJoin(distinct, this.table, this.joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, this.sort, page);
     }
 
     public SelectSpecWithJoin clearSortAndPage() {
-        return new SelectSpecWithJoin(this.distinct, this.table, this.joinSpecs, this.projectedFields, this.criteria, SortSpec.UNSORTED, Pageable.unpaged());
+        return new SelectSpecWithJoin(this.distinct, this.table, this.joinSpecs, distinctOnExpression, this.projectedFields, this.criteria, SortSpec.UNSORTED, Pageable.unpaged());
     }
 
     public boolean isDistinct() {
@@ -309,7 +363,13 @@ public class SelectSpecWithJoin {
     }
 
     public List<Expression> getProjectedFields() {
-        return Collections.unmodifiableList(this.projectedFields);
+        final List<Expression> projections = new ArrayList<>();
+        if (this.distinctOnExpression != null)
+            projections.add(this.distinctOnExpression);
+
+        projections.addAll(this.projectedFields);
+
+        return Collections.unmodifiableList(projections);
     }
 
     @Nullable

@@ -120,6 +120,17 @@ services:
       - traefik-public
       - modmappings-data
 
+  redis:
+    image: redis-alpine
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type==worker
+          - node.labels.system==production
+          - node.labels.usecase==modmappings
+    networks:
+      - modmappings-data
+
 networks:
   traefik-public:
     external: true

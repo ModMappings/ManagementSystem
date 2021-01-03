@@ -336,6 +336,10 @@ public class ExtendedStatementMapper implements StatementMapper {
         return SelectSpecWithJoin.create(table);
     }
 
+    public SelectSpecWithJoin createSelectWithJoinDistinct(final String table) {
+        return SelectSpecWithJoin.createDistinct(table);
+    }
+
     /**
      * Extended implementation of {@link PreparedOperation}.
      *

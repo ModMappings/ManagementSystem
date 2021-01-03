@@ -60,6 +60,7 @@ public class WebSecurityConfiguration {
         return source;
     }
 
+    //TODO: Update to WSO2 Standard
     private static class KeycloakRoleExtractingGrantedAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
         /**

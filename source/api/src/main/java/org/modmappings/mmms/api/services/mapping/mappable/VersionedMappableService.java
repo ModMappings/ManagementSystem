@@ -7,6 +7,7 @@ import org.modmappings.mmms.api.model.mapping.mappable.VersionedMappableDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
+import org.modmappings.mmms.api.util.CacheKeyBuilder;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappable.*;
 import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
@@ -16,13 +17,17 @@ import org.modmappings.mmms.repository.repositories.mapping.mappables.protectedm
 import org.modmappings.mmms.repository.repositories.mapping.mappables.versionedmappables.VersionedMappableRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -41,6 +46,12 @@ import java.util.function.Supplier;
 @Component
 public class VersionedMappableService {
 
+    @Value("${caching.versioned-mappable.lifetimes.by-id:86400}")
+    private int CACHE_LIFETIME_BY_ID;
+
+    @Value("${caching.versioned-mappable.lifetimes.all:3600}")
+    private int CACHE_LIFETIME_ALL;
+
     private final Logger logger = LoggerFactory.getLogger(VersionedMappableService.class);
 
     private final VersionedMappableRepository repository;
@@ -51,10 +62,12 @@ public class VersionedMappableService {
 
     private final VersionedMappableConverter versionedMappableConverter;
     private final MappableTypeConverter mappableTypeConverter;
+    private final ReactiveValueOperations<Map<String, String>, VersionedMappableDTO> cacheOps;
+    private final ReactiveValueOperations<Map<String, String>, Page<VersionedMappableDTO>> pageCacheOps;
 
     private final UserLoggingService userLoggingService;
 
-    public VersionedMappableService(final VersionedMappableRepository repository, final InheritanceDataRepository inheritanceDataRepository, final MappableRepository mappableRepository, final ProtectedMappableInformationRepository protectedMappableInformationRepository, final MappingTypeRepository mappingTypeRepository, final VersionedMappableConverter versionedMappableConverter, final MappableTypeConverter mappableTypeConverter, final UserLoggingService userLoggingService) {
+    public VersionedMappableService(final VersionedMappableRepository repository, final InheritanceDataRepository inheritanceDataRepository, final MappableRepository mappableRepository, final ProtectedMappableInformationRepository protectedMappableInformationRepository, final MappingTypeRepository mappingTypeRepository, final VersionedMappableConverter versionedMappableConverter, final MappableTypeConverter mappableTypeConverter, final ReactiveValueOperations<Map<String, String>, VersionedMappableDTO> cacheOps, final ReactiveValueOperations<Map<String, String>, Page<VersionedMappableDTO>> pageCacheOps, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.inheritanceDataRepository = inheritanceDataRepository;
         this.mappableRepository = mappableRepository;
@@ -62,6 +75,8 @@ public class VersionedMappableService {
         this.mappingTypeRepository = mappingTypeRepository;
         this.versionedMappableConverter = versionedMappableConverter;
         this.mappableTypeConverter = mappableTypeConverter;
+        this.cacheOps = cacheOps;
+        this.pageCacheOps = pageCacheOps;
         this.userLoggingService = userLoggingService;
     }
 
@@ -72,11 +87,22 @@ public class VersionedMappableService {
      * @return A {@link Mono} containing the requested mappable or a errored {@link Mono} that indicates a failure.
      */
     public Mono<VersionedMappableDTO> getBy(final UUID id) {
-        return repository.findById(id)
-                .doFirst(() -> logger.debug("Looking up a mappable by id: {}", id))
-                .flatMap(this::toDTO)
-                .doOnNext(dto -> logger.debug("Found mappable: {} with id: {}", dto.getType(), dto.getId()))
-                .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mappable")));
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("ops", "getById")
+                .put("id", id)
+                .build();
+
+        return cacheOps.get(
+                cacheKey
+        )
+                .doFirst(() -> logger.debug("Looking up a mappable by id in cache: {}", id))
+                .doOnNext(dto -> logger.debug("Found mappable: {} with id in cache: {}", dto.getType(), dto.getId()))
+                .switchIfEmpty(repository.findById(id)
+                        .doFirst(() -> logger.debug("Looking up a mappable by id in database: {}", id))
+                        .flatMap(this::toDTO)
+                        .doOnNext(dto -> logger.debug("Found mappable: {} with id in database: {}", dto.getType(), dto.getId()))
+                        .zipWhen(dto -> cacheOps.set(cacheKey, dto, Duration.ofSeconds(CACHE_LIFETIME_BY_ID)), (dto, a) -> dto)
+                        .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mappable"))));
     }
 
     /**
@@ -108,16 +134,36 @@ public class VersionedMappableService {
             final UUID subTypeTargetId,
             final Pageable pageable
     ) {
-        return repository.findAllFor(
-                gameVersionId, this.mappableTypeConverter.toDMO(mappableTypeDTO), classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, true, pageable
-        )
-                .doFirst(() -> logger.debug("Looking up mappables."))
-                .flatMap(page -> Flux.fromIterable(page)
-                        .flatMap(this::toDTO)
-                        .collectList()
-                        .map(mappables -> (Page<VersionedMappableDTO>) new PageImpl<>(mappables, page.getPageable(), page.getTotalElements())))
-                .doOnNext(page -> logger.debug("Found mappables: {}", page))
-                .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mappable")));
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("ops", "getAll")
+                .put("gameVersionId", gameVersionId)
+                .put("mappableTypeDTO", mappableTypeDTO)
+                .put("classId", classId)
+                .put("methodId", methodId)
+                .put("mappingId", mappingId)
+                .put("mappingTypeId", mappingTypeId)
+                .put("mappingInputRegex", mappingInputRegex)
+                .put("mappingOutputRegex", mappingOutputRegex)
+                .put("superTypeTargetId", superTypeTargetId)
+                .put("subTypeTargetId", subTypeTargetId)
+                .put("pageable", pageable)
+                .build();
+
+        return pageCacheOps.get(
+                cacheKey
+        ).doFirst(() -> logger.debug("Looking up versioned mappables in cache: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", gameVersionId, mappableTypeDTO, classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId))
+                .doOnNext(page -> logger.debug("Found versioned mappables in cache: {}", page))
+                .switchIfEmpty(repository.findAllFor(
+                        gameVersionId, this.mappableTypeConverter.toDMO(mappableTypeDTO), classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId, true, pageable
+                )
+                        .doFirst(() -> logger.debug("Looking up versioned mappables in database: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", gameVersionId, mappableTypeDTO, classId, methodId, mappingId, mappingTypeId, mappingInputRegex, mappingOutputRegex, superTypeTargetId, subTypeTargetId))
+                        .flatMap(page -> Flux.fromIterable(page)
+                                .flatMap(this::toDTO)
+                                .collectList()
+                                .map(mappables -> (Page<VersionedMappableDTO>) new PageImpl<>(mappables, page.getPageable(), page.getTotalElements())))
+                        .doOnNext(page -> logger.debug("Found versioned mappables in database: {}", page))
+                        .zipWhen(page -> pageCacheOps.set(cacheKey, page, Duration.ofSeconds(CACHE_LIFETIME_ALL)), (page, a) -> page)
+                        .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mappable"))));
     }
 
     /**
@@ -132,6 +178,11 @@ public class VersionedMappableService {
             final UUID id,
             final VersionedMappableDTO versionedMappableToUpdate,
             final Supplier<UUID> userIdSupplier) {
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("ops", "getById")
+                .put("id", id)
+                .build();
+
         return repository.findById(id)
                 .flatMap(dmo -> protectedMappableInformationRepository.findAllByVersionedMappable(id, Pageable.unpaged())
                         .doFirst(() -> userLoggingService.info(logger, userIdSupplier, String.format("Retrieving protection information for: %s.", id)))
@@ -152,7 +203,9 @@ public class VersionedMappableService {
                         )
                         .then()
                 )
-                .flatMap(v -> repository.findById(id).flatMap(this::toDTO));
+                .zipWhen(v -> cacheOps.delete(cacheKey))
+                //TODO: Somehow clear the page cache as well.
+                .flatMap(v -> this.getBy(id));
     }
 
     private Mono<VersionedMappableDTO> toDTO(final VersionedMappableDMO dmo) {

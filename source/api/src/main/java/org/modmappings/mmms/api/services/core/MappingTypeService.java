@@ -1,20 +1,24 @@
 package org.modmappings.mmms.api.services.core;
 
-import org.modmappings.mmms.api.converters.MappingTypeConverter;
+import org.modmappings.mmms.api.converters.core.MappingTypeConverter;
 import org.modmappings.mmms.api.model.core.MappingTypeDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
-import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
+import org.modmappings.mmms.api.util.CacheKeyBuilder;
 import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -31,13 +35,23 @@ import java.util.UUID;
 @Component
 public class MappingTypeService {
 
+    @Value("${caching.mapping-type.lifetimes.by-id:86400}")
+    private int CACHE_LIFETIME_BY_ID;
+
+    @Value("${caching.mapping-type.lifetimes.all:3600}")
+    private int CACHE_LIFETIME_ALL;
+
     private final Logger logger = LoggerFactory.getLogger(MappingTypeService.class);
     private final MappingTypeRepository repository;
     private final MappingTypeConverter mappingTypeConverter;
+    private final ReactiveValueOperations<Map<String, String>, MappingTypeDTO> cacheOps;
+    private final ReactiveValueOperations<Map<String, String>, Page<MappingTypeDTO>> pageCacheOps;
 
-    public MappingTypeService(final MappingTypeRepository repository, final MappingTypeConverter mappingTypeConverter) {
+    public MappingTypeService(final MappingTypeRepository repository, final MappingTypeConverter mappingTypeConverter, final ReactiveValueOperations<Map<String, String>, MappingTypeDTO> cacheOps, final ReactiveValueOperations<Map<String, String>, Page<MappingTypeDTO>> pageCacheOps) {
         this.repository = repository;
         this.mappingTypeConverter = mappingTypeConverter;
+        this.cacheOps = cacheOps;
+        this.pageCacheOps = pageCacheOps;
     }
 
     /**
@@ -51,11 +65,21 @@ public class MappingTypeService {
             final UUID id,
             final boolean externallyVisibleOnly
     ) {
-        return repository.findById(id, externallyVisibleOnly)
-                .doFirst(() -> logger.debug("Looking up a mapping type by id: {}", id))
-                .map(this.mappingTypeConverter::toDTO)
-                .doOnNext(dto -> logger.debug("Found mapping type: {} with id: {}", dto.getName(), dto.getId()))
-                .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "MappingType")));
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("ops", "getById")
+                .put("id", id)
+                .build();
+
+        return cacheOps.get(
+                cacheKey
+        ).doFirst(() -> logger.debug("Looking up a mapping type by id from cache: {}", id))
+        .doOnNext(dto -> logger.debug("Found mapping type: {} with id from cache: {}", dto.getName(), dto.getId()))
+                .switchIfEmpty(repository.findById(id, externallyVisibleOnly)
+                        .doFirst(() -> logger.debug("Looking up a mapping type by id from database: {}", id))
+                        .map(this.mappingTypeConverter::toDTO)
+                        .doOnNext(dto -> logger.debug("Found mapping type: {} with id from database: {}", dto.getName(), dto.getId()))
+                        .zipWhen(dto -> cacheOps.set(cacheKey, dto, Duration.ofSeconds(CACHE_LIFETIME_BY_ID)), (dto, b) -> dto)
+                        .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "MappingType"))));
     }
 
     /**
@@ -74,17 +98,30 @@ public class MappingTypeService {
             final boolean externallyVisibleOnly,
             final Pageable pageable
     ) {
-        return repository.findAllBy(
-                nameRegex,
-                editable,
-                externallyVisibleOnly,
-                pageable)
-                .doFirst(() -> logger.debug("Looking up mapping types in search mode. Using parameters: {}, {}", nameRegex, editable))
-                .flatMap(page -> Flux.fromIterable(page)
-                        .map(this.mappingTypeConverter::toDTO)
-                        .collectList()
-                        .map(mappingTypes -> (Page<MappingTypeDTO>) new PageImpl<>(mappingTypes, page.getPageable(), page.getTotalElements())))
-                .doOnNext(page -> logger.debug("Found mapping types: {}", page))
-                .switchIfEmpty(Mono.error(new NoEntriesFoundException("MappingType")));
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("ops", "getAll")
+                .put("nameRegex", nameRegex)
+                .put("editable", editable)
+                .put("externallyVisibleOnly", externallyVisibleOnly)
+                .put("pageable", pageable)
+                .build();
+
+        return pageCacheOps.get(
+                cacheKey
+        ).doFirst(() -> logger.debug("Looking up mapping types in search mode. Using parameters from cache: {}, {}", nameRegex, editable))
+                .doOnNext(page -> logger.debug("Found mapping types in cache: {}", page))
+                .switchIfEmpty(repository.findAllBy(
+                        nameRegex,
+                        editable,
+                        externallyVisibleOnly,
+                        pageable)
+                        .doFirst(() -> logger.debug("Looking up mapping types in search mode. Using parameters from database: {}, {}", nameRegex, editable))
+                        .flatMap(page -> Flux.fromIterable(page)
+                                .map(this.mappingTypeConverter::toDTO)
+                                .collectList()
+                                .map(mappingTypes -> (Page<MappingTypeDTO>) new PageImpl<>(mappingTypes, page.getPageable(), page.getTotalElements())))
+                        .doOnNext(page -> logger.debug("Found mapping types in database: {}", page))
+                        .zipWhen(page -> pageCacheOps.set(cacheKey, page, Duration.ofSeconds(CACHE_LIFETIME_ALL)), (page, a) -> page)
+                        .switchIfEmpty(Mono.error(new NoEntriesFoundException("MappingType"))));
     }
 }

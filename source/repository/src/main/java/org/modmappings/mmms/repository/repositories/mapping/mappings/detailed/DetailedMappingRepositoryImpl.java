@@ -136,8 +136,6 @@ public class DetailedMappingRepositoryImpl implements DetailedMappingRepository,
         }
         final SelectSpecWithJoin specWithJoin = mapper.createSelectWithJoin("mapping")
                 .select(createSelectStatementsForCompoundEntity(DetailedMappingDMO.class))
-                .join(() -> join("release_component", "rc")
-                        .on(() -> on(Expressions.reference("id")).is(Expressions.reference("rc", "mapping_id"))))
                 .join(() -> join("versioned_mappable", "versioned_mappable")
                         .on(() -> on(Expressions.reference("versioned_mappable_id")).is(Expressions.reference("versioned_mappable", "id"))))
                 .join(() -> join("mappable", "mappable")

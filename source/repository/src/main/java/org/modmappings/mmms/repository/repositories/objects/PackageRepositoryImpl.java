@@ -2,9 +2,10 @@ package org.modmappings.mmms.repository.repositories.objects;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
+import org.modmappings.mmms.er2dbc.data.statements.expression.Expression;
 import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
-import org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
+import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
+import org.modmappings.mmms.repository.model.objects.PackageDMO;
 import org.modmappings.mmms.repository.repositories.IModMappingQuerySupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,8 @@ import javax.annotation.Priority;
 import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.where;
 import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.*;
-import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.join;
+import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.*;
 import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.Order.asc;
 import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.Order.desc;
 import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.sort;
@@ -62,49 +62,66 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
     }
 
     @Override
-    public Mono<Page<String>> findAllBy(
+    public Mono<Page<PackageDMO>> findAllBy(
+            final Boolean latestOnly,
             final UUID gameVersion,
             final UUID releaseId,
             final UUID mappingTypeId,
-            final String inputMatchingRegex,
-            final String outputMatchingRegex,
+            final String matchingRegex,
+            final String parentPackagePath, final boolean externallyVisibleOnly,
             final Pageable pageable
     ) {
 
-        if (inputMatchingRegex != null && outputMatchingRegex != null) {
-            return Mono.error(new IllegalArgumentException("Both input and output matching regex are supplied. Package lookup only supports either output mode or input mode."));
-        }
+        return this.createPagedStarRequest(
+                selectSpecWithJoin -> {
+                    if (latestOnly != null && latestOnly) {
+                        selectSpecWithJoin = selectSpecWithJoin
+                            .withDistinctOn(reference("path"));
+                    } else {
+                        selectSpecWithJoin = selectSpecWithJoin.withDistinct(true);
+                    }
 
-        if (inputMatchingRegex == null && outputMatchingRegex == null) {
-            return Mono.error(new IllegalArgumentException("Neither input and output matching regex are supplied. Package lookup requires at least one of the two to be supplied."));
-        }
+                    return selectSpecWithJoin.withJoin()
+                            //LIKE concat(packages.path,'%') and m.package_parent_path like concat(packages.parent_path,'%')
+                            .withJoin(leftOuterJoin("mapping", "m").withOn(on(reference("m", "package_path")).like(invoke("concat", reference("path"), just("'%'"))).and(reference("m", "package_parent_path")).like(invoke("concat", reference("parent_path"), just("'%'")))))
+                            .withJoin(optionalLeftOuterJoin( externallyVisibleOnly, "mapping_type", "mt").withOn(on(reference("m", "mapping_type_id")).is(reference("mt", "id"))))
+                            .withJoin(nonNullLeftOuterJoin( releaseId,"release_component", "rc").withOn(on(reference("m", "id")).is(reference("rc", "mapping_id"))))
+                            .where(() -> {
+                                ColumnBasedCriteria criteria = nonNullAndEqualsCheckForWhere(null, gameVersion, "m", "game_version_id");
+                                criteria = nonNullAndEqualsCheckForWhere(criteria, releaseId, "rc", "release_id");
+                                criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "m", "mapping_type_id");
+                                criteria = nonNullAndEqualsCheckForWhere(criteria, parentPackagePath, "packages", "parent_path");
 
-        final String side = outputMatchingRegex != null ? "output" : "input";
-        final String matchingRegex = outputMatchingRegex != null ? outputMatchingRegex : inputMatchingRegex;
+                                if (externallyVisibleOnly) {
+                                    criteria = nonNullAndEqualsCheckForWhere(
+                                            criteria,
+                                            true,
+                                            "mt",
+                                            "visible"
+                                    );
+                                }
 
-        return this.createPagedRequest(
-                selectSpecWithJoin -> selectSpecWithJoin
-                        .withProjection(distinct(aliased(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex)), "package")))
-                        .withJoin(join("versioned_mappable", "vm").withOn(on(reference("versioned_mappable_id")).is(reference("vm", "id"))))
-                        .withJoin(join("mappable", "mp").withOn(on(reference("vm", "mappable_id")).is(reference("mp", "id"))))
-                        .withJoin(join("release_component", "rc").withOn(on(reference("id")).is(reference("rc", "mapping_id"))))
-                        .where(() -> {
-                            ColumnBasedCriteria criteria = nonNullAndEqualsCheckForWhere(null, gameVersion, "vm", "game_version_id");
-                            criteria = nonNullAndEqualsCheckForWhere(criteria, releaseId, "rc", "release_id");
-                            criteria = nonNullAndEqualsCheckForWhere(criteria, mappingTypeId, "mapping", "mapping_type_id");
-                            criteria = nonNullAndEqualsCheckForWhere(criteria, MappableTypeDMO.CLASS, "mp", "type");
-
-                            if (criteria == null)
-                                return where(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex))).isNotNull();
-
-                            return criteria.and(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex))).isNotNull();
-                        })
-                        .withSort(sort(asc(invoke("substring", reference("mapping", side), Expressions.parameter("mapping_regex", matchingRegex)))))
-
+                                return nonNullAndMatchesCheckForWhere(criteria, matchingRegex, "packages", "path");
+                            })
+                            .withSort(sort(asc(reference("path"))).and(desc(reference("created_on"))));
+                }
                 ,
-                "mapping",
-                String.class,
+                "packages",
+                PackageDMO.class,
                 pageable
         );
+    }
+
+    @Override
+    public Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType) {
+        if (resultType != PackageDMO.class) {
+            final Expression countingExpression = selectSpec.getProjectedFields().size() == 1 ? selectSpec.getProjectedFields().get(0).dealias() : Expressions.reference(tableName, getIdColumnName(resultType));
+            final Expression countingDistinctExpression = selectSpec.isDistinct() ? Expressions.distinct(countingExpression) : countingExpression;
+            final Expression projectionExpression = Expressions.invoke("count", countingDistinctExpression);
+
+            return this.createCountRequestWith(selectSpec, resultType, projectionExpression);
+        }
+
+        return this.createCountRequestWith(selectSpec, resultType,Expressions.invoke("count", Expressions.distinct(Expressions.reference("path"))));
     }
 }

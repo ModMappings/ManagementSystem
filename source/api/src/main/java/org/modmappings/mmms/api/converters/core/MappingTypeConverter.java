@@ -1,4 +1,4 @@
-package org.modmappings.mmms.api.converters;
+package org.modmappings.mmms.api.converters.core;
 
 import org.modmappings.mmms.api.model.core.MappingTypeDTO;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;

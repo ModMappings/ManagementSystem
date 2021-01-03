@@ -1,11 +1,13 @@
 package org.modmappings.mmms.api.model.mapping.mappable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 @Schema(name = "SimpleVersionedMappable", description = "Represents a single piece of the sourcecode whose name can be remapped in a given version of the game, without the super- and subtype information, as well as the mapping locking information.")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SimpleVersionedMappableDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The id of the versioned mappable.")
     protected UUID id;

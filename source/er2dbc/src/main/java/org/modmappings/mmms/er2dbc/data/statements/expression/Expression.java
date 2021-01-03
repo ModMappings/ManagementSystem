@@ -24,6 +24,10 @@ public interface Expression {
         return false;
     }
 
+    default boolean isDistinctOn() {
+        return false;
+    }
+
     default boolean isAliased() {
         return false;
     }

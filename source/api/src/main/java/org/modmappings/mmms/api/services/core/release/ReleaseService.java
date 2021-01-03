@@ -1,29 +1,31 @@
 package org.modmappings.mmms.api.services.core.release;
 
-import org.modmappings.mmms.api.converters.release.ReleaseConverter;
+import org.modmappings.mmms.api.converters.core.release.ReleaseConverter;
 import org.modmappings.mmms.api.model.core.release.ReleaseDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.InsertionFailureDueToDuplicationException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
-import org.modmappings.mmms.repository.model.comments.CommentDMO;
+import org.modmappings.mmms.api.util.CacheKeyBuilder;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.model.core.release.ReleaseComponentDMO;
-import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;
-import org.modmappings.mmms.repository.repositories.comments.comment.CommentRepository;
 import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
 import org.modmappings.mmms.repository.repositories.core.releases.components.ReleaseComponentRepository;
 import org.modmappings.mmms.repository.repositories.core.releases.release.ReleaseRepository;
 import org.modmappings.mmms.repository.repositories.mapping.mappings.mapping.MappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -43,21 +45,31 @@ import java.util.stream.Collectors;
 @Component
 public class ReleaseService {
 
+    @Value("${caching.release.lifetimes.by-id:86400}")
+    private int CACHE_LIFETIME_BY_ID;
+
+    @Value("${caching.release.lifetimes.all:3600}")
+    private int CACHE_LIFETIME_ALL;
+
     private final Logger logger = LoggerFactory.getLogger(ReleaseService.class);
     private final ReleaseRepository repository;
     private final ReleaseComponentRepository releaseComponentRepository;
     private final MappingRepository mappingRepository;
     private final MappingTypeRepository mappingTypeRepository;
     private final ReleaseConverter releaseConverter;
+    private final ReactiveValueOperations<Map<String, String>, ReleaseDTO> cacheOps;
+    private final ReactiveValueOperations<Map<String, String>, Page<ReleaseDTO>> pageCacheOps;
 
     private final UserLoggingService userLoggingService;
 
-    public ReleaseService(final ReleaseRepository repository, final ReleaseComponentRepository releaseComponentRepository, final MappingRepository mappingRepository, final MappingTypeRepository mappingTypeRepository, final ReleaseConverter releaseConverter, final UserLoggingService userLoggingService) {
+    public ReleaseService(final ReleaseRepository repository, final ReleaseComponentRepository releaseComponentRepository, final MappingRepository mappingRepository, final MappingTypeRepository mappingTypeRepository, final ReleaseConverter releaseConverter, final ReactiveValueOperations<Map<String, String>, ReleaseDTO> cacheOps, final ReactiveValueOperations<Map<String, String>, Page<ReleaseDTO>> pageCacheOps, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.releaseComponentRepository = releaseComponentRepository;
         this.mappingRepository = mappingRepository;
         this.mappingTypeRepository = mappingTypeRepository;
         this.releaseConverter = releaseConverter;
+        this.cacheOps = cacheOps;
+        this.pageCacheOps = pageCacheOps;
         this.userLoggingService = userLoggingService;
     }
 
@@ -72,13 +84,24 @@ public class ReleaseService {
             final UUID id,
             final boolean externallyVisibleOnly
     ) {
-        return repository.findById(id, externallyVisibleOnly)
-                .doFirst(() -> logger.debug("Looking up a release by id: {}", id))
-                .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
-                        .map(MappingTypeDMO::isVisible)) //Only return a release when it is supposed to be visible.
-                .map(this.releaseConverter::toDTO)
-                .doOnNext(dto -> logger.debug("Found release: {} with id: {}", dto.getName(), dto.getId()))
-                .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Release")));
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("ops", "getBy")
+                .put("id", id)
+                .put("externallyVisibleOnly", externallyVisibleOnly)
+                .build();
+
+        return cacheOps.get(
+                cacheKey
+        ).doFirst(() -> logger.debug("Looking up a release by id from cache: {}", id))
+                .doOnNext(dto -> logger.debug("Found release in cache: {} with id: {}", dto.getName(), dto.getId()))
+                .switchIfEmpty(repository.findById(id, externallyVisibleOnly)
+                        .doFirst(() -> logger.debug("Looking up a release by id: {}", id))
+                        .filterWhen((dto) -> mappingTypeRepository.findById(dto.getMappingTypeId())
+                                .map(MappingTypeDMO::isVisible)) //Only return a release when it is supposed to be visible.
+                        .map(this.releaseConverter::toDTO)
+                        .doOnNext(dto -> logger.debug("Found release in database: {} with id: {}", dto.getName(), dto.getId()))
+                        .zipWhen(dto -> cacheOps.set(cacheKey, dto, Duration.ofSeconds(CACHE_LIFETIME_BY_ID)), (releaseDTO, aBoolean) -> releaseDTO)
+                        .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Release"))));
     }
 
     /**
@@ -104,14 +127,30 @@ public class ReleaseService {
                                            final UUID userId,
                                            final boolean externallyVisibleOnly,
                                            final Pageable pageable) {
-        return repository.findAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable)
-                .doFirst(() -> logger.debug("Looking up releases: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
-                .flatMap(page -> Flux.fromIterable(page)
-                        .map(this.releaseConverter::toDTO)
-                        .collectList()
-                        .map(releases -> (Page<ReleaseDTO>) new PageImpl<>(releases, page.getPageable(), page.getTotalElements())))
-                .doOnNext(page -> logger.debug("Found releases: {}", page))
-                .switchIfEmpty(Mono.error(new NoEntriesFoundException("Release")));
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("nameRegex", nameRegex)
+                .put("gameVersionId", gameVersionId)
+                .put("mappingTypeId", mappingTypeId)
+                .put("isSnapshot", isSnapshot)
+                .put("mappingId", mappingId)
+                .put("userId", userId)
+                .put("externallyVisibleOnly", externallyVisibleOnly)
+                .put("Pageable", pageable)
+                .build();
+
+        return pageCacheOps.get(
+                cacheKey
+        ).doFirst(() -> logger.debug("Looking up releases from cache: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
+                .doOnNext(page -> logger.debug("Found releases in cache: {}", page))
+                .switchIfEmpty(repository.findAllBy(nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable)
+                        .doFirst(() -> logger.debug("Looking up releases in database: {}, {}, {}, {}, {}, {}, {}, {}", nameRegex, gameVersionId, mappingTypeId, isSnapshot, mappingId, userId, externallyVisibleOnly, pageable))
+                        .flatMap(page -> Flux.fromIterable(page)
+                                .map(this.releaseConverter::toDTO)
+                                .collectList()
+                                .map(releases -> (Page<ReleaseDTO>) new PageImpl<>(releases, page.getPageable(), page.getTotalElements())))
+                        .doOnNext(page -> logger.debug("Found releases in database: {}", page))
+                        .zipWhen(page -> pageCacheOps.set(cacheKey, page, Duration.ofSeconds(CACHE_LIFETIME_ALL)), (releaseDTO, aBoolean) -> releaseDTO)
+                        .switchIfEmpty(Mono.error(new NoEntriesFoundException("Release"))));
     }
 
     /**

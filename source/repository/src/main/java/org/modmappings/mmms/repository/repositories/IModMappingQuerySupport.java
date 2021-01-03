@@ -21,6 +21,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -89,12 +90,11 @@ public interface IModMappingQuerySupport {
         }
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithPagination);
 
-        getLogger().debug("Executing find operation: " + operation.toString());
-
         return this.getDatabaseClient().execute(operation) //
                 .as(resultType) //
                 .fetch()
-                .all();
+                .all()
+                .doFirst(() -> getLogger().debug("Executing find operation: " + operation.toString()));
     }
 
     default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType) {
@@ -104,9 +104,15 @@ public interface IModMappingQuerySupport {
         final Expression countingDistinctExpression = selectSpec.isDistinct() ? Expressions.distinct(countingExpression) : countingExpression;
         final Expression projectionExpression = Expressions.invoke("count", countingDistinctExpression);
 
+        return this.createCountRequestWith(selectSpec, resultType, projectionExpression);
+    }
+
+    default Mono<Long> createCountRequestWith(final SelectSpecWithJoin selectSpec, final Class<?> resultType, final Expression projectionExpression) {
+        Assert.notNull(selectSpec, "SelectSpec must not be null");
+        Assert.notNull(projectionExpression, "ProjectionExpression must not be null");
+
         final SelectSpecWithJoin selectSpecWithProj =
                 selectSpec.notDistinct().clearSortAndPage().setProjection(projectionExpression);
-
 
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
         if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
@@ -114,26 +120,32 @@ public interface IModMappingQuerySupport {
         }
         final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
 
-        getLogger().debug("Executing count operation: " + operation.toString());
-
         return this.getDatabaseClient().execute(operation) //
                 .map((r, md) -> r.get(0, Long.class)) //
-                .first() //
+                .first()//
+                .doFirst(() -> getLogger().debug("Executing count operation: " + operation.toString()))
                 .defaultIfEmpty(0L);
     }
 
+
     default <R> Mono<Page<R>> createPagedRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, final Pageable pageable) {
-        return createFindRequest(selectSpecWithJoin, resultType, pageable)
-                .collectList()
-                .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, resultType)
-                        .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
+        return Mono.zip(
+                createFindRequest(selectSpecWithJoin, resultType, pageable)
+                        .collectList()
+                        .doOnNext(data -> getLogger().debug("Completed data retrieval with count: " + data.size())),
+                createCountRequest(selectSpecWithJoin, tableName, resultType)
+                        .doOnNext(count -> getLogger().debug("Completed count request with count: " + count))
+        ).map(data -> new PageImpl<>(data.getT1(), pageable, data.getT2()));
     }
 
-    default <R> Mono<Page<R>> createPagedRequestWithCountType(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, Class<?> countType, final Pageable pageable) {
-        return createFindRequest(selectSpecWithJoin, resultType, pageable)
-                .collectList()
-                .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, countType)
-                        .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
+    default <R> Mono<Page<R>> createPagedRequestWithCountType(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, final Class<?> countType, final Pageable pageable) {
+        return Mono.zip(
+                createFindRequest(selectSpecWithJoin, resultType, pageable)
+                        .collectList()
+                        .doOnNext(data -> getLogger().debug("Completed data retrieval with count: " + data.size())),
+                createCountRequest(selectSpecWithJoin, tableName, countType)
+                        .doOnNext(count -> getLogger().debug("Completed count request with count: " + count))
+        ).map(data -> new PageImpl<>(data.getT1(), pageable, data.getT2()));
     }
 
     default <R> Mono<Page<R>> createPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<R> resultType, final Pageable pageable) {
@@ -145,6 +157,21 @@ public interface IModMappingQuerySupport {
             mapper = mapper.forType(resultType);
         }
         SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(tableName);
+
+        selectSpec = selectSpecBuilder.apply(selectSpec);
+
+        return createPagedRequest(selectSpec, tableName, resultType, pageable);
+    }
+
+    default <R> Mono<Page<R>> createDistinctPagedRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<R> resultType, final Pageable pageable) {
+        Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
+        Assert.notNull(pageable, "Pageable most not be null!");
+
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
+        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoinDistinct(tableName);
 
         selectSpec = selectSpecBuilder.apply(selectSpec);
 
@@ -166,11 +193,29 @@ public interface IModMappingQuerySupport {
         return createPagedRequestWithCountType(selectSpec, tableName, resultType, countType, pageable);
     }
 
+    default <R> Mono<Page<R>> createDistinctPagedRequestWithCountType(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<R> resultType, final Class<?> countType, final Pageable pageable) {
+        Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
+        Assert.notNull(pageable, "Pageable most not be null!");
+
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
+        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoinDistinct(tableName);
+
+        selectSpec = selectSpecBuilder.apply(selectSpec);
+
+        return createPagedRequestWithCountType(selectSpec, tableName, resultType, countType, pageable);
+    }
+
     default <T> Mono<Page<T>> createPagedStarRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<T> resultType, final Pageable pageable) {
-        return createFindStarRequest(selectSpecWithJoin, resultType, pageable)
-                .collectList()
-                .flatMap(results -> createCountRequest(selectSpecWithJoin, tableName, resultType)
-                        .flatMap(count -> Mono.just(new PageImpl<>(results, pageable, count))));
+        return Mono.zip(
+                createFindStarRequest(selectSpecWithJoin, resultType, pageable)
+                        .collectList()
+                        .doOnNext(data -> getLogger().debug("Completed data retrieval with count: " + data.size())),
+                createCountRequest(selectSpecWithJoin, tableName, resultType)
+                    .doOnNext(count -> getLogger().debug("Completed count request with count: " + count))
+        ).map(data -> new PageImpl<>(data.getT1(), pageable, data.getT2()));
     }
 
     default <T> Mono<Page<T>> createPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<T> resultType, final Pageable pageable) {
@@ -183,6 +228,22 @@ public interface IModMappingQuerySupport {
             mapper = mapper.forType(resultType);
         }
         SelectSpecWithJoin selectSpec = mapper.createSelectWithJoin(tableName);
+
+        selectSpec = selectSpecBuilder.apply(selectSpec);
+
+        return createPagedStarRequest(selectSpec, tableName, resultType, pageable);
+    }
+
+    default <T> Mono<Page<T>> createDistinctPagedStarRequest(final UnaryOperator<SelectSpecWithJoin> selectSpecBuilder, final String tableName, final Class<T> resultType, final Pageable pageable) {
+        Assert.notNull(selectSpecBuilder, "SelectSpecBuilder must not be null!");
+        Assert.notNull(pageable, "Pageable most not be null!");
+
+
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
+        SelectSpecWithJoin selectSpec = mapper.createSelectWithJoinDistinct(tableName);
 
         selectSpec = selectSpecBuilder.apply(selectSpec);
 

@@ -8,11 +8,14 @@ import org.modmappings.mmms.api.model.mapping.mappings.MappingDTO;
 public class DetailedMappingDTO {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The mappable metadata related to the mapping.")
-    private final MappableDTO mappable;
+    private MappableDTO mappable;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The versioned mappable metadata related to the mapping. Does not contain sub- or supertype as well mapping locking information.")
-    private final SimpleVersionedMappableDTO versionedMappable;
+    private SimpleVersionedMappableDTO versionedMappable;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The actuall mapping.")
-    private final MappingDTO mappingDTO;
+    private MappingDTO mappingDTO;
+
+    public DetailedMappingDTO() {
+    }
 
     public DetailedMappingDTO(final MappableDTO mappable, final SimpleVersionedMappableDTO versionedMappable, final MappingDTO mappingDTO) {
         this.mappable = mappable;

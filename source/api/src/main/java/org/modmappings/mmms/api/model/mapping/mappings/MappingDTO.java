@@ -1,6 +1,7 @@
 package org.modmappings.mmms.api.model.mapping.mappings;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -25,8 +26,31 @@ public class MappingDTO {
     private String documentation;
     @Schema(description = "The distribution that the versioned mappable that is targeted by this mapping is in.")
     private DistributionDTO distribution;
+    @Schema(description = "The package the mapping for the class is in. Might be null when this is not a mapping for a class")
+    private String packagePath;
+    @Schema(description = "The parent package of the package the mapping for the class is in. Might be null when this is not a mapping for a class")
+    private String parentPackagePath;
+    @Schema(description = "The id of the game version this mapping is for.")
+    private UUID gameVersionId;
+    @Schema(description = "The type of mappable this is a mapping for.")
+    private MappableTypeDTO mappableType;
+    @Schema(description = "The id of the mappable this is a mapping for.")
+    private UUID mappableId;
 
-    public MappingDTO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID versionedMappableId, final UUID mappingTypeId, final String input, final String output, final String documentation, final DistributionDTO distribution) {
+    public MappingDTO(final UUID id,
+                      final UUID createdBy,
+                      final Timestamp createdOn,
+                      final UUID versionedMappableId,
+                      final UUID mappingTypeId,
+                      final String input,
+                      final String output,
+                      final String documentation,
+                      final DistributionDTO distribution,
+                      final String packagePath,
+                      final String parentPackagePath,
+                      final UUID gameVersionId,
+                      final MappableTypeDTO mappableType,
+                      final UUID mappableId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -36,6 +60,11 @@ public class MappingDTO {
         this.output = output;
         this.documentation = documentation;
         this.distribution = distribution;
+        this.packagePath = packagePath;
+        this.parentPackagePath = parentPackagePath;
+        this.gameVersionId = gameVersionId;
+        this.mappableType = mappableType;
+        this.mappableId = mappableId;
     }
 
     public MappingDTO() {
@@ -75,5 +104,25 @@ public class MappingDTO {
 
     public DistributionDTO getDistribution() {
         return distribution;
+    }
+
+    public String getPackagePath() {
+        return packagePath;
+    }
+
+    public String getParentPackagePath() {
+        return parentPackagePath;
+    }
+
+    public UUID getGameVersionId() {
+        return gameVersionId;
+    }
+
+    public MappableTypeDTO getMappableType() {
+        return mappableType;
+    }
+
+    public UUID getMappableId() {
+        return mappableId;
     }
 }

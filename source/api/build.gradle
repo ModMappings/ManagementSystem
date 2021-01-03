@@ -27,6 +27,7 @@ dependencies {
     implementation project(':source:er2dbc')
     implementation project(':source:repository')
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
     implementation 'org.springframework.boot.experimental:spring-boot-actuator-autoconfigure-r2dbc'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot.experimental:spring-boot-starter-data-r2dbc'

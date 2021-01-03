@@ -21,12 +21,40 @@ public class JoinSpec {
         this.tableAlias = tableAlias;
     }
 
+    public static JoinSpec nonNullJoin(final Object target, final String tableName, final String tableAlias) {
+        if (target == null)
+            return new NoopJoinSpec(JoinType.JOIN, "", "");
+
+        return new JoinSpec(JoinType.JOIN, tableName, tableAlias);
+    }
+
+    public static JoinSpec optionalJoin(final boolean shouldApply, final String tableName, final String tableAlias) {
+        if (!shouldApply)
+            return new NoopJoinSpec(JoinType.JOIN, "", "");
+
+        return new JoinSpec(JoinType.JOIN, tableName, tableAlias);
+    }
+
     public static JoinSpec join(final String tableName, final String tableAlias) {
         return new JoinSpec(JoinType.JOIN, tableName, tableAlias);
     }
 
     public static JoinSpec crossJoin(final String tableName, final String tableAlias) {
         return new JoinSpec(JoinType.CROSS_JOIN, tableName, tableAlias);
+    }
+
+    public static JoinSpec nonNullLeftOuterJoin(final Object target, final String tableName, final String tableAlias) {
+        if (target == null)
+            return new NoopJoinSpec(JoinType.LEFT_OUTER_JOIN, "", "");
+
+        return new JoinSpec(JoinType.LEFT_OUTER_JOIN, tableName, tableAlias);
+    }
+
+    public static JoinSpec optionalLeftOuterJoin(final boolean shouldApply, final String tableName, final String tableAlias) {
+        if (!shouldApply)
+            return new NoopJoinSpec(JoinType.LEFT_OUTER_JOIN, "", "");
+
+        return new JoinSpec(JoinType.LEFT_OUTER_JOIN, tableName, tableAlias);
     }
 
     public static JoinSpec leftOuterJoin(final String tableName, final String tableAlias) {
@@ -108,5 +136,22 @@ public class JoinSpec {
          */
 
         FULL_OUTER_JOIN;
+    }
+
+    public static class NoopJoinSpec extends JoinSpec {
+
+        private NoopJoinSpec(final JoinType type, final String tableName, final String tableAlias) {
+            super(type, tableName, tableAlias);
+        }
+
+        @Override
+        public JoinSpec withOn(final ColumnBasedCriteria columnBasedCriteria) {
+            return this;
+        }
+
+        @Override
+        public JoinSpec on(final Supplier<ColumnBasedCriteria> columnBasedCriteriaSupplier) {
+            return this;
+        }
     }
 }

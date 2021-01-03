@@ -1,10 +1,7 @@
 package org.modmappings.mmms.api.converters.mapping.mappings;
 
-import org.modmappings.mmms.api.model.mapping.mappable.MappableTypeDTO;
-import org.modmappings.mmms.api.model.mapping.mappings.DistributionDTO;
+import org.modmappings.mmms.api.converters.mapping.mappable.MappableTypeConverter;
 import org.modmappings.mmms.api.model.mapping.mappings.MappingDTO;
-import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
-import org.modmappings.mmms.repository.model.mapping.mappings.DistributionDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +16,11 @@ import java.util.function.Supplier;
 public class MappingConverter {
 
     private final DistributionConverter distributionConverter;
+    private final MappableTypeConverter mappableTypeConverter;
 
-    public MappingConverter(final DistributionConverter distributionConverter) {
+    public MappingConverter(final DistributionConverter distributionConverter, final MappableTypeConverter mappableTypeConverter) {
         this.distributionConverter = distributionConverter;
+        this.mappableTypeConverter = mappableTypeConverter;
     }
 
     /**
@@ -41,7 +40,12 @@ public class MappingConverter {
                 dmo.getInput(),
                 dmo.getOutput(),
                 dmo.getDocumentation(),
-                this.distributionConverter.toDTO(dmo.getDistribution())
+                this.distributionConverter.toDTO(dmo.getDistribution()),
+                dmo.getPackagePath(),
+                dmo.getPackageParentPath(),
+                dmo.getGameVersionId(),
+                this.mappableTypeConverter.toDTO(dmo.getMappableType()),
+                dmo.getMappableId()
         );
     }
 
@@ -67,7 +71,12 @@ public class MappingConverter {
                 dto.getInput(),
                 dto.getOutput(),
                 dto.getDocumentation(),
-                this.distributionConverter.toDMO(dto.getDistribution())
+                this.distributionConverter.toDMO(dto.getDistribution()),
+                dto.getPackagePath(),
+                dto.getParentPackagePath(),
+                dto.getGameVersionId(),
+                this.mappableTypeConverter.toDMO(dto.getMappableType()),
+                dto.getMappableId()
         );
     }
 

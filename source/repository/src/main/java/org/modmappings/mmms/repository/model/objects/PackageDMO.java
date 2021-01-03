@@ -1,29 +1,52 @@
 package org.modmappings.mmms.repository.model.objects;
 
-import java.util.List;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.sql.Timestamp;
 import java.util.UUID;
 
+@Table("packages")
 public class PackageDMO {
 
-    private UUID mappingTypeId;
-    private String packagePath;
-    private List<UUID> members;
+    private final String path;
+    private final String name;
+    private final String parentPath;
+    private final String parentParentPath;
+    private final UUID createdBy;
+    private final Timestamp createdOn;
 
-    public PackageDMO(final UUID mappingTypeId, final String packagePath, final List<UUID> members) {
-        this.mappingTypeId = mappingTypeId;
-        this.packagePath = packagePath;
-        this.members = members;
+    @PersistenceConstructor
+    public PackageDMO(final String path, final String name, final String parentPath, final String parentParentPath, final UUID createdBy, final Timestamp createdOn) {
+        this.path = path;
+        this.name = name;
+        this.parentPath = parentPath;
+        this.parentParentPath = parentParentPath;
+        this.createdBy = createdBy;
+        this.createdOn = createdOn;
     }
 
-    public UUID getMappingTypeId() {
-        return mappingTypeId;
+    public String getPath() {
+        return path;
     }
 
-    public String getPackagePath() {
-        return packagePath;
+    public String getName() {
+        return name;
     }
 
-    public List<UUID> getMembers() {
-        return members;
+    public String getParentPath() {
+        return parentPath;
+    }
+
+    public String getParentParentPath() {
+        return parentParentPath;
+    }
+
+    public UUID getCreatedBy() {
+        return createdBy;
+    }
+
+    public Timestamp getCreatedOn() {
+        return createdOn;
     }
 }

@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.modmappings.mmms.api.model.objects.PackageDTO;
 import org.modmappings.mmms.api.services.objects.PackageService;
 import org.modmappings.mmms.api.services.utils.exceptions.AbstractHttpResponseException;
 import org.modmappings.mmms.api.springdoc.PageableAsQueryParam;
+import org.modmappings.mmms.repository.model.objects.PackageDMO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -40,6 +42,10 @@ public class PackageController {
             summary = "Gets all known packages that match the given parameters.",
             parameters = {
                     @Parameter(
+                            name = "latestOnly",
+                            description = "Indicates if only the latest mapping for a versioned mappable should be taken into account."
+                    ),
+                    @Parameter(
                             name = "gameVersion",
                             description = "The id of the game version to get the package for."
                     ),
@@ -52,12 +58,12 @@ public class PackageController {
                             description = "The id of the mapping type to get the package for."
                     ),
                     @Parameter(
-                            name = "inputMatchingRegex",
-                            description = "The regex to match the input mapping of the packages against. Either this or the output variant needs to be specified."
+                            name = "pathMatchingRegex",
+                            description = "The regex to match the path of the packages against."
                     ),
                     @Parameter(
-                            name = "outputMatchingRegex",
-                            description = "The regex to match the output mapping of the packages against. Either this or the input variant needs to be specified."
+                            name = "parentPackagePath",
+                            description = "The path of the parent of the package. An empty string is the root of the package tree."
                     )
             }
     )
@@ -73,15 +79,16 @@ public class PackageController {
     })
     @GetMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
     @PageableAsQueryParam
-    public Mono<Page<String>> getAll(
+    public Mono<Page<PackageDTO>> getAll(
+            final @RequestParam(value = "latestOnly", required = false) Boolean latestOnly,
             final @RequestParam(value = "gameVersion", required = false) UUID gameVersion,
             final @RequestParam(value = "release", required = false) UUID release,
             final @RequestParam(value = "mappingType", required = false) UUID mappingType,
-            final @RequestParam(value = "inputMatchingRegex", required = false) String inputMatchingRegex,
-            final @RequestParam(value = "outputMatchingRegex", required = false) String outputMatchingRegex,
+            final @RequestParam(value = "pathMatchingRegex", required = false) String matchingRegex,
+            final @RequestParam(value = "parentPackagePath", required = false) String parentPackagePath,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return packageService.findAllBy(gameVersion, release, mappingType, inputMatchingRegex, outputMatchingRegex, pageable)
+        return packageService.findAllBy(latestOnly, gameVersion, release, mappingType, matchingRegex, parentPackagePath, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

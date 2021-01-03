@@ -1,4 +1,4 @@
-package org.modmappings.mmms.api.converters.release;
+package org.modmappings.mmms.api.converters.core.release;
 
 import org.modmappings.mmms.api.model.core.release.ReleaseDTO;
 import org.modmappings.mmms.repository.model.core.release.ReleaseDMO;

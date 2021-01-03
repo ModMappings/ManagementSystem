@@ -7,18 +7,23 @@ import org.modmappings.mmms.api.model.mapping.mappings.MappingDTO;
 import org.modmappings.mmms.api.services.utils.exceptions.EntryNotFoundException;
 import org.modmappings.mmms.api.services.utils.exceptions.NoEntriesFoundException;
 import org.modmappings.mmms.api.services.utils.user.UserLoggingService;
+import org.modmappings.mmms.api.util.CacheKeyBuilder;
 import org.modmappings.mmms.repository.model.core.MappingTypeDMO;
 import org.modmappings.mmms.repository.repositories.core.mappingtypes.MappingTypeRepository;
 import org.modmappings.mmms.repository.repositories.mapping.mappings.mapping.MappingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -36,6 +41,11 @@ import java.util.function.Supplier;
 @Component
 public class MappingService {
 
+    @Value("${caching.mapping.lifetimes.by-id:86400}")
+    private int CACHE_LIFETIME_BY_ID;
+    @Value("${caching.mapping.lifetimes.all:3600}")
+    private int CACHE_LIFETIME_ALL;
+
     private final Logger logger = LoggerFactory.getLogger(MappingService.class);
     private final MappingRepository repository;
     private final MappingTypeRepository mappingTypeRepository;
@@ -43,13 +53,18 @@ public class MappingService {
     private final MappingConverter mappingConverter;
     private final MappableTypeConverter mappableTypeConverter;
 
+    private final ReactiveValueOperations<Map<String, String>, MappingDTO> cacheOps;
+    private final ReactiveValueOperations<Map<String, String>, Page<MappingDTO>> pageCacheOps;
+
     private final UserLoggingService userLoggingService;
 
-    public MappingService(final MappingRepository repository, final MappingTypeRepository mappingTypeRepository, final MappingConverter mappingConverter, final MappableTypeConverter mappableTypeConverter, final UserLoggingService userLoggingService) {
+    public MappingService(final MappingRepository repository, final MappingTypeRepository mappingTypeRepository, final MappingConverter mappingConverter, final MappableTypeConverter mappableTypeConverter, final ReactiveValueOperations<Map<String, String>, MappingDTO> cacheOps, final ReactiveValueOperations<Map<String, String>, Page<MappingDTO>> pageCacheOps, final UserLoggingService userLoggingService) {
         this.repository = repository;
         this.mappingTypeRepository = mappingTypeRepository;
         this.mappingConverter = mappingConverter;
         this.mappableTypeConverter = mappableTypeConverter;
+        this.cacheOps = cacheOps;
+        this.pageCacheOps = pageCacheOps;
         this.userLoggingService = userLoggingService;
     }
 
@@ -65,11 +80,23 @@ public class MappingService {
             final UUID id,
             final boolean externallyVisibleOnly
     ) {
-        return repository.findById(id, externallyVisibleOnly)
-                .doFirst(() -> logger.debug("Looking up a mapping by id: {}", id))
-                .map(this.mappingConverter::toDTO)
-                .doOnNext(dto -> logger.debug("Found mapping: {}-{} with id: {}", dto.getInput(), dto.getOutput(), dto.getId()))
-                .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mapping")));
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("ops", "id")
+                .put("id", id)
+                .put("externallyVisibleOnly", externallyVisibleOnly)
+                .build();
+
+        return cacheOps.get(
+                cacheKey
+        )
+                .doFirst(() -> logger.debug("Looking up a mapping by id in cache: {}", id))
+                .doOnNext(dto -> logger.debug("Found mapping: {}-{} with id in cache: {}", dto.getInput(), dto.getOutput(), dto.getId()))
+                .switchIfEmpty(repository.findById(id, externallyVisibleOnly)
+                        .doFirst(() -> logger.debug("Looking up a mapping by id in database: {}", id))
+                        .map(this.mappingConverter::toDTO)
+                        .doOnNext(dto -> logger.debug("Found mapping: {}-{} with id in database: {}", dto.getInput(), dto.getOutput(), dto.getId()))
+                        .zipWhen(dto -> cacheOps.set(cacheKey, dto, Duration.ofSeconds(CACHE_LIFETIME_BY_ID)), (dto, a) -> dto)
+                        .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mapping"))));
     }
 
     /**
@@ -103,14 +130,37 @@ public class MappingService {
                                            final UUID parentMethodId,
                                            final boolean externallyVisibleOnly,
                                            final Pageable pageable) {
-        return repository.findAllOrLatestFor(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable)
-                .doFirst(() -> logger.debug("Looking up mappings: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
-                .flatMap(page -> Flux.fromIterable(page)
-                        .map(this.mappingConverter::toDTO)
-                        .collectList()
-                        .map(mappings -> (Page<MappingDTO>) new PageImpl<>(mappings, page.getPageable(), page.getTotalElements())))
-                .doOnNext(page -> logger.debug("Found mappings: {}", page))
-                .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mapping")));
+        final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                .put("ops", "getAll")
+                .put("latestOnly", latestOnly)
+                .put("versionedMappableId", versionedMappableId)
+                .put("releaseId", releaseId)
+                .put("mappableType", mappableType)
+                .put("inputRegex", inputRegex)
+                .put("outputRegex", outputRegex)
+                .put("mappingTypeId", mappingTypeId)
+                .put("gameVersionId", gameVersionId)
+                .put("userId", userId)
+                .put("parentClassId", parentClassId)
+                .put("parentMethodId", parentMethodId)
+                .put("externallyVisibleOnly", externallyVisibleOnly)
+                .put("pageable", pageable)
+                .build();
+
+        return pageCacheOps.get(
+                cacheKey
+        )
+                .doFirst(() -> logger.debug("Looking up mappings in cache: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
+                .doOnNext(page -> logger.debug("Found mappings in cache: {}", page))
+                .switchIfEmpty(repository.findAllOrLatestFor(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable)
+                        .doFirst(() -> logger.debug("Looking up mappings in database: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
+                        .flatMap(page -> Flux.fromIterable(page)
+                                .map(this.mappingConverter::toDTO)
+                                .collectList()
+                                .map(mappings -> (Page<MappingDTO>) new PageImpl<>(mappings, page.getPageable(), page.getTotalElements())))
+                        .doOnNext(page -> logger.debug("Found mappings in database: {}", page))
+                        .zipWhen(page -> pageCacheOps.set(cacheKey, page, Duration.ofSeconds(CACHE_LIFETIME_ALL)), (page, a) -> page)
+                        .switchIfEmpty(Mono.error(new NoEntriesFoundException("Mapping"))));
     }
 
     /**
@@ -135,6 +185,15 @@ public class MappingService {
                         .map(dto -> this.mappingConverter.toNewDMO(versionedMappableId, mappingTypeId, dto, userIdSupplier))
                         .flatMap(repository::save) //Creates the mapping object in the database
                         .map(this.mappingConverter::toDTO) //Create the DTO from it.
+                        .zipWhen(dto -> {
+                            final Map<String, String> cacheKey = CacheKeyBuilder.create()
+                                    .put("ops", "id")
+                                    .put("id", dto.getId())
+                                    .put("externallyVisibleOnly", true)
+                                    .build();
+
+                            return cacheOps.delete(cacheKey);
+                        }, (dto, a) -> dto )
                         .doOnNext(dto -> userLoggingService.warn(logger, userIdSupplier, String.format("Created new mapping: %s-%s with id: %s", dto.getInput(), dto.getOutput(), dto.getId()))));
     }
 }

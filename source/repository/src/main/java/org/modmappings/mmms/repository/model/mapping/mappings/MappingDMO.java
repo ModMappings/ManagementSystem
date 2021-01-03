@@ -1,5 +1,6 @@
 package org.modmappings.mmms.repository.model.mapping.mappings;
 
+import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.relational.core.mapping.Table;
@@ -24,18 +25,27 @@ public class MappingDMO {
     private String output;
     private String documentation;
     private DistributionDMO distribution;
+    private String packagePath;
+    private String packageParentPath;
+    private UUID gameVersionId;
+    private MappableTypeDMO mappableType;
+    private UUID mappableId;
 
     @PersistenceConstructor
-    public MappingDMO(
-            final UUID id,
-            final UUID createdBy,
-            final Timestamp createdOn,
-            final UUID versionedMappableId,
-            final UUID mappingTypeId,
-            final String input,
-            final String output,
-            final String documentation,
-            final DistributionDMO distribution) {
+    public MappingDMO(final UUID id,
+                      final UUID createdBy,
+                      final Timestamp createdOn,
+                      final UUID versionedMappableId,
+                      final UUID mappingTypeId,
+                      final String input,
+                      final String output,
+                      final String documentation,
+                      final DistributionDMO distribution,
+                      final String packagePath,
+                      final String packageParentPath,
+                      final UUID gameVersionId,
+                      final MappableTypeDMO mappableType,
+                      final UUID mappableId) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -45,7 +55,14 @@ public class MappingDMO {
         this.output = output;
         this.documentation = documentation;
         this.distribution = distribution;
+        this.packagePath = packagePath;
+        this.packageParentPath = packageParentPath;
+        this.gameVersionId = gameVersionId;
+        this.mappableType = mappableType;
+        this.mappableId = mappableId;
     }
+
+
 
     public MappingDMO(
             final UUID createdBy,
@@ -54,7 +71,12 @@ public class MappingDMO {
             final String input,
             final String output,
             final String documentation,
-            final DistributionDMO distribution) {
+            final DistributionDMO distribution,
+            final String packagePath,
+            final String packageParentPath,
+            final UUID gameVersionId,
+            final MappableTypeDMO mappableType,
+            final UUID mappableId) {
         this.id = null;
         this.createdBy = createdBy;
         this.createdOn = Timestamp.from(Instant.now());
@@ -64,6 +86,11 @@ public class MappingDMO {
         this.output = output;
         this.documentation = documentation;
         this.distribution = distribution;
+        this.packagePath = packagePath;
+        this.packageParentPath = packageParentPath;
+        this.gameVersionId = gameVersionId;
+        this.mappableType = mappableType;
+        this.mappableId = mappableId;
     }
 
     public UUID getId() {
@@ -100,5 +127,25 @@ public class MappingDMO {
 
     public DistributionDMO getDistribution() {
         return distribution;
+    }
+
+    public String getPackagePath() {
+        return packagePath;
+    }
+
+    public String getPackageParentPath() {
+        return packageParentPath;
+    }
+
+    public UUID getGameVersionId() {
+        return gameVersionId;
+    }
+
+    public MappableTypeDMO getMappableType() {
+        return mappableType;
+    }
+
+    public UUID getMappableId() {
+        return mappableId;
     }
 }

@@ -121,6 +121,19 @@ public class ExtendedMapper extends UpdateMapper {
             return new BoundExpression(boundExpression.getBindings(), new org.modmappings.mmms.er2dbc.relational.core.sql.AliasedExpression(boundExpression.getExpression(), aliasedExpression.getAlias()));
         }
 
+        if (expression.isDistinctOn()) {
+            final org.modmappings.mmms.er2dbc.data.statements.expression.DistinctOnExpression distinctOnExpression = (DistinctOnExpression) expression;
+            final List<Expression> expressions = new ArrayList<>();
+            Bindings internalBindings = Bindings.empty();
+
+            for (final org.modmappings.mmms.er2dbc.data.statements.expression.Expression source : distinctOnExpression.getSource()) {
+                final BoundExpression boundExpression = this.getMappedObject(source, defaultTable, bindings, aliasing);
+                internalBindings = internalBindings.and(boundExpression.getBindings());
+                expressions.add(boundExpression.getExpression());
+            }
+            return new BoundExpression(internalBindings, new org.modmappings.mmms.er2dbc.relational.core.sql.DistinctOnExpression(expressions.toArray(Expression[]::new)));
+        }
+
         if (expression.isDistinct()) {
             final org.modmappings.mmms.er2dbc.data.statements.expression.DistinctExpression distinctExpression = (org.modmappings.mmms.er2dbc.data.statements.expression.DistinctExpression) expression;
             final BoundExpression boundExpression = getMappedObject(distinctExpression.getSource(), defaultTable, bindings, aliasing);
@@ -132,8 +145,8 @@ public class ExtendedMapper extends UpdateMapper {
             final List<Expression> expressions = new ArrayList<>();
             Bindings internalBindings = Bindings.empty();
 
-            for (org.modmappings.mmms.er2dbc.data.statements.expression.Expression arg : functionExpression.getArgs()) {
-                BoundExpression boundExpression = this.getMappedObject(arg, defaultTable, bindings, aliasing);
+            for (final org.modmappings.mmms.er2dbc.data.statements.expression.Expression arg : functionExpression.getArgs()) {
+                final BoundExpression boundExpression = this.getMappedObject(arg, defaultTable, bindings, aliasing);
                 internalBindings = internalBindings.and(boundExpression.getBindings());
                 expressions.add(boundExpression.getExpression());
             }

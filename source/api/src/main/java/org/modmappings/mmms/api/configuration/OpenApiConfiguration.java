@@ -22,8 +22,6 @@ public class OpenApiConfiguration {
     private String URL;
     @Value("${spring.security.target.host}")
     private String URL_SEC;
-    @Value("${spring.security.target.realm}")
-    private String REALM_SEC;
 
     @Value("${build.version:0.0.0-Dev}")
     private String VERSION;
@@ -38,12 +36,12 @@ public class OpenApiConfiguration {
                                 .in(SecurityScheme.In.HEADER)
                                 .bearerFormat(Constants.JWT_BEARER_FORMAT)
                                 .description(Constants.OFFICIAL_AUTH_DESC)
-                                .openIdConnectUrl(buildOpenIdConfigUrl(URL_SEC, REALM_SEC))
+                                .openIdConnectUrl(buildOpenIdConfigUrl(URL_SEC))
                                 .flows(new OAuthFlows()
                                         .implicit(
                                                 new OAuthFlow()
-                                                        .authorizationUrl(buildOpenIdAuthUrl(URL_SEC, REALM_SEC))
-                                                        .tokenUrl(buildOpenIdTokenUrl(URL_SEC, REALM_SEC))
+                                                        .authorizationUrl(buildOpenIdAuthUrl(URL_SEC))
+                                                        .tokenUrl(buildOpenIdTokenUrl(URL_SEC))
                                                         .scopes(new Scopes()
                                                                 .addString(Constants.SCOPE_ROLES_NAME, Constants.SCOPE_ROLE_DESC)
                                                         )
@@ -71,15 +69,15 @@ public class OpenApiConfiguration {
         return new PageableSupportConverter();
     }
 
-    private String buildOpenIdConfigUrl(final String url, final String realm) {
-        return String.format("%s/auth/realms/%s/.well-known/openid-configuration", url, realm);
+    private String buildOpenIdConfigUrl(final String url) {
+        return String.format("%s/oauth2/token/.well-known/openid-configuration", url);
     }
 
-    private String buildOpenIdAuthUrl(final String url, final String realm) {
-        return String.format("%s/auth/realms/%s/protocol/openid-connect/auth", url, realm);
+    private String buildOpenIdAuthUrl(final String url) {
+        return String.format("%s/oauth2/authorize", url);
     }
 
-    private String buildOpenIdTokenUrl(final String url, final String realm) {
-        return String.format("%s/auth/realms/%s/protocol/openid-connect/token", url, realm);
+    private String buildOpenIdTokenUrl(final String url) {
+        return String.format("%s/oauth2/token", url);
     }
 }
