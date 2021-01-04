@@ -53,4 +53,8 @@ public interface Expression {
     }
 
     Expression dealias();
+
+    default boolean isSelect(){
+        return false;
+    }
 }

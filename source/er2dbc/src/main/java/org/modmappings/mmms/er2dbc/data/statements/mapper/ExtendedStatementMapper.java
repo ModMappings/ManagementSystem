@@ -45,6 +45,8 @@ public class ExtendedStatementMapper implements StatementMapper {
         this.renderContext = renderContext;
         this.extendedMapper = extendedMapper;
         this.mappingContext = mappingContext;
+
+        this.extendedMapper.setStatementMapper(this);
     }
 
     @Override
@@ -340,12 +342,16 @@ public class ExtendedStatementMapper implements StatementMapper {
         return SelectSpecWithJoin.createDistinct(table);
     }
 
+    public <T> PreparedOperation<T> count(final PreparedOperation<T> preparedOperation) {
+        return new CountingExtendedPreparedOperation<>(preparedOperation);
+    }
+
     /**
      * Extended implementation of {@link PreparedOperation}.
      *
      * @param <T>
      */
-    private class ExtendedPreparedOperation<T> implements PreparedOperation<T> {
+    public class ExtendedPreparedOperation<T> implements PreparedOperation<T> {
 
         private final T source;
         private final RenderContext renderContext;
@@ -409,6 +415,40 @@ public class ExtendedStatementMapper implements StatementMapper {
             return "ExtendedPreparedOperation{" +
                     "query=" + get() + "," +
                     "bindings=" + bindings.stream().map(binding -> binding.getBindMarker().getPlaceholder() + ":" + (binding.hasValue() ? binding.getValue() : "<NO VALUE>")).collect(Collectors.joining(", ")) +
+                    '}';
+        }
+    }
+
+    public class CountingExtendedPreparedOperation<T> implements PreparedOperation<T> {
+
+        private final PreparedOperation<T> inner;
+
+        public CountingExtendedPreparedOperation(final PreparedOperation<T> inner) {
+            this.inner = inner;
+        }
+
+        @Override
+        public T getSource() {
+            return inner.getSource();
+        }
+
+        @Override
+        public void bindTo(final BindTarget target) {
+            inner.bindTo(target);
+        }
+
+        @Override
+        public String toQuery() {
+            final String innerQuery = inner.toQuery();
+
+            return String.format("SELECT Count(*) from (%s) as c", innerQuery);
+        }
+
+        @Override
+        public String toString() {
+            return "CountingExtendedPreparedOperation{" +
+                    "inner=" + inner + "," +
+                    "sql=" + toQuery() +
                     '}';
         }
     }

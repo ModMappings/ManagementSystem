@@ -34,6 +34,7 @@ public interface MappingRepositoryCustom {
      * @param userId                The id of the user who created the mapping.
      * @param parentClassId         The id of the class of which the targeted mappings versioned mappable resides in.
      * @param parentMethodId        The id of the method of which the targeted mappings versioned mappable resides in.
+     * @param parentClassPackagePath The package of the class of which the targeted mappings versioned mappable resides in.
      * @param externallyVisibleOnly Indicates if only mappings for externally visible mapping types should be included.
      * @param pageable              The paging and sorting information.
      * @return All latest mappings who' matches the given regexes and are part of the mapping type and game version if those are specified.
@@ -49,7 +50,7 @@ public interface MappingRepositoryCustom {
                                               final UUID userId,
                                               final UUID parentClassId,
                                               final UUID parentMethodId,
-                                              final boolean externallyVisibleOnly,
+                                              final String parentClassPackagePath, final boolean externallyVisibleOnly,
                                               final Pageable pageable);
 
     /**

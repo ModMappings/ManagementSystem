@@ -2,7 +2,7 @@ package org.modmappings.mmms.repository.repositories.mapping.mappings.detailed;
 
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.DetailedMappingDMO;
-import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
+import org.modmappings.mmms.repository.repositories.mapping.mappings.mapping.MappingRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -23,7 +23,7 @@ public interface DetailedMappingRepository extends org.springframework.data.repo
      * The mapping also has to be for a versioned mappable who targets the game version with
      * the given id.
      *
-     * This method, compared to {@link org.modmappings.mmms.repository.repositories.mapping.mappings.mapping.MappingRepository#findAllOrLatestFor(Boolean, UUID, UUID, MappableTypeDMO, String, String, UUID, UUID, UUID, UUID, UUID, boolean, Pageable)}
+     * This method, compared to {@link MappingRepositoryCustom#findAllOrLatestFor(Boolean, UUID, UUID, MappableTypeDMO, String, String, UUID, UUID, UUID, UUID, UUID, String, boolean, Pageable)}
      * also returns all metadata information.
      *
      * @param latestOnly            Indicator if only the latest mappings or all mappings should be returned.

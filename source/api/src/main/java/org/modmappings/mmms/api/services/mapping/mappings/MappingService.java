@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -113,6 +114,7 @@ public class MappingService {
      * @param gameVersionId         The id of the game version that the mapping needs to be for. Use an empty optional for any game version.
      * @param parentClassId         The id of the class of which the targeted mappings versioned mappable resides in.
      * @param parentMethodId        The id of the method of which the targeted mappings versioned mappable resides in.
+     * @param parentClassPackagePath The package of the class of which the targeted mappings versioned mappable resides in.
      * @param externallyVisibleOnly Indicates if only mappings for externally visible mapping types should be included.
      * @param pageable              The paging and sorting information.
      * @return A {@link Mono} with the mappings, or an errored {@link Mono} that indicates a failure.
@@ -128,6 +130,7 @@ public class MappingService {
                                            final UUID userId,
                                            final UUID parentClassId,
                                            final UUID parentMethodId,
+                                           final String parentClassPackagePath,
                                            final boolean externallyVisibleOnly,
                                            final Pageable pageable) {
         final Map<String, String> cacheKey = CacheKeyBuilder.create()
@@ -143,6 +146,7 @@ public class MappingService {
                 .put("userId", userId)
                 .put("parentClassId", parentClassId)
                 .put("parentMethodId", parentMethodId)
+                .put("parentClassPackagePath", parentClassPackagePath)
                 .put("externallyVisibleOnly", externallyVisibleOnly)
                 .put("pageable", pageable)
                 .build();
@@ -150,10 +154,10 @@ public class MappingService {
         return pageCacheOps.get(
                 cacheKey
         )
-                .doFirst(() -> logger.debug("Looking up mappings in cache: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
+                .doFirst(() -> logger.debug("Looking up mappings in cache: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, parentClassPackagePath, externallyVisibleOnly, pageable))
                 .doOnNext(page -> logger.debug("Found mappings in cache: {}", page))
-                .switchIfEmpty(repository.findAllOrLatestFor(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable)
-                        .doFirst(() -> logger.debug("Looking up mappings in database: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
+                .switchIfEmpty(repository.findAllOrLatestFor(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, parentClassPackagePath, externallyVisibleOnly, pageable)
+                        .doFirst(() -> logger.debug("Looking up mappings in database: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, parentClassPackagePath, externallyVisibleOnly, pageable))
                         .flatMap(page -> Flux.fromIterable(page)
                                 .map(this.mappingConverter::toDTO)
                                 .collectList()

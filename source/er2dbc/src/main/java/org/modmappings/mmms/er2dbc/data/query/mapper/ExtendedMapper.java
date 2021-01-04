@@ -3,6 +3,7 @@ package org.modmappings.mmms.er2dbc.data.query.mapper;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
 import org.modmappings.mmms.er2dbc.data.statements.expression.*;
 import org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec;
+import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.bound.BoundExpression;
 import org.modmappings.mmms.er2dbc.relational.core.sql.DistinctExpression;
 import org.modmappings.mmms.er2dbc.relational.core.sql.IMatchFormatter;
@@ -33,6 +34,7 @@ public class ExtendedMapper extends UpdateMapper {
 
     private final MappingContext<? extends RelationalPersistentEntity<?>, RelationalPersistentProperty> mappingContext;
     private final IMatchFormatter matchFormatter;
+    private ExtendedStatementMapper statementMapper = null;
 
     /**
      * Creates a new {@link ExtendedMapper} with the given {@link R2dbcConverter}.
@@ -276,6 +278,8 @@ public class ExtendedMapper extends UpdateMapper {
             return SimpleFunction.create(functionExpression.getFunctionName(), expressions);
         }
 
+
+
         return null;
     }
 
@@ -343,6 +347,14 @@ public class ExtendedMapper extends UpdateMapper {
         }
 
         return SQL.bindMarker(bindMarker.getPlaceholder());
+    }
+
+    public ExtendedStatementMapper getStatementMapper() {
+        return statementMapper;
+    }
+
+    public void setStatementMapper(final ExtendedStatementMapper statementMapper) {
+        this.statementMapper = statementMapper;
     }
 
     public static class ExtendedMetadataBackedField extends MetadataBackedField {

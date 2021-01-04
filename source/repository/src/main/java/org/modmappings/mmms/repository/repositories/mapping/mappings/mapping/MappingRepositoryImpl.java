@@ -2,10 +2,8 @@ package org.modmappings.mmms.repository.repositories.mapping.mappings.mapping;
 
 import org.modmappings.mmms.er2dbc.data.access.strategy.ExtendedDataAccessStrategy;
 import org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria;
-import org.modmappings.mmms.er2dbc.data.statements.expression.Expressions;
 import org.modmappings.mmms.er2dbc.data.statements.mapper.ExtendedStatementMapper;
 import org.modmappings.mmms.er2dbc.data.statements.select.SelectSpecWithJoin;
-import org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec;
 import org.modmappings.mmms.repository.model.mapping.mappable.MappableTypeDMO;
 import org.modmappings.mmms.repository.model.mapping.mappings.MappingDMO;
 import org.modmappings.mmms.repository.repositories.AbstractModMappingRepository;
@@ -22,7 +20,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.on;
-import static org.modmappings.mmms.er2dbc.data.statements.criteria.ColumnBasedCriteria.where;
 import static org.modmappings.mmms.er2dbc.data.statements.expression.Expressions.reference;
 import static org.modmappings.mmms.er2dbc.data.statements.join.JoinSpec.*;
 import static org.modmappings.mmms.er2dbc.data.statements.sort.SortSpec.Order.asc;
@@ -52,6 +49,7 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
                                                      final UUID userId,
                                                      final UUID parentClassId,
                                                      final UUID parentMethodId,
+                                                     final String parentClassPackagePath,
                                                      final boolean externallyVisibleOnly,
                                                      final Pageable pageable) {
         return createPagedStarRequest(
@@ -80,6 +78,7 @@ class MappingRepositoryImpl extends AbstractModMappingRepository<MappingDMO> imp
                                         criteria = nonNullAndEqualsCheckForWhere(criteria, parentClassId, "vm", "parent_class_id");
                                         criteria = nonNullAndEqualsCheckForWhere(criteria, parentMethodId, "vm", "parent_method_id");
                                         criteria = nonNullAndEqualsCheckForWhere(criteria, userId, "", "created_by");
+                                        criteria = nonNullAndEqualsCheckForWhere(criteria, parentClassPackagePath, "", "package_path");
 
                                         if (externallyVisibleOnly) {
                                             criteria = nonNullAndEqualsCheckForWhere(criteria, true, "mt", "visible");

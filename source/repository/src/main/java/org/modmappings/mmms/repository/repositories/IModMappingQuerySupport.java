@@ -99,26 +99,17 @@ public interface IModMappingQuerySupport {
 
     default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType) {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
-
-        final Expression countingExpression = selectSpec.getProjectedFields().size() == 1 ? selectSpec.getProjectedFields().get(0).dealias() : Expressions.reference(tableName, getIdColumnName(resultType));
-        final Expression countingDistinctExpression = selectSpec.isDistinct() ? Expressions.distinct(countingExpression) : countingExpression;
-        final Expression projectionExpression = Expressions.invoke("count", countingDistinctExpression);
-
-        return this.createCountRequestWith(selectSpec, resultType, projectionExpression);
-    }
-
-    default Mono<Long> createCountRequestWith(final SelectSpecWithJoin selectSpec, final Class<?> resultType, final Expression projectionExpression) {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
-        Assert.notNull(projectionExpression, "ProjectionExpression must not be null");
 
         final SelectSpecWithJoin selectSpecWithProj =
-                selectSpec.notDistinct().clearSortAndPage().setProjection(projectionExpression);
+                selectSpec.clearSortAndPage();
 
         ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+
         if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
             mapper = mapper.forType(resultType);
         }
-        final PreparedOperation<?> operation = mapper.getMappedObject(selectSpecWithProj);
+        final PreparedOperation<?> operation = mapper.count(mapper.getMappedObject(selectSpecWithProj));
 
         return this.getDatabaseClient().execute(operation) //
                 .map((r, md) -> r.get(0, Long.class)) //
@@ -126,7 +117,6 @@ public interface IModMappingQuerySupport {
                 .doFirst(() -> getLogger().debug("Executing count operation: " + operation.toString()))
                 .defaultIfEmpty(0L);
     }
-
 
     default <R> Mono<Page<R>> createPagedRequest(final SelectSpecWithJoin selectSpecWithJoin, final String tableName, final Class<R> resultType, final Pageable pageable) {
         return Mono.zip(

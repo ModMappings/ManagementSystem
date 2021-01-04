@@ -111,17 +111,4 @@ public class PackageRepositoryImpl implements PackageRepository, IModMappingQuer
                 pageable
         );
     }
-
-    @Override
-    public Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType) {
-        if (resultType != PackageDMO.class) {
-            final Expression countingExpression = selectSpec.getProjectedFields().size() == 1 ? selectSpec.getProjectedFields().get(0).dealias() : Expressions.reference(tableName, getIdColumnName(resultType));
-            final Expression countingDistinctExpression = selectSpec.isDistinct() ? Expressions.distinct(countingExpression) : countingExpression;
-            final Expression projectionExpression = Expressions.invoke("count", countingDistinctExpression);
-
-            return this.createCountRequestWith(selectSpec, resultType, projectionExpression);
-        }
-
-        return this.createCountRequestWith(selectSpec, resultType,Expressions.invoke("count", Expressions.distinct(Expressions.reference("path"))));
-    }
 }

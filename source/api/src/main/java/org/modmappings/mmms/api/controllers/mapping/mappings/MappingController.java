@@ -171,6 +171,12 @@ public class MappingController {
                             in = ParameterIn.QUERY,
                             description = "The id of the method of which the targeted mappings versioned mappable resides in.",
                             example = "9b4a9c76-3588-48b5-bedf-b0df90b00381"
+                    ),
+                    @Parameter(
+                            name = "parentClassPackagePath",
+                            in = ParameterIn.QUERY,
+                            description = "The package of the class of which the targeted mappings versioned mappable resides in.",
+                            example = "com"
                     )
             }
     )
@@ -198,9 +204,10 @@ public class MappingController {
             final @RequestParam(value = "createdBy", required = false) UUID userId,
             final @RequestParam(value = "parentClassId", required = false) UUID parentClassId,
             final @RequestParam(value = "parentMethodId", required = false) UUID parentMethodId,
+            final @RequestParam(value = "parentClassPackagePath", required = false) String parentClassPackagePath,
             final @PageableDefault(size = 25) Pageable pageable,
             final ServerHttpResponse response) {
-        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, true, pageable)
+        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, parentClassPackagePath, true, pageable)
                 .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                     response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                     return Mono.empty();

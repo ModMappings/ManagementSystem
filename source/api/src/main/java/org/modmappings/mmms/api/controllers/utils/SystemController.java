@@ -143,7 +143,7 @@ public class SystemController
       final @PageableDefault(size = 2000) Pageable pageable,
       final ServerHttpResponse response)
     {
-        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, null,null, true, pageable)
+        return mappingService.getAllBy(latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, null,null, null, true, pageable)
                  .onErrorResume(AbstractHttpResponseException.class, (ex) -> {
                      response.setStatusCode(HttpStatus.valueOf(ex.getResponseCode()));
                      return Mono.empty();
