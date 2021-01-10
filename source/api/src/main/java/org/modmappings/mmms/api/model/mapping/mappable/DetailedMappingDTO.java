@@ -10,14 +10,14 @@ public class DetailedMappingDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The mappable metadata related to the mapping.")
     private MappableDTO mappable;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The versioned mappable metadata related to the mapping. Does not contain sub- or supertype as well mapping locking information.")
-    private SimpleVersionedMappableDTO versionedMappable;
+    private VersionedMappableDTO versionedMappable;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "The actuall mapping.")
     private MappingDTO mappingDTO;
 
     public DetailedMappingDTO() {
     }
 
-    public DetailedMappingDTO(final MappableDTO mappable, final SimpleVersionedMappableDTO versionedMappable, final MappingDTO mappingDTO) {
+    public DetailedMappingDTO(final MappableDTO mappable, final VersionedMappableDTO versionedMappable, final MappingDTO mappingDTO) {
         this.mappable = mappable;
         this.versionedMappable = versionedMappable;
         this.mappingDTO = mappingDTO;
@@ -27,7 +27,7 @@ public class DetailedMappingDTO {
         return mappable;
     }
 
-    public SimpleVersionedMappableDTO getVersionedMappable() {
+    public VersionedMappableDTO getVersionedMappable() {
         return versionedMappable;
     }
 

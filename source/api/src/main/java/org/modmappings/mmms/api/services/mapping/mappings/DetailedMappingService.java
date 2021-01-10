@@ -82,7 +82,7 @@ public class DetailedMappingService {
                 .doOnNext(dto -> logger.debug("Found detailed mapping: {}-{} with id in cache: {}", dto.getMappingDTO().getInput(), dto.getMappingDTO().getOutput(), dto.getMappingDTO().getId()))
                 .switchIfEmpty(repository.findById(id, externallyVisibleOnly)
                         .doFirst(() -> logger.debug("Looking up a detailed mapping by id in database: {}", id))
-                        .map(this.instancedMappingConverter::toDTO)
+                        .flatMap(this.instancedMappingConverter::toDTO)
                         .doOnNext(dto -> logger.debug("Found detailed mapping in database: {}-{} with id: {}", dto.getMappingDTO().getInput(), dto.getMappingDTO().getOutput(), dto.getMappingDTO().getId()))
                         .zipWhen(dto -> cacheOps.set(cacheKey, dto, Duration.ofSeconds(CACHE_LIFETIME_BY_ID)), (dto, a) -> dto)
                         .switchIfEmpty(Mono.error(new EntryNotFoundException(id, "Mapping"))));
@@ -143,7 +143,7 @@ public class DetailedMappingService {
                 .switchIfEmpty(repository.findAllBy(latestOnly, versionedMappableId, releaseId, this.mappableTypeConverter.toDMO(mappableType), inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable)
                         .doFirst(() -> logger.debug("Looking up detailed mappings in database: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}.", latestOnly, versionedMappableId, releaseId, mappableType, inputRegex, outputRegex, mappingTypeId, gameVersionId, userId, parentClassId, parentMethodId, externallyVisibleOnly, pageable))
                         .flatMap(page -> Flux.fromIterable(page)
-                                .map(this.instancedMappingConverter::toDTO)
+                                .flatMap(this.instancedMappingConverter::toDTO)
                                 .collectList()
                                 .map(mappings -> (Page<DetailedMappingDTO>) new PageImpl<>(mappings, page.getPageable(), page.getTotalElements())))
                         .doOnNext(page -> logger.debug("Found detailed mappings in database: {}", page))

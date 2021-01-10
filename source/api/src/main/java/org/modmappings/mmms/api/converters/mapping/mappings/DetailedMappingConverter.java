@@ -27,11 +27,11 @@ public class DetailedMappingConverter {
         this.mappableConverter = mappableConverter;
     }
 
-    public DetailedMappingDTO toDTO(final DetailedMappingDMO dmo) {
-        return new DetailedMappingDTO(
-                this.mappableConverter.toDTO(dmo.getMappable()),
-                this.versionedMappableConverter.toSimpleDTO(dmo.getVersionedMappable()),
-                this.mappingConverter.toDTO(dmo.getMapping())
-        );
+    public Mono<DetailedMappingDTO> toDTO(final DetailedMappingDMO dmo) {
+        return this.versionedMappableConverter.toDTO(dmo.getVersionedMappable())
+                .map(vmDto -> new DetailedMappingDTO(
+                        this.mappableConverter.toDTO(dmo.getMappable()),
+                        vmDto,
+                        this.mappingConverter.toDTO(dmo.getMapping())));
     }
 }

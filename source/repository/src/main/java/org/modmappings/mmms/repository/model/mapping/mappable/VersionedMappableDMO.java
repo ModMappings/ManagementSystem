@@ -26,6 +26,7 @@ public class VersionedMappableDMO {
     private Timestamp createdOn;
     private UUID gameVersionId;
     private UUID mappableId;
+    private MappableTypeDMO mappableType;
 
     private UUID parentClassId;
     private UUID parentMethodId;
@@ -39,41 +40,30 @@ public class VersionedMappableDMO {
     private int index;
 
     @PersistenceConstructor
-    public VersionedMappableDMO(
-            final UUID id,
-            final UUID createdBy,
-            final Timestamp createdOn,
-            final UUID gameVersionId,
-            final UUID mappableId,
-            final VisibilityDMO visibility,
-            final boolean isStatic,
-            final String type,
-            final UUID parentClassId,
-            final String descriptor,
-            final UUID parentMethodId,
-            final String signature,
-            final boolean external,
-            final int index) {
+    public VersionedMappableDMO(final UUID id, final UUID createdBy, final Timestamp createdOn, final UUID gameVersionId, final UUID mappableId, final MappableTypeDMO mappableType, final UUID parentClassId, final UUID parentMethodId, final VisibilityDMO visibility, final boolean isStatic, final String type, final String descriptor, final String signature, final boolean external, final int index) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
         this.gameVersionId = gameVersionId;
         this.mappableId = mappableId;
+        this.mappableType = mappableType;
+        this.parentClassId = parentClassId;
+        this.parentMethodId = parentMethodId;
         this.visibility = visibility;
         this.isStatic = isStatic;
         this.type = type;
-        this.parentClassId = parentClassId;
         this.descriptor = descriptor;
-        this.parentMethodId = parentMethodId;
         this.signature = signature;
         this.external = external;
         this.index = index;
     }
 
+
     public VersionedMappableDMO(
             final UUID createdBy,
             final UUID gameVersionId,
             final UUID mappableId,
+            final MappableTypeDMO mappableType,
             final VisibilityDMO visibility,
             final boolean isStatic,
             final String type,
@@ -90,6 +80,7 @@ public class VersionedMappableDMO {
         this.createdOn = Timestamp.from(Instant.now());
         this.gameVersionId = gameVersionId;
         this.mappableId = mappableId;
+        this.mappableType = mappableType;
         this.visibility = visibility;
         this.isStatic = isStatic;
         this.type = type;

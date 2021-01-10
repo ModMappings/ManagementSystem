@@ -97,6 +97,30 @@ public interface IModMappingQuerySupport {
                 .doFirst(() -> getLogger().debug("Executing find operation: " + operation.toString()));
     }
 
+    default Mono<Long> createStarCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType) {
+        Assert.notNull(selectSpec, "SelectSpec must not be null");
+        Assert.notNull(selectSpec, "SelectSpec must not be null");
+
+        final List<String> columns = this.getAccessStrategy().getAllColumns(resultType);
+
+        final SelectSpecWithJoin selectSpecWithProj = selectSpec.clearSortAndPage()
+                .withProjectionFromColumnName(columns);
+
+        ExtendedStatementMapper mapper = getAccessStrategy().getStatementMapper();
+
+        if (getAccessStrategy().getConverter().getMappingContext().hasPersistentEntityFor(resultType)) {
+            mapper = mapper.forType(resultType);
+        }
+        final PreparedOperation<?> operation = mapper.count(mapper.getMappedObject(selectSpecWithProj));
+
+        return this.getDatabaseClient().execute(operation) //
+                .map((r, md) -> r.get(0, Long.class)) //
+                .first()//
+                .doFirst(() -> getLogger().debug("Executing count operation: " + operation.toString()))
+                .defaultIfEmpty(0L);
+    }
+
+
     default Mono<Long> createCountRequest(final SelectSpecWithJoin selectSpec, final String tableName, final Class<?> resultType) {
         Assert.notNull(selectSpec, "SelectSpec must not be null");
         Assert.notNull(selectSpec, "SelectSpec must not be null");
@@ -203,7 +227,7 @@ public interface IModMappingQuerySupport {
                 createFindStarRequest(selectSpecWithJoin, resultType, pageable)
                         .collectList()
                         .doOnNext(data -> getLogger().debug("Completed data retrieval with count: " + data.size())),
-                createCountRequest(selectSpecWithJoin, tableName, resultType)
+                createStarCountRequest(selectSpecWithJoin, tableName, resultType)
                     .doOnNext(count -> getLogger().debug("Completed count request with count: " + count))
         ).map(data -> new PageImpl<>(data.getT1(), pageable, data.getT2()));
     }

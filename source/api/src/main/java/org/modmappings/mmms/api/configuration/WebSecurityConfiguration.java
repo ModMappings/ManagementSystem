@@ -2,6 +2,7 @@ package org.modmappings.mmms.api.configuration;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,12 +22,17 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Configuration
 @EnableReactiveMethodSecurity
 @EnableWebFluxSecurity
 public class WebSecurityConfiguration {
+
+    @Value("#{'${spring.security.oidc.claim-mode}'.toUpperCase()}")
+    AuthMode authMode;
 
     private final OAuth2ResourceServerProperties.Jwt properties;
 
@@ -43,8 +49,7 @@ public class WebSecurityConfiguration {
                 .oauth2ResourceServer(oAuth2ResourceServerSpec -> {
                     oAuth2ResourceServerSpec.jwt(jwtSpec -> {
                         final JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-                        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleExtractingGrantedAuthoritiesConverter());
-
+                        converter.setJwtGrantedAuthoritiesConverter(authMode.get());
                         jwtSpec.jwtAuthenticationConverter(new ReactiveJwtAuthenticationConverterAdapter(converter));
                     });
                 })
@@ -60,7 +65,6 @@ public class WebSecurityConfiguration {
         return source;
     }
 
-    //TODO: Update to WSO2 Standard
     private static class KeycloakRoleExtractingGrantedAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
         /**
@@ -82,6 +86,51 @@ public class WebSecurityConfiguration {
             final JSONObject authData = jwt.getClaim("realm_access");
             final JSONArray roleData = (JSONArray) authData.get("roles");
             return roleData.stream().map(roleObj -> (String) roleObj).map(roleStr -> "ROLE_" + roleStr).collect(Collectors.toSet());
+        }
+    }
+
+    private static class WSO2RoleExtractingGrantedAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+
+        /**
+         * Extract {@link GrantedAuthority}s from the given {@link Jwt}.
+         *
+         * @param jwt The {@link Jwt} token
+         * @return The {@link GrantedAuthority authorities} read from the token scopes
+         */
+        @Override
+        public Collection<GrantedAuthority> convert(final Jwt jwt) {
+            final Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+            for (final String authority : getRealmRoles(jwt)) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(authority));
+            }
+            return grantedAuthorities;
+        }
+
+        private Collection<String> getRealmRoles(final Jwt jwt) {
+            final JSONArray authData = jwt.getClaim("groups");
+            //Filter out the weird additional groupings.
+            //Only take the once for the application domain.
+            return authData.stream()
+                    .map(roleObj -> (String) roleObj)
+                    .filter(roleStr -> roleStr.toLowerCase(Locale.ROOT).contains("application"))
+                    .map(roleStr -> roleStr.substring(roleStr.indexOf("/") + 1))
+                    .map(roleStr -> "ROLE_" + roleStr)
+                    .collect(Collectors.toSet());
+        }
+    }
+
+    public enum AuthMode {
+        WSO2(WSO2RoleExtractingGrantedAuthoritiesConverter::new),
+        KEY_CLOAK(KeycloakRoleExtractingGrantedAuthoritiesConverter::new);
+
+        private final Supplier<Converter<Jwt, Collection<GrantedAuthority>>> modeConstructor;
+
+        AuthMode(final Supplier<Converter<Jwt, Collection<GrantedAuthority>>> modeConstructor) {
+            this.modeConstructor = modeConstructor;
+        }
+
+        public Converter<Jwt, Collection<GrantedAuthority>> get() {
+            return this.modeConstructor.get();
         }
     }
 }
