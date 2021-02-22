@@ -18,32 +18,8 @@ services:
           - node.labels.system==production
           - node.labels.usecase==modmappings
 
-  db_auth:
-    image: mysql:5.7.29
-    networks:
-      - modmappings-auth
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: wso2carbon
-      MYSQL_PASSWORD: wso2carbon
-    volumes:
-      - /var/docker/wso2/conf/mysql/scripts:/docker-entrypoint-initdb.d
-      - /var/docker/wso2/conf/mysql/conf/my.cnf:/etc/mysql/my.cnf
-      - /var/docker/wso2/data:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-uroot", "-proot" ]
-      interval: 30s
-      timeout: 60s
-      retries: 5
-    deploy:
-      placement:
-        constraints:
-          - node.labels.type==worker
-          - node.labels.system==production
-          - node.labels.usecase==modmappings
-
-  auth:
-    image: container.ldtteam.com/modmappings/auth:wso2
+  identity-server:
+    image: modmappings/docker-wso2-is:5.11.0
     deploy:
       placement:
         constraints:
@@ -56,30 +32,26 @@ services:
         - traefik.docker.network=traefik-public
         - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
-        - traefik.http.routers.modmappings-auth-http.rule=Host(`dev.auth.modmappings.org`)
-        - traefik.http.routers.modmappings-auth-http.entrypoints=http
-        - traefik.http.routers.modmappings-auth-http.middlewares=https-redirect
-        - traefik.http.routers.modmappings-auth-https.rule=Host(`dev.auth.modmappings.org`)
-        - traefik.http.routers.modmappings-auth-https.entrypoints=https
-        - traefik.http.routers.modmappings-auth-https.tls=true
-        - traefik.http.routers.modmappings-auth-https.service=modmappings-auth
-        - traefik.http.routers.modmappings-auth-https.tls.certresolver=le
-        - traefik.http.services.modmappings-auth.loadbalancer.server.port=443
-        - traefik.http.services.modmappings-auth.loadbalancer.server.scheme=https
-    healthcheck:
-      test: ["CMD", "curl", "-k", "-f", "https://localhost/carbon/admin/login.jsp"]
-      interval: 5s
-      timeout: 120s
-      start_period: 150s
+        - traefik.http.routers.modmappings-auth2-http.rule=Host(`dev.auth.modmappings.org`)
+        - traefik.http.routers.modmappings-auth2-http.entrypoints=http
+        - traefik.http.routers.modmappings-auth2-http.middlewares=https-redirect
+        - traefik.http.routers.modmappings-auth2-https.rule=Host(`dev.auth.modmappings.org`)
+        - traefik.http.routers.modmappings-auth2-https.entrypoints=https
+        - traefik.http.routers.modmappings-auth2-https.tls=true
+        - traefik.http.routers.modmappings-auth2-https.service=modmappings-auth2
+        - traefik.http.routers.modmappings-auth2-https.tls.certresolver=le
+        - traefik.http.services.modmappings-auth2.loadbalancer.server.port=9443
+        - traefik.http.services.modmappings-auth2.loadbalancer.server.scheme=https
     volumes:
-      - /var/docker/wso2/conf/identity-server:/home/root/wso2-config-volume
+      - /var/docker/wso2/conf/identity-server:/wso2-config-volume
+      - /var/docker/wso2/data/identity-server:/wso2is-5.11.0/repository/database
     networks:
       - traefik-public
-      - modmappings-auth
-      
+
   apiserver:
     image: container.ldtteam.com/modmappings/api:dev
     environment:
+      SPRING_CACHING_REDIS_HOST: redis
       SPRING_R2DBC_NAME: mmms
       SPRING_R2DBC_URL: r2dbc:postgresql://tasks.db_data/mmms
       SPRING_R2DBC_USERNAME: mmms
