@@ -51,7 +51,7 @@ services:
   apiserver:
     image: container.ldtteam.com/modmappings/api:dev
     environment:
-      SPRING_CACHING_REDIS_HOST: redis
+      SPRING_CACHING_REDIS_HOST: tasks.redis
       SPRING_R2DBC_NAME: mmms
       SPRING_R2DBC_URL: r2dbc:postgresql://tasks.db_data/mmms
       SPRING_R2DBC_USERNAME: mmms
@@ -92,8 +92,28 @@ services:
       - traefik-public
       - modmappings-data
 
+  ccs:
+    image: container.ldtteam.com/modmappings/ccs:dev
+    command: bin/CrispyComputingMachine importMinecraftVersionsJob
+    environment:
+      SPRING_R2DBC_NAME: mmms
+      SPRING_R2DBC_URL: r2dbc:postgresql://tasks.db_data/mmms
+      SPRING_R2DBC_USERNAME: mmms
+      SPRING_R2DBC_PASSWORD: mmms
+      SPRING_R2DBC_INITIALIZATIONMODE: ALWAYS
+      SPRING_R2DBC_POOL_MAX-SIZE: 20
+      SPRING_R2DBC_POOL_INITIAL-SIZE: 20
+    deploy:
+      placement:
+        constraints:
+          - node.labels.type==worker
+          - node.labels.system==production
+          - node.labels.usecase==modmappings
+    networks:
+      - modmappings-data
+
   redis:
-    image: redis-alpine
+    image: redis:alpine
     deploy:
       placement:
         constraints:
@@ -107,4 +127,3 @@ networks:
   traefik-public:
     external: true
   modmappings-data:
-  modmappings-auth:
